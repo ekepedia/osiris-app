@@ -70,7 +70,7 @@ module.exports.init = function (connection) {
 
 
     load_job_types().then(({job_types, job_types_map}) => {
-        console.log(job_types_map)
+        // console.log(job_types_map)
 
         INDUSTRIES = job_types;
         JOB_TYPES_MAP = job_types_map;

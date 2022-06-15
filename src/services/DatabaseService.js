@@ -9,11 +9,13 @@ const axios = require("axios");
 const DemoUserService = require("./demo_users/DemoUserService");
 const DemoTrackingService = require("./demo_tracking/DemoTrackingService");
 const DemoSohoApplicationService = require("./demo_soho_application/DemoSohoApplicationService");
+const UserService = require("./users/UserService");
 
 const DemoUserSchema = require("./demo_users/schema/demo_users.schema");
 const FeedbackUserSchema = require("./demo_users/schema/feedback_users.schema");
 const DemoTrackingSchema = require("./demo_tracking/schema/demo_tracking.schema");
 const DemoSohoApplicationSchema = require("./demo_soho_application/schema/demo_soho_application.schema");
+const UserSchema = require("./users/schema/users.schema");
 
 module.exports.init = function (connection) {
     init = true;
@@ -24,6 +26,7 @@ module.exports.init = function (connection) {
     DemoUserService.init(connection);
     DemoTrackingService.init(connection);
     DemoSohoApplicationService.init(connection);
+    UserService.init(connection);
 
     init_schema();
 };
@@ -33,6 +36,7 @@ function init_schema() {
     DemoTrackingSchema(knex);
     DemoSohoApplicationSchema(knex);
     FeedbackUserSchema(knex);
+    UserSchema(knex);
 }
 
 module.exports.generate_query = function generate_query(queryParams) {

@@ -6,3 +6,13 @@ export const COLOR_GOLD = "#B8965E";
 
 export const COLOR_BORDER_GREY = "#E5E5E5";
 export const COLOR_TEXT_GREY = "#666764";
+
+export const COLORS = {
+    COLOR_WHITE,
+    COLOR_BLACK,
+    COLOR_GREEN,
+    COLOR_GREEN_LIGHT,
+    COLOR_GOLD,
+    COLOR_BORDER_GREY,
+    COLOR_TEXT_GREY
+}

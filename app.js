@@ -6,6 +6,7 @@ const http    = require('http');
 const express = require('express');
 const bodyParser = require('body-parser')
 const session = require('express-session');
+const axios = require("axios");
 const app     = express();
 var jsonParser = bodyParser.json()
 
@@ -13,7 +14,10 @@ const { ApolloServer } = require('apollo-server-express');
 const Schema = require("./src/schema/schema");
 
 const server = new ApolloServer({
-    schema: Schema, playground: false, introspection: true, context: async ({req}) => {
+    schema: Schema,
+    playground: true,
+    introspection: true,
+    context: async ({req}) => {
         const headers = req ? req.headers : null;
         let ip = null;
 
@@ -102,15 +106,17 @@ app.get("/api/affinities", function (req, res) {
     });
 });
 
-
 app.get("*", function (req, res) {
     res.render("main");
 });
 
-const port = (process.env.PORT || 4004);
+const port = (process.env.PORT || 4005);
 
 httpServer.listen(port, function () {
     console.log('App listening on port ', port);
     console.log(`GraphQL available at ${server.graphqlPath}`);
     console.log(`Subscriptions ready at ws://localhost:${port}${server.graphqlPath}`)
 });
+
+
+

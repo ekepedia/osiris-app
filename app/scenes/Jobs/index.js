@@ -365,14 +365,10 @@ class Jobs extends React.Component {
                 </div>
             </div>
 
-
-
-
             <JobAlertSignUp
                 open={this.state.showJobAlerts}
                 onClose={this.closeJobAlerts.bind(this)}
                 state={this.state}
-
             />
 
             <ApplyNowModal

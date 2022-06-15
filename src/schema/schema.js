@@ -3,6 +3,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const { merge } = require("lodash");
 
 const DemoUsers = require("./demo_users");
+const Users = require("./users");
 const FeedbackUsers = require("./feedback_users");
 const DemoTrackings = require("./demo_tracking");
 const DemoSohoApplications = require("./demo_soho_application");
@@ -41,6 +42,7 @@ const jsSchema = makeExecutableSchema({
         Mutation,
         Subscription,
         DemoUsers.typeDef,
+        Users.typeDef,
         FeedbackUsers.typeDef,
         DemoTrackings.typeDef,
         DemoSohoApplications.typeDef,
@@ -49,6 +51,7 @@ const jsSchema = makeExecutableSchema({
     resolvers: merge(
         resolvers,
         DemoUsers.resolver,
+        Users.resolver,
         FeedbackUsers.resolver,
         DemoTrackings.resolver,
         DemoSohoApplications.resolver,

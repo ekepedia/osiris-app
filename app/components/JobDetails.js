@@ -81,6 +81,20 @@ class JobDetails extends React.Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log(this.varSection1.clientHeight);
+        console.log("PREP", prevProps.job);
+        let { job} = this.props;
+
+        if (job && prevProps.job && job.job_id !== prevProps.job.job_id) {
+            console.log("SETTING SATe")
+            // this.setState({
+            //     this.varSection1.clientHeight
+            // });
+
+        }
+    }
+
     render() {
         let { classes, onApply, job, forceCompany } = this.props;
 
@@ -216,7 +230,8 @@ class JobDetails extends React.Component {
                     <div style={{marginBottom: "0px", ...FONT_TITLE_2_BOLD, color: COLOR_GREEN}}>Job Highlights</div>
                     <div style={{marginBottom: "15px", ...FONT_SUBHEADER, color: COLOR_TEXT_GREY}}>Identified by OSIRIS from the original job post</div>
 
-                    <div style={{display: "flex", marginBottom: SECTION_BUFFER}}>
+                    <div style={{display: "flex", marginBottom: SECTION_BUFFER}}
+                         ref={ (div) => { this.varSection1 = div } }>
                         <div style={{flex: 1, paddingRight: "20px"}}>
                             <div style={{...FONT_BODY_BOLD, marginBottom: "10px"}}>Qualifications</div>
                             <div dangerouslySetInnerHTML={{
