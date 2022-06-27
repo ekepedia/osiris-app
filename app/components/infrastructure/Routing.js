@@ -17,7 +17,7 @@ class Routing extends React.Component {
         return (
             <main>
                 <Switch>
-                    <Route exact path='/' component={Home}/>
+                    <Route exact path='/' component={Jobs}/>
                     <Route exact path='/jobs' component={Jobs}/>
                 </Switch>
             </main>
