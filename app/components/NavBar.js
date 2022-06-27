@@ -76,7 +76,9 @@ class NavBar extends React.Component {
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}} className={classes.logoStyle}>
-                    OSIRIS
+                    <Link to={"/"} style={{color: COLOR_GREEN}}>
+                        OSIRIS
+                    </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right", paddingRight: "20px"}}>
                     <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>

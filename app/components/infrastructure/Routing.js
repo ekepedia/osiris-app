@@ -3,6 +3,8 @@ import { Switch, Route } from 'react-router-dom';
 
 import Jobs from "../../scenes/Jobs/index";
 import Home from "../../scenes/Home/index";
+import UserPortfolio from "../../scenes/UserPortfolio/index";
+import PublicPortfolio from "../../scenes/PublicPortfolio/index";
 
 import {withApollo} from "react-apollo";
 
@@ -19,6 +21,8 @@ class Routing extends React.Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route exact path='/jobs' component={Jobs}/>
+                    <Route exact path='/edit/:username' component={UserPortfolio}/>
+                    <Route exact path='/u/:username' component={PublicPortfolio}/>
                 </Switch>
             </main>
         );

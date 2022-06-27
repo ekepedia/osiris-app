@@ -101,9 +101,15 @@ export const STYLE_INPUT = {
     outline: "none",
 }
 
+export const GREY_BORDER_6 = {
+    border: `1px solid ${COLOR_BORDER_GREY}`,
+    borderRadius: "6px",
+}
+
 export const STYLES = {
     STYLE_INPUT,
     STYLE_BORDER_LINE,
+    GREY_BORDER_6,
     STYLE_MODAL_CONTENT,
     STYLE_MODAL_OVERLAY,
     STYLE_BUTTON_FOOTNOTE_OUTLINE,
