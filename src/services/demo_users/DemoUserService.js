@@ -205,6 +205,7 @@ function convert_to_job(record) {
     let fields = record.fields || {};
     let created = fields['Posting Date'] ? new Date(fields['Posting Date']) : now;
 
+    // console.log(fields['Company'], EMPLOYERS_MAP[fields['Company']])
     if (fields['Company'] && fields['Company'].length) {
         EMPLOYERS_USED.push(fields['Company'][0])
         EMPLOYERS_USED = _.uniq(EMPLOYERS_USED);
@@ -311,35 +312,69 @@ function load_employers() {
     let companies = [];
     let company_map = {};
 
+    let all_records = [];
+
     return new Promise((resolve, reject) => {
+
         axios.get(`https://api.airtable.com/v0/${JOBS_BASE}/Employers?`, {
             headers: {
                 'Authorization': `Bearer ${AIR_TABLE_KEY}`
             }
         }).then((res) => {
 
-            res.data.records.forEach((record) =>{
-                let fields = record.fields || {};
+            all_records = all_records.concat(res.data.records);
 
-                let company = {
-                    company_id: record.id,
-                    id: record.id,
-                    label: fields['Name'],
-                    company_name: fields['Name'],
-                    company_logo: fields['Logo'] && fields['Logo'].length ? fields['Logo'][0].url : "",
-                    company_about: fields['About'],
-                }
+            if (res.data.offset) {
+                const offset = res.data.offset;
+                axios.get(`https://api.airtable.com/v0/${JOBS_BASE}/Employers?offset=${offset}`, {
+                    headers: {
+                        'Authorization': `Bearer ${AIR_TABLE_KEY}`
+                    }
+                }).then((res2) => {
 
-                companies.push(company);
-                company_map[company.company_id] = company;
-            });
+                    all_records = all_records.concat(res2.data.records);
 
-            resolve({
-                companies,
-                company_map
-            });
+                    const processed = process_companies(all_records, companies, company_map)
+
+                    resolve({
+                        companies: processed.companies,
+                        company_map: processed.company_map
+                    });
+                });
+            } else {
+
+                const processed = process_companies(all_records, companies, company_map)
+
+                resolve({
+                    companies: processed.companies,
+                    company_map: processed.company_map
+                });
+            }
         });
     })
+}
+
+function process_companies(records, companies, company_map) {
+    records.forEach((record) =>{
+        let fields = record.fields || {};
+
+        let company = {
+            company_id: record.id,
+            id: record.id,
+            label: fields['Name'],
+            company_name: fields['Name'],
+            company_logo: fields['Logo'] && fields['Logo'].length ? fields['Logo'][0].url : "",
+            company_about: fields['About'],
+        }
+
+        companies.push(company);
+        company_map[company.company_id] = company;
+    });
+
+    return {
+        companies,
+        company_map
+    }
 }
 
 function load_locations() {

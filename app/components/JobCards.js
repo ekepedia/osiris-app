@@ -172,10 +172,14 @@ class JobCards extends React.Component {
 
             let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validRole && validAffinity;
 
-            if (valid) {
-                filteredJobs.push(job);
+            if (job && job.companies && job.companies.length && job.companies[0] ) {
+                if (valid) {
+                    filteredJobs.push(job);
+                } else {
+                    unFilteredJobs.push(job);
+                }
             } else {
-                unFilteredJobs.push(job);
+                console.log(job.companies.length, job.companies, job.companies[0])
             }
         });
 
