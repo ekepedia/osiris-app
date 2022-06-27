@@ -177,12 +177,19 @@ class Jobs extends React.Component {
             console.log("jobs", jobs);
             this.jobs = jobs;
 
+            let selectedJob;
+
+            jobs.forEach((job) => {
+                if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {
+                    selectedJob = job
+                }
+            });
 
             this.setState({
                 jobs,
-                selectedJobId: jobs[0].job_id,
-                selectedJob: jobs[0],
-            })
+                selectedJobId: selectedJob.job_id,
+                selectedJob
+            });
         })
 
         this.state = {
