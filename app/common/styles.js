@@ -106,6 +106,20 @@ export const GREY_BORDER_6 = {
     borderRadius: "6px",
 }
 
+export const MOBILE_STYLES = {
+    hideOnMobile: {
+        '@media (max-width: 768px)': {
+            display: "none"
+        },
+    },
+    showOnMobile: {
+        display: "none",
+        '@media (max-width: 768px)': {
+            display: "block"
+        },
+    }
+}
+
 export const STYLES = {
     STYLE_INPUT,
     STYLE_BORDER_LINE,
@@ -117,5 +131,6 @@ export const STYLES = {
     STYLE_BUTTON_SUBHEADER,
     STYLE_BUTTON_HEADLINE_OUTLINE,
     STYLE_BUTTON_HEADLINE,
-    MODAL_TIMING
+    MODAL_TIMING,
+    MOBILE_STYLES
 }

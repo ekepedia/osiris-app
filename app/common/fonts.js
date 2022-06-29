@@ -35,6 +35,10 @@ export const FONT_LARGE_TITLE_BOLD = { ...FONT_LARGE_TITLE,  ...BOLD_BASE}
 export const FONT_TITLE = { ...BASE, fontSize: "27px",}
 export const FONT_TITLE_BOLD = { ...FONT_TITLE,  ...BOLD_BASE}
 
+// TITLE 1
+export const FONT_TITLE_1 = { ...BASE, fontSize: "27px",}
+export const FONT_TITLE_1_BOLD = { ...FONT_TITLE_1,  ...BOLD_BASE}
+
 // TITLE 2
 export const FONT_TITLE_2 = { ...BASE, fontSize: "21px",}
 export const FONT_TITLE_2_BOLD = { ...FONT_TITLE_2,  ...BOLD_BASE}
@@ -60,6 +64,8 @@ export const FONTS = {
     FONT_TITLE_BOLD,
     FONT_LARGE_TITLE,
     FONT_LARGE_TITLE_BOLD,
+    FONT_TITLE_1,
+    FONT_TITLE_1_BOLD,
     FONT_TITLE_2,
     FONT_TITLE_2_BOLD,
     FONT_TITLE_3,

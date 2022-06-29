@@ -86,18 +86,18 @@ class OnBoardingModal extends React.Component {
                 }}
             >
                 <div>
-                    <div>{this.renderHeader("OnBoardingModal")}</div>
-                    <div>
-                        <div>First Name</div>
-                        {this.renderInput("first_name")}
-                        <div>Last Name</div>
-                        {this.renderInput("last_name")}
-                        <div>Username</div>
-                        {this.renderInput("username")}
-                    </div>
-                    <div>
-                        <div onClick={() => this.submit()}>Submit</div>
-                    </div>
+                    <div>{this.renderHeader("Coming Soon :)")}</div>
+                    {/*<div>*/}
+                    {/*    <div>First Name</div>*/}
+                    {/*    {this.renderInput("first_name")}*/}
+                    {/*    <div>Last Name</div>*/}
+                    {/*    {this.renderInput("last_name")}*/}
+                    {/*    <div>Username</div>*/}
+                    {/*    {this.renderInput("username")}*/}
+                    {/*</div>*/}
+                    {/*<div>*/}
+                    {/*    <div onClick={() => this.submit()}>Submit</div>*/}
+                    {/*</div>*/}
                 </div>
             </Modal>
         </div>)
