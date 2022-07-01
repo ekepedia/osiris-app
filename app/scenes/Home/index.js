@@ -151,11 +151,14 @@ const Styles = {
     },
     featureName: {
         ...COMMON.FONTS.FONT_BODY_BOLD,
-        marginTop: "10px"
+        marginTop: "10px",
+        color: COMMON.COLORS.COLOR_BLACK
     },
     featureBio: {
         ...COMMON.FONTS.FONT_CAPTION_1,
-        marginTop: "2px"
+        marginTop: "2px",
+        color: COMMON.COLORS.COLOR_BLACK
+
     },
     footerDefault: {
         ...COMMON.FONTS.FONT_BODY,
@@ -379,11 +382,13 @@ class Home extends React.Component {
                             <div style={{width: "100%", overflow: "scroll"}}>
                                 <div className={mc(classes.marginLeftDefault)} style={{width: "fit-content", whiteSpace: "nowrap"}}>
                                     <div className={mc(classes.featureContainer)}>
-                                        <div className={mc(classes.featureImage)}>
-                                            <CoverImageHolder url={"/img/Instagram post - 1.png"}/>
-                                        </div>
-                                        <div className={mc(classes.featureName)}>Jason Mayden</div>
-                                        <div className={mc(classes.featureBio)}>President Fear of God Athletics & Founder Trillicon Vally</div>
+                                        <Link to={"/u/jason"}>
+                                            <div className={mc(classes.featureImage)}>
+                                                <CoverImageHolder url={"/img/Instagram post - 1.png"}/>
+                                            </div>
+                                            <div className={mc(classes.featureName)}>Jason Mayden</div>
+                                            <div className={mc(classes.featureBio)}>President Fear of God Athletics & Founder Trillicon Vally</div>
+                                        </Link>
                                     </div>
                                     <div className={mc(classes.featureContainer)}>
                                         <div className={mc(classes.featureImageTall)}>
