@@ -158,7 +158,6 @@ const Styles = {
         ...COMMON.FONTS.FONT_CAPTION_1,
         marginTop: "2px",
         color: COMMON.COLORS.COLOR_BLACK
-
     },
     footerDefault: {
         ...COMMON.FONTS.FONT_BODY,

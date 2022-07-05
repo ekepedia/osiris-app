@@ -19,6 +19,9 @@ const typeDef = gql`
         user_id: String!,
         username: String,
         first_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        bio: String
         last_name: String
         archived: Boolean
     }
@@ -27,6 +30,9 @@ const typeDef = gql`
         username: String,
         first_name: String
         last_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        bio: String
     }
 
     input EditUserInput {
@@ -34,6 +40,9 @@ const typeDef = gql`
         username: String,
         first_name: String
         last_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        bio: String
     }
     
     input QueryUser {

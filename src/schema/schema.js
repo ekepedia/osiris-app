@@ -7,7 +7,9 @@ const Users = require("./users");
 const FeedbackUsers = require("./feedback_users");
 const DemoTrackings = require("./demo_tracking");
 const DemoSohoApplications = require("./demo_soho_application");
-
+const UserEducations = require("./user_educations");
+const UserExperiences = require("./user_experiences");
+const UserLinks = require("./user_links");
 
 // Main Query Schema
 const Query = gql`
@@ -46,6 +48,9 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.typeDef,
         DemoTrackings.typeDef,
         DemoSohoApplications.typeDef,
+        UserEducations.typeDef,
+        UserExperiences.typeDef,
+        UserLinks.typeDef
     ],
 
     resolvers: merge(
@@ -55,6 +60,9 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.resolver,
         DemoTrackings.resolver,
         DemoSohoApplications.resolver,
+        UserEducations.resolver,
+        UserExperiences.resolver,
+        UserLinks.resolver
     )
 });
 

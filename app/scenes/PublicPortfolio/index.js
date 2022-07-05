@@ -8,9 +8,13 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import UserService from '../../services/UserService';
+import UserEducationService from '../../services/UserEducationService';
+import UserExperienceService from '../../services/UserExperienceService';
+import UserLinkService from '../../services/UserLinkService';
+
 import STYLES from "../../common/index";
 import COMMON from "../../common/index";
-import { mc } from "../../common/helpers";
+import { mc, formatDuration } from "../../common/helpers";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import {FONT_CAPTION_2, FONT_CAPTION_2_BOLD} from "../../common/fonts";
@@ -97,10 +101,12 @@ class PublicPortfolio extends React.Component {
         super(props);
 
         this.state = {
-            user: null,
+            user: {},
+            user_educations: [],
             editingHeader: false,
             first_name: "",
             last_name: "",
+            loading_user: true
         };
     }
 
@@ -136,9 +142,112 @@ class PublicPortfolio extends React.Component {
             user = user || {};
             this.setState({
                 user,
+                loading_user: false,
                 first_name: user.first_name,
                 last_name: user.last_name
+            });
+
+            if (user && user.user_id) {
+                this.loadUser(user.user_id)
+            }
+        })
+    }
+
+    loadUser(user_id) {
+        let { client } = this.props;
+
+        this.loadLinks(user_id);
+        this.loadEducation(user_id);
+        this.loadExperience(user_id);
+    }
+
+    loadLinks(user_id) {
+        let { client } = this.props;
+        UserLinkService.getUserLink({client, user_id}).then((user_links) => {
+            user_links = user_links || [];
+            user_links = user_links.sort((a, b) => { return (a.link_order - b.link_order)});
+            console.log("user_links", user_links)
+            this.setState({user_links});
+        })
+    }
+
+    loadEducation(user_id) {
+        let { client } = this.props;
+        UserEducationService.getUserEducation({client, user_id}).then((user_educations) => {
+            user_educations = user_educations.map((user_education) => {
+                const time = `${moment(parseFloat(user_education.start_date)).format("YYYY")} - ${moment(parseFloat(user_education.end_date)).format("YYYY")}`
+                return { ...user_education, time }
             })
+            user_educations = user_educations.sort((a, b) => { return (a.start_date - b.start_date) * -1});
+            this.setState({user_educations});
+        })
+    }
+
+    loadExperience(user_id) {
+        let { client } = this.props;
+        UserExperienceService.getUserExperiences({client, user_id}).then((user_experiences) => {
+
+            let company_map = {};
+            user_experiences = user_experiences.map((user_experience) => {
+                const start = moment(parseFloat(user_experience.start_date));
+                const end = moment(parseFloat(user_experience.end_date));
+
+                const time = `${start.format("MMM YYYY")} - ${end.format("MMM YYYY")}`
+                const diff = end.diff(start);
+                const duration = moment.duration(diff);
+
+                company_map[user_experience.company_name] = company_map[user_experience.company_name] || 0;
+                company_map[user_experience.company_name]++;
+
+                return { ...user_experience, time, diff, duration, timeElapsed: formatDuration(duration) };
+            });
+
+
+            let experiences = [];
+            let company_roles = {};
+
+            user_experiences.forEach((user_experience) => {
+                const { company_name  } = user_experience;
+                if (company_map[user_experience.company_name] > 1) {
+
+                    company_roles[company_name] = company_roles[company_name] || {};
+                    company_roles[company_name].company_name = company_name;
+                    company_roles[company_name].start_date =  company_roles[company_name].start_date && user_experience.start_date > company_roles[company_name].start_date ?  company_roles[company_name].start_date : user_experience.start_date;
+                    company_roles[company_name].end_date =  company_roles[company_name].end_date && user_experience.end_date < company_roles[company_name].end_date ?  company_roles[company_name].end_date : user_experience.end_date;
+
+                    const start = moment(parseFloat(company_roles[company_name].start_date))
+                    const end = moment(parseFloat(company_roles[company_name].end_date))
+
+                    const time = `${start.format("MMM YYYY")} - ${end.format("MMM YYYY")}`
+                    const diff = end.diff(start);
+                    const duration = moment.duration(diff);
+
+                    company_roles[company_name].time = time;
+                    company_roles[company_name].diff = diff;
+                    company_roles[company_name].duration = duration;
+                    company_roles[company_name].timeElapsed = formatDuration(duration);
+
+                    company_roles[company_name].roles = company_roles[company_name].roles || [];
+                    company_roles[company_name].roles.push(user_experience)
+
+                } else {
+                    experiences.push(user_experience)
+                }
+            });
+
+            console.log("experiences", experiences)
+            console.log("company_roles", company_roles)
+
+            user_experiences = [...experiences, ...Object.values(company_roles)]
+
+
+
+
+            user_experiences = user_experiences.sort((a, b) => { return (a.start_date - b.start_date) * -1});
+            console.log("user_experiences", user_experiences)
+            console.log("company_map", company_map)
+
+            this.setState({user_experiences});
         })
     }
 
@@ -153,7 +262,7 @@ class PublicPortfolio extends React.Component {
                     </div>
                     <div style={{flex: 1}}>
                         <div className={mc(classes.cardTitle)}>{title}</div>
-                        <div className={mc(classes.cardBody)}><span>{company}</span> . <span>{time}</span></div>
+                        <div className={mc(classes.cardBody)}><span>{company}</span> • <span>{time}</span></div>
                     </div>
                 </div>
             </div>
@@ -172,7 +281,7 @@ class PublicPortfolio extends React.Component {
                     <div style={{flex: 1}}>
                         <div className={mc(classes.cardTitle)}>{title}</div>
                         <div className={mc(classes.cardSubTitle)}>{company}</div>
-                        <div className={mc(classes.cardBody)}><span>{timeElapsed}</span> . <span>{time}</span></div>
+                        <div className={mc(classes.cardBody)}><span>{timeElapsed}</span> • <span>{time}</span></div>
                     </div>
                 </div>
             </div>
@@ -209,8 +318,8 @@ class PublicPortfolio extends React.Component {
 
                             </div>
                             <div style={{flex: 1}}>
-                                <div className={mc(classes.cardTitle)}>{role.title}</div>
-                                <div className={mc(classes.cardBody)}><span>{role.timeElapsed}</span> . <span>{role.time}</span></div>
+                                <div className={mc(classes.cardTitle)}>{role.role_name}</div>
+                                <div className={mc(classes.cardBody)}><span>{role.timeElapsed}</span> • <span>{role.time}</span></div>
                             </div>
                         </div>
                     );
@@ -220,17 +329,17 @@ class PublicPortfolio extends React.Component {
         )
     }
 
-    renderLink({title, company, time, timeElapsed, link}) {
+    renderLink({ link, url, link_name}) {
         let { classes  } = this.props;
 
         return (
             <a style={{cursor: "pointer"}} href={link} target={"_blank"}>
                 <div className={mc(classes.linkContainer)}>
-                    <CoverImageHolder url={"https://dl.airtable.com/.attachmentThumbnails/a9342ff756c3eee2032bf386caf1e9b0/3c226297"}/>
+                    <CoverImageHolder url={url}/>
                     <div style={{position: "absolute", bottom: "10px", color: COMMON.COLORS.COLOR_WHITE, padding: "0 12px"}}>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, ...COMMON.FONTS.FONT_CAPTION_2_BOLD}}>
-                                This children’s book about design should be required reading for CEOs
+                                {link_name}
                             </div>
                             <div style={{flex: "0 0 20px"}}>
                                 <i className="fa-solid fa-link-horizontal"></i>
@@ -245,6 +354,8 @@ class PublicPortfolio extends React.Component {
     render() {
         let { classes, client, match: { params } } = this.props;
 
+        const { user, user_educations, user_experiences, user_links } = this.state;
+
         const instagram_link = "https://www.instagram.com/jasonmayden/";
         const twitter_link = "https://twitter.com/JasonMayden?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor";
 
@@ -255,6 +366,7 @@ class PublicPortfolio extends React.Component {
         const harvard_logo = "https://1000logos.net/wp-content/uploads/2017/02/Harvard-symbol.jpg";
         const stanford_logo = "https://dl.airtable.com/.attachmentThumbnails/a3b575705e7044d1b51ec55e9d2b5d82/9edea624";
         const ccs_logo = "https://dl.airtable.com/.attachmentThumbnails/abf1031e1956a44a57b27d5ecff3a4be/e5a90fc2";
+
 
         return (<div className={classes.container}>
 
@@ -270,7 +382,7 @@ class PublicPortfolio extends React.Component {
 
                                 <div style={{border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
                                     <div style={{height: "150px", width: "100%"}}>
-                                        <CoverImageHolder url={"/img/header-cover.png"}/>
+                                        <CoverImageHolder url={user.cover_photo_url}/>
                                     </div>
                                     <div style={{padding: "75px 35px", position:"relative", paddingBottom: "25px", background: STYLES.COLORS.COLOR_WHITE, border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`}}>
                                         <div style={{position: "absolute", top: "-50px"}}>
@@ -279,14 +391,13 @@ class PublicPortfolio extends React.Component {
                                                 width: "100px",
                                                 border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
                                                 borderRadius: "4px",
-                                                background: `black url('${user_profile_url}') no-repeat fixed center`,
                                                 overflow: "hidden",
                                                 backgroundSize: "cover"}}>
-                                                <CoverImageHolder url={user_profile_url}/>
+                                                <CoverImageHolder url={user.profile_photo_url}/>
                                             </div>
                                         </div>
-                                        <div style={{...STYLES.FONTS.FONT_TITLE_2_BOLD}}>Jason Mayden</div>
-                                        <div style={{...STYLES.FONTS.FONT_SUBHEADER}}>Designer + Educator + Entrepreneur + Author</div>
+                                        <div style={{...STYLES.FONTS.FONT_TITLE_2_BOLD}}>{user.first_name} {user.last_name}</div>
+                                        <div style={{...STYLES.FONTS.FONT_SUBHEADER}}>{user.bio}</div>
                                         <div style={{marginTop: "15px"}}>
                                             <a href={instagram_link} target={"_blank"}>
                                                 <div className={mc(classes.socialLink)}>
@@ -306,45 +417,26 @@ class PublicPortfolio extends React.Component {
                                 </div>
 
                                 <div className={mc(classes.sectionContainer)}>
-                                    {this.renderLink({title: "Business Analyst", company: "McKinsey & Co.", time: "1 yr 4 mos", logo: mckinsey_logo, link: "https://www.fastcompany.com/90749895/this-childrens-book-about-design-should-be-required-reading-for-ceos"})}
+                                    {user_links && user_links.length ? user_links.map((user_link) => {
+                                        return this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})
+                                    }) : null }
+                                    {
+
+                                    }
                                 </div>
                                 <div className={mc(classes.sectionContainer)}>
                                     <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Experience</div>
-                                    {this.renderCompanyCard({
-                                        title: "VP of Design",
-                                        company: "Mark One",
-                                        time: "1 yr 4 mos",
-                                        timeElapsed: "Jun 2014 - Oct 2015",
-                                        logo: "https://dl.airtable.com/.attachmentThumbnails/ec7e3c583aadf41ce8455b232e5fffc6/ca0cca36"
-                                    })}
-                                    {this.renderMultiCompanyCard({
-                                        company: "Nike", totalTimeElapsed: "13 yrs 6 mos", logo: nike_logo, roles:[
-                                            {
-                                                title: "Sr. Global Design Director - Brand Jordan",
-                                                time: "Nov 2012 - Jun 2014",
-                                                timeElapsed: "1 yr 8 mos"
-                                            },
-                                            {
-                                                title: "Director of Innovation - Digital Sport",
-                                                time: "Jul 2011 - Nov 2012",
-                                                timeElapsed: "1 yr 8 mos"
-                                            },
-                                            {
-                                                title: "Co-Chair Nike BEN (Black Employee Network)",
-                                                time: "Jun 2011 - Sep 2013",
-                                                timeElapsed: "2 yr 3 mos"
-                                            },
-                                            {
-                                                title: "Sr. Global Design Director - Brand Jordan",
-                                                time: "Jan 2001 - Jun 2011",
-                                                timeElapsed: "10 yr 5 mos"
-                                            },
-                                        ]})}
+                                    {user_experiences && user_experiences.length ? user_experiences.map((user_experience) => {
+                                        if (user_experience.roles) return this.renderMultiCompanyCard({company: user_experience.company_name, totalTimeElapsed: user_experience.timeElapsed, logo: nike_logo, roles: user_experience.roles})
+
+                                        return this.renderCompanyCard({title: user_experience.role_name, company: user_experience.company_name, time: user_experience.timeElapsed, timeElapsed: user_experience.time, logo: user_experience.company_logo_url});
+                                    }) : null }
                                 </div>
                                 <div className={mc(classes.sectionContainer)}>
                                     <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Education</div>
-                                    {this.renderCard({title: "Stanford Graduate School of Business", company: "MS, General Management", time: "2010 - 2011", logo: stanford_logo})}
-                                    {this.renderCard({title: "College for Creative Studies", company: "BFA, Industrial Design (Product)", time: "1998 - 2002", logo: ccs_logo})}
+                                    {user_educations && user_educations.length ? user_educations.map((user_education) => {
+                                        return this.renderCard({title: user_education.school_name, company: user_education.degree_name, time: user_education.time, logo: user_education.school_logo_url})
+                                    }) : null }
                                 </div>
                                 <div style={{textAlign: "center", marginTop: "35px"}}>
 

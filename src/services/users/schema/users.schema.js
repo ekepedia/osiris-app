@@ -9,6 +9,10 @@ module.exports = function (connection) {
         table.string('last_name');
         table.string('username').unique();
 
+        table.string('profile_photo_url');
+        table.string('cover_photo_url');
+        table.string('bio', 2000);
+
         table.boolean('disabled').defaultTo(false);
         table.boolean('archived').defaultTo(false);
 

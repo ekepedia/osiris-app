@@ -17,6 +17,15 @@ module.exports.init = function (connection) {
     knex = connection;
 
     console.log("SQL: User Service Successfully Initialized");
+
+    // edit_user({
+    //     user_id: 7,
+    //     first_name: "Jason",
+    //     last_name: "Mayden",
+    //     profile_photo_url: "https://dl.airtable.com/.attachmentThumbnails/0caaf4ff150561069d1b3e4cc2a0f0f4/e6453bd6",
+    //     cover_photo_url: "https://i.imgur.com/tM97NWQ.png",
+    //     bio: "Designer + Educator + Entrepreneur + Author"
+    // });
 };
 
 module.exports.get_users = get_users;
@@ -46,7 +55,7 @@ function clean_username (username) {
 
 module.exports.create_user = create_user;
 
-function create_user({username, first_name,  last_name}) {
+function create_user({username, first_name, last_name, profile_photo_url, cover_photo_url, bio}) {
 
     username = clean_username(username);
 
@@ -54,7 +63,7 @@ function create_user({username, first_name,  last_name}) {
         if (!username)
             return reject(new Error("Missing username"));
 
-        const query = DatabaseService.generate_query({username, first_name,  last_name});
+        const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, bio});
 
         knex(USER_TABLE).insert(query).returning("user_id").then((rows) => {
             const user_id = rows[0];
@@ -68,7 +77,7 @@ function create_user({username, first_name,  last_name}) {
 
 module.exports.edit_user = edit_user;
 
-function edit_user({user_id, username, first_name,  last_name}) {
+function edit_user({user_id, username, first_name, last_name, profile_photo_url, cover_photo_url, bio}) {
 
     username = clean_username(username);
 
@@ -76,7 +85,7 @@ function edit_user({user_id, username, first_name,  last_name}) {
         if (!user_id)
             return reject(new Error("Missing user_id"));
 
-        const query = {username, first_name,  last_name};
+        const query = {username, first_name, last_name, profile_photo_url, cover_photo_url, bio};
 
         knex(USER_TABLE).where({user_id}).update(query).then(() =>{
             return resolve();

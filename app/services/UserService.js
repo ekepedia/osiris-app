@@ -48,6 +48,9 @@ UserService.getUser = ({client, username}) => {
                     username
                     first_name
                     last_name
+                    profile_photo_url
+                    cover_photo_url
+                    bio
                 }
             }
         `;
