@@ -29,7 +29,7 @@ const Styles = {
     pageContainer: {
         padding: "0 50px",
         '@media (max-width: 768px)': {
-            padding: "0 30px",
+            padding: "0 25px",
         },
         height: "100%",
         overflow: "hidden"
@@ -38,7 +38,42 @@ const Styles = {
         height: "100%",
         overflow: "hidden",
         overflowY: "scroll",
-        paddingTop: "40px"
+        paddingTop: "35px",
+        '@media (max-width: 768px)': {
+            paddingTop: "20px",
+        },
+    },
+    profileHeaderContainer: {
+        padding: "75px 35px", position:"relative", paddingBottom: "25px", background: STYLES.COLORS.COLOR_WHITE,
+        '@media (max-width: 768px)': {
+            padding: "40px 25px",
+            paddingBottom: "20px"
+        },
+    },
+    profileCover: {
+        height: "150px", width: "100%", overflow: "hidden",
+        '@media (max-width: 768px)': {
+            height: "100px",
+        },
+    },
+    profileImageContainer: {
+        position: "absolute",
+        top: "-50px",
+        '@media (max-width: 768px)': {
+            top: "-25px",
+        },
+    },
+    profileImage:{
+        height: "100px",
+        width: "100px",
+        border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
+        borderRadius: "4px",
+        overflow: "hidden",
+        backgroundSize: "cover",
+        '@media (max-width: 768px)': {
+            height: "50px",
+            width: "50px",
+        },
     },
     socialLink: {
         background: STYLES.COLORS.COLOR_GREEN,
@@ -52,6 +87,18 @@ const Styles = {
         display: "inline-block",
         marginRight: "5px",
     },
+    profileHeaderName:{
+        ...STYLES.FONTS.FONT_TITLE_2_BOLD,
+        '@media (max-width: 768px)': {
+            ...STYLES.FONTS.FONT_HEADLINE_BOLD,
+        },
+    },
+    profileHeaderBio:{
+        ...STYLES.FONTS.FONT_SUBHEADER,
+        '@media (max-width: 768px)': {
+            ...STYLES.FONTS.FONT_FOOTNOTE,
+        },
+    },
     sectionContainer: {
         border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
         borderRadius: "6px",
@@ -59,6 +106,25 @@ const Styles = {
         padding: "15px 15px",
         background: STYLES.COLORS.COLOR_WHITE,
         marginTop: "10px"
+    },
+    sectionExperienceContainer: {
+        border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
+        borderRadius: "6px",
+        overflow: "hidden",
+        padding: "0",
+        background: STYLES.COLORS.COLOR_WHITE,
+        marginTop: "10px"
+    },
+    sectionExperiencePadding: {
+        padding: "15px 15px",
+    },
+    sectionExperienceShowMore: {
+        padding: "10px",
+        textAlign: "center",
+        cursor: "pointer",
+        borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
+        ...COMMON.FONTS.FONT_SUBHEADER_BOLD,
+        color: COMMON.COLORS.COLOR_TEXT_GREY
     },
     cardContainer: {
         padding: "15px",
@@ -106,32 +172,11 @@ class PublicPortfolio extends React.Component {
             editingHeader: false,
             first_name: "",
             last_name: "",
-            loading_user: true
+            loading_user: true,
+            limit: true
         };
-    }
 
-    setEditingHeader(editing) {
-        this.setState({
-            editingHeader: editing
-        })
-    }
-
-    renderInput(field) {
-        return (
-            <input value={this.state[field]} onChange={(e) => (this.setState({[field]: e.target.value}))}/>
-        )
-    }
-
-    submitEdit() {
-        let { classes, client, match: { params } } = this.props;
-
-        const user = this.state.user || {};
-        const { user_id } = user;
-        const { first_name, last_name } = this.state;
-
-        UserService.editUser({client, user_id, first_name, last_name}).then((success) => {
-            console.log("sucess", success);
-        })
+        this.portfolioLinkRef = React.createRef();
     }
 
     componentDidMount() {
@@ -151,7 +196,64 @@ class PublicPortfolio extends React.Component {
                 this.loadUser(user.user_id)
             }
         })
+
+        setTimeout(() =>{
+            this.setHeightRatio();
+        }, 2000)
+
+        window.addEventListener('resize', this.setHeightRatio.bind(this));
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setHeightRatio.bind(this));
+    }
+
+    setHeightRatio() {
+        const RATIO = 9/16;
+        const DELAY = 100;
+
+        clearInterval(this.holdForResize);
+
+        this.holdForResize = setTimeout(() => {
+
+            const node = this.portfolioLinkRef.current;
+            const currentWidth = node.clientWidth;
+            const currentHeight = currentWidth * RATIO;
+
+            console.log("RESIZED", node.clientWidth, currentHeight, node.clientHeight)
+
+            this.setState({
+                currentWidth,
+                currentHeight
+            });
+        }, DELAY);
+    }
+
+    setEditingHeader(editing) {
+        this.setState({
+            editingHeader: editing
+        })
+    }
+
+
+    renderInput(field) {
+        return (
+            <input value={this.state[field]} onChange={(e) => (this.setState({[field]: e.target.value}))}/>
+        )
+    }
+
+    submitEdit() {
+        let { classes, client, match: { params } } = this.props;
+
+        const user = this.state.user || {};
+        const { user_id } = user;
+        const { first_name, last_name } = this.state;
+
+        UserService.editUser({client, user_id, first_name, last_name}).then((success) => {
+            console.log("sucess", success);
+        })
+    }
+
 
     loadUser(user_id) {
         let { client } = this.props;
@@ -168,6 +270,7 @@ class PublicPortfolio extends React.Component {
             user_links = user_links.sort((a, b) => { return (a.link_order - b.link_order)});
             console.log("user_links", user_links)
             this.setState({user_links});
+            this.setHeightRatio();
         })
     }
 
@@ -190,9 +293,9 @@ class PublicPortfolio extends React.Component {
             let company_map = {};
             user_experiences = user_experiences.map((user_experience) => {
                 const start = moment(parseFloat(user_experience.start_date));
-                const end = moment(parseFloat(user_experience.end_date));
+                const end = moment(parseFloat(user_experience.end_date ? user_experience.end_date : new Date().getTime()));
 
-                const time = `${start.format("MMM YYYY")} - ${end.format("MMM YYYY")}`
+                const time = `${start.format("MMM YYYY")} - ${user_experience.end_date ? end.format("MMM YYYY") : "Present"}`
                 const diff = end.diff(start);
                 const duration = moment.duration(diff);
 
@@ -212,6 +315,7 @@ class PublicPortfolio extends React.Component {
 
                     company_roles[company_name] = company_roles[company_name] || {};
                     company_roles[company_name].company_name = company_name;
+                    company_roles[company_name].company_logo_url = user_experience.company_logo_url;
                     company_roles[company_name].start_date =  company_roles[company_name].start_date && user_experience.start_date > company_roles[company_name].start_date ?  company_roles[company_name].start_date : user_experience.start_date;
                     company_roles[company_name].end_date =  company_roles[company_name].end_date && user_experience.end_date < company_roles[company_name].end_date ?  company_roles[company_name].end_date : user_experience.end_date;
 
@@ -243,7 +347,12 @@ class PublicPortfolio extends React.Component {
 
 
 
-            user_experiences = user_experiences.sort((a, b) => { return (a.start_date - b.start_date) * -1});
+            user_experiences = user_experiences.sort((a, b) => {
+
+                const c = a.end_date ? a.end_date : new Date().getTime();
+                const d = b.end_date ? b.end_date : new Date().getTime();
+                return (c - d) * -1}
+            );
             console.log("user_experiences", user_experiences)
             console.log("company_map", company_map)
 
@@ -314,7 +423,7 @@ class PublicPortfolio extends React.Component {
                                     borderRadius: "100%",
                                     margin: "auto",
                                     marginTop: "6px"
-                                }}></div>
+                                }}/>
 
                             </div>
                             <div style={{flex: 1}}>
@@ -333,9 +442,10 @@ class PublicPortfolio extends React.Component {
         let { classes  } = this.props;
 
         return (
-            <a style={{cursor: "pointer"}} href={link} target={"_blank"}>
-                <div className={mc(classes.linkContainer)}>
+            <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
+                <div className={mc(classes.linkContainer)} style={{height: this.state.currentHeight ? this.state.currentHeight : null}} ref={this.portfolioLinkRef}>
                     <CoverImageHolder url={url}/>
+
                     <div style={{position: "absolute", bottom: "10px", color: COMMON.COLORS.COLOR_WHITE, padding: "0 12px"}}>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, ...COMMON.FONTS.FONT_CAPTION_2_BOLD}}>
@@ -381,23 +491,17 @@ class PublicPortfolio extends React.Component {
                             <div className={mc(classes.pageSection)} style={{flex: 2, paddingBottom: "50px"}}>
 
                                 <div style={{border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
-                                    <div style={{height: "150px", width: "100%"}}>
+                                    <div className={classes.profileCover}>
                                         <CoverImageHolder url={user.cover_photo_url}/>
                                     </div>
-                                    <div style={{padding: "75px 35px", position:"relative", paddingBottom: "25px", background: STYLES.COLORS.COLOR_WHITE, border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`}}>
-                                        <div style={{position: "absolute", top: "-50px"}}>
-                                            <div style={{
-                                                height: "100px",
-                                                width: "100px",
-                                                border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
-                                                borderRadius: "4px",
-                                                overflow: "hidden",
-                                                backgroundSize: "cover"}}>
+                                    <div className={classes.profileHeaderContainer}>
+                                        <div className={classes.profileImageContainer}>
+                                            <div className={classes.profileImage}>
                                                 <CoverImageHolder url={user.profile_photo_url}/>
                                             </div>
                                         </div>
-                                        <div style={{...STYLES.FONTS.FONT_TITLE_2_BOLD}}>{user.first_name} {user.last_name}</div>
-                                        <div style={{...STYLES.FONTS.FONT_SUBHEADER}}>{user.bio}</div>
+                                        <div className={classes.profileHeaderName}>{user.first_name} {user.last_name}</div>
+                                        <div className={classes.profileHeaderBio}>{user.bio}</div>
                                         <div style={{marginTop: "15px"}}>
                                             <a href={instagram_link} target={"_blank"}>
                                                 <div className={mc(classes.socialLink)}>
@@ -420,17 +524,25 @@ class PublicPortfolio extends React.Component {
                                     {user_links && user_links.length ? user_links.map((user_link) => {
                                         return this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})
                                     }) : null }
-                                    {
-
-                                    }
                                 </div>
-                                <div className={mc(classes.sectionContainer)}>
-                                    <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Experience</div>
-                                    {user_experiences && user_experiences.length ? user_experiences.map((user_experience) => {
-                                        if (user_experience.roles) return this.renderMultiCompanyCard({company: user_experience.company_name, totalTimeElapsed: user_experience.timeElapsed, logo: nike_logo, roles: user_experience.roles})
+                                <div className={mc(classes.sectionExperienceContainer)}>
+                                    <div className={classes.sectionExperiencePadding}>
+                                        <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Experience</div>
+                                        {user_experiences && user_experiences.length ? user_experiences.map((user_experience, i) => {
 
-                                        return this.renderCompanyCard({title: user_experience.role_name, company: user_experience.company_name, time: user_experience.timeElapsed, timeElapsed: user_experience.time, logo: user_experience.company_logo_url});
-                                    }) : null }
+                                            if (i >= 3 && this.state.limit)
+                                                return null;
+
+                                            if (user_experience.roles) return this.renderMultiCompanyCard({company: user_experience.company_name, totalTimeElapsed: user_experience.timeElapsed, logo: user_experience.company_logo_url, roles: user_experience.roles})
+
+                                            return this.renderCompanyCard({title: user_experience.role_name, company: user_experience.company_name, time: user_experience.timeElapsed, timeElapsed: user_experience.time, logo: user_experience.company_logo_url});
+                                        }) : null }
+                                    </div>
+                                    {user_experiences && user_experiences.length && user_experiences.length > 3 ? <div onClick={() => {
+                                        this.setState({limit: !this.state.limit})
+                                    }} className={classes.sectionExperienceShowMore}>
+                                        {this.state.limit ? "Show" : "Hide"} all experiences<i style={{marginLeft: "5px"}} className={`fa-solid fa-arrow-${this.state.limit ? "down" : "up"}`}/>
+                                    </div>: null}
                                 </div>
                                 <div className={mc(classes.sectionContainer)}>
                                     <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Education</div>
@@ -438,11 +550,13 @@ class PublicPortfolio extends React.Component {
                                         return this.renderCard({title: user_education.school_name, company: user_education.degree_name, time: user_education.time, logo: user_education.school_logo_url})
                                     }) : null }
                                 </div>
-                                <div style={{textAlign: "center", marginTop: "35px"}}>
+                                <div style={{textAlign: "center", marginTop: "35px", cursor: "pointer"}}>
 
-                                    <img src={"https://stripe-camo.global.ssl.fastly.net/a7a50b12a67746e3b93823ebacb2a536a3df879019a01863632fe7a8325a0949/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a6446387853307734536d6447616d70474d4464544e555a6b66475a6662476c325a563930596a4a3665576c72624664614e6a646b52455979516b78725931425a62455130306b676c7149777753"}
-                                    style={{width: "35px", height: "35px",  margin: "auto", marginBottom: "10px", borderRadius: "100%"}}/>
-                                    <div style={{...COMMON.FONTS.FONT_CAPTION_2_BOLD}}>JOIN OSIRIS</div>
+                                    <Link to={"/"}>
+                                        <img src={"https://stripe-camo.global.ssl.fastly.net/a7a50b12a67746e3b93823ebacb2a536a3df879019a01863632fe7a8325a0949/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a6446387853307734536d6447616d70474d4464544e555a6b66475a6662476c325a563930596a4a3665576c72624664614e6a646b52455979516b78725931425a62455130306b676c7149777753"}
+                                             style={{width: "35px", height: "35px",  margin: "auto", marginBottom: "10px", borderRadius: "100%"}}/>
+                                        <div style={{...COMMON.FONTS.FONT_CAPTION_2_BOLD, color: COMMON.COLORS.COLOR_BLACK}}>JOIN OSIRIS</div>
+                                    </Link>
 
                                 </div>
                             </div>
