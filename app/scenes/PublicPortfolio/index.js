@@ -155,7 +155,7 @@ const Styles = {
     linkContainer: {
         height: "384px", width: "100%", borderRadius: "6px", overflow: "hidden", position: "relative",
         '@media (max-width: 768px)': {
-            height: "191px",
+            // height: "191px",
         },
     },
     ...COMMON.STYLES.MOBILE_STYLES
@@ -210,7 +210,7 @@ class PublicPortfolio extends React.Component {
 
     setHeightRatio() {
         const RATIO = 9/16;
-        const DELAY = 100;
+        const DELAY = 5;
 
         clearInterval(this.holdForResize);
 
@@ -446,13 +446,13 @@ class PublicPortfolio extends React.Component {
                 <div className={mc(classes.linkContainer)} style={{height: this.state.currentHeight ? this.state.currentHeight : null}} ref={this.portfolioLinkRef}>
                     <CoverImageHolder url={url}/>
 
-                    <div style={{position: "absolute", bottom: "10px", color: COMMON.COLORS.COLOR_WHITE, padding: "0 12px"}}>
+                    <div style={{position: "absolute", width: "100%", bottom: "10px", color: COMMON.COLORS.COLOR_WHITE, padding: "0 12px"}}>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, ...COMMON.FONTS.FONT_CAPTION_2_BOLD}}>
                                 {link_name}
                             </div>
                             <div style={{flex: "0 0 20px"}}>
-                                <i className="fa-solid fa-link-horizontal"></i>
+                                <i className="fa-solid fa-link"></i>
                             </div>
                         </div>
                     </div>
@@ -520,11 +520,31 @@ class PublicPortfolio extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className={mc(classes.sectionContainer)}>
+                                <div className={mc(classes.sectionContainer)} style={{paddingBottom: "5px"}}>
                                     {user_links && user_links.length ? user_links.map((user_link) => {
-                                        return this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})
+                                        if (user_link.link_type === "youtube") {
+                                            return (<div style={{height: this.state.currentHeight ? this.state.currentHeight : null}} className={mc(classes.linkContainer)}>
+                                                <iframe
+                                                    width="100%"
+                                                    height="100%"
+                                                    src={user_link.link_url}
+                                                    frameBorder="0"
+                                                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                    title="Embedded youtube"
+                                                />
+                                            </div>);
+                                        } else {
+                                            return (<div style={{marginBottom: "10px"}}>
+                                                {this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
+                                            </div>);
+                                        }
+
+
+
                                     }) : null }
                                 </div>
+
                                 <div className={mc(classes.sectionExperienceContainer)}>
                                     <div className={classes.sectionExperiencePadding}>
                                         <div style={{...STYLES.FONTS.FONT_HEADLINE_BOLD}}>Experience</div>

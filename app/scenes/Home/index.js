@@ -210,7 +210,7 @@ const Styles = {
         },
     },
     userProfileSection: {
-        paddingTop: "243px",
+        paddingTop: "70px",
         '@media (max-width: 768px)': {
             paddingTop: "0",
         },
@@ -226,7 +226,7 @@ const Styles = {
     },
     peerSupportSection: {
         marginLeft: "auto",
-        paddingTop: "243px",
+        paddingTop: "50px",
         '@media (max-width: 768px)': {
             marginLeft: "0",
             paddingTop: "0",
@@ -432,6 +432,58 @@ class Home extends React.Component {
 
                         </div>
 
+                        <div className={mc(classes.findAJobSectionContainer)}>
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: 1}}>
+                                    <div className={mc(classes.findAJobSection)}>
+                                        <div className={mc(classes.paddingLeftDefault)}>
+                                            <div className={mc(classes.sectionWidthWide)}>
+                                                <div className={mc(classes.sectionHeader)}>ACCESS TO JOBS</div>
+                                                <div className={mc(classes.sectionTitle)}>Find a job that represents you</div>
+                                                <div className={mc(classes.sectionBody)}>OSIRIS allows you to find opportunities with companies that represent you. Use 10+ unique filters to sort through roles and get access to DE&I stats before applying</div>
+                                                <div className={mc(classes.sectionCTA)}>Find A Job <span><i className="fa-solid fa-arrow-right"></i></span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={mc(classes.mobileImageContainer)}>
+                                        <img className={mc(classes.mobileImage)} src={"/img/jobs-hero-2.png"}/>
+                                    </div>
+                                </div>
+                                <div style={{flex: 1.2}} className={mc(classes.hideOnMobile)}>
+                                    <div style={{width: "100%", maxWidth: "559px", marginLeft: "auto"}} className={mc(classes.marginRightDefault)}>
+                                        <img style={{width: "100%", }} src={"/img/jobs-hero-2.png"}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={mc(classes.peerSupportSectionContainer)}>
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: 1}} className={mc(classes.hideOnMobile)}>
+                                    <div style={{width: "100%",}}>
+                                        <img style={{width: "100%", maxWidth: "666px"}} className={mc(classes.marginLeftDefault)} src={"/img/peer-support-hero-2.png"}/>
+                                    </div>
+                                </div>
+                                <div style={{flex: 1}}>
+                                    <div>
+                                        <div className={mc(classes.marginRightDefault)}>
+                                            <div className={mc(classes.sectionWidthWide, classes.peerSupportSection)}>
+                                                <div className={mc(classes.sectionHeader)}>PEER & MENTOR SUPPORT</div>
+                                                <div className={mc(classes.sectionTitle)}>Connect with your community</div>
+                                                <div className={mc(classes.sectionBody)}>We verify every user before allowing them to join OSIRIS. As a result, users can post questions anonymously, allowing for authentic insights, feedback, and advice from community members</div>
+                                                <div className={mc(classes.sectionCTA)}>Ask a question <span><i className="fa-solid fa-arrow-right"></i></span></div>
+                                            </div>
+                                        </div>
+                                        <div className={mc(classes.mobileImageContainer)}>
+                                            <img className={mc(classes.mobileImage)} src={"/img/peer-support-hero-2.png"}/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
                         <div className={mc(classes.userProfileSectionContainer)}>
                             <div style={{display: "flex"}}>
                                 <div style={{flex: 1}}>
@@ -447,13 +499,13 @@ class Home extends React.Component {
                                         </div>
                                     </div>
                                     <div className={mc(classes.mobileImageContainer)}>
-                                        <img className={mc(classes.mobileImage)} src={"/img/profile-hero.png"}/>
+                                        <img className={mc(classes.mobileImage)} src={"/img/profile-hero-2.png"}/>
                                     </div>
                                 </div>
                                 <div style={{flex: 1.2}} className={mc(classes.hideOnMobile)}>
                                     <div className={mc(classes.marginRightDefault)} style={{maxWidth: "637px"}}>
                                         <div style={{width: "100%", textAlign: "center"}}>
-                                            <img style={{width: "100%", maxWidth: "666px", margin: "auto"}} src={"/img/profile-hero.png"}/>
+                                            <img style={{width: "100%", maxWidth: "666px", margin: "auto"}} src={"/img/profile-hero-2.png"}/>
                                         </div>
                                     </div>
 
@@ -462,57 +514,9 @@ class Home extends React.Component {
                         </div>
 
 
-                        <div className={mc(classes.peerSupportSectionContainer)}>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1}} className={mc(classes.hideOnMobile)}>
-                                    <div style={{width: "100%",}}>
-                                        <img style={{width: "100%", maxWidth: "666px"}} className={mc(classes.marginLeftDefault)} src={"/img/question-hero.png"}/>
-                                    </div>
-                                </div>
-                                <div style={{flex: 1}}>
-                                    <div>
-                                        <div className={mc(classes.marginRightDefault)}>
-                                            <div className={mc(classes.sectionWidthWide, classes.peerSupportSection)}>
-                                                <div className={mc(classes.sectionHeader)}>PEER & MENTOR SUPPORT</div>
-                                                <div className={mc(classes.sectionTitle)}>Connect with your community</div>
-                                                <div className={mc(classes.sectionBody)}>We verify every user before allowing them to join OSIRIS. As a result, users can post questions anonymously, allowing for authentic insights, feedback, and advice from community members</div>
-                                                <div className={mc(classes.sectionCTA)}>Ask a question <span><i className="fa-solid fa-arrow-right"></i></span></div>
-                                            </div>
-                                        </div>
-                                        <div className={mc(classes.mobileImageContainer)}>
-                                            <img className={mc(classes.mobileImage)} src={"/img/question-hero.png"}/>
-                                        </div>
-                                    </div>
-                                </div>
 
-                            </div>
 
-                        </div>
 
-                        <div className={mc(classes.findAJobSectionContainer)}>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1}}>
-                                    <div className={mc(classes.findAJobSection)}>
-                                        <div className={mc(classes.paddingLeftDefault)}>
-                                            <div className={mc(classes.sectionWidthWide)}>
-                                                <div className={mc(classes.sectionHeader)}>ACCESS TO JOBS</div>
-                                                <div className={mc(classes.sectionTitle)}>Find a job that represents you</div>
-                                                <div className={mc(classes.sectionBody)}>OSIRIS allows you to find opportunities with companies that represent you. Use 10+ unique filters to sort through roles and get access to DE&I stats before applying</div>
-                                                <div className={mc(classes.sectionCTA)}>Find A Job <span><i className="fa-solid fa-arrow-right"></i></span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className={mc(classes.mobileImageContainer)}>
-                                        <img className={mc(classes.mobileImage)} src={"/img/jobs-hero.png"}/>
-                                    </div>
-                                </div>
-                                <div style={{flex: 1.2}} className={mc(classes.hideOnMobile)}>
-                                    <div style={{width: "100%", maxWidth: "666px", marginLeft: "auto"}} className={mc(classes.marginRightDefault)}>
-                                        <img style={{width: "100%", }} src={"/img/jobs-hero.png"}/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div className={mc(classes.applySectionContainer)}>
                             <div style={{display: "flex"}}>

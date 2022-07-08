@@ -32,6 +32,13 @@ module.exports.init = function (connection) {
     //     console.log(e)
     // })
     //
+    // create_user_link({
+    //     user_id:"7",
+    //     link_type: "youtube",
+    // link_url: "https://www.youtube.com/embed/pXA1xFbMMTg"}).then((e) =>{
+    //     console.log(e)
+    // })
+    //
     // remove_user_link({user_link_id: 1, school_name: "MIT", degree_name: "Bachelors"}).then((r) =>{
     //     console.log("NEW ED", r);
     // })
