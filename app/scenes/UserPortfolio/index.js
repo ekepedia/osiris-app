@@ -9,6 +9,10 @@ import injectSheet from 'react-jss';
 
 import UserService from '../../services/UserService';
 import { COLOR_WHITE } from "../../common/colors";
+import StandardInput from "../../components/StandardInput";
+import StandardButton from "../../components/StandardButton";
+import axios from "axios";
+import StandardModal from "../../components/StandardModal";
 
 const Styles = {
     container: {
@@ -38,10 +42,16 @@ class UserPortfolio extends React.Component {
         })
     }
 
-    renderInput(field) {
-        return (
-            <input value={this.state[field]} onChange={(e) => (this.setState({[field]: e.target.value}))}/>
-        )
+    submitProfilePhoto(url) {
+        let { client } = this.props;
+
+        const user = this.state.user || {};
+        const { user_id } = user;
+        const profile_photo_url = url;
+
+        UserService.editUser({client, user_id, profile_photo_url}).then((success) => {
+            console.log("sucess", success);
+        })
     }
 
     submitEdit() {
@@ -59,7 +69,7 @@ class UserPortfolio extends React.Component {
     componentDidMount() {
         let { classes, client, match: { params } } = this.props;
 
-        UserService.getUser({client, username: params.username}).then((user) => {
+        UserService.getUser({client, user_id: params.user_id}).then((user) => {
             console.log("user,", user);
             user = user || {};
             this.setState({
@@ -70,24 +80,49 @@ class UserPortfolio extends React.Component {
         })
     }
 
+    fileUploaded(e) {
+
+        console.log(e.target.files);
+
+        if (e.target.files && e.target.files[0]) {
+
+            const file = e.target.files[0];
+            const formData = new FormData();
+
+            formData.append('img', file);
+
+            axios.post("/api/upload-user-img", formData).then((data) => {
+                console.log("hell?", data.data)
+
+                if (data && data.data && data.data.url) {
+                    const { url } = data.data;
+                    this.submitProfilePhoto(url);
+                }
+            })
+        }
+
+    }
 
     render() {
         let { classes, client, match: { params } } = this.props;
 
         return (<div className={classes.container}>
 
+            <input type={"file"} onChange={(e) => (this.fileUploaded(e))}/>
+
             {this.state.editingHeader ?
-
                 <div onClick={() => (this.setEditingHeader(false))}>Done Editin Header</div> :
-                <div onClick={() => (this.setEditingHeader(true))}>Edit Header</div>
-
+                <div >Edit Header</div>
             }
 
+            <StandardButton label={"Edit Header"} outline={true} onClick={() => (this.setEditingHeader(true))}/>
+
+            <StandardModal open={true}/>
             {this.state.editingHeader ?
 
                 <div>
-
-                    {this.renderInput("first_name")}
+                    <StandardInput value={this.state.first_name} update={(v) => {this.setState({first_name: v})}}/>
+                    <StandardInput value={this.state.last_name} update={(v) => {this.setState({last_name: v})}}/>
                     <div onClick={() => (this.submitEdit())}>Save</div>
                 </div> :
                 <div>

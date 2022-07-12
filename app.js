@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 const session = require('express-session');
 const axios = require("axios");
 const app     = express();
+const fileUpload = require('express-fileupload');
+
 var jsonParser = bodyParser.json()
 
 const { ApolloServer } = require('apollo-server-express');
@@ -48,7 +50,14 @@ app.use(session({
     secret: 'SECRET'
 }));
 
+app.use(jsonParser);
+app.use(fileUpload());
+
+const DatabaseService = require("./src/services/DatabaseService");
 const DemoUserService = require("./src/services/demo_users/DemoUserService");
+const UserLoginService = require("./src/services/user_logins/UserLoginService");
+
+UserLoginService.set_routes(app);
 
 app.get("/api/jobs", function (req, res) {
     DemoUserService.get_jobs().then(({jobs}) => {
@@ -106,6 +115,24 @@ app.get("/api/affinities", function (req, res) {
     });
 });
 
+app.post("/api/upload-user-img", function (req, res) {
+    console.log("req.files")
+    console.log(req.files)
+
+    if (req.files && req.files.img) {
+        console.log("GOT IT BBY :)");
+
+        const filePrefix = Math.round(Math.random() * 10000000);
+
+        const fileName = filePrefix + "-" + req.files.img.name;
+        DatabaseService.upload_img(fileName, req.files.img.mimetype, req.files.img.data ).then(({url}) => {
+            res.json({url})
+        })
+    } else {
+        res.json()
+    }
+});
+
 app.get("*", function (req, res) {
     res.render("main");
 });
@@ -117,6 +144,8 @@ httpServer.listen(port, function () {
     console.log(`GraphQL available at ${server.graphqlPath}`);
     console.log(`Subscriptions ready at ws://localhost:${port}${server.graphqlPath}`)
 });
+
+
 
 
 

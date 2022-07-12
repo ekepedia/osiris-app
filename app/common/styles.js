@@ -77,9 +77,9 @@ export const STYLE_MODAL_CONTENT = {
     background: '#fff',
     overflow: 'auto',
     WebkitOverflowScrolling: 'touch',
-    borderRadius: '10px',
+    borderRadius: '6px',
     outline: 'none',
-    padding: '20px'
+    padding: '0'
 }
 
 // BORDER

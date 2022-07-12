@@ -11,6 +11,10 @@ export const FONT_CAPTION_1_BOLD = { ...FONT_CAPTION_1,  ...BOLD_BASE}
 export const FONT_CAPTION_2 = { ...BASE, fontSize: "11px",}
 export const FONT_CAPTION_2_BOLD = { ...FONT_CAPTION_2,  ...BOLD_BASE}
 
+// CAPTION 3
+export const FONT_CAPTION_3 = { ...BASE, fontSize: "9px",}
+export const FONT_CAPTION_3_BOLD = { ...FONT_CAPTION_3,  ...BOLD_BASE}
+
 // FOOTNOTE
 export const FONT_FOOTNOTE = { ...BASE, fontSize: "12px",}
 export const FONT_FOOTNOTE_BOLD = { ...FONT_FOOTNOTE, ...BOLD_BASE}
@@ -52,6 +56,8 @@ export const FONTS = {
     FONT_CAPTION_1_BOLD,
     FONT_CAPTION_2,
     FONT_CAPTION_2_BOLD,
+    FONT_CAPTION_3,
+    FONT_CAPTION_3_BOLD,
     FONT_FOOTNOTE,
     FONT_FOOTNOTE_BOLD,
     FONT_SUBHEADER,

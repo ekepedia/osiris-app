@@ -11,8 +11,8 @@ import injectSheet from 'react-jss';
 
 import DataService from '../services/DataService';
 
-import { COLOR_WHITE } from "../common/colors";
-import { FONT_BODY_BOLD } from "../common/fonts";
+import COMMON from "../common/index";
+import { mc } from "../common/helpers";
 
 const Styles = {
     container: {

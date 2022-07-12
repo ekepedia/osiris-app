@@ -84,11 +84,71 @@ function clean_string (education) {
     return education.toLowerCase().trim();
 }
 
+module.exports.post_to_slack = post_to_slack
 
-module.exports.post_to_slack = function post_to_slack(message) {
+function post_to_slack(message) {
+
+    return console.warn("slack disabled");
+
     const url = "https://hooks.slack.com/services/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";
 
     axios.post(url, {"text": message}).then((res) => {
         console.log(res);
     })
+}
+
+module.exports.return_standard_error = return_standard_error
+
+function return_standard_error ({error}) {
+    return {
+        success: false,
+        error
+    }
+}
+module.exports.return_standard_success = return_standard_success
+
+function return_standard_success ({data}) {
+    return {
+        success: true,
+        data
+    }
+}
+
+const BUCKET_NAME = 'osiris-public-img';
+
+const AWS = require('aws-sdk');
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET
+});
+
+module.exports.upload_img = upload_img;
+
+function upload_img(name, mimetype, data) {
+    return new Promise((resolve, reject) => {
+        // Read content from the file
+
+        // Setting up S3 upload parameters
+        const params = {
+            Bucket: BUCKET_NAME,
+            Key: `post/${name}`, // File name you want to save as in S3
+            Body: data,
+            ContentType: mimetype
+        };
+
+        // Uploading files to the bucket
+        s3.upload(params, function(err, data) {
+            if (err) {
+                reject(err);
+            }
+
+            console.log(`File uploaded successfully. ${data.Location}`);
+
+            resolve({
+                url: data.Location
+            })
+        });
+    })
+
 }

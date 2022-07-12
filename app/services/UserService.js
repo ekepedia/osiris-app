@@ -35,14 +35,16 @@ UserService.createUser = ({client, first_name, last_name, username}) => {
 }
 
 
-UserService.getUser = ({client, username}) => {
+UserService.getUser = ({client, username, user_id}) => {
     return new Promise((resolve, reject) => {
         const UserQuery = gql`
             query UserQuery(
                 $username: String,
+                $user_id: String,
             ){
                 users(input:{
                     username: $username,
+                    user_id: $user_id
                 }) {
                     user_id
                     username
@@ -56,7 +58,8 @@ UserService.getUser = ({client, username}) => {
         `;
 
         const variables = {
-            username
+            username,
+            user_id
         };
 
         client.query({query: UserQuery, variables}).then((response) => {
@@ -71,26 +74,28 @@ UserService.getUser = ({client, username}) => {
     });
 }
 
-UserService.editUser = ({client, user_id, first_name, last_name, username}) => {
+UserService.editUser = ({client, user_id, first_name, last_name, profile_photo_url, username}) => {
     return new Promise((resolve, reject) => {
         const EditUserMutation = gql`
             mutation EditUserMutation(
                 $user_id: String!,
                 $first_name: String,
                 $last_name: String,
+                $profile_photo_url: String,
                 $username: String,
             ){
                 edit_user(input:{
                     user_id: $user_id,
                     first_name: $first_name,
                     last_name: $last_name,
+                    profile_photo_url: $profile_photo_url,
                     username: $username,
                 })
             }
         `;
 
         let variables = {
-            user_id, first_name, last_name, username
+            user_id, first_name, last_name, username, profile_photo_url
         };
 
         client.mutate({mutation: EditUserMutation, variables}).then((response) => {
