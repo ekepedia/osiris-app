@@ -7,9 +7,13 @@ export function formatDuration(duration) {
     let str = "";
 
     if (duration.asYears() > 1 ) {
-        str = `${duration.years()} yr ${duration.months()} mos`
+        str = `${Math.round(duration.years())} yr${duration.years() >= 2 ? "s" : ''}` ;
+
+        if (duration.months() > 0) {
+            str += ` ${Math.round(duration.months())} mo${duration.months() >= 2 ? "s" : ''}`;
+        }
     } else {
-        str = `${duration.asMonths()} mos`
+        str = `${duration.months()} mo${duration.months() >= 2 ? "s" : ''}`
     }
 
     return str

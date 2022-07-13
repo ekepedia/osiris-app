@@ -9,6 +9,8 @@ export const COLOR_GOLD = "#B8965E";
 export const COLOR_BORDER_GREY = "#E5E5E5";
 export const COLOR_TEXT_GREY = "#666764";
 
+export const DARK_GREY = "#9B9A97";
+
 export const COLORS = {
     COLOR_WHITE,
     COLOR_BLACK,
@@ -18,5 +20,6 @@ export const COLORS = {
     COLOR_BORDER_GREY,
     COLOR_TEXT_GREY,
     OSIRIS_GREEN,
-    OSIRIS_BLACK
+    OSIRIS_BLACK,
+    DARK_GREY
 }

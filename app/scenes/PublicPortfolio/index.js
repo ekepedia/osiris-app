@@ -19,6 +19,7 @@ import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import {FONT_CAPTION_2, FONT_CAPTION_2_BOLD} from "../../common/fonts";
 import PortfolioHeader from "./components/PortfolioHeader";
+import {DARK_GREY} from "../../common/colors";
 
 const Styles = {
     container: {
@@ -86,53 +87,84 @@ const Styles = {
     },
     cardContainer: {
         padding: "15px",
-        marginTop: "15px",
+        marginTop: "10px",
         overflow: "hidden",
         ...STYLES.STYLES.GREY_BORDER_6,
         '@media (max-width: 768px)': {
-            marginTop: "7.5px",
-            padding: "7.5px",
+            marginTop: "10px",
+            padding: "10px 12px",
         },
     },
     cardImageContainer: {
-        flex: "0 0 45px",
-        height: "45px",
+        flex: "0 0 51px",
+        height: "51px",
         marginRight: "15px",
         overflow: "hidden",
         ...STYLES.STYLES.GREY_BORDER_6,
         '@media (max-width: 768px)': {
-            flex: "0 0 34px",
-            height: "34px",
+            flex: "0 0 45px",
+            height: "45px",
             marginRight: "11px",
         },
     },
     cardTitle: {
-        ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
+        ...STYLES.FONTS.FONT_SUBHEADER_BOLD,
         marginTop: "0px",
+        lineHeight: "19px",
         '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_2_BOLD,
+            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
             marginTop: "0px",
+            lineHeight: "inherit"
+        },
+    },
+    cardEducationTitle: {
+        extend: 'cardTitle',
+        marginTop: "9.5px",
+        '@media (max-width: 768px)': {
+            marginTop: "6.5px",
+            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
         },
     },
     cardSubTitle: {
-        ...STYLES.FONTS.FONT_CAPTION_2,
-        marginTop: "1px",
+        ...STYLES.FONTS.FONT_FOOTNOTE,
+        lineHeight: "16px",
+        marginTop: "0px",
         '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_3,
+            ...STYLES.FONTS.FONT_CAPTION_2,
             marginTop: "0px",
+            lineHeight: "inherit"
         },
     },
     cardBody: {
-        ...STYLES.FONTS.FONT_CAPTION_2,
-        color: STYLES.COLORS.COLOR_TEXT_GREY,
-        marginTop: "2px",
+        ...STYLES.FONTS.FONT_FOOTNOTE,
+        color: STYLES.COLORS.DARK_GREY,
+        lineHeight: "16px",
+        marginTop: "0px",
         '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_3,
+            ...STYLES.FONTS.FONT_CAPTION_2,
             marginTop: "0px",
+            lineHeight: "inherit"
+        },
+    },
+    linkText: {
+        position: "absolute",
+        width: "100%",
+        bottom: "25px",
+        color: COMMON.COLORS.COLOR_WHITE,
+        padding: "0 25px",
+        ...COMMON.FONTS.FONT_SUBHEADER_BOLD,
+        '@media (max-width: 768px)': {
+            ...STYLES.FONTS.FONT_CAPTION_2_BOLD,
+            padding: "0 12px",
+            bottom: "11px",
         },
     },
     linkContainer: {
-        height: "384px", width: "100%", borderRadius: "6px", overflow: "hidden", position: "relative",
+        height: "384px",
+        width: "100%",
+        borderRadius: "6px",
+        overflow: "hidden",
+        position: "relative",
         '@media (max-width: 768px)': {
             // height: "191px",
         },
@@ -142,6 +174,15 @@ const Styles = {
         '@media (max-width: 768px)': {
             ...STYLES.FONTS.FONT_CAPTION_2_BOLD,
         },
+    },
+    centerAlignContainer: {
+        position: "relative"
+    },
+    centerAlignObject: {
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%,-50%)",
     },
     ...COMMON.STYLES.MOBILE_STYLES
 };
@@ -277,8 +318,11 @@ class PublicPortfolio extends React.Component {
 
             let company_map = {};
             user_experiences = user_experiences.map((user_experience) => {
-                const start = moment(parseFloat(user_experience.start_date));
+                const TEMP_PADDING = 1000*60*60*48;
+
+                const start = moment(parseFloat(user_experience.start_date) + TEMP_PADDING);
                 const end = moment(parseFloat(user_experience.end_date ? user_experience.end_date : new Date().getTime()));
+
 
                 const time = `${start.format("MMM YYYY")} - ${user_experience.end_date ? end.format("MMM YYYY") : "Present"}`
                 const diff = end.diff(start);
@@ -304,8 +348,10 @@ class PublicPortfolio extends React.Component {
                     company_roles[company_name].start_date =  company_roles[company_name].start_date && user_experience.start_date > company_roles[company_name].start_date ?  company_roles[company_name].start_date : user_experience.start_date;
                     company_roles[company_name].end_date =  company_roles[company_name].end_date && user_experience.end_date < company_roles[company_name].end_date ?  company_roles[company_name].end_date : user_experience.end_date;
 
+
                     const start = moment(parseFloat(company_roles[company_name].start_date))
-                    const end = moment(parseFloat(company_roles[company_name].end_date))
+                    const end = moment(parseFloat(company_roles[company_name].end_date ))
+
 
                     const time = `${start.format("MMM YYYY")} - ${end.format("MMM YYYY")}`
                     const diff = end.diff(start);
@@ -355,7 +401,7 @@ class PublicPortfolio extends React.Component {
                         <img src={logo} width={"100%"}/>
                     </div>
                     <div style={{flex: 1}}>
-                        <div className={mc(classes.cardTitle)}>{title}</div>
+                        <div className={mc(classes.cardEducationTitle)}>{title}</div>
                         <div className={mc(classes.cardBody)}><span>{company}</span> • <span>{time}</span></div>
                     </div>
                 </div>
@@ -403,13 +449,12 @@ class PublicPortfolio extends React.Component {
                             <div className={mc(classes.cardImageContainer)} style={{border: "none", height: "11px", textAlign: "center"}}>
                                 <div style={{
                                     background: COMMON.COLORS.COLOR_BORDER_GREY,
-                                    height: "5px",
+                                    height: "100%",
                                     width: "5px",
                                     borderRadius: "100%",
                                     margin: "auto",
                                     marginTop: "6px"
                                 }}/>
-
                             </div>
                             <div style={{flex: 1}}>
                                 <div className={mc(classes.cardTitle)}>{role.role_name}</div>
@@ -426,18 +471,24 @@ class PublicPortfolio extends React.Component {
     renderLink({ link, url, link_name}) {
         let { classes  } = this.props;
 
+        console.log(link_name, link_name.length);
+
+        let maxWidth = link_name && link_name.length && link_name.length > 60 ? 400 : 500;
+
         return (
             <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
                 <div className={mc(classes.linkContainer)} style={{height: this.state.currentHeight ? this.state.currentHeight : null}} ref={this.portfolioLinkRef}>
                     <CoverImageHolder url={url}/>
 
-                    <div style={{position: "absolute", width: "100%", bottom: "10px", color: COMMON.COLORS.COLOR_WHITE, padding: "0 12px"}}>
+                    <div className={mc(classes.linkText)}>
                         <div style={{display: "flex"}}>
-                            <div style={{flex: 1, ...COMMON.FONTS.FONT_CAPTION_2_BOLD}}>
-                                {link_name}
+                            <div style={{flex: 1}}>
+                                <div style={{maxWidth}}>
+                                    {link_name}
+                                </div>
                             </div>
-                            <div style={{flex: "0 0 20px"}}>
-                                <i className="fa-solid fa-link"></i>
+                            <div className={mc(classes.centerAlignContainer)} style={{flex: "0 0 20px"}}>
+                                <i className={mc("fa-solid fa-link", classes.centerAlignObject)}></i>
                             </div>
                         </div>
                     </div>

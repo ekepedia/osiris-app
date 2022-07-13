@@ -64,7 +64,7 @@ const Styles = {
         },
     },
     socialLink: {
-        background: COMMON.COLORS.COLOR_GREEN,
+        background: COMMON.COLORS.OSIRIS_GREEN,
         color: COMMON.COLORS.COLOR_WHITE,
         height: "22px",
         width: "22px",
