@@ -1,4 +1,5 @@
 export const CONSTS = {
     MODAL_HEIGHT: "350px",
+    EDIT_PORTFOLIO_MODAL_HEIGHT: "670px",
     MODAL_TIMING: 250
 }

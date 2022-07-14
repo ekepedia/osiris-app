@@ -53,8 +53,7 @@ const Styles = {
         },
     },
     buttonStyle: (props) => {
-
-        console.log("button", props);
+        console.log("standard button", props);
         const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
 
         return ({
@@ -67,11 +66,19 @@ const Styles = {
             ...font,
         })
     },
-    outlineButton: {
-        extend: 'buttonStyle',
-        background: "none",
-        border: `1px solid ${COMMON.COLORS.OSIRIS_GREEN}`,
-        color: COMMON.COLORS.OSIRIS_GREEN
+    outlineButton: (props) => {
+        console.log("outline button", props);
+        const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
+
+        return ({
+            height: setHeight(props),
+            padding: "6px 8px",
+            borderRadius: "6px",
+            background: "none",
+            border: `1px solid ${COMMON.COLORS.OSIRIS_GREEN}`,
+            color: COMMON.COLORS.OSIRIS_GREEN,
+            ...font,
+        })
     },
 };
 
@@ -94,7 +101,7 @@ class StandardButton extends React.Component {
 
         return (<div className={classes.container}>
 
-            <button className={outline ? classes.outlineButton : classes.buttonStyle} onClick={() => {
+            <button className={outline ? mc(classes.outlineButton) : classes.buttonStyle} onClick={() => {
                 onClick ? onClick() : null;
             }}>{label}</button>
 

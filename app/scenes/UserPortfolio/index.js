@@ -1,18 +1,14 @@
 import React from "react";
-import _ from "lodash";
-import moment from "moment";
 
-import { withApollo } from 'react-apollo';
-import { withRouter, Link} from 'react-router-dom';
+import {withApollo} from 'react-apollo';
+import {withRouter} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
 
 import UserService from '../../services/UserService';
-import { COLOR_WHITE } from "../../common/colors";
-import StandardInput from "../../components/StandardInput";
 import StandardButton from "../../components/StandardButton";
 import axios from "axios";
-import StandardModal from "../../components/StandardModal";
+import EditProfileHeaderModal from "./components/EditProfileHeaderModal";
 
 const Styles = {
     container: {
@@ -33,7 +29,10 @@ class UserPortfolio extends React.Component {
             editingHeader: false,
             first_name: "",
             last_name: "",
+            openEditProfileHeaderModal: true
         };
+
+        this.updateField = this.updateField.bind(this)
     }
 
     setEditingHeader(editing) {
@@ -50,7 +49,7 @@ class UserPortfolio extends React.Component {
         const profile_photo_url = url;
 
         UserService.editUser({client, user_id, profile_photo_url}).then((success) => {
-            console.log("sucess", success);
+            console.log("success", success);
         })
     }
 
@@ -59,10 +58,16 @@ class UserPortfolio extends React.Component {
 
         const user = this.state.user || {};
         const { user_id } = user;
-        const { first_name, last_name } = this.state;
+        const { first_name, last_name, bio } = this.state;
 
-        UserService.editUser({client, user_id, first_name, last_name}).then((success) => {
+        UserService.editUser({client, user_id, bio, first_name, last_name}).then((success) => {
             console.log("sucess", success);
+        })
+    }
+
+    updateField(field, value) {
+        this.setState({
+            [field]: value
         })
     }
 
@@ -75,7 +80,8 @@ class UserPortfolio extends React.Component {
             this.setState({
                 user,
                 first_name: user.first_name,
-                last_name: user.last_name
+                last_name: user.last_name,
+                bio: user.bio,
             })
         })
     }
@@ -100,37 +106,31 @@ class UserPortfolio extends React.Component {
                 }
             })
         }
+    }
 
+    buildUser() {
+        const {
+            first_name,
+            last_name,
+            bio
+        } = this.state;
+
+        return {first_name, last_name, bio};
     }
 
     render() {
         let { classes, client, match: { params } } = this.props;
 
+        let user = this.buildUser();
+
         return (<div className={classes.container}>
 
             <input type={"file"} onChange={(e) => (this.fileUploaded(e))}/>
 
-            {this.state.editingHeader ?
-                <div onClick={() => (this.setEditingHeader(false))}>Done Editin Header</div> :
-                <div >Edit Header</div>
-            }
+            <StandardButton label={"Edit Profile Header"} outline={true} onClick={() => (this.setState({openEditProfileHeaderModal: true}))}/>
 
-            <StandardButton label={"Edit Header"} outline={true} onClick={() => (this.setEditingHeader(true))}/>
+            <EditProfileHeaderModal user={user} onSubmit={() => (this.submitEdit())} updateField={this.updateField} open={this.state.openEditProfileHeaderModal} onClose={() => (this.setState({openEditProfileHeaderModal: false}))}/>
 
-            <StandardModal open={true}/>
-            {this.state.editingHeader ?
-
-                <div>
-                    <StandardInput value={this.state.first_name} update={(v) => {this.setState({first_name: v})}}/>
-                    <StandardInput value={this.state.last_name} update={(v) => {this.setState({last_name: v})}}/>
-                    <div onClick={() => (this.submitEdit())}>Save</div>
-                </div> :
-                <div>
-                    USER GOES HERE {params.username} {this.state.user ? this.state.user.first_name : null}
-
-                </div>
-
-            }
         </div>)
     }
 

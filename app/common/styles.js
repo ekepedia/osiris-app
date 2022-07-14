@@ -71,7 +71,7 @@ export const STYLE_MODAL_CONTENT = {
     right: 0,
     margin: "auto",
     maxWidth: "350px",
-    width: "100%",
+    width: "calc(100% - 20px)",
     bottom: '100px',
     border: '1px solid #ccc',
     background: '#fff',
@@ -81,6 +81,8 @@ export const STYLE_MODAL_CONTENT = {
     outline: 'none',
     padding: '0'
 }
+
+
 
 // BORDER
 export const STYLE_BORDER_LINE = {
@@ -120,6 +122,30 @@ export const MOBILE_STYLES = {
     }
 }
 
+export const EDIT_PORTFOLIO_MODAL = {
+    MODAL_CONTAINER: {
+        position: 'absolute',
+        top: '0',
+        left: 0,
+        right: 0,
+        margin: "auto",
+        maxWidth: "794px",
+        width: "calc(100% - 20px)",
+        bottom: '100px',
+        border: '1px solid #ccc',
+        background: '#fff',
+        overflow: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        borderRadius: '6px',
+        outline: 'none',
+        padding: '0'
+    },
+    DEFAULT_MODAL_HEIGHT: "670px",
+    MODAL_HEADER: {
+        ...FONT_HEADLINE_BOLD
+    }
+}
+
 export const STYLES = {
     STYLE_INPUT,
     STYLE_BORDER_LINE,
@@ -132,5 +158,8 @@ export const STYLES = {
     STYLE_BUTTON_HEADLINE_OUTLINE,
     STYLE_BUTTON_HEADLINE,
     MODAL_TIMING,
-    MOBILE_STYLES
+    MOBILE_STYLES,
+    EDIT_PORTFOLIO_MODAL
 }
+
+console.log("SD", STYLES)
