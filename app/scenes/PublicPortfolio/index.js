@@ -11,6 +11,7 @@ import UserService from '../../services/UserService';
 import UserEducationService from '../../services/UserEducationService';
 import UserExperienceService from '../../services/UserExperienceService';
 import UserLinkService from '../../services/UserLinkService';
+import UserGalleryService from '../../services/UserGalleryService';
 
 import STYLES from "../../common/index";
 import COMMON from "../../common/index";
@@ -20,6 +21,8 @@ import CoverImageHolder from "../../components/CoverImageHolder";
 import {FONT_CAPTION_2, FONT_CAPTION_2_BOLD} from "../../common/fonts";
 import PortfolioHeader from "./components/PortfolioHeader";
 import {DARK_GREY} from "../../common/colors";
+import Slider from "react-slick";
+import PortfolioCarousel from "./components/PortfolioCarousel";
 
 const Styles = {
     container: {
@@ -55,7 +58,7 @@ const Styles = {
         extend: 'sectionContainer',
         paddingBottom: "25px",
         '@media (max-width: 768px)': {
-            paddingBottom: "1px",
+            // paddingBottom: "1px",
         },
     },
     sectionExperienceContainer: {
@@ -236,7 +239,10 @@ class PublicPortfolio extends React.Component {
 
     setHeightRatio() {
         const RATIO = 9/16;
-        const DELAY = 5;
+        const DELAY = 1;
+
+        if (!this.portfolioLinkRef || !this.portfolioLinkRef.current)
+            return;
 
         clearInterval(this.holdForResize);
 
@@ -287,6 +293,7 @@ class PublicPortfolio extends React.Component {
         this.loadLinks(user_id);
         this.loadEducation(user_id);
         this.loadExperience(user_id);
+        this.loadGalleries(user_id);
     }
 
     loadLinks(user_id) {
@@ -300,9 +307,21 @@ class PublicPortfolio extends React.Component {
         })
     }
 
+    loadGalleries(user_id) {
+        let { client } = this.props;
+        UserGalleryService.getUserGallery({client, user_id}).then((user_galleries) => {
+            user_galleries = user_galleries || [];
+            user_galleries = user_galleries.sort((a, b) => { return (a.gallery_order - b.gallery_order)});
+            console.log("user_galleries", user_galleries)
+            this.setState({user_galleries});
+            this.setHeightRatio();
+        })
+    }
+
     loadEducation(user_id) {
         let { client } = this.props;
         UserEducationService.getUserEducation({client, user_id}).then((user_educations) => {
+            user_educations = user_educations || [];
             user_educations = user_educations.map((user_education) => {
                 const time = `${moment(parseFloat(user_education.start_date)).format("YYYY")} - ${moment(parseFloat(user_education.end_date)).format("YYYY")}`
                 return { ...user_education, time }
@@ -315,7 +334,7 @@ class PublicPortfolio extends React.Component {
     loadExperience(user_id) {
         let { client } = this.props;
         UserExperienceService.getUserExperiences({client, user_id}).then((user_experiences) => {
-
+            user_experiences = user_experiences || [];
             let company_map = {};
             user_experiences = user_experiences.map((user_experience) => {
                 const TEMP_PADDING = 1000*60*60*48;
@@ -468,6 +487,40 @@ class PublicPortfolio extends React.Component {
         )
     }
 
+    renderSmallLink({ link, url, link_name}) {
+        let { classes  } = this.props;
+        link = link || "";
+
+        console.log(link_name, link_name.length);
+
+        let maxWidth = link_name && link_name.length && link_name.length > 60 ? 400 : 500;
+
+        let clean_link = link.replace("http://" ,"").replace("https://" ,"")
+
+        return (
+            <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
+
+                <div style={{padding: "15px", borderRadius: "6px", color: COMMON.COLORS.DARK_GREY, textDecoration: "none", border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                    <div style={{display: "flex", height: "51px"}}>
+                        <div style={{flex: "0 0 51px", marginRight: "15px", overflow: "hidden", borderRadius: "6px", border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                            <CoverImageHolder url={url}/>
+                        </div>
+                        <div style={{flex: 1}}>
+                            <div>
+                                <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD, color: COMMON.COLORS.OSIRIS_BLACK, marginTop: "8px"}}>{link_name}</div>
+                                <div style={{...COMMON.FONTS.FONT_FOOTNOTE}}>{clean_link}</div>
+                            </div>
+                        </div>
+                        <div style={{flex: "0 0 20px", fontSize: "13px"}} className={mc(classes.centerAlignContainer)}>
+                            <i className={mc("fa-solid fa-arrow-right", classes.centerAlignObject)}/>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
+        )
+    }
+
     renderLink({ link, url, link_name}) {
         let { classes  } = this.props;
 
@@ -500,15 +553,15 @@ class PublicPortfolio extends React.Component {
     render() {
         let { classes, client, match: { params } } = this.props;
 
-        let { user, user_educations, user_experiences, user_links } = this.state;
+        let { user, user_educations, user_experiences, user_links, user_galleries } = this.state;
 
-        const instagram_link = "https://www.instagram.com/jasonmayden/";
-        const twitter_link = "https://twitter.com/JasonMayden?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor";
+        // const instagram_link = "https://www.instagram.com/jasonmayden/";
+        // const twitter_link = "https://twitter.com/JasonMayden?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor";
 
         user = {
             ...user,
-            instagram_link,
-            twitter_link
+            // instagram_link,
+            // twitter_link
         }
 
         return (<div className={classes.container}>
@@ -518,32 +571,42 @@ class PublicPortfolio extends React.Component {
                     <div className={mc(classes.pageSection)} style={{paddingBottom: "50px"}}>
 
                         <PortfolioHeader user={user}/>
-                        <div className={mc(classes.sectionPortfolio)}>
-                            {user_links && user_links.length ? user_links.map((user_link) => {
-                                if (user_link.link_type === "youtube") {
-                                    return (<div style={{height: this.state.currentHeight ? this.state.currentHeight : null, marginBottom: "10px"}} className={mc(classes.linkContainer)}>
-                                        <iframe
-                                            width="100%"
-                                            height="100%"
-                                            src={user_link.link_url}
-                                            frameBorder="0"
-                                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                            title="Embedded youtube"
-                                        />
-                                    </div>);
-                                } else {
-                                    return (<div style={{marginBottom: "10px"}}>
-                                        {this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
-                                    </div>);
-                                }
+
+                        <div className={mc(classes.sectionPortfolio)} style={{display: (user_links && user_links.length) || (user_galleries && user_galleries.length) ? null : "none"}}>
+                            {user_galleries && user_galleries.length ? <div style={{marginTop: 0}}>
+                                <PortfolioCarousel height={this.state.currentHeight ? this.state.currentHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.portfolioLinkRef}/>
+                            </div> : null }
+                            <div style={{marginTop: user_galleries && user_galleries.length ? "10px" : 0}}>
+                                {user_links && user_links.length ? user_links.map((user_link, i) => {
+                                    if (user_link.link_type === "youtube") {
+                                        return (<div style={{height: this.state.currentHeight ? this.state.currentHeight : null, marginTop: i === 0 ? "0px" : "10px"}} className={mc(classes.linkContainer)}>
+                                            <iframe
+                                                width="100%"
+                                                height="100%"
+                                                src={user_link.link_url}
+                                                frameBorder="0"
+                                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                                title="Embedded youtube"
+                                            />
+                                        </div>);
+                                    } else if (user_link.link_type === "small") {
+                                        return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
+                                            {this.renderSmallLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
+                                        </div>);
+                                    } else {
+                                        return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
+                                            {this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
+                                        </div>);
+                                    }
+                                }) : null }
+
+                            </div>
 
 
-
-                            }) : null }
                         </div>
 
-                        <div className={mc(classes.sectionExperienceContainer)}>
+                        <div className={mc(classes.sectionExperienceContainer)} style={{display: user_experiences && user_experiences.length ? null : "none"}}>
                             <div className={classes.sectionExperiencePadding}>
                                 <div className={mc(classes.sectionTitle)}>Experience</div>
                                 {user_experiences && user_experiences.length ? user_experiences.map((user_experience, i) => {
@@ -562,13 +625,13 @@ class PublicPortfolio extends React.Component {
                                 {this.state.limit ? "Show" : "Hide"} all experiences<i style={{marginLeft: "5px"}} className={`fa-solid fa-arrow-${this.state.limit ? "down" : "up"}`}/>
                             </div>: null}
                         </div>
-                        <div className={mc(classes.sectionContainer)}>
+                        <div className={mc(classes.sectionContainer)} style={{display: user_educations && user_educations.length ? null : "none"}}>
                             <div className={mc(classes.sectionTitle)}>Education</div>
                             {user_educations && user_educations.length ? user_educations.map((user_education) => {
                                 return this.renderCard({title: user_education.school_name, company: user_education.degree_name, time: user_education.time, logo: user_education.school_logo_url})
                             }) : null }
                         </div>
-                        <div style={{textAlign: "center", marginTop: "35px", cursor: "pointer"}}>
+                        <div style={{textAlign: "center", marginTop: "35px", cursor: "pointer", display: "none"}}>
 
                             <Link to={"/"}>
                                 <img src={"https://stripe-camo.global.ssl.fastly.net/a7a50b12a67746e3b93823ebacb2a536a3df879019a01863632fe7a8325a0949/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a6446387853307734536d6447616d70474d4464544e555a6b66475a6662476c325a563930596a4a3665576c72624664614e6a646b52455979516b78725931425a62455130306b676c7149777753"}

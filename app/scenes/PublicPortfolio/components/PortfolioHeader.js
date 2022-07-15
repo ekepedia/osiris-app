@@ -102,14 +102,14 @@ class PortfolioHeader extends React.Component {
             first_name,
             last_name,
             bio,
-            instagram_link,
-            twitter_link,
+            user_instagram_link,
+            user_twitter_link,
         } = user;
 
         return (<div className={classes.container}>
             <div style={{border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
                 <div className={classes.profileCover}>
-                    <CoverImageHolder url={cover_photo_url}/>
+                    <CoverImageHolder url={cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                 </div>
                 <div className={classes.profileHeaderContainer}>
                     <div className={classes.profileImageContainer}>
@@ -120,18 +120,18 @@ class PortfolioHeader extends React.Component {
                     <div className={classes.profileHeaderName}>{first_name} {last_name}</div>
                     <div className={classes.profileHeaderBio}>{bio}</div>
                     <div style={{marginTop: "15px"}}>
-                        <a href={instagram_link} target={"_blank"}>
+                        {user_instagram_link && <a href={user_instagram_link} target={"_blank"}>
                             <div className={mc(classes.socialLink)}>
                                 <div><i className={mc("fa-brands fa-instagram")}></i></div>
                             </div>
-                        </a>
-                        <a href={twitter_link} target={"_blank"}>
+                        </a>}
+                        {user_twitter_link && <a href={user_twitter_link} target={"_blank"}>
                             <div className={mc(classes.socialLink)}>
                                 <div>
                                     <i className={mc("fa-brands fa-twitter")}></i>
                                 </div>
                             </div>
-                        </a>
+                        </a>}
                     </div>
                 </div>
             </div>

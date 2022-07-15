@@ -20,28 +20,7 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
-    // get_user_links({}).then((d) => {
-    //     console.log("USER LINK", d);
-    // });
-    // // //
-    // edit_user_link({
-    //     user_link_id:"3",
-    //     link_name: "This children’s book about design should be required reading for CEOs",
-    //     link_image_url: "https://dl.airtable.com/.attachmentThumbnails/a9342ff756c3eee2032bf386caf1e9b0/3c226297",
-    // link_url: "https://www.fastcompany.com/90749895/this-childrens-book-about-design-should-be-required-reading-for-ceos"}).then((e) =>{
-    //     console.log(e)
-    // })
-    //
-    // create_user_link({
-    //     user_id:"7",
-    //     link_type: "youtube",
-    // link_url: "https://www.youtube.com/embed/pXA1xFbMMTg"}).then((e) =>{
-    //     console.log(e)
-    // })
-    //
-    // remove_user_link({user_link_id: 1, school_name: "MIT", degree_name: "Bachelors"}).then((r) =>{
-    //     console.log("NEW ED", r);
-    // })
+    // test_endpoints();
 };
 
 module.exports.get_user_links = get_user_links;
@@ -112,4 +91,29 @@ function remove_user_link({user_link_id}) {
             return reject(err);
         });
     });
+}
+
+function test_endpoints() {
+    // get_user_links({}).then((d) => {
+    //     console.log("USER LINK", d);
+    // });
+    // // //
+
+    // edit_user_link({
+    //     user_link_id:"6",
+    //     link_name: "No Label",
+    //     link_image_url: "https://dl.airtable.com/.attachmentThumbnails/895ccf330eae6c9b81b88dee333576e8/58cf893d",
+    // }).then(() => {})
+
+    //
+    // create_user_link({
+    //     user_id:"1",
+    //     link_type: "small",
+    // link_url: "https://nolabel.live"}).then((e) =>{
+    //     console.log(e)
+    // })
+    //
+    // remove_user_link({user_link_id: 1, school_name: "MIT", degree_name: "Bachelors"}).then((r) =>{
+    //     console.log("NEW ED", r);
+    // })
 }

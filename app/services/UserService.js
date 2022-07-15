@@ -53,6 +53,14 @@ UserService.getUser = ({client, username, user_id}) => {
                     profile_photo_url
                     cover_photo_url
                     bio
+
+                    user_twitter_link
+                    user_clubhouse_link
+                    user_instagram_link
+                    user_website_link 
+                    user_youtube_link
+                    user_main_contact_email
+                    user_main_contact_phone
                 }
             }
         `;
@@ -74,7 +82,7 @@ UserService.getUser = ({client, username, user_id}) => {
     });
 }
 
-UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_photo_url, username}) => {
+UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_photo_url, username, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) => {
     return new Promise((resolve, reject) => {
         const EditUserMutation = gql`
             mutation EditUserMutation(
@@ -84,6 +92,14 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_ph
                 $bio: String,
                 $profile_photo_url: String,
                 $username: String,
+
+                $user_twitter_link: String,
+                $user_clubhouse_link: String,
+                $user_instagram_link: String,
+                $user_website_link: String,
+                $user_youtube_link: String,
+                $user_main_contact_email: String,
+                $user_main_contact_phone: String,
             ){
                 edit_user(input:{
                     user_id: $user_id,
@@ -92,12 +108,19 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_ph
                     profile_photo_url: $profile_photo_url,
                     username: $username,
                     bio: $bio,
+                    user_twitter_link: $user_twitter_link,
+                    user_clubhouse_link: $user_clubhouse_link,
+                    user_instagram_link: $user_instagram_link,
+                    user_website_link: $user_website_link,
+                    user_youtube_link: $user_youtube_link,
+                    user_main_contact_email: $user_main_contact_email,
+                    user_main_contact_phone: $user_main_contact_phone,
                 })
             }
         `;
 
         let variables = {
-            user_id, bio, first_name, last_name, username, profile_photo_url
+            user_id, bio, first_name, last_name, username, profile_photo_url, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone
         };
 
         client.mutate({mutation: EditUserMutation, variables}).then((response) => {

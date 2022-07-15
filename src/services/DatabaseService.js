@@ -16,6 +16,7 @@ const UserLoginService = require("./user_logins/UserLoginService");
 const UserEducationService = require("./user_educations/UserEducationService");
 const UserExperienceService = require("./user_experiences/UserExperienceService");
 const UserLinksService = require("./user_links/UserLinksService");
+const UserGalleryService = require("./user_galleries/UserGalleryService");
 
 const DemoUserSchema = require("./demo_users/schema/demo_users.schema");
 const FeedbackUserSchema = require("./demo_users/schema/feedback_users.schema");
@@ -28,6 +29,7 @@ const UserLoginsSchema = require("./user_logins/schema/user_logins.schema");
 const UserEducationSchema = require("./user_educations/schema/user_educations.schema");
 const UserExperienceSchema = require("./user_experiences/schema/user_experiences.schema");
 const UserLinkSchema = require("./user_links/schema/user_links.schema");
+const UserGallerySchema = require("./user_galleries/schema/user_galleries.schema");
 
 module.exports.init = function (connection) {
     init = true;
@@ -45,6 +47,7 @@ module.exports.init = function (connection) {
     UserEducationService.init(connection);
     UserExperienceService.init(connection);
     UserLinksService.init(connection);
+    UserGalleryService.init(connection);
 
     init_schema();
 };
@@ -61,6 +64,7 @@ function init_schema() {
     UserEducationSchema(knex);
     UserExperienceSchema(knex);
     UserLinkSchema(knex);
+    UserGallerySchema(knex);
 }
 
 module.exports.generate_query = function generate_query(queryParams) {

@@ -10,6 +10,7 @@ const DemoSohoApplications = require("./demo_soho_application");
 const UserEducations = require("./user_educations");
 const UserExperiences = require("./user_experiences");
 const UserLinks = require("./user_links");
+const UserGalleries = require("./user_galleries");
 
 // Main Query Schema
 const Query = gql`
@@ -50,9 +51,9 @@ const jsSchema = makeExecutableSchema({
         DemoSohoApplications.typeDef,
         UserEducations.typeDef,
         UserExperiences.typeDef,
-        UserLinks.typeDef
+        UserLinks.typeDef,
+        UserGalleries.typeDef,
     ],
-
     resolvers: merge(
         resolvers,
         DemoUsers.resolver,
@@ -62,7 +63,8 @@ const jsSchema = makeExecutableSchema({
         DemoSohoApplications.resolver,
         UserEducations.resolver,
         UserExperiences.resolver,
-        UserLinks.resolver
+        UserLinks.resolver,
+        UserGalleries.resolver,
     )
 });
 
