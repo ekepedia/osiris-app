@@ -14,6 +14,7 @@ module.exports = function (connection) {
         table.string('bio', 2000);
 
         table.string('user_twitter_link');
+        table.string('user_tiktok_link');
         table.string('user_clubhouse_link');
         table.string('user_instagram_link');
         table.string('user_website_link');

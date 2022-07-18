@@ -128,6 +128,15 @@ const Styles = {
             ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
         },
     },
+    cardSmallLinkTitle: {
+        extend: 'cardTitle',
+        color: COMMON.COLORS.OSIRIS_BLACK,
+        marginTop: "8px",
+        '@media (max-width: 768px)': {
+            marginTop: "8px",
+            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
+        },
+    },
     cardSubTitle: {
         ...STYLES.FONTS.FONT_FOOTNOTE,
         lineHeight: "16px",
@@ -500,15 +509,15 @@ class PublicPortfolio extends React.Component {
         return (
             <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
 
-                <div style={{padding: "15px", borderRadius: "6px", color: COMMON.COLORS.DARK_GREY, textDecoration: "none", border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                <div className={mc(classes.cardContainer)} style={{color: COMMON.COLORS.DARK_GREY, textDecoration: "none"}}>
                     <div style={{display: "flex", height: "51px"}}>
-                        <div style={{flex: "0 0 51px", marginRight: "15px", overflow: "hidden", borderRadius: "6px", border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                        <div className={mc(classes.cardImageContainer)}>
                             <CoverImageHolder url={url}/>
                         </div>
                         <div style={{flex: 1}}>
                             <div>
-                                <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD, color: COMMON.COLORS.OSIRIS_BLACK, marginTop: "8px"}}>{link_name}</div>
-                                <div style={{...COMMON.FONTS.FONT_FOOTNOTE}}>{clean_link}</div>
+                                <div className={mc(classes.cardSmallLinkTitle)}>{link_name}</div>
+                                <div className={mc(classes.cardSubTitle)}>{clean_link}</div>
                             </div>
                         </div>
                         <div style={{flex: "0 0 20px", fontSize: "13px"}} className={mc(classes.centerAlignContainer)}>
@@ -555,13 +564,9 @@ class PublicPortfolio extends React.Component {
 
         let { user, user_educations, user_experiences, user_links, user_galleries } = this.state;
 
-        // const instagram_link = "https://www.instagram.com/jasonmayden/";
-        // const twitter_link = "https://twitter.com/JasonMayden?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor";
 
         user = {
             ...user,
-            // instagram_link,
-            // twitter_link
         }
 
         return (<div className={classes.container}>

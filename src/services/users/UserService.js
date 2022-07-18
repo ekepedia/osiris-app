@@ -6,6 +6,9 @@ const moment = require("moment");
 const DatabaseService = require("../DatabaseService");
 const UserExperienceService = require("../user_experiences/UserExperienceService");
 const UserEducationService = require("../user_educations/UserEducationService");
+const UserLinksService = require("../user_links/UserLinksService");
+const UserGalleryService = require("../user_galleries/UserGalleryService");
+
 const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 
 let init = false;
@@ -56,7 +59,7 @@ function clean_username (username) {
 
 module.exports.create_user = create_user;
 
-function create_user({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
+function create_user({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
 
     username = clean_username(username);
 
@@ -64,7 +67,7 @@ function create_user({username, first_name, last_name, profile_photo_url, cover_
         if (!username)
             return reject(new Error("Missing username"));
 
-        const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone});
+        const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone});
 
         knex(USER_TABLE).insert(query).returning("user_id").then((rows) => {
             const user_id = rows[0];
@@ -78,7 +81,7 @@ function create_user({username, first_name, last_name, profile_photo_url, cover_
 
 module.exports.edit_user = edit_user;
 
-function edit_user({user_id, username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
+function edit_user({user_id, username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
 
     username = clean_username(username);
 
@@ -86,7 +89,7 @@ function edit_user({user_id, username, first_name, last_name, profile_photo_url,
         if (!user_id)
             return reject(new Error("Missing user_id"));
 
-        const query = {username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_youtube_link, user_main_contact_email, user_main_contact_phone};
+        const query = {username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone};
 
         knex(USER_TABLE).where({user_id}).update(query).then(() =>{
             return resolve();
@@ -123,7 +126,10 @@ function test_endpoints() {
             // load_experiences_from_airtable({users, companies}).then(() => {
             //
             // });
-            load_education_from_airtable({users, companies}).then(() => {
+            // load_education_from_airtable({users, companies}).then(() => {
+            //
+            // });
+            load_links_from_airtable({users, companies}).then(() => {
 
             });
         })
@@ -280,6 +286,85 @@ function load_education_from_airtable({users, companies}) {
                         }
 
                         console.log( user.user_id, user.Name, education);
+
+                        // UserEducationService.create_user_education(education).then((id) => {
+                        //     console.log(id)
+                        // })
+                    }
+
+                }
+            });
+        });
+    })
+}
+
+function load_links_from_airtable({users, companies}) {
+    return new Promise((resolve) => {
+
+        axios.get(`https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Portfolio?`, {
+            headers: {
+                'Authorization': `Bearer ${AIR_TABLE_KEY}`
+            }
+        }).then((res) => {
+            res.data.records.forEach((record) => {
+                let fields = record.fields || {};
+                if (fields["Associated Person"]){
+                    let airtable_user_id = fields["Associated Person"][0];
+
+                    const user = users[airtable_user_id];
+
+                    if (user && user.user_id !== 7) {
+
+                        let link_name = fields["Name"];
+                        let link_url = fields["Link"];
+                        let link_type = fields["Type"];
+                        let link_image_url = fields["Image"] ? fields["Image"][0].url : undefined;
+
+                        let link = {
+                            user_id: user.user_id,
+                            link_name,
+                            link_url,
+                            link_image_url
+                        }
+
+                        if (link_type === "Youtube") {
+                            link.link_type = "youtube";
+                            // console.log( user.user_id, user.Name, link);
+                            // UserLinksService.create_user_link(link).then((id) => {
+                            //     console.log(id)
+                            // })
+                        } else if (link_type === "Banner Link") {
+                            link.link_type = "banner";
+                            // console.log( user.user_id, user.Name, link);
+                            // UserLinksService.create_user_link(link).then((id) => {
+                            //     console.log(id)
+                            // })
+                        } else if (link_type === "Small Link") {
+                            link.link_type = "small";
+                            // console.log( user.user_id, user.Name, link);
+                            // UserLinksService.create_user_link(link).then((id) => {
+                            //     console.log(id)
+                            // })
+                        } else if (link_type === "Slideshow") {
+                            fields["Image"].forEach((img, i ) => {
+
+
+                                const { url } = img;
+
+                                let gallery = {
+                                    user_id: user.user_id,
+                                    gallery_photo_url: url,
+                                    gallery_order: i,
+                                };
+
+                                console.log(gallery)
+                                // UserGalleryService.create_user_gallery(gallery).then((id) => {
+                                //         console.log(id)
+                                //     })
+                            })
+                        }
+
+
 
                         // UserEducationService.create_user_education(education).then((id) => {
                         //     console.log(id)

@@ -20,9 +20,12 @@ const Styles = {
         },
     },
     profileHeaderContainer: {
-        padding: "75px 35px", position:"relative", paddingBottom: "25px", background: COMMON.COLORS.COLOR_WHITE,
+        padding: "75px 35px",
+        position:"relative",
+        paddingBottom: "25px",
+        background: COMMON.COLORS.COLOR_WHITE,
         '@media (max-width: 768px)': {
-            padding: "30px 15px",
+            padding: "40px 15px",
             paddingBottom: "15px"
         },
     },
@@ -36,7 +39,7 @@ const Styles = {
         position: "absolute",
         top: "-50px",
         '@media (max-width: 768px)': {
-            top: "-18.5px",
+            top: "-25px",
         },
     },
     profileImage:{
@@ -47,8 +50,8 @@ const Styles = {
         overflow: "hidden",
         backgroundSize: "cover",
         '@media (max-width: 768px)': {
-            height: "37px",
-            width: "37px",
+            height: "50px",
+            width: "50px",
         },
     },
     profileHeaderName:{
@@ -85,10 +88,51 @@ class PortfolioHeader extends React.Component {
         this.state = {
 
         };
+
+        this.portfolioLinkRef = React.createRef();
+
     }
 
     componentDidMount() {
+        setTimeout(() =>{
+            this.setHeightRatio();
+        }, 5);
 
+        window.addEventListener('resize', this.setHeightRatio.bind(this));
+    }
+
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setHeightRatio.bind(this));
+    }
+
+    setHeightRatio() {
+        let RATIO = 150/681;
+        let DELAY = 1;
+
+        if (!this.portfolioLinkRef || !this.portfolioLinkRef.current)
+            return;
+
+        clearInterval(this.holdForResize);
+
+        this.holdForResize = setTimeout(() => {
+
+            const node = this.portfolioLinkRef.current;
+            const currentWidth = node.clientWidth;
+
+            if (currentWidth < 700) {
+                RATIO = 100/340;
+            }
+
+            const currentHeight = currentWidth * RATIO;
+
+            console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
+
+            this.setState({
+                currentWidth,
+                currentHeight
+            });
+        }, DELAY);
     }
 
     render() {
@@ -104,11 +148,15 @@ class PortfolioHeader extends React.Component {
             bio,
             user_instagram_link,
             user_twitter_link,
+            user_website_link,
+            user_tiktok_link
         } = user;
+
+        let has_link = (user_instagram_link || user_twitter_link || user_website_link || user_tiktok_link);
 
         return (<div className={classes.container}>
             <div style={{border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
-                <div className={classes.profileCover}>
+                <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
                     <CoverImageHolder url={cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                 </div>
                 <div className={classes.profileHeaderContainer}>
@@ -119,7 +167,7 @@ class PortfolioHeader extends React.Component {
                     </div>
                     <div className={classes.profileHeaderName}>{first_name} {last_name}</div>
                     <div className={classes.profileHeaderBio}>{bio}</div>
-                    <div style={{marginTop: "15px"}}>
+                    <div style={{marginTop: has_link ? "15px" : 0}}>
                         {user_instagram_link && <a href={user_instagram_link} target={"_blank"}>
                             <div className={mc(classes.socialLink)}>
                                 <div><i className={mc("fa-brands fa-instagram")}></i></div>
