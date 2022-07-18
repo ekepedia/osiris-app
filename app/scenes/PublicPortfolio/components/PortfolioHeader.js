@@ -25,7 +25,8 @@ const Styles = {
         paddingBottom: "25px",
         background: COMMON.COLORS.COLOR_WHITE,
         '@media (max-width: 768px)': {
-            padding: "40px 15px",
+            padding: "75px 15px",
+            // padding: "40px 15px",
             paddingBottom: "15px"
         },
     },
@@ -39,7 +40,8 @@ const Styles = {
         position: "absolute",
         top: "-50px",
         '@media (max-width: 768px)': {
-            top: "-25px",
+            // top: "-25px",
+            top: "-50px",
         },
     },
     profileImage:{
@@ -50,20 +52,22 @@ const Styles = {
         overflow: "hidden",
         backgroundSize: "cover",
         '@media (max-width: 768px)': {
-            height: "50px",
-            width: "50px",
+            // height: "50px",
+            // width: "50px",
+            height: "100px",
+            width: "100px",
         },
     },
     profileHeaderName:{
         ...COMMON.FONTS.FONT_TITLE_2_BOLD,
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
+            ...COMMON.FONTS.FONT_HEADLINE_BOLD,
         },
     },
     profileHeaderBio:{
         ...COMMON.FONTS.FONT_SUBHEADER,
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_CAPTION_3,
+            ...COMMON.FONTS.FONT_CAPTION_1,
         },
     },
     socialLink: {
