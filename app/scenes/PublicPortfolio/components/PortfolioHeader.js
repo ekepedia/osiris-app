@@ -130,7 +130,7 @@ class PortfolioHeader extends React.Component {
         const currentWidth = node.clientWidth;
 
         if (currentWidth < 700) {
-            RATIO = 100/340;
+            RATIO = 100/250;
         }
 
         const currentHeight = currentWidth * RATIO;
