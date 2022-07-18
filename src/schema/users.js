@@ -29,6 +29,7 @@ const typeDef = gql`
         user_website_link: String,
         user_tiktok_link: String,
         user_youtube_link: String,
+        user_vimeo_link: String,
         user_main_contact_email: String,
         user_main_contact_phone: String,
 
@@ -50,6 +51,7 @@ const typeDef = gql`
         user_website_link: String,
         user_tiktok_link: String,
         user_youtube_link: String,
+        user_vimeo_link: String,
         user_main_contact_email: String,
         user_main_contact_phone: String,
     }
@@ -69,6 +71,7 @@ const typeDef = gql`
         user_website_link: String,
         user_tiktok_link: String,
         user_youtube_link: String,
+        user_vimeo_link: String,
         user_main_contact_email: String,
         user_main_contact_phone: String,
     }

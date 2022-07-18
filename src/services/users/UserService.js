@@ -24,12 +24,7 @@ module.exports.init = function (connection) {
 
     console.log("SQL: User Service Successfully Initialized");
 
-    // test_endpoints();
-    // edit_user({
-    //     user_id: 7,
-    //     user_instagram_link: "https://www.instagram.com/jasonmayden/",
-    //     user_twitter_link: "https://twitter.com/JasonMayden/",
-    // }).then(() => {});
+    test_endpoints();
 };
 
 module.exports.get_users = get_users;
@@ -59,7 +54,7 @@ function clean_username (username) {
 
 module.exports.create_user = create_user;
 
-function create_user({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
+function create_user({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone}) {
 
     username = clean_username(username);
 
@@ -67,7 +62,7 @@ function create_user({username, first_name, last_name, profile_photo_url, cover_
         if (!username)
             return reject(new Error("Missing username"));
 
-        const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone});
+        const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone});
 
         knex(USER_TABLE).insert(query).returning("user_id").then((rows) => {
             const user_id = rows[0];
@@ -81,7 +76,7 @@ function create_user({username, first_name, last_name, profile_photo_url, cover_
 
 module.exports.edit_user = edit_user;
 
-function edit_user({user_id, username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone}) {
+function edit_user({user_id, username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone}) {
 
     username = clean_username(username);
 
@@ -89,7 +84,7 @@ function edit_user({user_id, username, first_name, last_name, profile_photo_url,
         if (!user_id)
             return reject(new Error("Missing user_id"));
 
-        const query = {username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_main_contact_email, user_main_contact_phone};
+        const query = {username, first_name, last_name, profile_photo_url, cover_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone};
 
         knex(USER_TABLE).where({user_id}).update(query).then(() =>{
             return resolve();
@@ -120,18 +115,26 @@ function archive_user({user_id}, unarchive) {
 
 
 const IMPORT_DATA = []
+
 function test_endpoints() {
     load_companies_from_airtable({companies: {}}).then((companies) => {
         load_users_from_airtable().then((users) => {
+
+            // SUBMIT EDITS
+            // Object.values(users).forEach((user) => {
+            //     edit_user(user).then((rs) => {
+            //     })
+            // });
+
             // load_experiences_from_airtable({users, companies}).then(() => {
             //
             // });
             // load_education_from_airtable({users, companies}).then(() => {
             //
             // });
-            load_links_from_airtable({users, companies}).then(() => {
-
-            });
+            // load_links_from_airtable({users, companies}).then(() => {
+            //
+            // });
         })
     });
 
@@ -154,10 +157,35 @@ function load_users_from_airtable() {
                         Name
                     } = fields;
 
+                    const first_name = fields["First Name"];
+                    const last_name = fields["Last Name"];
+
+                    const Header = fields["Header"];
+                    const Profile = fields["Profile Picture"];
+                    const bio = fields["Bio"];
+                    const user_instagram_link = fields["Instagram"];
+                    const user_twitter_link = fields["Twitter"];
+                    const user_website_link = fields["Personal Site"];
+                    const user_vimeo_link = fields["Vimeo"];
+                    const user_tiktok_link = fields["TikTok"];
+
+                    const cover_photo_url = Header && Header.length ? Header[0].url : undefined;
+                    const profile_photo_url = Profile && Profile.length ? Profile[0].url : undefined;
+
                     users[record.id] = {
                         user_id,
+                        first_name,
+                        last_name,
                         Name,
-                        airtable_user_id: record.id
+                        airtable_user_id: record.id,
+                        cover_photo_url,
+                        profile_photo_url,
+                        bio,
+                        user_instagram_link,
+                        user_twitter_link,
+                        user_website_link,
+                        user_vimeo_link,
+                        user_tiktok_link
                     };
 
                 }

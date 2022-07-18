@@ -214,6 +214,7 @@ class PublicPortfolio extends React.Component {
             limit: true
         };
 
+        this.galleryRef = React.createRef();
         this.portfolioLinkRef = React.createRef();
     }
 
@@ -247,27 +248,50 @@ class PublicPortfolio extends React.Component {
     }
 
     setHeightRatio() {
-        const RATIO = 9/16;
-        const DELAY = 1;
+        const DELAY = 100;
 
-        if (!this.portfolioLinkRef || !this.portfolioLinkRef.current)
+        if (this.portfolioLinkRef && this.portfolioLinkRef.current) {
+            clearInterval(this.holdForResize);
+
+            this.runResize(this.portfolioLinkRef);
+            this.holdForResize = setTimeout(() => {
+                this.runResize(this.portfolioLinkRef);
+            }, DELAY);
+        }
+
+        if (this.galleryRef && this.galleryRef.current) {
+            clearInterval(this.holdForResize);
+
+            this.runResize(this.galleryRef, true);
+            this.holdForResize = setTimeout(() => {
+                this.runResize(this.galleryRef, true);
+            }, DELAY);
+        }
+    }
+
+    runResize(ref, gallery) {
+        if (!ref || !ref.current)
             return;
 
-        clearInterval(this.holdForResize);
+        const RATIO = 9/16;
 
-        this.holdForResize = setTimeout(() => {
+        const node = ref.current;
+        const currentWidth = node.clientWidth;
+        const currentHeight = currentWidth * RATIO;
 
-            const node = this.portfolioLinkRef.current;
-            const currentWidth = node.clientWidth;
-            const currentHeight = currentWidth * RATIO;
+        console.log("RESIZED", node.clientWidth, currentHeight, node.clientHeight)
 
-            console.log("RESIZED", node.clientWidth, currentHeight, node.clientHeight)
-
+        if (gallery) {
+            this.setState({
+                currentGalleryWidth: currentWidth,
+                currentGalleryHeight: currentHeight
+            });
+        } else {
             this.setState({
                 currentWidth,
                 currentHeight
             });
-        }, DELAY);
+        }
     }
 
     setEditingHeader(editing) {
@@ -500,10 +524,6 @@ class PublicPortfolio extends React.Component {
         let { classes  } = this.props;
         link = link || "";
 
-        console.log(link_name, link_name.length);
-
-        let maxWidth = link_name && link_name.length && link_name.length > 60 ? 400 : 500;
-
         let clean_link = link.replace("http://" ,"").replace("https://" ,"")
 
         return (
@@ -532,8 +552,6 @@ class PublicPortfolio extends React.Component {
 
     renderLink({ link, url, link_name}) {
         let { classes  } = this.props;
-
-        console.log(link_name, link_name.length);
 
         let maxWidth = link_name && link_name.length && link_name.length > 60 ? 400 : 500;
 
@@ -579,7 +597,7 @@ class PublicPortfolio extends React.Component {
 
                         <div className={mc(classes.sectionPortfolio)} style={{display: (user_links && user_links.length) || (user_galleries && user_galleries.length) ? null : "none"}}>
                             {user_galleries && user_galleries.length ? <div style={{marginTop: 0}}>
-                                <PortfolioCarousel height={this.state.currentHeight ? this.state.currentHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.portfolioLinkRef}/>
+                                <PortfolioCarousel height={this.state.currentHeight ? this.state.currentHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.galleryRef}/>
                             </div> : null }
                             <div style={{marginTop: user_galleries && user_galleries.length ? "10px" : 0}}>
                                 {user_links && user_links.length ? user_links.map((user_link, i) => {

@@ -107,32 +107,36 @@ class PortfolioHeader extends React.Component {
     }
 
     setHeightRatio() {
-        let RATIO = 150/681;
-        let DELAY = 1;
-
         if (!this.portfolioLinkRef || !this.portfolioLinkRef.current)
             return;
 
+        let DELAY = 100;
+
         clearInterval(this.holdForResize);
 
+        this.runResize();
         this.holdForResize = setTimeout(() => {
-
-            const node = this.portfolioLinkRef.current;
-            const currentWidth = node.clientWidth;
-
-            if (currentWidth < 700) {
-                RATIO = 100/340;
-            }
-
-            const currentHeight = currentWidth * RATIO;
-
-            console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
-
-            this.setState({
-                currentWidth,
-                currentHeight
-            });
+            this.runResize();
         }, DELAY);
+    }
+
+    runResize() {
+        let RATIO = 150/681;
+        const node = this.portfolioLinkRef.current;
+        const currentWidth = node.clientWidth;
+
+        if (currentWidth < 700) {
+            RATIO = 100/340;
+        }
+
+        const currentHeight = currentWidth * RATIO;
+
+        console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
+
+        this.setState({
+            currentWidth,
+            currentHeight
+        });
     }
 
     render() {
@@ -148,11 +152,14 @@ class PortfolioHeader extends React.Component {
             bio,
             user_instagram_link,
             user_twitter_link,
+            user_clubhouse_link,
+            user_youtube_link,
             user_website_link,
-            user_tiktok_link
+            user_tiktok_link,
+            user_vimeo_link
         } = user;
 
-        let has_link = (user_instagram_link || user_twitter_link || user_website_link || user_tiktok_link);
+        let has_link = (user_instagram_link || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
 
         return (<div className={classes.container}>
             <div style={{border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
@@ -177,6 +184,27 @@ class PortfolioHeader extends React.Component {
                             <div className={mc(classes.socialLink)}>
                                 <div>
                                     <i className={mc("fa-brands fa-twitter")}></i>
+                                </div>
+                            </div>
+                        </a>}
+                        {user_vimeo_link && <a href={user_vimeo_link} target={"_blank"}>
+                            <div className={mc(classes.socialLink)}>
+                                <div>
+                                    <i className={mc("fa-brands fa-vimeo-v")}></i>
+                                </div>
+                            </div>
+                        </a>}
+                        {user_tiktok_link && <a href={user_tiktok_link} target={"_blank"}>
+                            <div className={mc(classes.socialLink)}>
+                                <div>
+                                    <i className={mc("fa-brands fa-tiktok")}></i>
+                                </div>
+                            </div>
+                        </a>}
+                        {user_website_link && <a href={user_website_link} target={"_blank"}>
+                            <div className={mc(classes.socialLink)}>
+                                <div>
+                                    <i className={mc("fa-solid fa-link")}></i>
                                 </div>
                             </div>
                         </a>}
