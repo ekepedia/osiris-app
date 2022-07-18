@@ -255,7 +255,7 @@ class PublicPortfolio extends React.Component {
 
             this.runResize(this.portfolioLinkRef);
             this.holdForResize = setTimeout(() => {
-                this.runResize(this.portfolioLinkRef);
+                this.runResize(this.portfolioLinkRef, false);
             }, DELAY);
         }
 
@@ -279,14 +279,17 @@ class PublicPortfolio extends React.Component {
         const currentWidth = node.clientWidth;
         const currentHeight = currentWidth * RATIO;
 
-        console.log("RESIZED", node.clientWidth, currentHeight, node.clientHeight)
 
         if (gallery) {
+            console.log("RESIZED GALLERY", node.clientWidth, currentHeight, node.clientHeight)
+
             this.setState({
                 currentGalleryWidth: currentWidth,
                 currentGalleryHeight: currentHeight
             });
         } else {
+            console.log("RESIZED LINK", node.clientWidth, currentHeight, node.clientHeight)
+
             this.setState({
                 currentWidth,
                 currentHeight
@@ -329,11 +332,23 @@ class PublicPortfolio extends React.Component {
         this.loadGalleries(user_id);
     }
 
+    convertType (link) {
+        if (link.link_type === "small") {
+            return 3
+        } else if (link.link_type === "youtube") {
+            return 1
+        } else {
+            return 2
+        }
+    }
+
     loadLinks(user_id) {
         let { client } = this.props;
         UserLinkService.getUserLink({client, user_id}).then((user_links) => {
             user_links = user_links || [];
-            user_links = user_links.sort((a, b) => { return (a.link_order - b.link_order)});
+            user_links = user_links.sort((a, b) => {
+                return (this.convertType(a) - this.convertType(b))
+            });
             console.log("user_links", user_links)
             this.setState({user_links});
             this.setHeightRatio();
@@ -597,16 +612,33 @@ class PublicPortfolio extends React.Component {
 
                         <div className={mc(classes.sectionPortfolio)} style={{display: (user_links && user_links.length) || (user_galleries && user_galleries.length) ? null : "none"}}>
                             {user_galleries && user_galleries.length ? <div style={{marginTop: 0}}>
-                                <PortfolioCarousel height={this.state.currentHeight ? this.state.currentHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.galleryRef}/>
+                                <PortfolioCarousel height={this.state.currentGalleryHeight ? this.state.currentGalleryHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.galleryRef}/>
                             </div> : null }
                             <div style={{marginTop: user_galleries && user_galleries.length ? "10px" : 0}}>
                                 {user_links && user_links.length ? user_links.map((user_link, i) => {
                                     if (user_link.link_type === "youtube") {
-                                        return (<div style={{height: this.state.currentHeight ? this.state.currentHeight : null, marginTop: i === 0 ? "0px" : "10px"}} className={mc(classes.linkContainer)}>
+
+
+                                        let { link_url } = user_link;
+
+                                        if (link_url.indexOf("embed") === -1 ) {
+                                             const getId = (url) => {
+                                                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                                                const match = url.match(regExp);
+
+                                                return (match && match[2].length === 11)
+                                                    ? match[2]
+                                                    : null;
+                                            }
+                                            link_url = `https://www.youtube.com/embed/${getId(link_url)}`
+                                        }
+
+
+                                        return (<div style={{height: this.state.currentHeight ? this.state.currentHeight : null, marginTop: i === 0 ? "0px" : "10px"}} ref={this.portfolioLinkRef} className={mc(classes.linkContainer)}>
                                             <iframe
                                                 width="100%"
                                                 height="100%"
-                                                src={user_link.link_url}
+                                                src={link_url}
                                                 frameBorder="0"
                                                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                 allowFullScreen

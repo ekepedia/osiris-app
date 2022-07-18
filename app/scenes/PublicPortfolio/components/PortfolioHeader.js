@@ -160,10 +160,11 @@ class PortfolioHeader extends React.Component {
             user_youtube_link,
             user_website_link,
             user_tiktok_link,
+            user_main_contact_email,
             user_vimeo_link
         } = user;
 
-        let has_link = (user_instagram_link || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
+        let has_link = (user_instagram_link || user_main_contact_email || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
 
         return (<div className={classes.container}>
             <div style={{border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
@@ -209,6 +210,13 @@ class PortfolioHeader extends React.Component {
                             <div className={mc(classes.socialLink)}>
                                 <div>
                                     <i className={mc("fa-solid fa-link")}></i>
+                                </div>
+                            </div>
+                        </a>}
+                        {user_main_contact_email && <a href={`mailto:${user_main_contact_email}`} target={"_blank"}>
+                            <div className={mc(classes.socialLink)}>
+                                <div>
+                                    <i className={mc("fa-solid fa-envelope")}></i>
                                 </div>
                             </div>
                         </a>}

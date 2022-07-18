@@ -39,6 +39,8 @@ module.exports.init = function (connection) {
     // remove_user_education({user_education_id: 3, school_name: "MIT", degree_name: "Bachelors"}).then((r) =>{
     //     console.log("NEW ED", r);
     // })
+
+    // mass_delete();
 };
 
 module.exports.get_user_educations = get_user_educations;
@@ -118,5 +120,11 @@ function remove_user_education({user_education_id}) {
         }).catch((err) => {
             return reject(err);
         });
+    });
+}
+
+function mass_delete() {
+    knex(SERVICE_DEFAULT_TABLE).whereNot({user_id: 7}).del().then(() => {
+    }).catch((err) => {
     });
 }

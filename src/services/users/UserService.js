@@ -24,7 +24,7 @@ module.exports.init = function (connection) {
 
     console.log("SQL: User Service Successfully Initialized");
 
-    // test_endpoints();
+    test_endpoints();
 };
 
 module.exports.get_users = get_users;
@@ -120,24 +120,42 @@ function test_endpoints() {
     load_companies_from_airtable({companies: {}}).then((companies) => {
         load_users_from_airtable().then((users) => {
 
+            // console.log(users);
+
             // SUBMIT EDITS
             // Object.values(users).forEach((user) => {
             //     edit_user(user).then((rs) => {
             //     })
             // });
 
+            // CREATE USERS
+            // Object.values(users).forEach((user) => {
+            //     user.username = `${user.first_name}${user.last_name}`.toLowerCase();
+            //     console.log(user)
+            //     create_user(user).then((rs) => {
+            //         console.log(user.username, rs)
+            //     })
+            // });
+
             // load_experiences_from_airtable({users, companies}).then(() => {
             //
             // });
+
             // load_education_from_airtable({users, companies}).then(() => {
             //
             // });
+
             // load_links_from_airtable({users, companies}).then(() => {
             //
             // });
         })
     });
 
+    get_users({}).then((users) => {
+        users.forEach((user) => {
+            console.log(user.username)
+        })
+    })
 }
 
 function load_users_from_airtable() {
@@ -151,6 +169,7 @@ function load_users_from_airtable() {
         }).then((res) => {
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
+                // if (!fields.user_id && fields["Status"] === "Done"){
                 if (fields.user_id){
                     const {
                         user_id,
@@ -168,6 +187,9 @@ function load_users_from_airtable() {
                     const user_website_link = fields["Personal Site"];
                     const user_vimeo_link = fields["Vimeo"];
                     const user_tiktok_link = fields["TikTok"];
+                    const user_main_contact_email = fields["Email"];
+
+                    const status = fields["Status"];
 
                     const cover_photo_url = Header && Header.length ? Header[0].url : undefined;
                     const profile_photo_url = Profile && Profile.length ? Profile[0].url : undefined;
@@ -185,7 +207,8 @@ function load_users_from_airtable() {
                         user_twitter_link,
                         user_website_link,
                         user_vimeo_link,
-                        user_tiktok_link
+                        user_tiktok_link,
+                        user_main_contact_email
                     };
 
                 }
@@ -237,14 +260,23 @@ function load_companies_from_airtable({offset, companies}) {
     })
 }
 
-function load_experiences_from_airtable({users, companies}) {
+function load_experiences_from_airtable({users, companies, offset}) {
     return new Promise((resolve) => {
 
-        axios.get(`https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Experiences?`, {
+        let url = "https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Experiences";
+
+        if (offset) {
+            url += "?offset=" + offset
+        }
+
+        axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${AIR_TABLE_KEY}`
             }
         }).then((res) => {
+
+            const offset = res.data.offset;
+
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
                 if (fields["Associated Person"]){
@@ -268,8 +300,8 @@ function load_experiences_from_airtable({users, companies}) {
                             role_name: title
                         }
 
-                        console.log( user.user_id, user.Name,  experience);
-
+                        // console.log( user.user_id, user.Name,  experience);
+                        //
                         // UserExperienceService.create_user_experience(experience).then((id) => {
                         //     console.log(id)
                         // })
@@ -277,6 +309,12 @@ function load_experiences_from_airtable({users, companies}) {
 
                 }
             });
+
+            if (offset) {
+                load_experiences_from_airtable({users, companies, offset}).then(() => {
+
+                })
+            }
         });
     })
 }
@@ -313,8 +351,8 @@ function load_education_from_airtable({users, companies}) {
                             end_date: end_year ? new Date(`5/30/${end_year}`).getTime() : undefined,
                         }
 
-                        console.log( user.user_id, user.Name, education);
-
+                        // console.log( user.user_id, user.Name, education);
+                        //
                         // UserEducationService.create_user_education(education).then((id) => {
                         //     console.log(id)
                         // })
@@ -334,6 +372,8 @@ function load_links_from_airtable({users, companies}) {
                 'Authorization': `Bearer ${AIR_TABLE_KEY}`
             }
         }).then((res) => {
+            const offset = res.data.offset;
+            console.log("ODSDSDFS", offset)
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
                 if (fields["Associated Person"]){
@@ -355,24 +395,25 @@ function load_links_from_airtable({users, companies}) {
                             link_image_url
                         }
 
-                        if (link_type === "Youtube") {
+
+                        if (link_type === "YouTube") {
                             link.link_type = "youtube";
-                            // console.log( user.user_id, user.Name, link);
-                            // UserLinksService.create_user_link(link).then((id) => {
-                            //     console.log(id)
-                            // })
+                            console.log( "YOURUBE", user.user_id, user.username, link);
+                            UserLinksService.create_user_link(link).then((id) => {
+                                console.log(id)
+                            })
                         } else if (link_type === "Banner Link") {
                             link.link_type = "banner";
-                            // console.log( user.user_id, user.Name, link);
-                            // UserLinksService.create_user_link(link).then((id) => {
-                            //     console.log(id)
-                            // })
+                            console.log( "BANNER", user.user_id, user.username, link);
+                            UserLinksService.create_user_link(link).then((id) => {
+                                console.log(id)
+                            })
                         } else if (link_type === "Small Link") {
                             link.link_type = "small";
-                            // console.log( user.user_id, user.Name, link);
-                            // UserLinksService.create_user_link(link).then((id) => {
-                            //     console.log(id)
-                            // })
+                            console.log( "SMA:", user.user_id, user.username, link);
+                            UserLinksService.create_user_link(link).then((id) => {
+                                console.log(id)
+                            })
                         } else if (link_type === "Slideshow") {
                             fields["Image"].forEach((img, i ) => {
 
@@ -385,18 +426,12 @@ function load_links_from_airtable({users, companies}) {
                                     gallery_order: i,
                                 };
 
-                                console.log(gallery)
-                                // UserGalleryService.create_user_gallery(gallery).then((id) => {
-                                //         console.log(id)
-                                //     })
+                                // console.log(gallery)
+                                UserGalleryService.create_user_gallery(gallery).then((id) => {
+                                        console.log(id)
+                                    })
                             })
                         }
-
-
-
-                        // UserEducationService.create_user_education(education).then((id) => {
-                        //     console.log(id)
-                        // })
                     }
 
                 }

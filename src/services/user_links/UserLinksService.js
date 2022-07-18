@@ -21,6 +21,7 @@ module.exports.init = function (connection) {
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
     // test_endpoints();
+    // mass_delete();
 };
 
 module.exports.get_user_links = get_user_links;
@@ -116,4 +117,10 @@ function test_endpoints() {
     // remove_user_link({user_link_id: 1, school_name: "MIT", degree_name: "Bachelors"}).then((r) =>{
     //     console.log("NEW ED", r);
     // })
+}
+
+function mass_delete() {
+    knex(SERVICE_DEFAULT_TABLE).whereNot({user_id: 7}).del().then(() => {
+    }).catch((err) => {
+    });
 }
