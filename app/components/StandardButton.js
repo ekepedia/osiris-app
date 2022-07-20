@@ -53,7 +53,6 @@ const Styles = {
         },
     },
     buttonStyle: (props) => {
-        console.log("standard button", props);
         const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
 
         return ({
@@ -67,7 +66,6 @@ const Styles = {
         })
     },
     outlineButton: (props) => {
-        console.log("outline button", props);
         const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
 
         return ({

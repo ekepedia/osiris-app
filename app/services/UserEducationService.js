@@ -32,7 +32,7 @@ UserEducationService.getUserEducation = ({client, user_id}) => {
             user_id
         };
 
-        client.query({query: UserEducationQuery, variables}).then((response) => {
+        client.query({query: UserEducationQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
             if (response && response.data && response.data.user_educations && response.data.user_educations.length) {
                 resolve(response.data.user_educations)
             } else {
@@ -42,6 +42,38 @@ UserEducationService.getUserEducation = ({client, user_id}) => {
             resolve();
         })
     });
+}
+
+UserEducationService.editUserEducation = ({client, user_education_id, school_name, degree_name, start_date, end_date}) => {
+    return new Promise((resolve, reject) => {
+        const EditUserEducationMutation = gql`
+            mutation EditUserEducationMutation(
+                $user_education_id: String!,
+                $school_name: String,
+                $degree_name: String,
+                $start_date: String, 
+                $end_date: String
+            ){
+                edit_user_education(input:{
+                    user_education_id: $user_education_id,
+                    school_name: $school_name,
+                    degree_name: $degree_name,
+                    start_date: $start_date,
+                    end_date: $end_date,
+                })
+            }
+        `;
+
+        let variables = {
+            user_education_id, school_name, degree_name, start_date, end_date
+        };
+
+        client.mutate({mutation: EditUserEducationMutation, variables}).then((response) => {
+            resolve(response.data.edit_user_education)
+        }).catch((err) => {
+            resolve();
+        })
+    })
 }
 
 

@@ -141,6 +141,9 @@ const Styles = {
         ...STYLES.FONTS.FONT_FOOTNOTE,
         lineHeight: "16px",
         marginTop: "0px",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
         '@media (max-width: 768px)': {
             ...STYLES.FONTS.FONT_CAPTION_2,
             marginTop: "0px",
@@ -545,11 +548,11 @@ class PublicPortfolio extends React.Component {
             <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
 
                 <div className={mc(classes.cardContainer)} style={{color: COMMON.COLORS.DARK_GREY, textDecoration: "none"}}>
-                    <div style={{display: "flex", height: "51px"}}>
+                    <div style={{display: "flex"}}>
                         <div className={mc(classes.cardImageContainer)}>
                             <CoverImageHolder url={url}/>
                         </div>
-                        <div style={{flex: 1}}>
+                        <div style={{flex: 1, overflow: "hidden", paddingRight: "5px"}}>
                             <div>
                                 <div className={mc(classes.cardSmallLinkTitle)}>{link_name}</div>
                                 <div className={mc(classes.cardSubTitle)}>{clean_link}</div>

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function mc (){
     const args = Array.prototype.slice.call(arguments);
     return args.join(" ")
@@ -17,4 +19,16 @@ export function formatDuration(duration) {
     }
 
     return str
+}
+
+export function convertDateObjectToMonthYear({date}) {
+    const original_date = moment(date);
+    return {
+        month: original_date.month() + 1,
+        year: original_date.year(),
+    }
+}
+
+export function converMonthYearToDateObject({month, year}) {
+    return new Date(`${month}/1/${year}`);
 }

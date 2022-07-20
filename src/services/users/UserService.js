@@ -137,15 +137,15 @@ function test_endpoints() {
             //     })
             // });
 
-            // load_experiences_from_airtable({users, companies}).then(() => {
+            // load_experiences_from_airtable({users, companies, create: false}).then(() => {
+            //
+            // });
+            //
+            // load_education_from_airtable({users, companies, create: false}).then(() => {
             //
             // });
 
-            // load_education_from_airtable({users, companies}).then(() => {
-            //
-            // });
-
-            // load_links_from_airtable({users, companies}).then(() => {
+            // load_links_from_airtable({users, companies, create: false}).then(() => {
             //
             // });
         })
@@ -153,7 +153,7 @@ function test_endpoints() {
 
     get_users({}).then((users) => {
         users.forEach((user) => {
-            console.log(user.username)
+            console.log(`https://app-osiris.herokuapp.com/u/${user.username}`)
         })
     })
 }
@@ -260,7 +260,7 @@ function load_companies_from_airtable({offset, companies}) {
     })
 }
 
-function load_experiences_from_airtable({users, companies, offset}) {
+function load_experiences_from_airtable({users, companies, offset, create}) {
     return new Promise((resolve) => {
 
         let url = "https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Experiences";
@@ -302,9 +302,12 @@ function load_experiences_from_airtable({users, companies, offset}) {
 
                         // console.log( user.user_id, user.Name,  experience);
                         //
-                        // UserExperienceService.create_user_experience(experience).then((id) => {
-                        //     console.log(id)
-                        // })
+                        if (create) {
+                            UserExperienceService.create_user_experience(experience).then((id) => {
+                                console.log(id)
+                            })
+                        }
+
                     }
 
                 }
@@ -319,7 +322,7 @@ function load_experiences_from_airtable({users, companies, offset}) {
     })
 }
 
-function load_education_from_airtable({users, companies}) {
+function load_education_from_airtable({users, companies, create}) {
     return new Promise((resolve) => {
 
         axios.get(`https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Education?`, {
@@ -353,9 +356,11 @@ function load_education_from_airtable({users, companies}) {
 
                         // console.log( user.user_id, user.Name, education);
                         //
-                        // UserEducationService.create_user_education(education).then((id) => {
-                        //     console.log(id)
-                        // })
+                        if (create) {
+                            UserEducationService.create_user_education(education).then((id) => {
+                                console.log(id)
+                            })
+                        }
                     }
 
                 }
@@ -364,7 +369,7 @@ function load_education_from_airtable({users, companies}) {
     })
 }
 
-function load_links_from_airtable({users, companies}) {
+function load_links_from_airtable({users, companies, create}) {
     return new Promise((resolve) => {
 
         axios.get(`https://api.airtable.com/v0/appBlhk8AlG9XyuEo/Portfolio?`, {
@@ -399,21 +404,30 @@ function load_links_from_airtable({users, companies}) {
                         if (link_type === "YouTube") {
                             link.link_type = "youtube";
                             console.log( "YOURUBE", user.user_id, user.username, link);
-                            UserLinksService.create_user_link(link).then((id) => {
-                                console.log(id)
-                            })
+
+                            if (create) {
+                                UserLinksService.create_user_link(link).then((id) => {
+                                    console.log(id)
+                                })
+                            }
                         } else if (link_type === "Banner Link") {
                             link.link_type = "banner";
                             console.log( "BANNER", user.user_id, user.username, link);
-                            UserLinksService.create_user_link(link).then((id) => {
-                                console.log(id)
-                            })
+
+                            if (create) {
+                                UserLinksService.create_user_link(link).then((id) => {
+                                    console.log(id)
+                                })
+                            }
                         } else if (link_type === "Small Link") {
                             link.link_type = "small";
                             console.log( "SMA:", user.user_id, user.username, link);
-                            UserLinksService.create_user_link(link).then((id) => {
-                                console.log(id)
-                            })
+
+                            if (create) {
+                                UserLinksService.create_user_link(link).then((id) => {
+                                    console.log(id)
+                                })
+                            }
                         } else if (link_type === "Slideshow") {
                             fields["Image"].forEach((img, i ) => {
 
@@ -427,9 +441,12 @@ function load_links_from_airtable({users, companies}) {
                                 };
 
                                 // console.log(gallery)
-                                UserGalleryService.create_user_gallery(gallery).then((id) => {
+
+                                if (create) {
+                                    UserGalleryService.create_user_gallery(gallery).then((id) => {
                                         console.log(id)
-                                    })
+                                    });
+                                }
                             })
                         }
                     }

@@ -138,9 +138,10 @@ export const EDIT_PORTFOLIO_MODAL = {
         WebkitOverflowScrolling: 'touch',
         borderRadius: '6px',
         outline: 'none',
-        padding: '0'
+        padding: '0',
+        inset: "0"
     },
-    DEFAULT_MODAL_HEIGHT: "670px",
+    DEFAULT_MODAL_HEIGHT: "90vh",
     MODAL_HEADER: {
         ...FONT_HEADLINE_BOLD
     }
