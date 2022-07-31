@@ -13,16 +13,16 @@ import UserExperienceService from '../../services/UserExperienceService';
 import UserLinkService from '../../services/UserLinkService';
 import UserGalleryService from '../../services/UserGalleryService';
 
-import STYLES from "../../common/index";
 import COMMON from "../../common/index";
 import { mc, formatDuration } from "../../common/helpers";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
-import {FONT_CAPTION_2, FONT_CAPTION_2_BOLD} from "../../common/fonts";
 import PortfolioHeader from "./components/PortfolioHeader";
-import {DARK_GREY} from "../../common/colors";
-import Slider from "react-slick";
 import PortfolioCarousel from "./components/PortfolioCarousel";
+import SmallLink from "./components/SmallLink";
+import EducationCard from "./components/EducationCard";
+import ExperienceCard from "./components/ExperienceCard";
+import BannerLink from "./components/BannerLink";
 
 const Styles = {
     container: {
@@ -31,174 +31,9 @@ const Styles = {
             padding: "0",
         },
     },
-    pageContainer: {
-        padding: "0 50px",
-        '@media (max-width: 768px)': {
-            padding: "0 19px",
-        },
-    },
-    pageSection: {
-        paddingTop: "35px",
-        '@media (max-width: 768px)': {
-            paddingTop: "20px",
-        },
-    },
-    sectionContainer: {
-        border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
-        borderRadius: "6px",
-        overflow: "hidden",
-        padding: "25px 35px",
-        background: STYLES.COLORS.COLOR_WHITE,
-        marginTop: "10px",
-        '@media (max-width: 768px)': {
-            padding: "11px 11px",
-        },
-    },
-    sectionPortfolio: {
-        extend: 'sectionContainer',
-        paddingBottom: "25px",
-        '@media (max-width: 768px)': {
-            // paddingBottom: "1px",
-        },
-    },
-    sectionExperienceContainer: {
-        border: `1px solid ${STYLES.COLORS.COLOR_BORDER_GREY}`,
-        borderRadius: "6px",
-        overflow: "hidden",
-        padding: "0",
-        background: STYLES.COLORS.COLOR_WHITE,
-        marginTop: "10px"
-    },
-    sectionExperiencePadding: {
-        padding: "25px 35px",
-        '@media (max-width: 768px)': {
-            padding: "11px 11px",
-        },
-    },
-    sectionExperienceShowMore: {
-        padding: "10px",
-        textAlign: "center",
-        cursor: "pointer",
-        borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
-        ...COMMON.FONTS.FONT_SUBHEADER_BOLD,
-        color: COMMON.COLORS.COLOR_TEXT_GREY,
-        '@media (max-width: 768px)': {
-            padding: "11px 11px",
-            ...COMMON.FONTS.FONT_CAPTION_1_BOLD,
-
-        },
-    },
-    cardContainer: {
-        padding: "15px",
-        marginTop: "10px",
-        overflow: "hidden",
-        ...STYLES.STYLES.GREY_BORDER_6,
-        '@media (max-width: 768px)': {
-            marginTop: "10px",
-            padding: "10px 12px",
-        },
-    },
-    cardImageContainer: {
-        flex: "0 0 51px",
-        height: "51px",
-        marginRight: "15px",
-        overflow: "hidden",
-        ...STYLES.STYLES.GREY_BORDER_6,
-        '@media (max-width: 768px)': {
-            flex: "0 0 45px",
-            height: "45px",
-            marginRight: "11px",
-        },
-    },
-    cardTitle: {
-        ...STYLES.FONTS.FONT_SUBHEADER_BOLD,
-        marginTop: "0px",
-        lineHeight: "19px",
-        '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
-            marginTop: "0px",
-            lineHeight: "inherit"
-        },
-    },
-    cardEducationTitle: {
-        extend: 'cardTitle',
-        marginTop: "9.5px",
-        '@media (max-width: 768px)': {
-            marginTop: "6.5px",
-            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
-        },
-    },
-    cardSmallLinkTitle: {
-        extend: 'cardTitle',
-        color: COMMON.COLORS.OSIRIS_BLACK,
-        marginTop: "8px",
-        '@media (max-width: 768px)': {
-            marginTop: "8px",
-            ...STYLES.FONTS.FONT_FOOTNOTE_BOLD,
-        },
-    },
-    cardSubTitle: {
-        ...STYLES.FONTS.FONT_FOOTNOTE,
-        lineHeight: "16px",
-        marginTop: "0px",
-        overflow: "hidden",
-        whiteSpace: "nowrap",
-        textOverflow: "ellipsis",
-        '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_2,
-            marginTop: "0px",
-            lineHeight: "inherit"
-        },
-    },
-    cardBody: {
-        ...STYLES.FONTS.FONT_FOOTNOTE,
-        color: STYLES.COLORS.DARK_GREY,
-        lineHeight: "16px",
-        marginTop: "0px",
-        '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_2,
-            marginTop: "0px",
-            lineHeight: "inherit"
-        },
-    },
-    linkText: {
-        position: "absolute",
-        width: "100%",
-        bottom: "25px",
-        color: COMMON.COLORS.COLOR_WHITE,
-        padding: "0 25px",
-        ...COMMON.FONTS.FONT_SUBHEADER_BOLD,
-        '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_2_BOLD,
-            padding: "0 12px",
-            bottom: "11px",
-        },
-    },
-    linkContainer: {
-        height: "384px",
-        width: "100%",
-        borderRadius: "6px",
-        overflow: "hidden",
-        position: "relative",
-        '@media (max-width: 768px)': {
-            // height: "191px",
-        },
-    },
-    sectionTitle: {
-        ...STYLES.FONTS.FONT_HEADLINE_BOLD,
-        '@media (max-width: 768px)': {
-            ...STYLES.FONTS.FONT_CAPTION_2_BOLD,
-        },
-    },
-    centerAlignContainer: {
-        position: "relative"
-    },
-    centerAlignObject: {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%,-50%)",
-    },
+    ...COMMON.STYLES.PORTFOLIO.PortfolioPageStyles,
+    ...COMMON.STYLES.PORTFOLIO.StandardCardStyles,
+    ...COMMON.STYLES.GENERAL.AlignmentStyles,
     ...COMMON.STYLES.MOBILE_STYLES
 };
 
@@ -347,7 +182,7 @@ class PublicPortfolio extends React.Component {
 
     loadLinks(user_id) {
         let { client } = this.props;
-        UserLinkService.getUserLink({client, user_id}).then((user_links) => {
+        UserLinkService.getUserLink({client, user_id, is_hidden: false}).then((user_links) => {
             user_links = user_links || [];
             user_links = user_links.sort((a, b) => {
                 return (this.convertType(a) - this.convertType(b))
@@ -360,7 +195,7 @@ class PublicPortfolio extends React.Component {
 
     loadGalleries(user_id) {
         let { client } = this.props;
-        UserGalleryService.getUserGallery({client, user_id}).then((user_galleries) => {
+        UserGalleryService.getUserGallery({client, user_id, is_hidden: false}).then((user_galleries) => {
             user_galleries = user_galleries || [];
             user_galleries = user_galleries.sort((a, b) => { return (a.gallery_order - b.gallery_order)});
             console.log("user_galleries", user_galleries)
@@ -371,7 +206,7 @@ class PublicPortfolio extends React.Component {
 
     loadEducation(user_id) {
         let { client } = this.props;
-        UserEducationService.getUserEducation({client, user_id}).then((user_educations) => {
+        UserEducationService.getUserEducation({client, user_id, is_hidden: false}).then((user_educations) => {
             user_educations = user_educations || [];
             user_educations = user_educations.map((user_education) => {
                 const time = `${moment(parseFloat(user_education.start_date)).format("YYYY")} - ${moment(parseFloat(user_education.end_date)).format("YYYY")}`
@@ -384,7 +219,7 @@ class PublicPortfolio extends React.Component {
 
     loadExperience(user_id) {
         let { client } = this.props;
-        UserExperienceService.getUserExperiences({client, user_id}).then((user_experiences) => {
+        UserExperienceService.getUserExperiences({client, user_id, is_hidden: false}).then((user_experiences) => {
             user_experiences = user_experiences || [];
             let company_map = {};
             user_experiences = user_experiences.map((user_experience) => {
@@ -445,9 +280,6 @@ class PublicPortfolio extends React.Component {
 
             user_experiences = [...experiences, ...Object.values(company_roles)]
 
-
-
-
             user_experiences = user_experiences.sort((a, b) => {
 
                 const c = a.end_date ? a.end_date : new Date().getTime();
@@ -459,43 +291,6 @@ class PublicPortfolio extends React.Component {
 
             this.setState({user_experiences});
         })
-    }
-
-    renderCard({title, company, time, logo}) {
-        let { classes  } = this.props;
-
-        return (
-            <div className={mc(classes.cardContainer)}>
-                <div style={{display: "flex"}}>
-                    <div className={mc(classes.cardImageContainer)}>
-                        <img src={logo} width={"100%"}/>
-                    </div>
-                    <div style={{flex: 1}}>
-                        <div className={mc(classes.cardEducationTitle)}>{title}</div>
-                        <div className={mc(classes.cardBody)}><span>{company}</span> • <span>{time}</span></div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    renderCompanyCard({title, company, time, timeElapsed, logo}) {
-        let { classes  } = this.props;
-
-        return (
-            <div className={mc(classes.cardContainer)}>
-                <div style={{display: "flex"}}>
-                    <div className={mc(classes.cardImageContainer)}>
-                        <CoverImageHolder url={logo}/>
-                    </div>
-                    <div style={{flex: 1}}>
-                        <div className={mc(classes.cardTitle)}>{title}</div>
-                        <div className={mc(classes.cardSubTitle)}>{company}</div>
-                        <div className={mc(classes.cardBody)}><span>{timeElapsed}</span> • <span>{time}</span></div>
-                    </div>
-                </div>
-            </div>
-        )
     }
 
     renderMultiCompanyCard({company, totalTimeElapsed, logo, roles}) {
@@ -538,75 +333,20 @@ class PublicPortfolio extends React.Component {
         )
     }
 
-    renderSmallLink({ link, url, link_name}) {
-        let { classes  } = this.props;
-        link = link || "";
-
-        let clean_link = link.replace("http://" ,"").replace("https://" ,"")
-
-        return (
-            <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
-
-                <div className={mc(classes.cardContainer)} style={{color: COMMON.COLORS.DARK_GREY, textDecoration: "none"}}>
-                    <div style={{display: "flex"}}>
-                        <div className={mc(classes.cardImageContainer)}>
-                            <CoverImageHolder url={url}/>
-                        </div>
-                        <div style={{flex: 1, overflow: "hidden", paddingRight: "5px"}}>
-                            <div>
-                                <div className={mc(classes.cardSmallLinkTitle)}>{link_name}</div>
-                                <div className={mc(classes.cardSubTitle)}>{clean_link}</div>
-                            </div>
-                        </div>
-                        <div style={{flex: "0 0 20px", fontSize: "13px"}} className={mc(classes.centerAlignContainer)}>
-                            <i className={mc("fa-solid fa-arrow-right", classes.centerAlignObject)}/>
-                        </div>
-                    </div>
-
-                </div>
-            </a>
-        )
-    }
-
-    renderLink({ link, url, link_name}) {
-        let { classes  } = this.props;
-
-        let maxWidth = link_name && link_name.length && link_name.length > 60 ? 400 : 500;
-
-        return (
-            <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
-                <div className={mc(classes.linkContainer)} style={{height: this.state.currentHeight ? this.state.currentHeight : null}} ref={this.portfolioLinkRef}>
-                    <CoverImageHolder url={url}/>
-
-                    <div className={mc(classes.linkText)}>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1}}>
-                                <div style={{maxWidth}}>
-                                    {link_name}
-                                </div>
-                            </div>
-                            <div className={mc(classes.centerAlignContainer)} style={{flex: "0 0 20px"}}>
-                                <i className={mc("fa-solid fa-link", classes.centerAlignObject)}></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        )
-    }
-
     render() {
         let { classes, client, match: { params } } = this.props;
 
+        let embedded = false;
+        if (window.location.pathname.indexOf("/ue/") !== -1) {
+            embedded = true;
+        }
+
+        console.log("embedded" , embedded)
         let { user, user_educations, user_experiences, user_links, user_galleries } = this.state;
 
 
-        user = {
-            ...user,
-        }
-
         return (<div className={classes.container}>
-            <div className={mc(classes.pageContainer)}>
+            <div className={mc(classes.pageContainer)} style={{padding: embedded ? 0 : null}}>
                 <div style={{maxWidth: "600px", margin: "auto"}}>
 
                     <div className={mc(classes.pageSection)} style={{paddingBottom: "50px"}}>
@@ -650,11 +390,11 @@ class PublicPortfolio extends React.Component {
                                         </div>);
                                     } else if (user_link.link_type === "small") {
                                         return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
-                                            {this.renderSmallLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
+                                            <SmallLink {...{link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name}}/>
                                         </div>);
                                     } else {
                                         return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
-                                            {this.renderLink({ link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name})}
+                                            <BannerLink {...{link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name, currentHeight: this.state.currentHeight, portfolioLinkRef: this.portfolioLinkRef}}/>
                                         </div>);
                                     }
                                 }) : null }
@@ -674,7 +414,13 @@ class PublicPortfolio extends React.Component {
 
                                     if (user_experience.roles) return this.renderMultiCompanyCard({company: user_experience.company_name, totalTimeElapsed: user_experience.timeElapsed, logo: user_experience.company_logo_url, roles: user_experience.roles})
 
-                                    return this.renderCompanyCard({title: user_experience.role_name, company: user_experience.company_name, time: user_experience.timeElapsed, timeElapsed: user_experience.time, logo: user_experience.company_logo_url});
+                                    return (<ExperienceCard {...{
+                                        time: user_experience.timeElapsed,
+                                        company_name: user_experience.company_name,
+                                        role_name: user_experience.role_name,
+                                        company_logo_url: user_experience.company_logo_url,
+                                        timeElapsed: user_experience.time,
+                                    }}/>);
                                 }) : null }
                             </div>
                             {user_experiences && user_experiences.length && user_experiences.length > 3 ? <div onClick={() => {
@@ -683,12 +429,14 @@ class PublicPortfolio extends React.Component {
                                 {this.state.limit ? "Show" : "Hide"} all experiences<i style={{marginLeft: "5px"}} className={`fa-solid fa-arrow-${this.state.limit ? "down" : "up"}`}/>
                             </div>: null}
                         </div>
+
                         <div className={mc(classes.sectionContainer)} style={{display: user_educations && user_educations.length ? null : "none"}}>
                             <div className={mc(classes.sectionTitle)}>Education</div>
                             {user_educations && user_educations.length ? user_educations.map((user_education) => {
-                                return this.renderCard({title: user_education.school_name, company: user_education.degree_name, time: user_education.time, logo: user_education.school_logo_url})
+                                return (<EducationCard {...user_education}/>)
                             }) : null }
                         </div>
+
                         <div style={{textAlign: "center", marginTop: "35px", cursor: "pointer", display: "none"}}>
 
                             <Link to={"/"}>

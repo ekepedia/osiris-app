@@ -27,6 +27,7 @@ class Routing extends React.Component {
                     <Route exact path='/jobs' component={Jobs}/>
                     <Route exact path='/edit/:user_id' component={UserPortfolio}/>
                     <Route exact path='/u/:username' component={PublicPortfolio}/>
+                    <Route exact path='/ue/:username' component={PublicPortfolio}/>
                 </Switch>
             </main>
         );

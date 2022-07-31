@@ -59,7 +59,7 @@ const Styles = {
             height: setHeight(props),
             padding: "6px 8px",
             background: COMMON.COLORS.OSIRIS_GREEN,
-            border: "none",
+            border: `1px solid ${COMMON.COLORS.OSIRIS_GREEN}`,
             borderRadius: "6px",
             color: COMMON.COLORS.COLOR_WHITE,
             ...font,
@@ -95,11 +95,11 @@ class StandardButton extends React.Component {
     }
 
     render() {
-        let { classes, label, outline, onClick } = this.props;
+        let { classes, label, outline, onClick, fullWidth } = this.props;
 
         return (<div className={classes.container}>
 
-            <button className={outline ? mc(classes.outlineButton) : classes.buttonStyle} onClick={() => {
+            <button style={{width: fullWidth ? "100%" : null}} className={outline ? mc(classes.outlineButton) : classes.buttonStyle} onClick={() => {
                 onClick ? onClick() : null;
             }}>{label}</button>
 

@@ -8,8 +8,11 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import DataService from '../../services/DataService';
-import { COLOR_WHITE } from "../../common/colors";
+import COMMON from "../../common/index";
 import axios from "axios";
+import {mc} from "../../common/helpers";
+import StandardInput from "../../components/StandardInput";
+import StandardButton from "../../components/StandardButton";
 
 const Styles = {
     container: {
@@ -17,6 +20,33 @@ const Styles = {
         '@media (max-width: 768px)': {
             padding: "0",
         },
+    },
+    ...COMMON.STYLES.GENERAL.InputStyles,
+    headerTitle: {
+        ...COMMON.FONTS.FONT_TITLE_2_BOLD,
+        marginBottom: "20px",
+        textAlign: "center",
+        color: COMMON.COLORS.OSIRIS_GREEN
+    },
+    subContainer: {
+        maxWidth: "400px",
+        margin: "auto",
+        marginTop: "calc(50vh - 182px)"
+    },
+    buttonContainer: {
+        marginTop: "20px"
+    },
+    disclaimer: {
+        ...COMMON.FONTS.FONT_CAPTION_2,
+        color: COMMON.COLORS.DARK_GREY,
+        maxWidth: "241px",
+        margin: "auto",
+        marginTop: "20px",
+        textAlign: "center"
+    },
+    disclaimerBold: {
+        extend: "disclaimer",
+        ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
     }
 };
 
@@ -50,21 +80,25 @@ class Login extends React.Component {
         const { username, password } = this.state;
 
         return (<div className={classes.container}>
-            <div>LOGIN PAGE</div>
 
-            <div>Username</div>
-            <input value={username} onChange={(e) => {
-                this.setState({username: e.target.value})
-            }}/>
-            <div>Password</div>
-            <input value={password} onChange={(e) => {
-                this.setState({password: e.target.value})
-            }}/>
+            <div className={mc(classes.subContainer)}>
+                <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
 
-            <div>{username}, {password}</div>
-            <button onClick={() => {
-                this.login();
-            }}>LOGIN</button>
+                <div className={mc(classes.inputLabel)}>Username</div>
+                <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
+
+                <div className={mc(classes.inputLabel)}>Password</div>
+                <StandardInput value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
+
+                <div className={mc(classes.buttonContainer)}>
+                    <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>
+                </div>
+
+                <div className={mc(classes.disclaimer)}>
+                    By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
+                </div>
+            </div>
+
         </div>)
     }
 

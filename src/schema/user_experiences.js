@@ -11,11 +11,13 @@ const typeDef = gql`
     extend type Mutation {
         add_user_experience(input: CreateUserExperienceInput!): String
         edit_user_experience(input: EditUserExperienceInput!): Boolean
+        remove_user_experience(user_experience_id: String!): Boolean
     }
 
     type UserExperience {
         user_experience_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         company_id: String,
         company_name: String
@@ -41,6 +43,7 @@ const typeDef = gql`
     
     input CreateUserExperienceInput {
         user_id: String!
+        is_hidden: Boolean,
 
         company_id: String,
         company_name: String
@@ -67,6 +70,7 @@ const typeDef = gql`
     input EditUserExperienceInput {
         user_experience_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         company_id: String,
         company_name: String
@@ -93,6 +97,7 @@ const typeDef = gql`
     input QueryUserExperience {
         user_experience_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         company_id: String,
         company_name: String
@@ -136,6 +141,13 @@ const resolver = {
         }),
         edit_user_experience: (_, {input}) => new Promise((res, rej) => {
             UserExperienceService.edit_user_experience(input).then( () => {
+                return res(true);
+            }).catch(() => {
+                return res(false);
+            })
+        }),
+        remove_user_experience: (_, {user_experience_id}) => new Promise((res, rej) => {
+            UserExperienceService.remove_user_experience({user_experience_id}).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);

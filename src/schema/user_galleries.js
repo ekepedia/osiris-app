@@ -11,11 +11,13 @@ const typeDef = gql`
     extend type Mutation {
         add_user_gallery(input: CreateUserGalleryInput!): String
         edit_user_gallery(input: EditUserGalleryInput!): Boolean
+        remove_user_gallery(user_gallery_id: String!): Boolean
     }
 
     type UserGallery {
         user_gallery_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         gallery_photo_url: String,
         gallery_order: Int
@@ -25,6 +27,7 @@ const typeDef = gql`
     
     input CreateUserGalleryInput {
         user_id: String,
+        is_hidden: Boolean,
 
         gallery_photo_url: String,
         gallery_order: Int
@@ -34,6 +37,7 @@ const typeDef = gql`
 
     input EditUserGalleryInput {
         user_gallery_id: String,
+        is_hidden: Boolean,
         gallery_photo_url: String,
         gallery_order: Int
         gallery_name: String
@@ -43,6 +47,7 @@ const typeDef = gql`
     input QueryUserGallery {
         user_gallery_id: String,
         user_id: String
+        is_hidden: Boolean,
     }
 `;
 
@@ -65,6 +70,13 @@ const resolver = {
         }),
         edit_user_gallery: (_, {input}) => new Promise((res, rej) => {
             UserGalleryService.edit_user_gallery(input).then( () => {
+                return res(true);
+            }).catch(() => {
+                return res(false);
+            })
+        }),
+        remove_user_gallery: (_, {user_gallery_id}) => new Promise((res, rej) => {
+            UserGalleryService.remove_user_gallery({user_gallery_id}).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);

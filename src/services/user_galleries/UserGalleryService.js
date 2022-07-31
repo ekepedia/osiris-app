@@ -26,9 +26,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_galleries = get_user_galleries;
 
-function get_user_galleries({user_gallery_id, user_id}) {
+function get_user_galleries({user_gallery_id, user_id, is_hidden}) {
 
-    const query = DatabaseService.generate_query({user_gallery_id, user_id});
+    const query = DatabaseService.generate_query({user_gallery_id, user_id, is_hidden});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -43,12 +43,12 @@ function get_user_galleries({user_gallery_id, user_id}) {
 
 module.exports.create_user_gallery = create_user_gallery;
 
-function create_user_gallery({user_id, gallery_photo_url, gallery_order, gallery_name, gallery_caption}) {
+function create_user_gallery({user_id, is_hidden, gallery_photo_url, gallery_order, gallery_name, gallery_caption}) {
     return new Promise((resolve, reject) => {
         if (!user_id || !gallery_photo_url)
             return reject(new Error("Missing user_id or gallery_photo_url"));
 
-        const query = DatabaseService.generate_query({user_id, gallery_photo_url, gallery_order, gallery_name, gallery_caption});
+        const query = DatabaseService.generate_query({user_id, is_hidden, gallery_photo_url, gallery_order, gallery_name, gallery_caption});
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("user_gallery_id").then((rows) => {
             const user_gallery_id = rows[0];
@@ -61,12 +61,12 @@ function create_user_gallery({user_id, gallery_photo_url, gallery_order, gallery
 
 module.exports.edit_user_gallery = edit_user_gallery;
 
-function edit_user_gallery({user_gallery_id, gallery_photo_url, gallery_order, gallery_name, gallery_caption}) {
+function edit_user_gallery({user_gallery_id, is_hidden, gallery_photo_url, gallery_order, gallery_name, gallery_caption}) {
     return new Promise((resolve, reject) => {
         if (!user_gallery_id)
             return reject(new Error("Missing user_gallery_id"));
 
-        const query = {gallery_photo_url, gallery_order, gallery_name, gallery_caption};
+        const query = {gallery_photo_url, is_hidden, gallery_order, gallery_name, gallery_caption};
 
         knex(SERVICE_DEFAULT_TABLE).where({user_gallery_id}).update(query).then(() =>{
             return resolve();

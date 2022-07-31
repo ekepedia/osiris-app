@@ -27,6 +27,8 @@ module.exports = function (connection) {
         table.string('date_created');
         table.string('date_updated');
 
+        table.boolean('is_hidden').defaultTo(false);
+
         table.timestamps(true, true);
     }).then(function () {
         winston.info(`Created ${USER_EXPERIENCE_TABLE} table`);

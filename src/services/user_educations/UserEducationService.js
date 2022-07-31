@@ -45,9 +45,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_educations = get_user_educations;
 
-function get_user_educations({user_education_id, user_id}) {
+function get_user_educations({user_education_id, user_id, is_hidden}) {
 
-    const query = DatabaseService.generate_query({user_education_id, user_id});
+    const query = DatabaseService.generate_query({user_education_id, user_id, is_hidden});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -62,7 +62,7 @@ function get_user_educations({user_education_id, user_id}) {
 
 module.exports.create_user_education = create_user_education;
 
-function create_user_education({user_id, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled }) {
+function create_user_education({user_id, is_hidden, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled }) {
 
     //school_name = DatabaseService.clean_string(school_name);
     // degree_name = DatabaseService.clean_string(degree_name);
@@ -72,7 +72,7 @@ function create_user_education({user_id, school_name, school_id, school_logo_url
         if (!user_id || !school_name)
             return reject(new Error("Missing user_id or school_name"));
 
-        const query = DatabaseService.generate_query({user_id, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled});
+        const query = DatabaseService.generate_query({user_id, is_hidden, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled});
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("user_education_id").then((rows) => {
             const user_education_id = rows[0];
@@ -86,7 +86,7 @@ function create_user_education({user_id, school_name, school_id, school_logo_url
 
 module.exports.edit_user_education = edit_user_education;
 
-function edit_user_education({user_education_id, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled}) {
+function edit_user_education({user_education_id, is_hidden, school_name, school_id, school_logo_url, degree_id, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled}) {
 
     //school_name = DatabaseService.clean_string(school_name);
     // degree_name = DatabaseService.clean_string(degree_name);
@@ -96,7 +96,7 @@ function edit_user_education({user_education_id, school_name, school_id, school_
         if (!user_education_id)
             return reject(new Error("Missing user_education_id"));
 
-        const query = { school_name, school_id, degree_id, school_logo_url, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled};
+        const query = { school_name, is_hidden, school_id, degree_id, school_logo_url, degree_name, field_of_study_name, field_of_study_id, start_date, end_date, is_currently_enrolled};
 
         knex(SERVICE_DEFAULT_TABLE).where({user_education_id}).update(query).then(() =>{
             return resolve();

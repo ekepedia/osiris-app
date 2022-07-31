@@ -18,6 +18,8 @@ import StandardInput from "../../../components/StandardInput";
 import {EDIT_PORTFOLIO_MODAL, EDIT_PORTFOLIO_MODALS} from "../../../common/styles";
 import EditPortfolioModalHeader from "./EditPortfolioModalHeader";
 import StandardSelect from "../../../components/StandardSelect";
+import axios from "axios";
+import ThumbnailUpload from "../../../components/ThumbnailUpload";
 
 const Styles = {
     container: {
@@ -36,7 +38,8 @@ const Styles = {
         marginTop: "10px",
         marginBottom: "6px",
         ...COMMON.FONTS.FONT_FOOTNOTE
-    }
+    },
+    ...COMMON.STYLES.PORTFOLIO.PortfolioPageStyles
 };
 
 class EditEducationModal extends React.Component {
@@ -56,18 +59,31 @@ class EditEducationModal extends React.Component {
 
     setDateObjects(user_education) {
 
-        let month = 1;
-        let year = 2020;
+        let start_month = 1;
+        let start_year = 2020;
 
         if (user_education.start_date) {
             const date = new Date(parseFloat(user_education.start_date));
             const MY = convertDateObjectToMonthYear({date});
-            month = MY.month;
-            year = MY.year;
+            start_month = MY.month;
+            start_year = MY.year;
         }
 
-        user_education.start_month = user_education.start_month || month;
-        user_education.start_year = user_education.start_year ||  year;
+        user_education.start_month = user_education.start_month || start_month;
+        user_education.start_year = user_education.start_year || start_year;
+
+        let end_month = 1;
+        let end_year = 2020;
+
+        if (user_education.end_date) {
+            const date = new Date(parseFloat(user_education.end_date));
+            const MY = convertDateObjectToMonthYear({date});
+            end_month = MY.month;
+            end_year = MY.year;
+        }
+
+        user_education.end_month = user_education.end_month || end_month;
+        user_education.end_year = user_education.end_year || end_year;
 
         return user_education;
     }
@@ -98,10 +114,23 @@ class EditEducationModal extends React.Component {
                         <EditPortfolioModalHeader title={"Edit Education"} onClose={onClose} />
                     </div>
                     <div style={{flex: 1, padding: "20px 25px"}}>
-                        <div className={classes.inputLabel}>School</div>
-                        <StandardInput value={user_education.school_name} update={(v) => (updateField("school_name", v))} />
-                        <div className={classes.inputLabel}>Degree</div>
-                        <StandardInput value={user_education.degree_name} update={(v) => (updateField("degree_name", v))} />
+
+                        <div style={{display: "flex"}}>
+                            <div className={classes.smallThumbnailContainer}>
+                                <div className={classes.inputLabel}>Company Logo</div>
+                                <div className={classes.smallThumbnailHolder}>
+                                    <ThumbnailUpload url={user_education.school_logo_url} onURL={({url, file_name}) => {
+                                        updateField("school_logo_url", url)
+                                    }}/>
+                                </div>
+                            </div>
+                            <div style={{flex: 1}}>
+                                <div className={classes.inputLabel}>School</div>
+                                <StandardInput value={user_education.school_name} update={(v) => (updateField("school_name", v))} />
+                                <div className={classes.inputLabel}>Degree</div>
+                                <StandardInput value={user_education.degree_name} update={(v) => (updateField("degree_name", v))} />
+                            </div>
+                        </div>
 
 
                         <div style={{display: "flex"}}>
@@ -114,13 +143,16 @@ class EditEducationModal extends React.Component {
                                 <StandardSelect value={user_education.start_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("start_year", v))}/>
                             </div>
                         </div>
-
-
-                        <select value={user_education.start_year} onChange={(e) => (updateField("start_year", e.target.value))}>
-                            <option>2020</option>
-                            <option>2021</option>
-                            <option>2022</option>
-                        </select>
+                        <div style={{display: "flex"}}>
+                            <div style={{flex: 1, paddingRight: "15px"}}>
+                                <div className={classes.inputLabel}>Month</div>
+                                <StandardSelect value={user_education.end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("end_month", v))}/>
+                            </div>
+                            <div style={{flex: 1}}>
+                                <div className={classes.inputLabel}>Year</div>
+                                <StandardSelect value={user_education.end_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("end_year", v))}/>
+                            </div>
+                        </div>
                     </div>
                     <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <StandardButton label={"Save"} size={"S"} onClick={() => {

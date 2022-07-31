@@ -11,11 +11,13 @@ const typeDef = gql`
     extend type Mutation {
         add_user_education(input: CreateUserEducationInput!): String
         edit_user_education(input: EditUserEducationInput!): Boolean
+        remove_user_education(user_education_id: String!): Boolean
     }
 
     type UserEducation {
         user_education_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         school_id: String,
         school_name: String
@@ -39,6 +41,7 @@ const typeDef = gql`
     
     input CreateUserEducationInput {
         user_id: String!
+        is_hidden: Boolean,
 
         school_id: String,
         school_name: String
@@ -63,6 +66,7 @@ const typeDef = gql`
     input EditUserEducationInput {
         user_education_id: String!
         user_id: String,
+        is_hidden: Boolean,
 
         school_id: String,
         school_name: String
@@ -87,6 +91,7 @@ const typeDef = gql`
     input QueryUserEducation {
         user_education_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         school_id: String,
         school_name: String
@@ -128,6 +133,13 @@ const resolver = {
         }),
         edit_user_education: (_, {input}) => new Promise((res, rej) => {
             UserEducationService.edit_user_education(input).then( () => {
+                return res(true);
+            }).catch(() => {
+                return res(false);
+            })
+        }),
+        remove_user_education: (_, {user_education_id}) => new Promise((res, rej) => {
+            UserEducationService.remove_user_education({user_education_id}).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);

@@ -29,6 +29,7 @@ const Styles = {
         border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
         outline: "none",
         width: "100%",
+        background: "none",
         // TODO "&:focus-visible": {
         //
         // }
@@ -50,12 +51,12 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, value, update} = this.props;
+        let { classes, value, update, placeholder} = this.props;
 
         update = update || (() => {});
 
         return (<div className={classes.container}>
-            <input className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
+            <input placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
         </div>)
     }
 

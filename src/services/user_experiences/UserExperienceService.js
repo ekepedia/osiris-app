@@ -61,9 +61,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_experiences = get_user_experiences;
 
-function get_user_experiences({user_education_id, user_id}) {
+function get_user_experiences({user_education_id, user_id, is_hidden}) {
 
-    const query = DatabaseService.generate_query({user_education_id, user_id});
+    const query = DatabaseService.generate_query({user_education_id, user_id, is_hidden});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -78,12 +78,12 @@ function get_user_experiences({user_education_id, user_id}) {
 
 module.exports.create_user_experience = create_user_experience;
 
-function create_user_experience({user_id, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description,}) {
+function create_user_experience({user_id, is_hidden, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description,}) {
     return new Promise((resolve, reject) => {
         if (!user_id || !company_name)
             return reject(new Error("Missing user_id or company_name"));
 
-        const query = DatabaseService.generate_query({user_id, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description});
+        const query = DatabaseService.generate_query({user_id, is_hidden, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description});
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("user_experience_id").then((rows) => {
             const user_experience_id = rows[0];
@@ -97,12 +97,12 @@ function create_user_experience({user_id, company_id, company_name, company_logo
 
 module.exports.edit_user_experience = edit_user_experience;
 
-function edit_user_experience({user_experience_id, user_id, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description}) {
+function edit_user_experience({user_experience_id, user_id, is_hidden, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description}) {
     return new Promise((resolve, reject) => {
         if (!user_experience_id)
             return reject(new Error("Missing user_experience_id"));
 
-        const query = { user_id, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description};
+        const query = { user_id, is_hidden, company_id, company_name, company_logo_url, role_id, role_name, is_current, start_date, end_date, type, type_id, description};
 
         knex(SERVICE_DEFAULT_TABLE).where({user_experience_id}).update(query).then(() =>{
             return resolve();

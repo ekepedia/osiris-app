@@ -26,9 +26,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_links = get_user_links;
 
-function get_user_links({user_link_id, user_id}) {
+function get_user_links({user_link_id, user_id, is_hidden}) {
 
-    const query = DatabaseService.generate_query({user_link_id, user_id});
+    const query = DatabaseService.generate_query({user_link_id, user_id, is_hidden});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -43,12 +43,12 @@ function get_user_links({user_link_id, user_id}) {
 
 module.exports.create_user_link = create_user_link;
 
-function create_user_link({user_id, link_type_id, link_type, link_name, link_url, link_image_url, link_order, }) {
+function create_user_link({user_id, is_hidden, link_type_id, link_type, link_name, link_url, link_image_url, link_order, }) {
     return new Promise((resolve, reject) => {
         if (!user_id || !link_url)
             return reject(new Error("Missing user_id or link_url"));
 
-        const query = DatabaseService.generate_query({user_id, link_type_id, link_type, link_name, link_url, link_image_url, link_order});
+        const query = DatabaseService.generate_query({user_id, is_hidden, link_type_id, link_type, link_name, link_url, link_image_url, link_order});
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("user_link_id").then((rows) => {
             const user_link_id = rows[0];
@@ -62,12 +62,12 @@ function create_user_link({user_id, link_type_id, link_type, link_name, link_url
 
 module.exports.edit_user_link = edit_user_link;
 
-function edit_user_link({user_link_id, user_id, link_type_id, link_type, link_name, link_url, link_image_url, link_order}) {
+function edit_user_link({user_link_id, user_id, is_hidden, link_type_id, link_type, link_name, link_url, link_image_url, link_order}) {
     return new Promise((resolve, reject) => {
         if (!user_link_id)
             return reject(new Error("Missing user_link_id"));
 
-        const query = { user_id, link_type_id, link_type, link_name, link_url, link_image_url, link_order};
+        const query = { user_id, is_hidden, link_type_id, link_type, link_name, link_url, link_image_url, link_order};
 
         knex(SERVICE_DEFAULT_TABLE).where({user_link_id}).update(query).then(() =>{
             return resolve();

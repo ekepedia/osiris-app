@@ -10,12 +10,14 @@ module.exports = function (connection) {
         table.string('link_type_id');
         table.string('link_type');
 
-        table.string('link_name');
+        table.string('link_name', 2000);
 
-        table.string('link_url');
-        table.string('link_image_url');
+        table.string('link_url', 2000);
+        table.string('link_image_url', 2000);
 
         table.string('link_order');
+
+        table.boolean('is_hidden').defaultTo(false);
 
         table.timestamps(true, true);
     }).then(function () {

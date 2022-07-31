@@ -87,10 +87,6 @@ class PortfolioCarousel extends React.Component {
             </div>
 
         );
-
-        return (<div className={classes.container}>
-
-        </div>)
     }
 
 }

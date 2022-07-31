@@ -72,7 +72,7 @@ UserService.getUser = ({client, username, user_id}) => {
             user_id
         };
 
-        client.query({query: UserQuery, variables}).then((response) => {
+        client.query({query: UserQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
             if (response && response.data && response.data.users && response.data.users.length) {
                 resolve(response.data.users[0])
             } else {
@@ -84,7 +84,7 @@ UserService.getUser = ({client, username, user_id}) => {
     });
 }
 
-UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_photo_url, username, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone}) => {
+UserService.editUser = ({client, user_id, bio, first_name, last_name, cover_photo_url, profile_photo_url, username, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone}) => {
     return new Promise((resolve, reject) => {
         const EditUserMutation = gql`
             mutation EditUserMutation(
@@ -93,6 +93,7 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_ph
                 $last_name: String,
                 $bio: String,
                 $profile_photo_url: String,
+                $cover_photo_url: String,
                 $username: String,
 
                 $user_twitter_link: String,
@@ -110,6 +111,7 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_ph
                     first_name: $first_name,
                     last_name: $last_name,
                     profile_photo_url: $profile_photo_url,
+                    cover_photo_url: $cover_photo_url,
                     username: $username,
                     bio: $bio,
                     user_twitter_link: $user_twitter_link,
@@ -126,7 +128,22 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, profile_ph
         `;
 
         let variables = {
-            user_id, bio, first_name, last_name, username, profile_photo_url, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone
+            user_id,
+            bio,
+            first_name,
+            last_name,
+            username,
+            profile_photo_url,
+            cover_photo_url,
+            user_twitter_link,
+            user_clubhouse_link,
+            user_instagram_link,
+            user_website_link,
+            user_tiktok_link,
+            user_youtube_link,
+            user_vimeo_link,
+            user_main_contact_email,
+            user_main_contact_phone
         };
 
         client.mutate({mutation: EditUserMutation, variables}).then((response) => {

@@ -11,11 +11,13 @@ const typeDef = gql`
     extend type Mutation {
         add_user_link(input: CreateUserLinkInput!): String
         edit_user_link(input: EditUserLinkInput!): Boolean
+        remove_user_link(user_link_id: String!): Boolean
     }
 
     type UserLink {
         user_link_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         link_type_id: String,
         link_type: String
@@ -30,6 +32,7 @@ const typeDef = gql`
     
     input CreateUserLinkInput {
         user_id: String,
+        is_hidden: Boolean,
 
         link_type_id: String,
         link_type: String
@@ -45,6 +48,7 @@ const typeDef = gql`
     input EditUserLinkInput {
         user_link_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         link_type_id: String,
         link_type: String
@@ -60,6 +64,7 @@ const typeDef = gql`
     input QueryUserLink {
         user_link_id: String,
         user_id: String,
+        is_hidden: Boolean,
 
         link_type_id: String,
         link_type: String
@@ -92,6 +97,13 @@ const resolver = {
         }),
         edit_user_link: (_, {input}) => new Promise((res, rej) => {
             UserLinksService.edit_user_link(input).then( () => {
+                return res(true);
+            }).catch(() => {
+                return res(false);
+            })
+        }),
+        remove_user_link: (_, {user_link_id}) => new Promise((res, rej) => {
+            UserLinksService.remove_user_link({user_link_id}).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);

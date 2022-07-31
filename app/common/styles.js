@@ -53,6 +53,7 @@ export const STYLE_BUTTON_FOOTNOTE_OUTLINE = {
     borderRadius: "6px",
     border: `1px solid ${COLOR_GREEN}`
 }
+
 // MODAL STYLES
 export const STYLE_MODAL_OVERLAY = {
     position: 'fixed',
@@ -62,6 +63,26 @@ export const STYLE_MODAL_OVERLAY = {
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     transition: `opacity ${MODAL_TIMING}ms ease-in-out`
+}
+
+// MODAL STYLES
+export const STYLE_MODAL_CONTAINER = {
+    flex: 1,
+    padding: "20px 25px",
+    overflow: "scroll"
+}
+
+export const STYLE_MODAL_SUPER_CONTAINER = {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    overflow: "hidden"
+}
+
+export const STYLE_MODAL_SUPER_SUPER_CONTAINER = {
+    height: "90vh",
+    // height: "100%",
+    overflow: "hidden"
 }
 
 export const STYLE_MODAL_CONTENT = {
@@ -147,12 +168,19 @@ export const EDIT_PORTFOLIO_MODAL = {
     }
 }
 
+
+import { PORTFOLIO } from "./styles/Portfolio";
+import { GENERAL } from "./styles/General";
+
 export const STYLES = {
     STYLE_INPUT,
     STYLE_BORDER_LINE,
     GREY_BORDER_6,
     STYLE_MODAL_CONTENT,
     STYLE_MODAL_OVERLAY,
+    STYLE_MODAL_CONTAINER,
+    STYLE_MODAL_SUPER_CONTAINER,
+    STYLE_MODAL_SUPER_SUPER_CONTAINER,
     STYLE_BUTTON_FOOTNOTE_OUTLINE,
     STYLE_BUTTON_FOOTNOTE,
     STYLE_BUTTON_SUBHEADER,
@@ -160,7 +188,9 @@ export const STYLES = {
     STYLE_BUTTON_HEADLINE,
     MODAL_TIMING,
     MOBILE_STYLES,
-    EDIT_PORTFOLIO_MODAL
+    EDIT_PORTFOLIO_MODAL,
+    PORTFOLIO,
+    GENERAL
 }
 
 console.log("SD", STYLES)

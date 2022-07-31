@@ -54,6 +54,8 @@ class StandardModal extends React.Component {
 
         user = user || {};
 
+        console.log("MODAL USER", user);
+
         return (<div className={classes.container}>
             <Modal
                 isOpen={open}
@@ -81,6 +83,18 @@ class StandardModal extends React.Component {
                         <StandardInput value={user.last_name} update={(v) => (updateField("last_name", v))} />
                         <div className={classes.inputLabel}>Bio</div>
                         <StandardInput value={user.bio} update={(v) => (updateField("bio", v))} />
+                        <div className={classes.inputLabel}>Instagram Link</div>
+                        <StandardInput value={user.user_instagram_link} update={(v) => (updateField("user_instagram_link", v))} />
+                        <div className={classes.inputLabel}>Twitter Link</div>
+                        <StandardInput value={user.user_twitter_link} update={(v) => (updateField("user_twitter_link", v))} />
+                        <div className={classes.inputLabel}>TikTok Link</div>
+                        <StandardInput value={user.user_tiktok_link} update={(v) => (updateField("user_tiktok_link", v))} />
+                        <div className={classes.inputLabel}>Personal Website Link</div>
+                        <StandardInput value={user.user_website_link} update={(v) => (updateField("user_website_link", v))} />
+                        <div className={classes.inputLabel}>Vimeo Link</div>
+                        <StandardInput value={user.user_vimeo_link} update={(v) => (updateField("user_vimeo_link", v))} />
+                        <div className={classes.inputLabel}>Email Contact</div>
+                        <StandardInput value={user.user_main_contact_email} update={(v) => (updateField("user_main_contact_email", v))} />
                     </div>
                     <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <StandardButton label={"Save"} size={"S"} onClick={() => {

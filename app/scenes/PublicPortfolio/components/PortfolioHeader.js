@@ -19,69 +19,7 @@ const Styles = {
             padding: "0",
         },
     },
-    profileHeaderContainer: {
-        padding: "75px 35px",
-        position:"relative",
-        paddingBottom: "25px",
-        background: COMMON.COLORS.COLOR_WHITE,
-        '@media (max-width: 768px)': {
-            padding: "75px 15px",
-            // padding: "40px 15px",
-            paddingBottom: "15px"
-        },
-    },
-    profileCover: {
-        height: "150px", width: "100%", overflow: "hidden",
-        '@media (max-width: 768px)': {
-            height: "75px",
-        },
-    },
-    profileImageContainer: {
-        position: "absolute",
-        top: "-50px",
-        '@media (max-width: 768px)': {
-            // top: "-25px",
-            top: "-50px",
-        },
-    },
-    profileImage:{
-        height: "100px",
-        width: "100px",
-        border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
-        borderRadius: "4px",
-        overflow: "hidden",
-        backgroundSize: "cover",
-        '@media (max-width: 768px)': {
-            // height: "50px",
-            // width: "50px",
-            height: "100px",
-            width: "100px",
-        },
-    },
-    profileHeaderName:{
-        ...COMMON.FONTS.FONT_TITLE_2_BOLD,
-        '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_HEADLINE_BOLD,
-        },
-    },
-    profileHeaderBio:{
-        ...COMMON.FONTS.FONT_SUBHEADER,
-        '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_CAPTION_1,
-        },
-    },
-    socialLink: {
-        background: COMMON.COLORS.OSIRIS_GREEN,
-        color: COMMON.COLORS.COLOR_WHITE,
-        height: "22px",
-        width: "22px",
-        textAlign: "center",
-        fontSize: "10.5px",
-        borderRadius: "6px",
-        paddingTop: "5.75px",
-        display: "inline-block",
-        marginRight: "5px",
-    },
+    ...COMMON.STYLES.PORTFOLIO.PortfolioHeaderStyles
 };
 
 class PortfolioHeader extends React.Component {
@@ -167,7 +105,7 @@ class PortfolioHeader extends React.Component {
         let has_link = (user_instagram_link || user_main_contact_email || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
 
         return (<div className={classes.container}>
-            <div style={{border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
+            <div className={classes.superContainer}>
                 <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
                     <CoverImageHolder url={cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                 </div>

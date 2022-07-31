@@ -71,7 +71,7 @@ module.exports.generate_query = function generate_query(queryParams) {
     let query = {};
 
     _.forEach(queryParams, (val, key) => {
-        if (val)
+        if (val !== undefined && val !== null)
             query[key] = val
     });
 

@@ -14,7 +14,7 @@ import DataService from '../services/DataService';
 import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_GOLD, COLOR_GREEN, COLOR_WHITE} from "../common/colors";
 import {FONT_BODY_BOLD, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD} from "../common/fonts";
 
-const NAV_HEIGHT = 65;
+const NAV_HEIGHT = 60;
 
 const Styles = {
     container: {
@@ -77,7 +77,7 @@ class NavBar extends React.Component {
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}} className={classes.logoStyle}>
                     <Link to={"/"} style={{color: COLOR_GREEN}}>
-                        OSIRIS
+                        <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "15px"}}/>
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right", paddingRight: "20px"}}>

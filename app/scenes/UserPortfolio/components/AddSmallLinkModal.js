@@ -20,6 +20,7 @@ import EditPortfolioModalHeader from "./EditPortfolioModalHeader";
 import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import CoverImageHolder from "../../../components/CoverImageHolder";
+import ThumbnailUpload from "../../../components/ThumbnailUpload";
 
 const Styles = {
     container: {
@@ -38,7 +39,8 @@ const Styles = {
         marginTop: "10px",
         marginBottom: "6px",
         ...COMMON.FONTS.FONT_FOOTNOTE
-    }
+    },
+    ...COMMON.STYLES.PORTFOLIO.PortfolioPageStyles
 };
 
 class AddSmallLinkModal extends React.Component {
@@ -56,29 +58,6 @@ class AddSmallLinkModal extends React.Component {
     componentDidMount() {
 
     }
-
-    fileUploaded(e) {
-        if (e.target.files && e.target.files[0]) {
-
-            this.setState({uploading: true});
-            const file = e.target.files[0];
-            const formData = new FormData();
-
-            formData.append('img', file);
-
-            axios.post("/api/upload-user-img", formData).then((data) => {
-                this.setState({uploading: false});
-
-                if (data && data.data && data.data.url) {
-                    const { url } = data.data;
-                    this.setState({
-                        link_image_url: url
-                    })
-                }
-            })
-        }
-    }
-
 
     render() {
         let { classes, open, onClose, onSubmit } = this.props;
@@ -111,18 +90,25 @@ class AddSmallLinkModal extends React.Component {
                             <EditPortfolioModalHeader title={"Add Link"} onClose={onClose} />
                         </div>
                         <div style={{flex: 1, padding: "20px 25px"}}>
-                            <div className={classes.inputLabel}>Title</div>
-                            <StandardInput value={link_name} update={(v) => (this.setState({link_name: v}))} />
-                            <div className={classes.inputLabel}>URL</div>
-                            <StandardInput value={link_url} update={(v) => (this.setState({link_url: v}))} />
-                            <div className={classes.inputLabel}>Upload Image</div>
-                            <input type={"file"} onChange={(e) => (this.fileUploaded(e))}/>
-                            <div className={classes.inputLabel}>Thumbnail</div>
-                            <div style={{width: "100%", height: "418px", background: COMMON.COLORS.BACKGROUND_GREY}}>
-                                <CoverImageHolder url={link_image_url}/>
-                                {this.state.uploading && <div>
-                                    <div><i className="fa-solid fa-spinner"></i></div>
-                                </div>}
+
+
+                            <div style={{display: "flex"}}>
+                                <div className={classes.smallThumbnailContainer}>
+                                    <div className={classes.inputLabel}>Thumbnail</div>
+                                    <div className={classes.smallThumbnailHolder}>
+                                        <ThumbnailUpload url={this.state.link_image_url} onURL={({url, file_name}) => {
+                                            this.setState({
+                                                link_image_url: url,
+                                            })
+                                        }}/>
+                                    </div>
+                                </div>
+                                <div style={{flex: 1}}>
+                                    <div className={classes.inputLabel}>Title</div>
+                                    <StandardInput value={link_name} update={(v) => (this.setState({link_name: v}))} />
+                                    <div className={classes.inputLabel}>URL</div>
+                                    <StandardInput value={link_url} update={(v) => (this.setState({link_url: v}))} />
+                                </div>
                             </div>
                         </div>
                         <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>

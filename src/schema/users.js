@@ -50,6 +50,7 @@ const typeDef = gql`
         user_instagram_link: String,
         user_website_link: String,
         user_tiktok_link: String,
+        
         user_youtube_link: String,
         user_vimeo_link: String,
         user_main_contact_email: String,
