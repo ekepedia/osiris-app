@@ -226,10 +226,10 @@ class PublicPortfolio extends React.Component {
                 const TEMP_PADDING = 1000*60*60*48;
 
                 const start = moment(parseFloat(user_experience.start_date) + TEMP_PADDING);
-                const end = moment(parseFloat(user_experience.end_date ? user_experience.end_date : new Date().getTime()));
+                const end = moment(parseFloat(user_experience.end_date && !user_experience.is_current ? user_experience.end_date : new Date().getTime()));
 
 
-                const time = `${start.format("MMM YYYY")} - ${user_experience.end_date ? end.format("MMM YYYY") : "Present"}`
+                const time = `${start.format("MMM YYYY")} - ${user_experience.end_date && !user_experience.is_current ? end.format("MMM YYYY") : "Present"}`
                 const diff = end.diff(start);
                 const duration = moment.duration(diff);
 

@@ -12,7 +12,7 @@ import Modal from 'react-modal';
 import DataService from '../../../services/DataService';
 
 import COMMON from "../../../common/index";
-import {convertDateObjectToMonthYear, converMonthYearToDateObject} from "../../../common/helpers";
+import {convertDateObjectToMonthYear, converMonthYearToDateObject, mc} from "../../../common/helpers";
 import StandardButton from "../../../components/StandardButton";
 import StandardInput from "../../../components/StandardInput";
 import {EDIT_PORTFOLIO_MODAL, EDIT_PORTFOLIO_MODALS} from "../../../common/styles";
@@ -39,7 +39,9 @@ const Styles = {
         marginTop: "10px",
         marginBottom: "6px",
         ...COMMON.FONTS.FONT_FOOTNOTE
-    }
+    },
+    ...COMMON.STYLES.GENERAL.AlignmentStyles,
+    ...COMMON.STYLES.PORTFOLIO.EditToggleDeleteStyles,
 };
 
 class EditGalleryModal extends React.Component {
@@ -60,15 +62,23 @@ class EditGalleryModal extends React.Component {
     }
 
     removeUserGallery({user_gallery_id}) {
-        const { client, refresh } = this.props;
+        const { client, refetch } = this.props;
 
         let yes = confirm("Are you sure you want delete this photo? This action can not be undone!");
 
         if (yes) {
             UserGalleryService.removeUserGallery({client, user_gallery_id}).then(() => {
-                refresh ? refresh() : refresh;
+                refetch ? refetch() : refetch;
             })
         }
+    }
+
+    toggleActive({user_gallery_id, is_hidden}) {
+        const { client, refetch } = this.props;
+
+        UserGalleryService.editUserGallery({client, user_gallery_id, is_hidden: !is_hidden}).then(() => {
+            refetch ? refetch() : refetch;
+        })
     }
 
     render() {
@@ -109,7 +119,7 @@ class EditGalleryModal extends React.Component {
 
                             {user_galleries.map((user_gallery, i) => {
 
-                                return (<div>
+                                return (<div style={{opacity: user_gallery.is_hidden ? 0.5 : 1}}>
                                     <div style={{display: "flex", height: "40px", lineHeight: "40px", marginTop: i === 0 ? 0 : "15px"}}>
                                         <div style={{flex: "0 0 71px", border: `1px solid ${COMMON.COLORS.LIGHT_GREY}`, borderRadius: "6px", }}>
                                             <CoverImageHolder url={user_gallery.gallery_photo_url}/>
@@ -117,10 +127,15 @@ class EditGalleryModal extends React.Component {
                                         <div style={{flex: 1, paddingLeft: "15px", ...COMMON.FONTS.FONT_SUBHEADER_BOLD}}>
                                             {user_gallery.gallery_name}
                                         </div>
-                                        <div style={{flex: "0 0 20px"}} onClick={() => {
-                                            this.removeUserGallery(user_gallery)
-                                        }}>
-                                            <i style={{lineHeight: "40px"}} className="fa-solid fa-xmark"/>
+                                        <div style={{flex: "0 0 42px"}} className={mc(classes.centerAlignContainer, classes.editToggleDeleteSuperContainer)}>
+                                            <div className={mc(classes.centerAlignObject, classes.editToggleDeleteContainer)}>
+                                                <div className={mc(classes.editToggleDeleteToggle)} onClick={() => (this.toggleActive(user_gallery))}>
+                                                    <i className={`fa-solid fa-toggle-${user_gallery.is_hidden ? "off" : "on"}`}/>
+                                                </div>
+                                                <div className={mc(classes.editToggleDeleteDelete)} onClick={() => (this.removeUserGallery(user_gallery))}>
+                                                    <i className="fa-solid fa-xmark"/>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>)

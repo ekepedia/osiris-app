@@ -20,6 +20,7 @@ import EditPortfolioModalHeader from "./EditPortfolioModalHeader";
 import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import CoverImageHolder from "../../../components/CoverImageHolder";
+import YouTubeIFrame from "../../../components/YouTubeIFrame";
 
 const Styles = {
     container: {
@@ -100,14 +101,16 @@ class EditYoutubeLinkModal extends React.Component {
                     }
                 }}
             >
-                <div style={{height: "100%", overflow: "hidden"}}>
-                    <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
+                <div style={COMMON.STYLES.STYLE_MODAL_SUPER_SUPER_CONTAINER}>
+                    <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Edit YouTube"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px"}}>
+                        <div style={COMMON.STYLES.STYLE_MODAL_CONTAINER}>
                             <div className={classes.inputLabel}>URL</div>
                             <StandardInput value={user_link.link_url} update={(v) => (updateField("link_url", v))} />
+                            <div className={classes.inputLabel}>Preview</div>
+                            <YouTubeIFrame link_url={user_link.link_url}/>
                         </div>
                         <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <StandardButton label={"Save"} size={"S"} onClick={() => {

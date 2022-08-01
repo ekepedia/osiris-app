@@ -79,7 +79,7 @@ class EditBannerLinkModal extends React.Component {
                     }
                 }}
             >
-                <div style={STYLE_MODAL_SUPER_SUPER_CONTAINER}>
+                <div style={COMMON.STYLES.STYLE_MODAL_SUPER_SUPER_CONTAINER}>
                     <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Edit Banner Link"} onClose={onClose} />

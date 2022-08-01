@@ -4,11 +4,11 @@ body {
     background: #F6F6F6;
 }
 
-input {
-    appearance: none !important;
-    -moz-appearance: none !important;
-    -webkit-appearance: none !important;
-}
+/*input {*/
+/*    appearance: none !important;*/
+/*    -moz-appearance: none !important;*/
+/*    -webkit-appearance: none !important;*/
+/*}*/
 
 input[type=text] {
     appearance: none !important;

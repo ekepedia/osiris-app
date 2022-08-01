@@ -38,14 +38,50 @@ UserGalleryService.addUserGallery = ({client, user_id, gallery_photo_url, galler
     })
 }
 
-UserGalleryService.getUserGallery = ({client, user_id}) => {
+UserGalleryService.editUserGallery = ({client, user_gallery_id, is_hidden, gallery_photo_url, gallery_order, gallery_name, gallery_caption}) => {
+    return new Promise((resolve, reject) => {
+        const EditUserGalleryMutation = gql`
+            mutation EditUserGalleryMutation(
+                $user_gallery_id: String!,
+                $gallery_caption: String,
+                $gallery_name: String,
+                $gallery_order: Int,
+                $gallery_photo_url: String,
+                $is_hidden: Boolean
+            ){
+                edit_user_gallery(input:{
+                    user_gallery_id: $user_gallery_id,
+                    gallery_caption: $gallery_caption,
+                    gallery_name: $gallery_name,
+                    gallery_order: $gallery_order,
+                    gallery_photo_url: $gallery_photo_url,
+                    is_hidden: $is_hidden
+                })
+            }
+        `;
+
+        let variables = {
+            user_gallery_id, is_hidden, gallery_photo_url, gallery_order, gallery_name, gallery_caption
+        };
+
+        client.mutate({mutation: EditUserGalleryMutation, variables}).then((response) => {
+            resolve(response.data.edit_user_gallery)
+        }).catch((err) => {
+            resolve();
+        })
+    })
+}
+
+UserGalleryService.getUserGallery = ({client, user_id, is_hidden}) => {
     return new Promise((resolve, reject) => {
         const UserGalleryQuery = gql`
             query UserGalleryQuery(
                 $user_id: String,
+                $is_hidden: Boolean,
             ){
                 user_galleries(input:{
                     user_id: $user_id,
+                    is_hidden: $is_hidden,
                 }) {
                     user_gallery_id
                     user_id
@@ -60,7 +96,8 @@ UserGalleryService.getUserGallery = ({client, user_id}) => {
         `;
 
         const variables = {
-            user_id
+            user_id,
+            is_hidden
         };
 
         client.query({query: UserGalleryQuery, variables, fetchPolicy: "no-cache"}).then((response) => {

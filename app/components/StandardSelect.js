@@ -29,6 +29,14 @@ const Styles = {
         border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
         outline: "none",
         width: "100%",
+        "mozAppearance": "none",
+        "webkitAppearance": "none",
+        "appearance": "none",
+        background: "url('/img/select-down.png')",
+        "backgroundRepeat": "no-repeat",
+        "backgroundPositionX": "calc(100% - 10.5px)",
+        "backgroundPositionY": "11.5px",
+        "backgroundSize": "10px auto"
         // TODO "&:focus-visible": {
         //
         // }

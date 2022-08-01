@@ -21,6 +21,7 @@ import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import ThumbnailUpload from "../../../components/ThumbnailUpload";
+import StandardCheckbox from "../../../components/StandardCheckbox";
 
 const Styles = {
     container: {
@@ -135,6 +136,9 @@ class EditExperienceModal extends React.Component {
                             </div>
                         </div>
 
+                        <div>
+                            <StandardCheckbox label={"I am currently working in this role"} value={user_experience.is_current} update={(v) => (updateField("is_current", v))}/>
+                        </div>
 
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, paddingRight: "15px"}}>
@@ -146,7 +150,7 @@ class EditExperienceModal extends React.Component {
                                 <StandardSelect value={user_experience.start_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("start_year", v))}/>
                             </div>
                         </div>
-                        <div style={{display: "flex"}}>
+                        <div style={{display: user_experience.is_current ? "none" : "flex"}}>
                             <div style={{flex: 1, paddingRight: "15px"}}>
                                 <div className={classes.inputLabel}>End date*</div>
                                 <StandardSelect value={user_experience.end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("end_month", v))}/>

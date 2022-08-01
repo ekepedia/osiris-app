@@ -21,6 +21,7 @@ import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import ThumbnailUpload from "../../../components/ThumbnailUpload";
+import StandardCheckbox from "../../../components/StandardCheckbox";
 
 const Styles = {
     container: {
@@ -122,7 +123,9 @@ class AddUserExperienceModal extends React.Component {
                                     <StandardInput value={role_name} update={(v) => (this.setState({role_name: v}))} />
                                 </div>
                             </div>
-
+                            <div>
+                                <StandardCheckbox label={"I am currently working in this role"} value={is_current} update={(v) => (this.setState({is_current: v}))}/>
+                            </div>
                             <div style={{display: "flex"}}>
                                 <div style={{flex: 1, paddingRight: "15px"}}>
                                     <div className={classes.inputLabel}>Start date*</div>
@@ -133,7 +136,7 @@ class AddUserExperienceModal extends React.Component {
                                     <StandardSelect value={start_year} options={COMMON.CONSTS.YEARS} update={(v) => (this.setState({start_year: v}))}/>
                                 </div>
                             </div>
-                            <div style={{display: "flex"}}>
+                            <div style={{display: is_current ? "none" : "flex"}}>
                                 <div style={{flex: 1, paddingRight: "15px"}}>
                                     <div className={classes.inputLabel}>End date*</div>
                                     <StandardSelect value={end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (this.setState({end_month: v}))}/>
