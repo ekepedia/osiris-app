@@ -144,7 +144,9 @@ function upload_img(name, mimetype, data) {
         // Uploading files to the bucket
         s3.upload(params, function(err, data) {
             if (err) {
-                reject(err);
+                console.error("ERROR UPLOADING");
+                console.error("Upload error", err);
+                return reject(err);
             }
 
             console.log(`File uploaded successfully. ${data.Location}`);
