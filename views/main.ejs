@@ -37,14 +37,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJW2J68X1Z"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJHZLTB8NS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-QJW2J68X1Z');
+        console.log(window.location)
+
+        if (window.location && window.location.host && window.location.host.indexOf("www.osiris.works") !== -1) {
+            gtag('config', 'G-DJHZLTB8NS');
+        } else {
+            gtag('config', 'G-9JMPPPXN1J');
+        }
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-modal/3.14.3/react-modal.min.js"
