@@ -74,6 +74,13 @@ class ThumbnailUpload extends React.Component {
 
         if (e.target.files && e.target.files[0]) {
 
+            const MB_10 = 1024 * 1024 * 10;
+
+            if (e.target.files[0].size > MB_10){
+                alert("File is too big! Please upload a file smaller than 10MB");
+                return;
+            }
+
             updateLoading(true);
 
             const file = e.target.files[0];
@@ -115,7 +122,7 @@ class ThumbnailUpload extends React.Component {
         let { classes, client, match: { params }, url } = this.props;
 
         return (<div className={classes.container}>
-            {url && url.length ? <div style={{height: "100%", width: "100%", position: "relative"}}>
+            {url && url.length ? <div style={{height: "100%", width: "100%", position: "relative", borderRadius: "6px", overflow: "hidden"}}>
                 <CoverImageHolder url={url}/>
                 <div className={classes.cameraIconContainer} style={{top: "5%", right: "5%"}} onClick={() => {this.clickPhotoReUploadButton()}}>
                     <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
@@ -124,7 +131,7 @@ class ThumbnailUpload extends React.Component {
             </div>: <div className={classes.centerAlignContainer} style={{height: "100%", width: "100%", backgroundColor: COMMON.COLORS.BACKGROUND_GREY}}>
                 <div className={classes.centerAlignObject}>
                     <div className={classes.uploadButton} onClick={() => {this.clickPhotoReUploadButton()}}>Upload <i className="fa-solid fa-arrow-up"></i></div>
-                    <input type={"file"} style={{display: "none"}} ref={this.photoReUploadButton} onChange={(e) => (this.fileUploaded(e))}/>
+                    <input type={"file"} accept="image/*" style={{display: "none"}} ref={this.photoReUploadButton} onChange={(e) => (this.fileUploaded(e))}/>
                 </div>
             </div>}
         </div>)

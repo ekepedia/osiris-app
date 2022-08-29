@@ -18,6 +18,13 @@ const UserExperienceService = require("./user_experiences/UserExperienceService"
 const UserLinksService = require("./user_links/UserLinksService");
 const UserGalleryService = require("./user_galleries/UserGalleryService");
 
+const CompanyService = require("./companies/CompanyService");
+const CompanyDemographicService = require("./company_demographics/CompanyDemographicService");
+const JobService = require("./jobs/JobService");
+const SavedJobService = require("./saved_jobs/SavedJobService");
+const SavedJobNoteService = require("./saved_jobs_notes/SavedJobNoteService");
+const SavedJobReminderService = require("./saved_jobs_reminders/SavedJobReminderService");
+
 const DemoUserSchema = require("./demo_users/schema/demo_users.schema");
 const FeedbackUserSchema = require("./demo_users/schema/feedback_users.schema");
 const DemoTrackingSchema = require("./demo_tracking/schema/demo_tracking.schema");
@@ -30,6 +37,13 @@ const UserEducationSchema = require("./user_educations/schema/user_educations.sc
 const UserExperienceSchema = require("./user_experiences/schema/user_experiences.schema");
 const UserLinkSchema = require("./user_links/schema/user_links.schema");
 const UserGallerySchema = require("./user_galleries/schema/user_galleries.schema");
+
+const CompaniesSchema = require("./companies/schema/companies.schema");
+const CompanyDemographicsSchema = require("./company_demographics/schema/company_demographics.schema");
+const JobsSchema = require("./jobs/schema/jobs.schema");
+const SavedJobsSchema = require("./saved_jobs/schema/saved_jobs.schema");
+const SavedJobNotesSchema = require("./saved_jobs_notes/schema/saved_job_notes.schema");
+const SavedJobRemindersSchema = require("./saved_jobs_reminders/schema/saved_jobs_reminders.schema");
 
 module.exports.init = function (connection) {
     init = true;
@@ -49,6 +63,13 @@ module.exports.init = function (connection) {
     UserLinksService.init(connection);
     UserGalleryService.init(connection);
 
+    CompanyService.init(connection);
+    CompanyDemographicService.init(connection);
+    JobService.init(connection);
+    SavedJobService.init(connection);
+    SavedJobNoteService.init(connection);
+    SavedJobReminderService.init(connection);
+
     init_schema();
 };
 
@@ -65,6 +86,13 @@ function init_schema() {
     UserExperienceSchema(knex);
     UserLinkSchema(knex);
     UserGallerySchema(knex);
+
+    CompaniesSchema(knex);
+    CompanyDemographicsSchema(knex);
+    JobsSchema(knex);
+    SavedJobsSchema(knex);
+    SavedJobNotesSchema(knex);
+    SavedJobRemindersSchema(knex);
 }
 
 module.exports.generate_query = function generate_query(queryParams) {

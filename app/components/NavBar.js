@@ -11,8 +11,10 @@ import injectSheet from 'react-jss';
 
 import DataService from '../services/DataService';
 
-import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_GOLD, COLOR_GREEN, COLOR_WHITE} from "../common/colors";
+import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_GOLD, COLOR_GREEN, COLOR_WHITE, OSIRIS_GREEN} from "../common/colors";
 import {FONT_BODY_BOLD, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD} from "../common/fonts";
+import UserService from "../services/UserService";
+import CoverImageHolder from "./CoverImageHolder";
 
 const NAV_HEIGHT = 60;
 
@@ -37,7 +39,9 @@ const Styles = {
         position: "relative",
         width: "fit-content",
         marginLeft: "auto",
-        cursor: "pointer"
+        cursor: "pointer",
+        marginRight: "20px",
+        display: "inline-block"
     },
     selectedLink: {
         position: "absolute",
@@ -52,7 +56,9 @@ const Styles = {
         height: "40px",
         width: "40px",
         borderRadius: "100%",
-        border: `2px solid ${COLOR_BORDER_GREY}`
+        border: `2px solid ${OSIRIS_GREEN}`,
+        overflow: "hidden",
+        cursor: "pointer"
     }
 };
 
@@ -61,17 +67,42 @@ class NavBar extends React.Component {
     constructor(props) {
         super(props);
 
+        let user = {};
+        let userstring = localStorage.user;
+
+        if (userstring && userstring !== "undefined") {
+            user = JSON.parse(userstring)
+        }
+
+        console.log("LOC", userstring, user)
         this.state = {
-            selected: true
+            selected: true,
+            user
         };
     }
 
     componentDidMount() {
+        this.loadUser();
+    }
 
+    loadUser() {
+        let {  client, } = this.props;
+
+        UserService.getUser({client, user_id: "1"}).then((user) => {
+            console.log("NAV USER", user);
+            localStorage.user = JSON.stringify(user);
+            this.setState({
+                user
+            })
+        })
     }
 
     render() {
         let { classes, client, match: { params } } = this.props;
+        let { user } = this.state;
+
+        user = user || {};
+        let path = window.location.pathname || "";
 
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
@@ -80,16 +111,37 @@ class NavBar extends React.Component {
                         <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "15px"}}/>
                     </Link>
                 </div>
-                <div style={{flex: 1, textAlign: "right", paddingRight: "20px"}}>
-                    <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
-                        Jobs
-                        {this.state.selected && <div className={classes.selectedLink}/>}
-                    </div>
+                <div style={{flex: 1, textAlign: "right",}}>
+                    <Link to={"/jobs"}>
+                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                            Jobs
+                            {path === "/jobs" && <div className={classes.selectedLink}/>}
+                        </div>
+                    </Link>
+                    <Link to={"/companies"}>
+                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                            Companies
+                            {path === "/companies" && <div className={classes.selectedLink}/>}
+                        </div>
+                    </Link>
+                    <Link to={"/saved-jobs/" + user.user_id }>
+                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                            <div>
+                                <i className="fa-solid fa-briefcase"/>
+                                <span style={{fontSize: "0px", opacity: 0}}>.</span>
+                            </div>
+                            {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
+                        </div>
+                    </Link>
                 </div>
                 <div style={{flex: "0 0 40px"}}>
-                    <div  className={classes.profileContainer}>
-                        <img src="/img/profile.png" width={"100%"}/>
-                    </div>
+                    <Link to={"/edit/" + user.user_id}>
+                        <div  className={classes.profileContainer}>
+                            <div style={{border: `2px solid ${COLOR_WHITE}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
+                                <CoverImageHolder url={user.profile_photo_url}/>
+                            </div>
+                        </div>
+                    </Link>
                 </div>
             </div>
 

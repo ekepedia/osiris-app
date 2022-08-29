@@ -47,39 +47,20 @@ class AddYoutubeLinkModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            link_name: null,
-            link_url: null,
-            link_image_url: null
-        };
+        this.state = {};
     }
 
     componentDidMount() {
-
+        this.resetState();
     }
 
-    fileUploaded(e) {
-        if (e.target.files && e.target.files[0]) {
-
-            this.setState({uploading: true});
-            const file = e.target.files[0];
-            const formData = new FormData();
-
-            formData.append('img', file);
-
-            axios.post("/api/upload-user-img", formData).then((data) => {
-                this.setState({uploading: false});
-
-                if (data && data.data && data.data.url) {
-                    const { url } = data.data;
-                    this.setState({
-                        link_image_url: url
-                    })
-                }
-            })
-        }
+    resetState() {
+        this.setState({
+            link_name: null,
+            link_url: null,
+            link_image_url: null
+        })
     }
-
 
     render() {
         let { classes, open, onClose, onSubmit } = this.props;
@@ -89,7 +70,6 @@ class AddYoutubeLinkModal extends React.Component {
             link_url,
             link_image_url
         } = this.state;
-
 
         return (<div className={classes.container}>
             <Modal
@@ -101,8 +81,8 @@ class AddYoutubeLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "665px"
                     }
                 }}
             >
@@ -121,6 +101,7 @@ class AddYoutubeLinkModal extends React.Component {
                             <StandardButton label={"Save"} size={"S"} onClick={() => {
                                 onSubmit ? onSubmit({link_name, link_url, link_image_url}) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>

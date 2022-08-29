@@ -51,6 +51,16 @@ export const FONT_TITLE_2_BOLD = { ...FONT_TITLE_2,  ...BOLD_BASE}
 export const FONT_TITLE_3 = { ...BASE, fontSize: "19px",}
 export const FONT_TITLE_3_BOLD = { ...FONT_TITLE_3,  ...BOLD_BASE}
 
+
+export const FONT_P_100 = { ...BASE, fontSize: "12px", lineHeight: "16px", fontWeight: 400}
+
+export const FONT_H_100 = { ...BASE, fontSize: "10px", lineHeight: "16px", fontWeight: 400}
+export const FONT_H_200 = { ...BASE, fontSize: "12px", lineHeight: "16px", fontWeight: 600}
+export const FONT_H_300 = { ...BASE, fontSize: "12px", lineHeight: "16px", fontWeight: 600}
+export const FONT_H_400 = { ...BASE, fontSize: "14px", lineHeight: "24px", fontWeight: 600}
+export const FONT_H_600 = { ...BASE, fontSize: "18px", lineHeight: "24px", fontWeight: 600}
+
+
 export const FONTS = {
     FONT_CAPTION_1,
     FONT_CAPTION_1_BOLD,
@@ -75,5 +85,12 @@ export const FONTS = {
     FONT_TITLE_2,
     FONT_TITLE_2_BOLD,
     FONT_TITLE_3,
-    FONT_TITLE_3_BOLD
+    FONT_TITLE_3_BOLD,
+    FONT_P_100,
+    FONT_H_100,
+    FONT_H_200,
+    FONT_H_300,
+    FONT_H_400,
+    FONT_H_600,
+
 }

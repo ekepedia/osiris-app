@@ -105,7 +105,7 @@ class EditGalleryModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
                         height: "fit-content"
                     }
                 }}

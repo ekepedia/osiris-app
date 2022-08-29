@@ -67,7 +67,7 @@ class PortfolioHeader extends React.Component {
         const node = this.portfolioLinkRef.current;
         const currentWidth = node.clientWidth;
 
-        if (currentWidth < 700) {
+        if (currentWidth < 50) {
             RATIO = 100/250;
         }
 

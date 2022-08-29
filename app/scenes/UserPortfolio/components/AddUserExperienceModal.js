@@ -49,7 +49,15 @@ class AddUserExperienceModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.resetState();
+    }
+
+    resetState() {
+        this.setState({
             company_name: null,
             company_logo_url: null,
             role_name: null,
@@ -60,11 +68,7 @@ class AddUserExperienceModal extends React.Component {
             start_year: 2022,
             end_month: 1,
             end_year: 2022
-        };
-    }
-
-    componentDidMount() {
-
+        })
     }
 
     render() {
@@ -93,8 +97,8 @@ class AddUserExperienceModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: is_current ? "390px" : "455px"
                     }
                 }}
             >
@@ -103,7 +107,7 @@ class AddUserExperienceModal extends React.Component {
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Experience"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px"}}>
+                        <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
 
                             <div style={{display: "flex"}}>
                                 <div className={classes.smallThumbnailContainer}>
@@ -162,6 +166,7 @@ class AddUserExperienceModal extends React.Component {
                                     end_year
                                 }) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>

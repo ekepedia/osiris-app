@@ -74,8 +74,8 @@ class EditBannerLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: `${COMMON.STYLES.MODAL_HEIGHT_730}px`
                     }
                 }}
             >

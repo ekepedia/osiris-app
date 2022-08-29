@@ -13,7 +13,21 @@ export const DARK_GREY = "#9B9A97";
 export const BACKGROUND_GREY = "#F5F5F5";
 export const LIGHT_GREY = "#E5E5E5";
 
+export const PIE_CHART_GREY = "#8D8880";
+export const PIE_CHART_WHITE = "#F7F6F4";
+
+export const TAG_GREY = "#EBECED";
+export const TAG_YELLOW = "#FBF3DB";
+export const TAG_ORANGE= "#F8FAF9";
+export const TAG_GREEN = "#DDEDEA";
+export const TAG_RED = "#FBE4E4";
+
 export const OSIRIS_TAN = "#B4A090";
+
+export const N_600 = "#8F95B2";
+export const N_700 = "#696F8C";
+export const N_800 = "#474D66";
+export const N_900 = "#101840";
 
 export const COLORS = {
     COLOR_WHITE,
@@ -28,5 +42,16 @@ export const COLORS = {
     DARK_GREY,
     BACKGROUND_GREY,
     LIGHT_GREY,
-    OSIRIS_TAN
+    OSIRIS_TAN,
+    TAG_GREY,
+    TAG_YELLOW,
+    TAG_ORANGE,
+    TAG_GREEN,
+    TAG_RED,
+    PIE_CHART_GREY,
+    PIE_CHART_WHITE,
+    N_600,
+    N_700,
+    N_800,
+    N_900
 }

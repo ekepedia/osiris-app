@@ -56,6 +56,16 @@ class PublicPortfolio extends React.Component {
         this.portfolioLinkRef = React.createRef();
     }
 
+    fixLink(link) {
+        if (!link)
+            return link;
+
+        if (link && link.indexOf("http") === -1) {
+            link = `https://${link}`;
+        }
+
+        return link;
+    }
     componentDidMount() {
         let { classes, client, match: { params } } = this.props;
 
@@ -68,6 +78,14 @@ class PublicPortfolio extends React.Component {
                 first_name: user.first_name,
                 last_name: user.last_name
             });
+
+            user.user_instagram_link = this.fixLink(user.user_instagram_link);
+            user.user_tiktok_link = this.fixLink(user.user_tiktok_link);
+            user.user_clubhouse_link = this.fixLink(user.user_clubhouse_link);
+            user.user_instagram_link = this.fixLink(user.user_instagram_link);
+            user.user_website_link = this.fixLink(user.user_website_link);
+            user.user_vimeo_link = this.fixLink(user.user_vimeo_link);
+            user.user_youtube_link = this.fixLink(user.user_youtube_link);
 
             if (user && user.user_id) {
                 this.loadUser(user.user_id)
@@ -188,6 +206,20 @@ class PublicPortfolio extends React.Component {
                 return (this.convertType(a) - this.convertType(b))
             });
             console.log("user_links", user_links)
+
+            user_links = user_links.map((user_link) => {
+                if (user_link.link_type !== "youtube") {
+                    if ((user_link.link_url || "").indexOf("http") === -1) {
+                        user_link.link_url = `https://${user_link.link_url}`;
+                        return user_link;
+                    } else {
+                        return user_link;
+                    }
+                } else {
+                    return user_link
+                }
+            });
+
             this.setState({user_links});
             this.setHeightRatio();
         })

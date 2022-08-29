@@ -32,3 +32,14 @@ export function convertDateObjectToMonthYear({date}) {
 export function converMonthYearToDateObject({month, year}) {
     return new Date(`${month}/1/${year}`);
 }
+
+export function formatLargeNumber (num) {
+    num = Math.round(num*100)/100;
+
+    if (num > 1000000) {
+        num = (Math.round((num/1000000)*100)/100) + "M"
+    } else if (num > 1000) {
+        num = (Math.round((num/1000)*10)/10) + "K"
+    }
+    return num;
+}

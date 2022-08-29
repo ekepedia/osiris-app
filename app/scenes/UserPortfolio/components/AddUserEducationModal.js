@@ -48,22 +48,25 @@ class AddUserEducationModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            company_name: null,
-            company_logo_url: null,
-            role_name: null,
-            is_current: null,
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.resetState();
+    }
+
+    resetState() {
+        this.setState({
+            school_name: null,
+            degree_name: null,
+            school_logo_url: null,
             start_date: null,
             end_date: null,
             start_month: 1,
             start_year: 2022,
             end_month: 1,
             end_year: 2022
-        };
-    }
-
-    componentDidMount() {
-
+        })
     }
 
     render() {
@@ -91,17 +94,17 @@ class AddUserEducationModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "345px"
                     }
                 }}
             >
-                <div style={{height: "100%", overflow: "hidden"}}>
+                <div style={{height: "100%", overflow: "hidden",}}>
                     <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Education"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px"}}>
+                        <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
 
                             <div style={{display: "flex"}}>
                                 <div className={classes.smallThumbnailContainer}>
@@ -125,25 +128,29 @@ class AddUserEducationModal extends React.Component {
 
 
                             <div style={{display: "flex"}}>
-                                <div style={{flex: 1, paddingRight: "15px"}}>
-                                    <div className={classes.inputLabel}>Start date</div>
-                                    <StandardSelect value={start_month} options={COMMON.CONSTS.MONTHS} update={(v) => (this.setState({start_month: v}))}/>
-                                </div>
+                                {/*<div style={{flex: 1, paddingRight: "15px"}}>*/}
+                                {/*    <div className={classes.inputLabel}>Start year</div>*/}
+                                {/*    <StandardSelect value={start_month} options={COMMON.CONSTS.MONTHS} update={(v) => (this.setState({start_month: v}))}/>*/}
+                                {/*</div>*/}
                                 <div style={{flex: 1}}>
-                                    <div className={classes.inputLabel}><span style={{opacity: 0}}>-</span></div>
+                                    <div className={classes.inputLabel}>Start year</div>
                                     <StandardSelect value={start_year} options={COMMON.CONSTS.YEARS} update={(v) => (this.setState({start_year: v}))}/>
                                 </div>
-                            </div>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1, paddingRight: "15px"}}>
-                                    <div className={classes.inputLabel}>End date (or expected)</div>
-                                    <StandardSelect value={end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (this.setState({end_month: v}))}/>
-                                </div>
                                 <div style={{flex: 1}}>
-                                    <div className={classes.inputLabel}><span style={{opacity: 0}}>-</span></div>
+                                    <div className={classes.inputLabel}>End year (or expected)</div>
                                     <StandardSelect value={end_year} options={COMMON.CONSTS.YEARS} update={(v) => (this.setState({end_year: v}))}/>
                                 </div>
                             </div>
+                            {/*<div style={{display: "flex"}}>*/}
+                            {/*    <div style={{flex: 1, paddingRight: "15px"}}>*/}
+                            {/*        <div className={classes.inputLabel}>End date (or expected)</div>*/}
+                            {/*        <StandardSelect value={end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (this.setState({end_month: v}))}/>*/}
+                            {/*    </div>*/}
+                            {/*    <div style={{flex: 1}}>*/}
+                            {/*        <div className={classes.inputLabel}><span style={{opacity: 0}}>-</span></div>*/}
+                            {/*        <StandardSelect value={end_year} options={COMMON.CONSTS.YEARS} update={(v) => (this.setState({end_year: v}))}/>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
                         </div>
                         <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <StandardButton label={"Save"} size={"S"} onClick={() => {
@@ -159,6 +166,7 @@ class AddUserEducationModal extends React.Component {
                                     end_year
                                 }) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>

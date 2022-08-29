@@ -47,16 +47,20 @@ class AddGalleryModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.resetState();
+    }
+
+    resetState() {
+        this.setState({
             gallery_photo_url: null,
             gallery_order: null,
             gallery_name: null,
             gallery_caption: null,
-        };
-    }
-
-    componentDidMount() {
-
+        })
     }
 
     render() {
@@ -69,7 +73,6 @@ class AddGalleryModal extends React.Component {
             gallery_caption,
         } = this.state;
 
-
         return (<div className={classes.container}>
             <Modal
                 isOpen={open}
@@ -80,8 +83,8 @@ class AddGalleryModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: `${COMMON.STYLES.MODAL_HEIGHT_600}px`
                     }
                 }}
             >
@@ -90,7 +93,7 @@ class AddGalleryModal extends React.Component {
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Gallery Photo"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px"}}>
+                        <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
 
                             <div className={classes.inputLabel}>Thumbnail</div>
                             <div style={{width: "100%", height: "418px", background: COMMON.COLORS.BACKGROUND_GREY}}>
@@ -106,6 +109,7 @@ class AddGalleryModal extends React.Component {
                             <StandardButton label={"Save"} size={"S"} onClick={() => {
                                 onSubmit ? onSubmit({gallery_photo_url, gallery_name, gallery_caption, gallery_order}) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>

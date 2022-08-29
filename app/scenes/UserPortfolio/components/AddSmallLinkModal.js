@@ -48,15 +48,19 @@ class AddSmallLinkModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            link_name: null,
-            link_url: null,
-            link_image_url: null
-        };
+        this.state = {};
     }
 
     componentDidMount() {
+        this.resetState();
+    }
 
+    resetState() {
+        this.setState({
+            link_name: null,
+            link_url: null,
+            link_image_url: null
+        })
     }
 
     render() {
@@ -79,8 +83,8 @@ class AddSmallLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "277px"
                     }
                 }}
             >
@@ -89,9 +93,7 @@ class AddSmallLinkModal extends React.Component {
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Link"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px"}}>
-
-
+                        <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
                             <div style={{display: "flex"}}>
                                 <div className={classes.smallThumbnailContainer}>
                                     <div className={classes.inputLabel}>Thumbnail</div>
@@ -115,10 +117,10 @@ class AddSmallLinkModal extends React.Component {
                             <StandardButton label={"Save"} size={"S"} onClick={() => {
                                 onSubmit ? onSubmit({link_name, link_url, link_image_url}) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>
-
                 </div>
             </Modal>
         </div>)

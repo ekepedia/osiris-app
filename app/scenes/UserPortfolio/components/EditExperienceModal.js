@@ -106,22 +106,22 @@ class EditExperienceModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: user_experience.is_current ? "390px" : "455px"
                     }
                 }}
             >
-                <div style={{display: "flex", flexDirection: "column"}}>
+                <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
                     <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <EditPortfolioModalHeader title={"Edit Experience"} onClose={onClose} />
                     </div>
-                    <div style={{flex: 1, padding: "20px 25px"}}>
+                    <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
 
 
 
                         <div style={{display: "flex"}}>
                             <div className={classes.smallThumbnailContainer}>
-                                <div className={classes.inputLabel}>School Logo</div>
+                                <div className={classes.inputLabel}>Company Logo</div>
                                 <div className={classes.smallThumbnailHolder}>
                                     <ThumbnailUpload url={user_experience.company_logo_url} onURL={({url, file_name}) => {
                                         updateField("company_logo_url", url)

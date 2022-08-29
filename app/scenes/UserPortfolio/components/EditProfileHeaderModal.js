@@ -66,16 +66,16 @@ class StandardModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "820px"
                     }
                 }}
             >
-                <div style={{display: "flex", flexDirection: "column"}}>
+                <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
                     <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <EditPortfolioModalHeader title={"Edit Header"} onClose={onClose} />
                     </div>
-                    <div style={{flex: 1, padding: "20px 25px"}}>
+                    <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
                         <div className={classes.sectionLabel}>Profile Information</div>
                         <div className={classes.inputLabel}>First Name</div>
                         <StandardInput value={user.first_name} update={(v) => (updateField("first_name", v))} />

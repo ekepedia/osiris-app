@@ -13,6 +13,15 @@ const MONTHS = [
     {value: 12, label: "Dec"},
 ]
 
+const STATUSES = [
+    {value: 1, label: "Wishlist"},
+    {value: 2, label: "Applied"},
+    {value: 3, label: "Interviewing"},
+    {value: 4, label: "Offer"},
+    {value: 5, label: "Rejected"},
+    {value: 6, label: "Withdrawn"},
+]
+
 let years = [];
 
 for (let i = 1920; i < 2040; i++) {
@@ -28,5 +37,6 @@ export const CONSTS = {
     EDIT_PORTFOLIO_MODAL_HEIGHT: "670px",
     MODAL_TIMING: 250,
     MONTHS,
-    YEARS
+    YEARS,
+    STATUSES
 }

@@ -104,20 +104,20 @@ class EditEducationModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "345px"
                     }
                 }}
             >
-                <div style={{display: "flex", flexDirection: "column"}}>
+                <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
                     <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <EditPortfolioModalHeader title={"Edit Education"} onClose={onClose} />
                     </div>
-                    <div style={{flex: 1, padding: "20px 25px"}}>
+                    <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
 
                         <div style={{display: "flex"}}>
                             <div className={classes.smallThumbnailContainer}>
-                                <div className={classes.inputLabel}>Company Logo</div>
+                                <div className={classes.inputLabel}>School Logo</div>
                                 <div className={classes.smallThumbnailHolder}>
                                     <ThumbnailUpload url={user_education.school_logo_url} onURL={({url, file_name}) => {
                                         updateField("school_logo_url", url)
@@ -134,25 +134,32 @@ class EditEducationModal extends React.Component {
 
 
                         <div style={{display: "flex"}}>
+                            {/*<div style={{flex: 1, paddingRight: "15px"}}>*/}
+                            {/*    <div className={classes.inputLabel}>Start year</div>*/}
+                            {/*    <StandardSelect value={user_education.start_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("start_month", v))}/>*/}
+                            {/*</div>*/}
                             <div style={{flex: 1, paddingRight: "15px"}}>
-                                <div className={classes.inputLabel}>Month</div>
-                                <StandardSelect value={user_education.start_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("start_month", v))}/>
-                            </div>
-                            <div style={{flex: 1}}>
-                                <div className={classes.inputLabel}>Year</div>
+                                <div className={classes.inputLabel}>Start year</div>
                                 <StandardSelect value={user_education.start_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("start_year", v))}/>
                             </div>
-                        </div>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1, paddingRight: "15px"}}>
-                                <div className={classes.inputLabel}>Month</div>
-                                <StandardSelect value={user_education.end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("end_month", v))}/>
-                            </div>
                             <div style={{flex: 1}}>
-                                <div className={classes.inputLabel}>Year</div>
+                                <div className={classes.inputLabel}>End year (or expected)</div>
                                 <StandardSelect value={user_education.end_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("end_year", v))}/>
                             </div>
+                            {/*<div style={{flex: 1}}>*/}
+                            {/*    <StandardSelect value={user_education.start_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("start_year", v))}/>*/}
+                            {/*</div>*/}
                         </div>
+                        {/*<div style={{display: "flex"}}>*/}
+                        {/*    <div style={{flex: 1, paddingRight: "15px"}}>*/}
+                        {/*        <div className={classes.inputLabel}>Month</div>*/}
+                        {/*        <StandardSelect value={user_education.end_month} options={COMMON.CONSTS.MONTHS} update={(v) => (updateField("end_month", v))}/>*/}
+                        {/*    </div>*/}
+                        {/*    <div style={{flex: 1}}>*/}
+                        {/*        <div className={classes.inputLabel}>Year</div>*/}
+                        {/*        <StandardSelect value={user_education.end_year} options={COMMON.CONSTS.YEARS} update={(v) => (updateField("end_year", v))}/>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </div>
                     <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                         <StandardButton label={"Save"} size={"S"} onClick={() => {

@@ -3,6 +3,9 @@ import {FONT_FOOTNOTE, FONT_FOOTNOTE_BOLD, FONT_HEADLINE_BOLD, FONT_SUBHEADER, F
 
 export const MODAL_TIMING = 250;
 
+export const MODAL_HEIGHT_600 = 605;
+export const MODAL_HEIGHT_730 = 735;
+
 // BUTTON STYLES
 export const STYLE_BUTTON_HEADLINE = {
     ...FONT_HEADLINE_BOLD,
@@ -80,8 +83,8 @@ export const STYLE_MODAL_SUPER_CONTAINER = {
 }
 
 export const STYLE_MODAL_SUPER_SUPER_CONTAINER = {
-    height: "90vh",
-    // height: "100%",
+    // height: "90vh",
+    height: "100%",
     overflow: "hidden"
 }
 
@@ -162,7 +165,8 @@ export const EDIT_PORTFOLIO_MODAL = {
         padding: '0',
         inset: "0"
     },
-    DEFAULT_MODAL_HEIGHT: "90vh",
+    DEFAULT_MODAL_HEIGHT: "100%",
+    DEFAULT_MODAL_MAX_HEIGHT: "90vh",
     MODAL_HEADER: {
         ...FONT_HEADLINE_BOLD
     }
@@ -171,6 +175,8 @@ export const EDIT_PORTFOLIO_MODAL = {
 
 import { PORTFOLIO } from "./styles/Portfolio";
 import { GENERAL } from "./styles/General";
+import { COMPANY } from "./styles/Company";
+import { SAVED_JOBS } from "./styles/SavedJobs";
 
 export const STYLES = {
     STYLE_INPUT,
@@ -187,10 +193,12 @@ export const STYLES = {
     STYLE_BUTTON_HEADLINE_OUTLINE,
     STYLE_BUTTON_HEADLINE,
     MODAL_TIMING,
+    MODAL_HEIGHT_600,
+    MODAL_HEIGHT_730,
     MOBILE_STYLES,
     EDIT_PORTFOLIO_MODAL,
     PORTFOLIO,
-    GENERAL
+    GENERAL,
+    COMPANY,
+    SAVED_JOBS
 }
-
-console.log("SD", STYLES)

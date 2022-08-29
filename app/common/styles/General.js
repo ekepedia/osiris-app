@@ -27,8 +27,25 @@ const InputStyles =  {
     }
 }
 
+const NavigationStyles = {
+    masterContainer: {
+        height: "100%",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column"
+    },
+    masterNavContainer: {
+        flex: "0 0 60px"
+    },
+    masterBodyContainer: {
+        flex: 1,
+        overflow: "scroll"
+    }
+}
+
 export const GENERAL = {
     alignmentStyles,
     AlignmentStyles: alignmentStyles,
-    InputStyles
+    InputStyles,
+    NavigationStyles
 }

@@ -58,29 +58,6 @@ class EditYoutubeLinkModal extends React.Component {
 
     }
 
-    fileUploaded(e) {
-        const { updateField } = this.props;
-
-        if (e.target.files && e.target.files[0]) {
-
-            this.setState({uploading: true});
-            const file = e.target.files[0];
-            const formData = new FormData();
-
-            formData.append('img', file);
-
-            axios.post("/api/upload-user-img", formData).then((data) => {
-                this.setState({uploading: false});
-
-                if (data && data.data && data.data.url) {
-                    const { url } = data.data;
-                    updateField("link_image_url", url)
-                }
-            })
-        }
-    }
-
-
     render() {
         let { classes, open, onClose, onSubmit, updateField, user_link  } = this.props;
 
@@ -96,8 +73,8 @@ class EditYoutubeLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "665px"
                     }
                 }}
             >

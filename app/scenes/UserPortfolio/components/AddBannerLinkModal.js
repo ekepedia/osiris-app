@@ -15,7 +15,7 @@ import COMMON from "../../../common/index";
 import {convertDateObjectToMonthYear, converMonthYearToDateObject} from "../../../common/helpers";
 import StandardButton from "../../../components/StandardButton";
 import StandardInput from "../../../components/StandardInput";
-import {EDIT_PORTFOLIO_MODAL, EDIT_PORTFOLIO_MODALS} from "../../../common/styles";
+import {EDIT_PORTFOLIO_MODAL, EDIT_PORTFOLIO_MODALS, MODAL_HEIGHT_730} from "../../../common/styles";
 import EditPortfolioModalHeader from "./EditPortfolioModalHeader";
 import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
@@ -47,15 +47,19 @@ class AddBannerLinkModal extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            link_name: null,
-            link_url: null,
-            link_image_url: null
-        };
+        this.state = {};
     }
 
     componentDidMount() {
+        this.resetState();
+    }
 
+    resetState() {
+        this.setState({
+            link_name: null,
+            link_url: null,
+            link_image_url: null
+        })
     }
 
     fileUploaded(e) {
@@ -101,17 +105,17 @@ class AddBannerLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: `${COMMON.STYLES.MODAL_HEIGHT_730}px`
                     }
                 }}
             >
-                <div style={{height: "100%", overflow: "hidden"}}>
-                    <div style={{display: "flex", flexDirection: "column", height: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT, overflow: "hidden"}}>
+                <div style={COMMON.STYLES.STYLE_MODAL_SUPER_SUPER_CONTAINER}>
+                    <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Banner Link"} onClose={onClose} />
                         </div>
-                        <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>
+                        <div style={COMMON.STYLES.STYLE_MODAL_CONTAINER}>
                             <div className={classes.inputLabel}>Title</div>
                             <StandardInput value={link_name} update={(v) => (this.setState({link_name: v}))} />
                             <div className={classes.inputLabel}>URL</div>
@@ -129,6 +133,7 @@ class AddBannerLinkModal extends React.Component {
                             <StandardButton label={"Save"} size={"S"} onClick={() => {
                                 onSubmit ? onSubmit({link_name, link_url, link_image_url}) : null;
                                 onClose ? onClose() : null;
+                                this.resetState();
                             }}/>
                         </div>
                     </div>

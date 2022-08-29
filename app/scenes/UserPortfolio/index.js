@@ -38,6 +38,7 @@ import PortfolioCarousel from "../PublicPortfolio/components/PortfolioCarousel";
 import EditPortfolioCarousel from "./components/EditPortfolioCarousel";
 import EditGalleryModal from "./components/EditGalleryModal";
 import AddGeneralLinkModal from "./components/AddGeneralLinkModal";
+import NavBar from "../../components/NavBar";
 
 
 const Styles = {
@@ -45,6 +46,7 @@ const Styles = {
     ...COMMON.STYLES.PORTFOLIO.StandardCardStyles,
     ...COMMON.STYLES.GENERAL.AlignmentStyles,
     ...COMMON.STYLES.PORTFOLIO.EditToggleDeleteStyles,
+    ...COMMON.STYLES.GENERAL.NavigationStyles,
     container: {
         padding: "0",
         '@media (max-width: 768px)': {
@@ -718,190 +720,199 @@ class UserPortfolio extends React.Component {
         let user = this.buildUser();
         const { user_educations, user_links, user_experiences, user_galleries } = this.state;
 
-        return (<div className={classes.container}>
-            <div className={mc(classes.pageContainer)}>
-                <div style={{maxWidth: "600px", margin: "auto"}}>
+        return (
+            <div className={classes.masterContainer}>
+                <div className={classes.masterNavContainer}>
+                    <NavBar />
+                </div>
+                <div className={classes.masterBodyContainer}>
+                    <div className={classes.container}>
+                        <div className={mc(classes.pageContainer)}>
+                            <div style={{maxWidth: "600px", margin: "auto"}}>
 
-                    <div className={mc(classes.pageSection)} style={{paddingBottom: "50px"}}>
+                                <div className={mc(classes.pageSection)} style={{paddingBottom: "50px"}}>
 
-                        <EditPortfolioHeaderSection
-                            user={user}
-                            uploadProfilePhoto={(e) => (this.fileUploaded(e))}
-                            uploadCoverPhoto={(e) => (this.fileUploaded(e, true))}
-                            openEditModal={() => (this.setState({openEditProfileHeaderModal: true}))}
-                        />
+                                    <EditPortfolioHeaderSection
+                                        user={user}
+                                        uploadProfilePhoto={(e) => (this.fileUploaded(e))}
+                                        uploadCoverPhoto={(e) => (this.fileUploaded(e, true))}
+                                        openEditModal={() => (this.setState({openEditProfileHeaderModal: true}))}
+                                    />
 
-                        <div className={mc(classes.sectionContainer)}>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1}}>
-                                    <div className={mc(classes.sectionTitle)}>Links & Embeds</div>
-                                    <div className={mc(classes.sectionSubTitle)}>Title hidden from users</div>
-                                </div>
-                                <div style={{flex: "0 0 20px"}}>
-                                    <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddGeneralLinkModal: true}))}></i>
-                                </div>
-                            </div>
-                            {user_galleries && user_galleries.length ? <div style={{marginTop: 10}}>
-                                <EditPortfolioCarousel onEdit={() => (this.setState({openEditGalleryModal: true}))} height={this.state.currentGalleryHeight ? this.state.currentGalleryHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.galleryRef}/>
-                            </div> : null }
-                            <div style={{marginTop: user_galleries && user_galleries.length ? "10px" : 10}}>
-                            {user_links && user_links.length ? user_links.map((user_link, i) => {
-                                if (user_link.link_type === "youtube") {
-
-                                    let { link_url, is_hidden } = user_link;
-
-                                    if (link_url.indexOf("embed") === -1 ) {
-                                        const getId = (url) => {
-                                            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-                                            const match = url.match(regExp);
-
-                                            return (match && match[2].length === 11)
-                                                ? match[2]
-                                                : null;
-                                        }
-                                        link_url = `https://www.youtube.com/embed/${getId(link_url)}`
-                                    }
-
-
-                                    return (<div style={{opacity: is_hidden ? 0.5: 1, position: "relative", height: this.state.currentHeight ? this.state.currentHeight : null, marginTop: i === 0 ? "0px" : "10px"}} ref={this.portfolioLinkRef} className={mc(classes.linkContainer)}>
-                                        <iframe
-                                            width="100%"
-                                            height="100%"
-                                            src={link_url}
-                                            frameBorder="0"
-                                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                            title="Embedded youtube"
-                                        />
-                                        <div className={mc(classes.editToggleDeleteFloatingContainer)}>
-                                            <div className={mc(classes.editToggleDeleteContainer)}>
-                                                <div className={mc(classes.editToggleDeleteEdit)} onClick={() => {
-                                                    this.setState({
-                                                        openEditYoutubeLinkModal: true,
-                                                        selectedUserYoutubeLink: {...user_link}
-                                                    });
-                                                }}>
-                                                    <i className={mc("fa-solid fa-pen")}/>
-                                                </div>
-                                                <div className={mc(classes.editToggleDeleteToggle)} onClick={() => (this.toggleYoutubeActive(user_link))}>
-                                                    <i className={`fa-solid fa-toggle-${user_link.is_hidden ? "off" : "on"}`}/>
-                                                </div>
-                                                <div className={mc(classes.editToggleDeleteDelete)} onClick={() => (this.deleteYoutube(user_link))}>
-                                                    <i className="fa-solid fa-xmark"/>
-                                                </div>
+                                    <div className={mc(classes.sectionContainer)}>
+                                        <div style={{display: "flex"}}>
+                                            <div style={{flex: 1}}>
+                                                <div className={mc(classes.sectionTitle)}>Links & Embeds</div>
+                                                <div className={mc(classes.sectionSubTitle)}>Title hidden from users</div>
+                                            </div>
+                                            <div style={{flex: "0 0 20px"}}>
+                                                <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddGeneralLinkModal: true}))}></i>
                                             </div>
                                         </div>
-                                    </div>);
-                                } else if (user_link.link_type === "small") {
-                                    return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
-                                        <SmallLink refetch={() => (this.loadLinks())}  {...{...user_link, link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name}}
-                                                   onEdit={() => (this.setState({openEditSmallLinkModal: true, selectedUserSmallLink: {...user_link}}))}/>
-                                    </div>);
-                                } else {
-                                    return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
-                                        <EditBannerLink refetch={() => (this.loadLinks())}  onEdit={() => (this.setState({openEditBannerLinkModal: true, selectedUserBannerLink: {...user_link}}))} {...{...user_link, link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name, currentHeight: this.state.currentHeight, portfolioLinkRef: this.portfolioLinkRef}}/>
-                                    </div>);
-                                }
-                            }) : null }
+                                        {user_galleries && user_galleries.length ? <div style={{marginTop: 10}}>
+                                            <EditPortfolioCarousel onEdit={() => (this.setState({openEditGalleryModal: true}))} height={this.state.currentGalleryHeight ? this.state.currentGalleryHeight : null} user_galleries={user_galleries} portfolioLinkRef={this.galleryRef}/>
+                                        </div> : null }
+                                        <div style={{marginTop: user_galleries && user_galleries.length ? "10px" : 10}}>
+                                            {user_links && user_links.length ? user_links.map((user_link, i) => {
+                                                if (user_link.link_type === "youtube") {
+
+                                                    let { link_url, is_hidden } = user_link;
+
+                                                    if (link_url.indexOf("embed") === -1 ) {
+                                                        const getId = (url) => {
+                                                            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                                                            const match = url.match(regExp);
+
+                                                            return (match && match[2].length === 11)
+                                                                ? match[2]
+                                                                : null;
+                                                        }
+                                                        link_url = `https://www.youtube.com/embed/${getId(link_url)}`
+                                                    }
+
+
+                                                    return (<div style={{opacity: is_hidden ? 0.5: 1, position: "relative", height: this.state.currentHeight ? this.state.currentHeight : null, marginTop: i === 0 ? "0px" : "10px"}} ref={this.portfolioLinkRef} className={mc(classes.linkContainer)}>
+                                                        <iframe
+                                                            width="100%"
+                                                            height="100%"
+                                                            src={link_url}
+                                                            frameBorder="0"
+                                                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowFullScreen
+                                                            title="Embedded youtube"
+                                                        />
+                                                        <div className={mc(classes.editToggleDeleteFloatingContainer)}>
+                                                            <div className={mc(classes.editToggleDeleteContainer)}>
+                                                                <div className={mc(classes.editToggleDeleteEdit)} onClick={() => {
+                                                                    this.setState({
+                                                                        openEditYoutubeLinkModal: true,
+                                                                        selectedUserYoutubeLink: {...user_link}
+                                                                    });
+                                                                }}>
+                                                                    <i className={mc("fa-solid fa-pen")}/>
+                                                                </div>
+                                                                <div className={mc(classes.editToggleDeleteToggle)} onClick={() => (this.toggleYoutubeActive(user_link))}>
+                                                                    <i className={`fa-solid fa-toggle-${user_link.is_hidden ? "off" : "on"}`}/>
+                                                                </div>
+                                                                <div className={mc(classes.editToggleDeleteDelete)} onClick={() => (this.deleteYoutube(user_link))}>
+                                                                    <i className="fa-solid fa-xmark"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>);
+                                                } else if (user_link.link_type === "small") {
+                                                    return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
+                                                        <SmallLink refetch={() => (this.loadLinks())}  {...{...user_link, link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name}}
+                                                                   onEdit={() => (this.setState({openEditSmallLinkModal: true, selectedUserSmallLink: {...user_link}}))}/>
+                                                    </div>);
+                                                } else {
+                                                    return (<div style={{marginTop: i === 0 ? "0px" : "10px"}}>
+                                                        <EditBannerLink refetch={() => (this.loadLinks())}  onEdit={() => (this.setState({openEditBannerLinkModal: true, selectedUserBannerLink: {...user_link}}))} {...{...user_link, link: user_link.link_url, url: user_link.link_image_url, link_name: user_link.link_name, currentHeight: this.state.currentHeight, portfolioLinkRef: this.portfolioLinkRef}}/>
+                                                    </div>);
+                                                }
+                                            }) : null }
+                                        </div>
+
+
+                                    </div>
+
+                                    <div className={mc(classes.sectionContainer)}>
+                                        <div style={{display: "flex"}}>
+                                            <div style={{flex: 1}}>
+                                                <div className={mc(classes.sectionTitle)}>Experience</div>
+                                            </div>
+                                            <div style={{flex: "0 0 20px"}}>
+                                                <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddUserExperienceModal: true}))}></i>
+                                            </div>
+                                        </div>
+
+                                        {user_experiences && user_experiences.length ? user_experiences.map((user_experience, i) => {
+
+                                            if (i >= 3 && this.state.limit)
+                                                return null;
+
+                                            return (<EditExperienceCard
+                                                refetch={() => (this.loadExperience())}
+                                                onEdit={() => (this.setState({openEditExperienceModal: true, selectedUserExperience: {...user_experience}}))}
+                                                {...{
+                                                    ...user_experience,
+                                                    time: user_experience.timeElapsed,
+                                                    company_name: user_experience.company_name,
+                                                    role_name: user_experience.role_name,
+                                                    company_logo_url: user_experience.company_logo_url,
+                                                    timeElapsed: user_experience.time,
+                                                }}/>);
+                                        }) : null }
+
+
+                                    </div>
+
+                                    <div className={mc(classes.sectionContainer)}>
+                                        <div style={{display: "flex"}}>
+                                            <div style={{flex: 1}}>
+                                                <div className={mc(classes.sectionTitle)}>Education</div>
+                                            </div>
+                                            <div style={{flex: "0 0 20px"}}>
+                                                <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddUserEducationModal: true}))}></i>
+                                            </div>
+                                        </div>
+
+                                        {user_educations && user_educations.length ? <div>
+                                            {user_educations.map((user_education) => {
+                                                return (<div>
+                                                    <EditEducationCard {...user_education} refetch={() => (this.loadEducation())} onEdit={() => (this.setState({openEditEducationModal: true, selectedUserEducation: {...user_education}}))}/>
+
+                                                </div>)
+                                            })}
+                                        </div>: null}
+
+
+                                    </div>
+
+
+                                </div>
                             </div>
-
-
                         </div>
 
-                        <div className={mc(classes.sectionContainer)}>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1}}>
-                                    <div className={mc(classes.sectionTitle)}>Experience</div>
-                                </div>
-                                <div style={{flex: "0 0 20px"}}>
-                                    <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddUserExperienceModal: true}))}></i>
-                                </div>
-                            </div>
+                        <div>
 
-                            {user_experiences && user_experiences.length ? user_experiences.map((user_experience, i) => {
+                            <AddGeneralLinkModal open={this.state.openAddGeneralLinkModal}
+                                                 openGallery={() => (this.setState({openAddGalleryModal: true, openAddGeneralLinkModal: false}))}
+                                                 openBannerLink={() => (this.setState({openAddBannerLinkModal: true, openAddGeneralLinkModal: false}))}
+                                                 openYoutubeLink={() => (this.setState({openAddYoutubeLinkModal: true, openAddGeneralLinkModal: false}))}
+                                                 openSmallLink={() => (this.setState({openAddSmallLinkModal: true, openAddGeneralLinkModal: false}))}
+                                                 onClose={() => (this.setState({openAddGeneralLinkModal: false}))}/>
 
-                                if (i >= 3 && this.state.limit)
-                                    return null;
+                            <AddGalleryModal onSubmit={(data) => (this.submitAddGallery(data))}  open={this.state.openAddGalleryModal} onClose={() => (this.setState({openAddGalleryModal: false}))}/>
+                            <EditGalleryModal refetch={() => (this.loadGalleries())} onUploadNew={() => {
+                                this.setState({
+                                    openEditGalleryModal: false,
+                                    openAddGalleryModal: true
+                                })
+                            }} onSubmit={(data) => (this.submitAddGallery(data))} user_galleries={user_galleries} open={this.state.openEditGalleryModal} onClose={() => (this.setState({openEditGalleryModal: false}))}/>
 
-                                return (<EditExperienceCard
-                                    refetch={() => (this.loadExperience())}
-                                    onEdit={() => (this.setState({openEditExperienceModal: true, selectedUserExperience: {...user_experience}}))}
-                                    {...{
-                                        ...user_experience,
-                                        time: user_experience.timeElapsed,
-                                        company_name: user_experience.company_name,
-                                        role_name: user_experience.role_name,
-                                        company_logo_url: user_experience.company_logo_url,
-                                        timeElapsed: user_experience.time,
-                                    }}/>);
-                            }) : null }
+                            <AddYoutubeLinkModal onSubmit={(data) => (this.submitAddYoutubeLink(data))}  open={this.state.openAddYoutubeLinkModal} onClose={() => (this.setState({openAddYoutubeLinkModal: false}))}/>
+                            <EditYoutubeLinkModal user_link={this.state.selectedUserYoutubeLink} updateField={this.updateSelectedYoutubeLink}  onSubmit={() => (this.submitEditYoutubeLink())}  open={this.state.openEditYoutubeLinkModal} onClose={() => (this.setState({openEditYoutubeLinkModal: false}))}/>
 
+                            <AddSmallLinkModal onSubmit={(data) => (this.submitAddSmallLink(data))}  open={this.state.openAddSmallLinkModal} onClose={() => (this.setState({openAddSmallLinkModal: false}))}/>
+                            <EditSmallLinkModal user_link={this.state.selectedUserSmallLink} updateField={this.updateSelectedSmallLink}  onSubmit={() => (this.submitEditSmallLink())}  open={this.state.openEditSmallLinkModal} onClose={() => (this.setState({openEditSmallLinkModal: false}))}/>
 
+                            <AddBannerLinkModal onSubmit={(data) => (this.submitAddBannerLink(data))}  open={this.state.openAddBannerLinkModal} onClose={() => (this.setState({openAddBannerLinkModal: false}))}/>
+                            <EditBannerLinkModal user_link={this.state.selectedUserBannerLink} updateField={this.updateSelectedBannerLink}  onSubmit={() => (this.submitEditBannerLink())}  open={this.state.openEditBannerLinkModal} onClose={() => (this.setState({openEditBannerLinkModal: false}))}/>
+
+                            <AddUserExperienceModal onSubmit={(data) => (this.submitAddUserExperience(data))}  open={this.state.openAddUserExperienceModal} onClose={() => (this.setState({openAddUserExperienceModal: false}))}/>
+                            <AddUserEducationModal onSubmit={(data) => (this.submitAddUserEducation(data))}  open={this.state.openAddUserEducationModal} onClose={() => (this.setState({openAddUserEducationModal: false}))}/>
+
+                            <EditProfileHeaderModal user={user} onSubmit={() => (this.submitEdit())} updateField={this.updateField} open={this.state.openEditProfileHeaderModal} onClose={() => (this.setState({openEditProfileHeaderModal: false}))}/>
+
+                            <EditEducationModal user_education={this.state.selectedUserEducation} onSubmit={() => (this.submitEducationEdit())} updateField={this.updateSelectedEducation} open={this.state.openEditEducationModal} onClose={() => (this.setState({openEditEducationModal: false}))}/>
+                            <EditExperienceModal user_experience={this.state.selectedUserExperience} onSubmit={() => (this.submitExperienceEdit())} updateField={this.updateSelectedExperience} open={this.state.openEditExperienceModal} onClose={() => (this.setState({openEditExperienceModal: false}))}/>
                         </div>
-
-                        <div className={mc(classes.sectionContainer)}>
-                            <div style={{display: "flex"}}>
-                                <div style={{flex: 1}}>
-                                    <div className={mc(classes.sectionTitle)}>Education</div>
-                                </div>
-                                <div style={{flex: "0 0 20px"}}>
-                                    <i className={mc("fa-solid fa-plus", classes.plusIcon)} onClick={() => (this.setState({openAddUserEducationModal: true}))}></i>
-                                </div>
-                            </div>
-
-                            {user_educations && user_educations.length ? <div>
-                                {user_educations.map((user_education) => {
-                                    return (<div>
-                                        <EditEducationCard {...user_education} refetch={() => (this.loadEducation())} onEdit={() => (this.setState({openEditEducationModal: true, selectedUserEducation: {...user_education}}))}/>
-
-                                    </div>)
-                                })}
-                            </div>: null}
-
-
-                        </div>
-
 
                     </div>
                 </div>
             </div>
-
-            <div>
-
-                <AddGeneralLinkModal open={this.state.openAddGeneralLinkModal}
-                                     openGallery={() => (this.setState({openAddGalleryModal: true, openAddGeneralLinkModal: false}))}
-                                     openBannerLink={() => (this.setState({openAddBannerLinkModal: true, openAddGeneralLinkModal: false}))}
-                                     openYoutubeLink={() => (this.setState({openAddYoutubeLinkModal: true, openAddGeneralLinkModal: false}))}
-                                     openSmallLink={() => (this.setState({openAddSmallLinkModal: true, openAddGeneralLinkModal: false}))}
-                                     onClose={() => (this.setState({openAddGeneralLinkModal: false}))}/>
-
-                <AddGalleryModal onSubmit={(data) => (this.submitAddGallery(data))}  open={this.state.openAddGalleryModal} onClose={() => (this.setState({openAddGalleryModal: false}))}/>
-                <EditGalleryModal refetch={() => (this.loadGalleries())} onUploadNew={() => {
-                    this.setState({
-                        openEditGalleryModal: false,
-                        openAddGalleryModal: true
-                    })
-                }} onSubmit={(data) => (this.submitAddGallery(data))} user_galleries={user_galleries} open={this.state.openEditGalleryModal} onClose={() => (this.setState({openEditGalleryModal: false}))}/>
-
-                <AddYoutubeLinkModal onSubmit={(data) => (this.submitAddYoutubeLink(data))}  open={this.state.openAddYoutubeLinkModal} onClose={() => (this.setState({openAddYoutubeLinkModal: false}))}/>
-                <EditYoutubeLinkModal user_link={this.state.selectedUserYoutubeLink} updateField={this.updateSelectedYoutubeLink}  onSubmit={() => (this.submitEditYoutubeLink())}  open={this.state.openEditYoutubeLinkModal} onClose={() => (this.setState({openEditYoutubeLinkModal: false}))}/>
-
-                <AddSmallLinkModal onSubmit={(data) => (this.submitAddSmallLink(data))}  open={this.state.openAddSmallLinkModal} onClose={() => (this.setState({openAddSmallLinkModal: false}))}/>
-                <EditSmallLinkModal user_link={this.state.selectedUserSmallLink} updateField={this.updateSelectedSmallLink}  onSubmit={() => (this.submitEditSmallLink())}  open={this.state.openEditSmallLinkModal} onClose={() => (this.setState({openEditSmallLinkModal: false}))}/>
-
-                <AddBannerLinkModal onSubmit={(data) => (this.submitAddBannerLink(data))}  open={this.state.openAddBannerLinkModal} onClose={() => (this.setState({openAddBannerLinkModal: false}))}/>
-                <EditBannerLinkModal user_link={this.state.selectedUserBannerLink} updateField={this.updateSelectedBannerLink}  onSubmit={() => (this.submitEditBannerLink())}  open={this.state.openEditBannerLinkModal} onClose={() => (this.setState({openEditBannerLinkModal: false}))}/>
-
-                <AddUserExperienceModal onSubmit={(data) => (this.submitAddUserExperience(data))}  open={this.state.openAddUserExperienceModal} onClose={() => (this.setState({openAddUserExperienceModal: false}))}/>
-                <AddUserEducationModal onSubmit={(data) => (this.submitAddUserEducation(data))}  open={this.state.openAddUserEducationModal} onClose={() => (this.setState({openAddUserEducationModal: false}))}/>
-
-                <EditProfileHeaderModal user={user} onSubmit={() => (this.submitEdit())} updateField={this.updateField} open={this.state.openEditProfileHeaderModal} onClose={() => (this.setState({openEditProfileHeaderModal: false}))}/>
-
-                <EditEducationModal user_education={this.state.selectedUserEducation} onSubmit={() => (this.submitEducationEdit())} updateField={this.updateSelectedEducation} open={this.state.openEditEducationModal} onClose={() => (this.setState({openEditEducationModal: false}))}/>
-                <EditExperienceModal user_experience={this.state.selectedUserExperience} onSubmit={() => (this.submitExperienceEdit())} updateField={this.updateSelectedExperience} open={this.state.openEditExperienceModal} onClose={() => (this.setState({openEditExperienceModal: false}))}/>
-            </div>
-
-        </div>)
+            )
     }
 
 }

@@ -44,7 +44,7 @@ class SmallLink extends React.Component {
         let clean_link = link.replace("http://" ,"").replace("https://" ,"")
 
         return (
-            <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
+            <a style={{cursor: "pointer", textDecoration: "none"}} href={link} target={"_blank"} >
 
                 <div className={mc(classes.cardContainer)} style={{color: COMMON.COLORS.DARK_GREY, textDecoration: "none"}}>
                     <div style={{display: "flex"}}>

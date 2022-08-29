@@ -8,6 +8,7 @@ const UserExperienceService = require("../user_experiences/UserExperienceService
 const UserEducationService = require("../user_educations/UserEducationService");
 const UserLinksService = require("../user_links/UserLinksService");
 const UserGalleryService = require("../user_galleries/UserGalleryService");
+const CompanyService = require("../companies/CompanyService");
 
 const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 
@@ -24,7 +25,7 @@ module.exports.init = function (connection) {
 
     console.log("SQL: User Service Successfully Initialized");
 
-    test_endpoints();
+    // test_endpoints();
 };
 
 module.exports.get_users = get_users;
@@ -118,6 +119,18 @@ const IMPORT_DATA = []
 
 function test_endpoints() {
     load_companies_from_airtable({companies: {}}).then((companies) => {
+
+        // console.log("LOADD COMPANYS", companies)
+        //
+        // Object.values(companies).forEach((company) => {
+        //     CompanyService.create_company(company).then((company_id) => {
+        //         console.log("company_id", company_id);
+        //     }).catch((e) => {
+        //         console.log("company already exists", company.company_name);
+        //
+        //     })
+        // })
+
         load_users_from_airtable().then((users) => {
 
             // console.log(users);
@@ -151,11 +164,11 @@ function test_endpoints() {
         })
     });
 
-    get_users({}).then((users) => {
-        users.forEach((user) => {
-            console.log(`https://app-osiris.herokuapp.com/u/${user.username}`)
-        })
-    })
+    // get_users({}).then((users) => {
+    //     users.forEach((user) => {
+    //         console.log(`https://app-osiris.herokuapp.com/u/${user.username}`)
+    //     })
+    // })
 }
 
 function load_users_from_airtable() {
@@ -240,9 +253,44 @@ function load_companies_from_airtable({offset, companies}) {
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
 
+
+                let company_city = undefined;
+                let company_state = undefined;
+                let company_city_lower = undefined;
+                let company_state_lower = undefined;
+
+                if (fields["Headquarters"]) {
+                    let h = fields["Headquarters"];
+                    h = h.replace("'","");
+                    h = h.replace("'","");
+                    h = h.replace("\"","");
+                    h = h.replace("\"","");
+                    let hs = h.split(", ");
+
+                    if (hs.length === 2) {
+                        console.log("COMPANY CITY STATE", hs[0], hs[1]);
+                        company_city = hs[0];
+                        company_state = hs[1];
+                        company_city_lower = company_city.toLowerCase();
+                        company_state_lower = company_state.toLowerCase();
+                    }
+                }
+                console.log("COMPANY CITY STATE AGAIN", company_city, company_state);
+
                 const company = {
+                    airtable_company_id: record.id,
                     name: fields["Name"],
+                    company_city,
+                    company_state,
+                    company_city_lower,
+                    company_state_lower,
+                    company_name: fields["Name"],
+                    company_about: fields["About"],
+                    company_website: fields["Site"],
+                    company_size: fields["Employees"],
+                    headquarters: fields["Headquarters"],
                     logo: fields["Logo"] ? fields["Logo"][0].url : null,
+                    company_logo_url: fields["Logo"] ? fields["Logo"][0].url : null,
                 };
 
                 companies[record.id] = company

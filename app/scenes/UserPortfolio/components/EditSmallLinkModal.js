@@ -80,12 +80,12 @@ class EditSmallLinkModal extends React.Component {
                     },
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
-                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_HEIGHT,
-                        height: "fit-content"
+                        maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
+                        height: "277px"
                     }
                 }}
             >
-                <div style={{...STYLE_MODAL_SUPER_SUPER_CONTAINER, height: "100%"}}>
+                <div style={COMMON.STYLES.STYLE_MODAL_SUPER_SUPER_CONTAINER}>
                     <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Edit Link"} onClose={onClose} />

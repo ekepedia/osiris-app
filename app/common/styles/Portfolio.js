@@ -159,6 +159,7 @@ const PortfolioHeaderStyles = {
     },
     profileHeaderBio:{
         ...FONT_SUBHEADER,
+        whiteSpace: "pre-line",
         '@media (max-width: 768px)': {
             ...FONT_CAPTION_1,
         },
