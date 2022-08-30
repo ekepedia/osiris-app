@@ -68,12 +68,12 @@ class NavBar extends React.Component {
         super(props);
 
         let user = {};
-        let userstring = localStorage.user;
+        // let userstring = localStorage.user;
         let user_id_string = localStorage.user_id;
 
-        if (userstring && userstring !== "undefined") {
-            user = JSON.parse(userstring)
-        }
+        // if (userstring && userstring !== "undefined") {
+        //     user = JSON.parse(userstring)
+        // }
 
         console.log("LOC", userstring, user)
         this.state = {
