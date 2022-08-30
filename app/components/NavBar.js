@@ -87,8 +87,12 @@ class NavBar extends React.Component {
 
     loadUser() {
         let {  client, } = this.props;
+        let {  user } = this.state;
 
-        UserService.getUser({client, user_id: "1"}).then((user) => {
+        if (!user || !user.user_id)
+            return;
+
+        UserService.getUser({client, user_id: user.user_id + ""}).then((user) => {
             console.log("NAV USER", user);
             localStorage.user = JSON.stringify(user);
             this.setState({
@@ -133,7 +137,13 @@ class NavBar extends React.Component {
                             {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
                         </div>
                     </Link>
+                    <Link to={"/login"} style={{display: "none"}}>
+                        <div className={classes.linkStyle}>
+                            Logout
+                        </div>
+                    </Link>
                 </div>
+
                 <div style={{flex: "0 0 40px"}}>
                     <Link to={"/edit/" + user.user_id}>
                         <div  className={classes.profileContainer}>
@@ -143,6 +153,7 @@ class NavBar extends React.Component {
                         </div>
                     </Link>
                 </div>
+
             </div>
 
         </div>)

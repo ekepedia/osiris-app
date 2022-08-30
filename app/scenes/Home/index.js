@@ -315,26 +315,23 @@ class Home extends React.Component {
 
 
             <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
-                <div style={{flex: "0 0 50px"}}>
-                    <NavBar/>
-                </div>
                 <div style={{flex: 1, overflow: "scroll"}}>
                     <div>
                         <div className={mc(classes.landingContainer)}>
                             <div style={{display: "flex", height: "100%"}}>
-                                <div style={{flex: 1}}>
+                                <div style={{flex: 1, textAlign: "center"}}>
                                     <div>
-                                        <div className={mc(classes.marginLeftDefault, classes.landingHeroText)}>
+                                        <div className={mc(classes.marginLeftDefault, classes.landingHeroText)} style={{marginTop: "calc(50vh - 86.5px)", marginLeft: "auto", marginRight: "auto"}}>
                                             <div className={mc(classes.landingHeroTitle)}>The professional network built for the multi-hyphenate generation</div>
                                             <div className={mc(classes.landingHeroBody)}>OSIRIS is redefining what a social and career network can and should be by redefining the professional for today’s generation</div>
-                                            <div style={{marginTop: "25px"}}>
+                                            <div style={{marginTop: "25px", display: "none"}}>
                                                 <div style={{...COMMON.STYLES.STYLE_BUTTON_HEADLINE, background: COMMON.COLORS.OSIRIS_GREEN}} onClick={() => (this.setOnBoardingModal(true))}>Claim your portfolio</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div style={{flex: 1, height: "100%"}} className={mc(classes.hideOnMobile)}>
+                                <div style={{flex: 1, height: "100%", display: "none"}} className={mc(classes.hideOnMobile)}>
 
                                     <div style={{display: "flex", height: "100%"}}>
                                         <div style={{flex: 1, marginRight: "5px", height: "100%"}}>
@@ -366,7 +363,12 @@ class Home extends React.Component {
                         </div>
 
 
-                        <div style={{paddingTop: "50px"}}>
+
+
+                        {false && <div>
+
+
+                            <div style={{paddingTop: "50px"}}>
                                 <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide, )}>
                                     <div>
                                         <div className={mc(classes.sectionHeader)}>Community</div>
@@ -374,9 +376,7 @@ class Home extends React.Component {
                                         <div className={mc(classes.sectionBody)}>OSIRIS connects you with your peers, companies, and mentors across industries irrespective of your background</div>
                                     </div>
                                 </div>
-                        </div>
-
-
+                            </div>
                         <div className={mc(classes.profileHighlights)}>
                             <div style={{width: "100%", overflow: "scroll"}}>
                                 <div className={mc(classes.marginLeftDefault)} style={{width: "fit-content", whiteSpace: "nowrap"}}>
@@ -607,6 +607,8 @@ class Home extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        </div>}
+
                     </div>
 
                 </div>
