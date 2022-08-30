@@ -75,7 +75,7 @@ class NavBar extends React.Component {
         //     user = JSON.parse(userstring)
         // }
 
-        console.log("LOC", userstring, user)
+        // console.log("LOC", userstring, user)
         this.state = {
             selected: true,
             user,
