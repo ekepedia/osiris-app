@@ -143,7 +143,7 @@ class PortfolioHeader extends React.Component {
                     <CoverImageHolder url={cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                     <div className={classes.cameraIconContainer} style={{top: 20, right: 20}} onClick={() => {this.uploadCoverPhoto()}}>
                         <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
-                        <input type={"file"} style={{display: "none"}} ref={this.profileCoverUpload} onChange={(e) => {
+                        <input type={"file"} accept="image/*" style={{display: "none"}} ref={this.profileCoverUpload} onChange={(e) => {
                             uploadCoverPhoto ? uploadCoverPhoto(e) : null
                         }}/>
                     </div>
@@ -154,7 +154,7 @@ class PortfolioHeader extends React.Component {
                             <CoverImageHolder url={profile_photo_url}/>
                             <div className={classes.cameraIconContainer} onClick={() => {this.uploadProfilePhoto()}} >
                                 <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
-                                <input type={"file"} style={{display: "none"}} ref={this.profilePhotoUpload} onChange={(e) => {
+                                <input type={"file"} accept="image/*" style={{display: "none"}} ref={this.profilePhotoUpload} onChange={(e) => {
                                     uploadProfilePhoto ? uploadProfilePhoto(e) : null
                                 }}/>
                             </div>

@@ -69,6 +69,7 @@ class Login extends React.Component {
             console.log("LOGIN", data.data);
 
             if (data.data.success) {
+                localStorage.user_id = data.data.data.user_login.user_id;
                 window.location.pathname = `/edit/${data.data.data.user_login.user_id}`;
             }
         })
@@ -88,7 +89,7 @@ class Login extends React.Component {
                 <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
 
                 <div className={mc(classes.inputLabel)}>Password</div>
-                <StandardInput value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
+                <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
 
                 <div className={mc(classes.buttonContainer)}>
                     <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>

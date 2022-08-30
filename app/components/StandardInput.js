@@ -59,7 +59,7 @@ class StandardInput extends React.Component {
             {type === "textarea" ?
                 <textarea style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
                 :
-                <input  style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
+                <input type={type} style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
 
             }
         </div>)

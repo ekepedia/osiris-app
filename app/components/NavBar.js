@@ -69,6 +69,7 @@ class NavBar extends React.Component {
 
         let user = {};
         let userstring = localStorage.user;
+        let user_id_string = localStorage.user_id;
 
         if (userstring && userstring !== "undefined") {
             user = JSON.parse(userstring)
@@ -77,7 +78,8 @@ class NavBar extends React.Component {
         console.log("LOC", userstring, user)
         this.state = {
             selected: true,
-            user
+            user,
+            user_id: user_id_string + ""
         };
     }
 
@@ -87,10 +89,14 @@ class NavBar extends React.Component {
 
     loadUser() {
         let {  client, } = this.props;
-        let {  user } = this.state;
+        let { user, user_id} = this.state;
 
-        if (!user || !user.user_id)
+        user = user || {};
+        user.user_id = user.user_id ? user.user_id : ( user_id ? user_id : null);
+
+        if (!user || !user.user_id) {
             return;
+        }
 
         UserService.getUser({client, user_id: user.user_id + ""}).then((user) => {
             console.log("NAV USER", user);
@@ -116,27 +122,27 @@ class NavBar extends React.Component {
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>
-                    <Link to={"/jobs"}>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
-                            Jobs
-                            {path === "/jobs" && <div className={classes.selectedLink}/>}
-                        </div>
-                    </Link>
-                    <Link to={"/companies"}>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
-                            Companies
-                            {path === "/companies" && <div className={classes.selectedLink}/>}
-                        </div>
-                    </Link>
-                    <Link to={"/saved-jobs/" + user.user_id }>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
-                            <div>
-                                <i className="fa-solid fa-briefcase"/>
-                                <span style={{fontSize: "0px", opacity: 0}}>.</span>
-                            </div>
-                            {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
-                        </div>
-                    </Link>
+                    {/*<Link to={"/jobs"}>*/}
+                    {/*    <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>*/}
+                    {/*        Jobs*/}
+                    {/*        {path === "/jobs" && <div className={classes.selectedLink}/>}*/}
+                    {/*    </div>*/}
+                    {/*</Link>*/}
+                    {/*<Link to={"/companies"}>*/}
+                    {/*    <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>*/}
+                    {/*        Companies*/}
+                    {/*        {path === "/companies" && <div className={classes.selectedLink}/>}*/}
+                    {/*    </div>*/}
+                    {/*</Link>*/}
+                    {/*<Link to={"/saved-jobs/" + user.user_id }>*/}
+                    {/*    <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>*/}
+                    {/*        <div>*/}
+                    {/*            <i className="fa-solid fa-briefcase"/>*/}
+                    {/*            <span style={{fontSize: "0px", opacity: 0}}>.</span>*/}
+                    {/*        </div>*/}
+                    {/*        {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}*/}
+                    {/*    </div>*/}
+                    {/*</Link>*/}
                     <Link to={"/login"} style={{display: "none"}}>
                         <div className={classes.linkStyle}>
                             Logout

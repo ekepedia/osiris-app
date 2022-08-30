@@ -126,7 +126,7 @@ class ThumbnailUpload extends React.Component {
                 <CoverImageHolder url={url}/>
                 <div className={classes.cameraIconContainer} style={{top: "5%", right: "5%"}} onClick={() => {this.clickPhotoReUploadButton()}}>
                     <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
-                    <input type={"file"} style={{display: "none"}} ref={this.photoReUploadButton} onChange={(e) => (this.fileUploaded(e))}/>
+                    <input type={"file"} accept="image/*" style={{display: "none"}} ref={this.photoReUploadButton} onChange={(e) => (this.fileUploaded(e))}/>
                 </div>
             </div>: <div className={classes.centerAlignContainer} style={{height: "100%", width: "100%", backgroundColor: COMMON.COLORS.BACKGROUND_GREY}}>
                 <div className={classes.centerAlignObject}>
