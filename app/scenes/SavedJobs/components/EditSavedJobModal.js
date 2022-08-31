@@ -15,7 +15,7 @@ import Modal from 'react-modal';
 import DataService from '../../../services/DataService';
 
 import COMMON from "../../../common/index";
-import {convertDateObjectToMonthYear, converMonthYearToDateObject, mc} from "../../../common/helpers";
+import {convertDateObjectToMonthYear, converMonthYearToDateObject, mc, companyCustomSearch} from "../../../common/helpers";
 import StandardButton from "../../../components/StandardButton";
 import StandardInput from "../../../components/StandardInput";
 import {
@@ -225,6 +225,7 @@ class EditSavedJobModal extends React.Component {
                                                     isClearable={true}
                                                     placeholder="Choose a company ..."
                                                     options={options}
+                                                    filterOption={companyCustomSearch}
                                                     styles={{indicatorSeparator: () => ({display: "none"})}}
                                                     value={option_map[job.company_id]}
                                                     onChange={(e) => {

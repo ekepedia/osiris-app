@@ -33,6 +33,19 @@ export function converMonthYearToDateObject({month, year}) {
     return new Date(`${month}/1/${year}`);
 }
 
+export function companyCustomSearch(option, searchText) {
+    searchText = (searchText || "").toLowerCase();
+
+    if (option && option.data && option.data.company) {
+        let { company } = option.data;
+        let company_name = (company.company_name || "").toLowerCase();
+
+        return company_name.indexOf(searchText) !== -1;
+    } else {
+        return false
+    }
+}
+
 export function formatLargeNumber (num) {
     num = Math.round(num*100)/100;
 

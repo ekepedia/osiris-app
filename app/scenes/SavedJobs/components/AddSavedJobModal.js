@@ -18,6 +18,7 @@ import EditPortfolioModalHeader from "../../UserPortfolio/components/EditPortfol
 import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import Select from "react-select/creatable";
+import {companyCustomSearch} from "../../../common/helpers";
 
 const Styles = {
     container: {
@@ -95,6 +96,7 @@ class AddSavedJobModal extends React.Component {
                                 isClearable={true}
                                 placeholder="Choose a company ..."
                                 options={options}
+                                filterOption={companyCustomSearch}
                                 styles={{indicatorSeparator: () => ({display: "none"})}}
                                 onChange={(e) => {
                                     console.log("ON CHANGE", e)
