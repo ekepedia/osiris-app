@@ -175,7 +175,7 @@ const Styles = {
         },
     },
     landingHeroText: {
-        maxWidth: "454px",
+        maxWidth: "370px",
         marginTop: "calc(50vh - 116px - 65px)",
         '@media (max-width: 768px)': {
             marginTop: "65px",
@@ -321,9 +321,9 @@ class Home extends React.Component {
                             <div style={{display: "flex", height: "100%"}}>
                                 <div style={{flex: 1, textAlign: "center"}}>
                                     <div>
-                                        <div className={mc(classes.marginLeftDefault, classes.landingHeroText)} style={{marginTop: "calc(50vh - 86.5px)", marginLeft: "auto", marginRight: "auto"}}>
-                                            <div className={mc(classes.landingHeroTitle)}>The professional network built for the multi-hyphenate generation</div>
-                                            <div className={mc(classes.landingHeroBody)}>OSIRIS is redefining what a social and career network can and should be by redefining the professional for today’s generation</div>
+                                        <div className={mc(classes.marginLeftDefault, classes.landingHeroText)} style={{marginTop: "calc(50vh - 68.5px)", marginLeft: "auto", marginRight: "auto"}}>
+                                            <div className={mc(classes.landingHeroTitle)}>Finding your dream job doesn’t have to suck</div>
+                                            <div className={mc(classes.landingHeroBody)} style={{fontSize: "16px"}}>OSIRIS provides you with the community, tools, and data to make better career decisions</div>
                                             <div style={{marginTop: "25px", display: "none"}}>
                                                 <div style={{...COMMON.STYLES.STYLE_BUTTON_HEADLINE, background: COMMON.COLORS.OSIRIS_GREEN}} onClick={() => (this.setOnBoardingModal(true))}>Claim your portfolio</div>
                                             </div>
