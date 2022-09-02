@@ -116,28 +116,23 @@ class PortfolioHeader extends React.Component {
                     <div className={classes.editHeaderButtonContainer}>
                         <div className={classes.editHeaderButton}>
                             <a target={"_blank"} href={company.company_website}>
-                                <StandardButton label={"Learn More"} outline={false}/>
+                                <StandardButton label={"Learn More"} outline={false} icon={"fa-solid fa-compass"}/>
                             </a>
                         </div>
                     </div>
                     <div className={classes.profileHeaderName}>{company.company_name}</div>
                     <div className={classes.profileHeaderBio}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
-                    <div style={{
-                        height: "45px",
-                        lineHeight: "45px",
-                        marginTop: "25px",
-                        borderTop: `1px solid ${COMMON.COLORS.LIGHT_GREY}`
-                    }}>
+                    <div className={classes.companyTabs}>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
-                            Home
+                            <span style={{color: selectedState === 1 ? COMMON.COLORS.B400 : null}}>Home</span>
                             {selectedState === 1 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
-                            About
+                            <span style={{color: selectedState === 2 ? COMMON.COLORS.B400 : null}}>About</span>
                             {selectedState === 2 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
-                            DE&I
+                            <span style={{color: selectedState === 3 ? COMMON.COLORS.B400 : null}}>DE&I</span>
                             {selectedState === 3 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                     </div>

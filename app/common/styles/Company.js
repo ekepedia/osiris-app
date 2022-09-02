@@ -4,9 +4,21 @@ import {
     FONT_FOOTNOTE,
     FONT_FOOTNOTE_BOLD, FONT_H_200, FONT_H_300, FONT_SUBHEADER, FONT_SUBHEADER_BOLD,
     FONT_TITLE_2_BOLD,
-    FONT_TITLE_3_BOLD
+    FONT_TITLE_3_BOLD, H100, H300, H400, H500, H600, P100, P200
 } from "../fonts";
-import {COLOR_GOLD, COLOR_WHITE, DARK_GREY, LIGHT_GREY, OSIRIS_BLACK, OSIRIS_GREEN} from "../colors";
+import {
+    B400,
+    COLOR_GOLD,
+    COLOR_WHITE,
+    DARK_GREY,
+    LIGHT_GREY, N400,
+    N700,
+    N75,
+    N800,
+    N900,
+    OSIRIS_BLACK,
+    OSIRIS_GREEN
+} from "../colors";
 
 const CompanyPageStyles = {
     pageTitle: {
@@ -32,13 +44,17 @@ const CompanyPageStyles = {
         background: COLOR_WHITE
     },
     companyFilterLabel: {
-        ...FONT_FOOTNOTE_BOLD,
-        marginBottom: "10px"
+        ...H400,
+        color: N900,
+        marginBottom: "10px",
+        "& i": {
+            marginRight: "5px"
+        }
     },
     companySubFilterLabel: {
-        ...FONT_FOOTNOTE,
-        color: DARK_GREY,
-        marginBottom: "5px"
+        ...P100,
+        color: N700,
+        marginBottom: "8px"
     }
 }
 
@@ -60,31 +76,40 @@ const CompanyProfilePageStyles = {
         color: OSIRIS_BLACK,
         marginTop: "20px"
     },
+    sectionMainTitle: {
+        ...H600,
+        color: N900,
+    },
     sectionTitle: {
-        ...FONT_TITLE_2_BOLD,
-        lineHeight: "26px"
+        ...H500,
+        color: N900,
     },
     sectionSubHeader:{
-        color: DARK_GREY,
+        color: N700,
+        textTransform: "uppercase",
         marginTop: "2px",
-        ...FONT_SUBHEADER
+        ...H100
     },
     sectionSubtitle: {
-        ...FONT_BODY_BOLD,
+        ...H500,
+        color: N900,
         marginTop: "25px",
-        lineHeight: "21px",
-        marginBottom: "2px"
+        marginBottom: 0
     },
     aboutBody: {
-        ...FONT_BODY,
-        marginTop: "25px"
+        ...P200,
+        color: N800,
+        marginTop: "15px"
     },
     overviewSection: {
-        ...FONT_BODY,
+        ...P200,
+        color: N800
     },
     companyWebsite: {
-        ...FONT_BODY_BOLD,
-        color: COLOR_GOLD
+        color: COLOR_GOLD,
+        '& a': {
+            color: COLOR_GOLD,
+        }
     },
     diversityStatsContainer: {
         marginTop: "20px",
@@ -117,6 +142,15 @@ const CompanyProfilePageStyles = {
         ...FONT_H_200,
         flex: "0 0 35px"
     },
+    seeMoreDetails: {
+        ...H400,
+        cursor: "pointer",
+        marginTop: "25px",
+        textAlign: "center",
+        paddingTop: "12px",
+        borderTop: `1px solid ${N400}`,
+        color: N700,
+    }
 }
 
 const CompanyHeaderStyles  = {
@@ -124,19 +158,28 @@ const CompanyHeaderStyles  = {
         width: "fit-content",
         display: "inline-block",
         marginRight: "35px",
-        ...FONT_SUBHEADER_BOLD,
         position: "relative",
-        cursor: "pointer"
+        cursor: "pointer",
+        color: N700
     },
     companyMenuSelectBar: {
         position: "absolute",
         width: "100%",
         bottom: 0,
-        height: "4px",
-        background: OSIRIS_GREEN,
+        height: "2px",
+        background: B400,
         borderRadius: "2px 2px 0 0"
+    },
+    companyTabs: {
+        ...H300,
+        height: "48px",
+        lineHeight: "48px",
+        marginTop: "25px",
+        borderTop: `1px solid ${N400}`,
+        width: "calc(100% + 70px)",
+        marginLeft: "-35px",
+        paddingLeft: "35px"
     }
-
 }
 
 

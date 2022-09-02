@@ -47,8 +47,7 @@ class SmallLink extends React.Component {
                     </div>
                     <div style={{flex: 1}}>
                         <div className={mc(classes.cardTitle)}>{role_name}</div>
-                        <div className={mc(classes.cardSubTitle)}>{company_name}</div>
-                        <div className={mc(classes.cardBody)}><span>{timeElapsed}</span> • <span>{time}</span></div>
+                        <div className={mc(classes.cardBody)}><span>{company_name}</span> • <span>{timeElapsed}</span> • <span>{time}</span></div>
                     </div>
                 </div>
             </div>

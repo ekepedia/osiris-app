@@ -58,13 +58,43 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, style, value, options, update, color} = this.props;
+        let { classes, style, value, options, update, color, background} = this.props;
 
         style = style || {};
         update = update || (() => {});
 
+        let width = null;
+
+        if (options && options.length && value) {
+            options.forEach((option) => {
+                console.log(option.value, value, option.width)
+                if (option && option.value && (option.value + "" === value + "")) {
+
+                    if (option.width)
+                        width = option.width
+
+                    if (option.color)
+                        color = option.color
+
+                    if (option.background)
+                        background = option.background
+
+                }
+            })
+        }
+
+        let selectStyle = {...style, color: color ? color : null, background: background ? background : null};
+
+        if (width) {
+            console.log("we found width");
+            selectStyle.width = width;
+            console.log(selectStyle);
+        } else {
+            console.log("nope!")
+        }
+
         return (<div className={classes.container}>
-            <select className={classes.inputStyle} style={{background: color ? color : null, ...style}} value={value} onChange={(e) => (update(e.target.value))}>
+            <select className={classes.inputStyle} style={selectStyle} value={value} onChange={(e) => (update(e.target.value))}>
                 {options.map((option) => {
                     return (<option value={option.value}>{option.label}</option>)
                 })}

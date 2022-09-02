@@ -14,19 +14,22 @@ import {TAG_GREY} from "../../../common/colors";
 
 const Styles = {
     container: {
-        padding: "15px 20px",
+        padding: "17px 20px",
         '@media (max-width: 768px)': {
             padding: "15px 20px",
         },
         background: COMMON.COLORS.COLOR_WHITE,
-        borderBottom: `1px solid ${COMMON.COLORS.LIGHT_GREY}`,
-        display: "flex"
+        borderBottom: `1px solid ${COMMON.COLORS.N400}`,
+        display: "flex",
+        ...COMMON.FONTS.H400,
+        color: COMMON.COLORS.N900,
+        overflow: "hidden"
     },
     companyLogo: {
-        height: "36px",
-        flex: "0 0 36px",
+        height: "40px",
+        flex: "0 0 40px",
         marginRight: "10px",
-        border: `1px solid ${COMMON.COLORS.LIGHT_GREY}`,
+        border: `1px solid ${COMMON.COLORS.N300}`,
         borderRadius: "6px",
         overflow: "hidden"
     },
@@ -34,7 +37,12 @@ const Styles = {
         flex: "0 0 233px"
     },
     companyEmployeeContainer: {
-        flex: "0 0 95px"
+        flex: "0 0 95px",
+        "& i": {
+            color: COMMON.COLORS.N600,
+            marginRight: "4px",
+            fontSize: "12px"
+        }
     },
     companyGenderContainer: {
         flex: "0 0 220px"
@@ -49,25 +57,26 @@ const Styles = {
     companyIndustry: {
         marginLeft: "5px",
         marginTop: "5.5px",
-        height: "25px",
-        lineHeight: "25px",
-        ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
-        padding: "0 8px",
-        background: COMMON.COLORS.TAG_GREY,
-        color: COMMON.COLORS.OSIRIS_BLACK,
+        ...COMMON.FONTS.H100,
+        padding: "2px 4px",
+        background: COMMON.COLORS.N100,
+        color: COMMON.COLORS.N700,
         display: "inline-block",
-        borderRadius: "6px"
+        borderRadius: "4px",
+        whiteSpace: "nowrap",
+        textTransform: "uppercase"
     },
     companyHeader: {
-        ...COMMON.FONTS.FONT_SUBHEADER_BOLD,
-        color: COMMON.COLORS.OSIRIS_BLACK,
-        lineHeight: "19px"
+        ...COMMON.FONTS.H400,
+        color: COMMON.COLORS.N900,
     },
     companySubHeader: {
-        ...COMMON.FONTS.FONT_FOOTNOTE,
-        marginTop: "1px",
-        color: COMMON.COLORS.DARK_GREY,
-        lineHeight: "16px"
+        ...COMMON.FONTS.H100,
+        color: COMMON.COLORS.N700,
+    },
+    companyLocation: {
+        extend: 'companySubHeader',
+        ...COMMON.FONTS.H300,
     }
 };
 
@@ -101,17 +110,17 @@ class CompanyIndexRow extends React.Component {
                     <div className={mc(classes.companyHeader)}>
                         {company.company_name}
                     </div>
-                    <div className={mc(classes.companySubHeader)}>
+                    <div className={mc(classes.companyLocation)}>
                         {company.company_city || "San Diego"}, {company.company_state || "CA"}
                     </div>
                 </Link>
             </div>
             <div className={mc(classes.companyEmployeeContainer)}>
                 <div className={mc(classes.companyHeader)}>
-                    {company.company_size  ?formatLargeNumber(company.company_size) : "--"}
+                    <i className="fa-solid fa-user-group"/>{company.company_size  ?formatLargeNumber(company.company_size) : "--"}
                 </div>
                 <div className={mc(classes.companySubHeader)}>
-                    Employees
+                    EMPLOYEES
                 </div>
             </div>
 
@@ -119,10 +128,10 @@ class CompanyIndexRow extends React.Component {
                 <div className={mc(classes.companyHeader)}>
                     {company_demographics.employees_female ||company_demographics.employees_male ? <div>
                         {company_demographics.employees_male || "--"}% Male / {company_demographics.employees_female || "--"}% Female
-                    </div> : <div>No Data</div> }
+                    </div> : <div>—</div> }
                 </div>
                 <div className={mc(classes.companySubHeader)}>
-                    No 2021 Data
+                    —
                 </div>
             </div>
 
@@ -130,10 +139,10 @@ class CompanyIndexRow extends React.Component {
                 <div className={mc(classes.companyHeader)}>
                     {bipoc_respresentation ? <div>
                         {bipoc_respresentation}% BIPOC
-                    </div> : <div>No Data</div>}
+                    </div> : <div>—</div>}
                 </div>
                 <div className={mc(classes.companySubHeader)}>
-                    No 2021 Data
+                    —
                 </div>
             </div>
 

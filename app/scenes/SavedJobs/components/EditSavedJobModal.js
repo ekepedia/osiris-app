@@ -211,12 +211,9 @@ class EditSavedJobModal extends React.Component {
                                     {selectedState === 4 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>
                             </div>
-
                             <div style={{display: selectedState === 1 ? null : "none"}}>
-
                                 <div style={{display: "flex"}}>
                                     <div style={{flex: 1, marginRight: "50px"}}>
-
                                         <div style={{display: "flex"}}>
                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                 <div className={classes.inputLabel}>Company</div>

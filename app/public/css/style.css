@@ -126,3 +126,7 @@ input[type=range]:focus::-ms-fill-lower {
 input[type=range]:focus::-ms-fill-upper {
     background: #9B9A97;
 }
+
+a:hover {
+    text-decoration: none;
+}

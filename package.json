@@ -7,7 +7,7 @@
     "node": "10.15.0"
   },
   "scripts": {
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --progress --config webpack.config.js",
     "build": "webpack --config webpack.config.js",
     "monitor": "nodemon app.js",
     "start": "node app.js"

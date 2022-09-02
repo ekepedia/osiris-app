@@ -109,11 +109,10 @@ class CompanyIndex extends React.Component {
                         <div className={mc(classes.mainContainer)}>
                             <div className={mc(classes.LHSContainer)}>
                                 <div className={mc(classes.companyFilterContainer)}>
-                                    <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/> Company Search</div>
+                                    <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/>Company Search</div>
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => (this.setState({companyNameFilter: v}))}/>
 
-                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-building"/> Company Details</div>
-
+                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-building"/>Company Details</div>
 
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>Employee Count</div>
@@ -122,7 +121,7 @@ class CompanyIndex extends React.Component {
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
-                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-user-group"/> Representation</div>
+                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-user-group"/>Representation</div>
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>Female Representation</div>
                                         <input type="range" min={0} max={100} value={femaleEmployeeFilter} className="slider" onChange={(e) =>{

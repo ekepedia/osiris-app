@@ -15,34 +15,11 @@ import COMMON from "../common/index";
 import { mc } from "../common/helpers";
 
 const setHeight = (props) => {
-
-    let height = "31px";
-    if (!props || !props.size)
-        return height;
-
-    const { size } = props;
-
-    if (size === "S") {
-        height = "28px"
-    }
-
-    return height
+    return "32px"
 }
 
 const setFont = (props) => {
-
-    let font = COMMON.FONTS.FONT_SUBHEADER_BOLD;
-
-    if (!props || !props.size)
-        return font;
-
-    const { size } = props;
-
-    if (size === "S") {
-        font = COMMON.FONTS.FONT_FOOTNOTE_BOLD
-    }
-
-    return font
+    return COMMON.FONTS.H300;
 }
 
 const Styles = {
@@ -53,31 +30,34 @@ const Styles = {
         },
     },
     buttonStyle: (props) => {
-        const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
+        const font = setFont(props);
 
         return ({
             height: setHeight(props),
-            padding: "6px 8px",
-            background: COMMON.COLORS.OSIRIS_GREEN,
-            border: `1px solid ${COMMON.COLORS.OSIRIS_GREEN}`,
-            borderRadius: "6px",
+            padding: "8px 10px",
+            background: COMMON.COLORS.B400,
+            border: `1px solid ${COMMON.COLORS.B400}`,
+            borderRadius: "4px",
             color: COMMON.COLORS.COLOR_WHITE,
             ...font,
         })
     },
-    outlineButton: (props) => {
-        const font = setFont(props) || COMMON.FONTS.FONT_SUBHEADER_BOLD;
+    secondaryButton: (props) => {
+        const font = setFont(props);
 
         return ({
             height: setHeight(props),
-            padding: "6px 8px",
-            borderRadius: "6px",
-            background: "none",
-            border: `1px solid ${COMMON.COLORS.OSIRIS_GREEN}`,
+            padding: "8px 10px",
+            background: COMMON.COLORS.N0,
+            border: `1px solid ${COMMON.COLORS.N400}`,
+            borderRadius: "4px",
             color: COMMON.COLORS.OSIRIS_GREEN,
             ...font,
         })
     },
+    defaultIcon: {
+        fontSize: "11.5px"
+    }
 };
 
 class StandardButton extends React.Component {
@@ -95,14 +75,13 @@ class StandardButton extends React.Component {
     }
 
     render() {
-        let { classes, label, outline, onClick, fullWidth } = this.props;
+        let { classes, label, secondary, onClick, fullWidth, icon, iconStyle } = this.props;
 
         return (<div className={classes.container}>
 
-            <button style={{width: fullWidth ? "100%" : null}} className={outline ? mc(classes.outlineButton) : classes.buttonStyle} onClick={() => {
+            <button style={{width: fullWidth ? "100%" : null}} className={secondary ? mc(classes.secondaryButton) : classes.buttonStyle} onClick={() => {
                 onClick ? onClick() : null;
-            }}>{label}</button>
-
+            }}>{label}{icon && <span style={{marginLeft: "8px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span>}</button>
         </div>)
     }
 

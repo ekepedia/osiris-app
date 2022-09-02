@@ -11,12 +11,23 @@ import injectSheet from 'react-jss';
 
 import DataService from '../services/DataService';
 
-import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_GOLD, COLOR_GREEN, COLOR_WHITE, OSIRIS_GREEN} from "../common/colors";
-import {FONT_BODY_BOLD, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD} from "../common/fonts";
+import {
+    COLOR_BLACK,
+    COLOR_BORDER_GREY,
+    COLOR_GOLD,
+    COLOR_GREEN,
+    COLOR_WHITE,
+    N900,
+    OSIRIS_GREEN
+} from "../common/colors";
+
+import COMMON from "../common/index";
+
+import {FONT_BODY_BOLD, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD, H300} from "../common/fonts";
 import UserService from "../services/UserService";
 import CoverImageHolder from "./CoverImageHolder";
 
-const NAV_HEIGHT = 60;
+const NAV_HEIGHT = 48;
 
 const Styles = {
     container: {
@@ -33,8 +44,8 @@ const Styles = {
         lineHeight: `${NAV_HEIGHT}px`,
     },
     linkStyle: {
-        ...FONT_SUBHEADER_BOLD,
-        color: COLOR_BLACK,
+        ...H300,
+        color: N900,
         lineHeight: `${NAV_HEIGHT}px`,
         position: "relative",
         width: "fit-content",
@@ -48,15 +59,15 @@ const Styles = {
         width: "100%",
         height: "4px",
         bottom: 0,
-        background: COLOR_GREEN,
+        background: COMMON.COLORS.B400,
         borderRadius: "2px 2px 0 0"
     },
     profileContainer: {
-        marginTop: "12.5px",
-        height: "40px",
-        width: "40px",
+        marginTop: "9px",
+        height: "30px",
+        width: "30px",
         borderRadius: "100%",
-        border: `2px solid ${OSIRIS_GREEN}`,
+        border: `2px solid ${COMMON.COLORS.N900}`,
         overflow: "hidden",
         cursor: "pointer"
     }
@@ -107,37 +118,43 @@ class NavBar extends React.Component {
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}} className={classes.logoStyle}>
-                    <Link to={"/"} style={{color: COLOR_GREEN}}>
-                        <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "15px"}}/>
+                    <Link to={"/"} style={{color: COMMON.COLORS.N900}}>
+                        <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>
+                    <Link to={"/"}>
+                        <div className={classes.linkStyle} style={{color: path === "/" ? COMMON.COLORS.B400 : null}}>
+                            Home
+                            {path === "/" && <div className={classes.selectedLink}/>}
+                        </div>
+                    </Link>
                     <Link to={"/jobs"}>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                        <div className={classes.linkStyle} style={{color: path === "/jobs" ? COMMON.COLORS.B400 : null}}>
                             Jobs
                             {path === "/jobs" && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
                     <Link to={"/companies"}>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                        <div className={classes.linkStyle} style={{color: path.indexOf("/companies") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Companies
-                            {path === "/companies" && <div className={classes.selectedLink}/>}
+                            {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
                     <Link to={"/saved-jobs/" + user.user_id }>
-                        <div className={classes.linkStyle} style={{color: this.state.selected ? COLOR_GREEN : null}}>
+                        <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
-                                <i className="fa-solid fa-briefcase"/>
+                                <i className="fa-solid fa-briefcase" style={{marginRight: "5px"}}/>Saved Jobs
                                 <span style={{fontSize: "0px", opacity: 0}}>.</span>
                             </div>
                             {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
                         </div>
                     </Link>
                 </div>
-                <div style={{flex: "0 0 40px"}}>
+                <div style={{flex: "0 0 30px"}}>
                     <Link to={"/edit/" + user.user_id}>
                         <div  className={classes.profileContainer}>
-                            <div style={{border: `2px solid ${COLOR_WHITE}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
+                            <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
                                 <CoverImageHolder url={user.profile_photo_url}/>
                             </div>
                         </div>

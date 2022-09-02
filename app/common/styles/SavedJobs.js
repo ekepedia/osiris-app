@@ -4,9 +4,21 @@ import {
     FONT_FOOTNOTE,
     FONT_FOOTNOTE_BOLD, FONT_H_300, FONT_P_100, FONT_SUBHEADER, FONT_SUBHEADER_BOLD,
     FONT_TITLE_2_BOLD,
-    FONT_TITLE_3_BOLD
+    FONT_TITLE_3_BOLD, H100, H300, P100
 } from "../fonts";
-import {COLOR_GOLD, COLOR_WHITE, DARK_GREY, LIGHT_GREY, N_600, N_700, N_800, OSIRIS_BLACK} from "../colors";
+import {
+    B400,
+    COLOR_GOLD,
+    COLOR_WHITE,
+    DARK_GREY,
+    LIGHT_GREY, N100,
+    N700,
+    N900,
+    N_600,
+    N_700,
+    N_800,
+    OSIRIS_BLACK
+} from "../colors";
 
 const SavedJobPageStyles = {
     pageTitle: {
@@ -28,25 +40,76 @@ const SavedJobPageStyles = {
         marginBottom: "5px",
     },
     rowContainer: {
-        padding: "10px",
-        ...FONT_SUBHEADER,
-        // borderBottom: `1px solid ${LIGHT_GREY}`,
-        minHeight: "53px",
-        lineHeight: "calc(53px - 20px)"
+        padding: "0",
+        ...P100,
+        lineHeight: "48px",
+        color: N700
+    },
+    jobTitle: {
+        extend: 'rowContainer',
+        ...H300,
+        lineHeight: "48px",
+        cursor: "pointer",
+        color: N900
+    },
+    rowContainerHeader: {
+        extend: 'rowContainer',
+        textTransform: "uppercase",
+        color: N700,
+        ...H100,
+        lineHeight: "48px",
+    },
+    rowHeaderSuperContainer: {
+        padding: "0 15px",
+        display: "flex",
+        background: "#FAFBFF"
     },
     filterHolder: {
-        ...FONT_H_300,
+        ...H300,
         display: "inline-block",
         marginRight: "8px",
         padding: "0 8px",
         borderRadius: "4px",
         lineHeight: "32px",
         background: "#EBF0FF",
-        color:"#3366FF",
+        color: B400,
         width: "fit-content",
     },
     savedJobRow: {
-        borderTop: `1px solid ${LIGHT_GREY}`
+        borderTop: `1px solid ${LIGHT_GREY}`,
+        display: "flex",
+        padding: "0 15px"
+    },
+    companyLogoContainer: {
+        position: "absolute",
+        height: "16px",
+        width: "16px",
+        marginRight: "5px",
+        top: "16px",
+        left: 0,
+        borderRadius: "4px",
+        overflow: "hidden",
+        border: "none"
+    },
+    statusSelectStyle: {
+        ...H100,
+        border: "none",
+        height: "20px",
+        padding: "2px 4px",
+        marginTop: "14px",
+        color: N700,
+        textTransform: "uppercase",
+        borderRadius: "4px",
+        width: "91px"
+    },
+    roleTypeContainer: {
+        background: N100,
+        padding: "2px 3px",
+        borderRadius: "4px",
+        "& i": {
+            fontSize: "10px",
+            marginRight: "3px"
+        }
     }
 }
 
