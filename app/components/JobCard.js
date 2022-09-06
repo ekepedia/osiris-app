@@ -15,13 +15,17 @@ import {COLOR_BORDER_GREY, COLOR_WHITE, COLOR_TEXT_GREY, COLOR_GREEN_LIGHT, COLO
 import {FONT_SUBHEADER_BOLD, FONT_FOOTNOTE} from "../common/fonts";
 import {STYLE_BUTTON_FOOTNOTE, STYLE_BUTTON_FOOTNOTE_OUTLINE} from "../common/styles";
 
+import COMMON from "../common/index";
+import CoverImageHolder from "./CoverImageHolder";
+import StandardBadge from "./StandardBadge";
+
 const Styles = {
     container: {
         padding: "0",
         '@media (max-width: 768px)': {
             padding: "0",
         },
-        background: COLOR_WHITE,
+        background: COMMON.COLORS.N0,
         overflow: "hidden",
         cursor: "pointer"
     },
@@ -61,50 +65,44 @@ class JobCard extends React.Component {
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
 
-        return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COLOR_GREEN_LIGHT: null}}>
-            <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COLOR_GREEN : COLOR_BORDER_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
-                <div style={{display: "flex"}}>
-                    <div style={{flex: "0 0 45px", paddingRight: "15px"}}>
-                        <div style={{borderRadius: "4px", border: `1px solid ${COLOR_BORDER_GREY}`, overflow: "hidden"}}>
-                            <img
-                                width={"100%"}
-                                src={company.company_logo}
-                            />
+        return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
+            <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "6px", overflow: "hidden"}}>
+                <div style={{display: "flex", marginBottom: "7px"}}>
+
+                    <div style={{flex: "0 0 38px", marginRight: "8px", height: "38px"}}>
+                        <div style={{borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden"}}>
+                            <CoverImageHolder url={company.company_logo} />
                         </div>
                     </div>
+
                     <div style={{flex: 1}}>
-                        <div style={{marginBottom: "10px"}}>
-                            <div style={{marginBottom: "2px", ...FONT_SUBHEADER_BOLD}}>{job.job_title}</div>
-                            <div style={{color: COLOR_TEXT_GREY, ...FONT_FOOTNOTE}}>{company.company_name} • {job.date_created_label}</div>
-                        </div>
-                        <div style={{marginBottom: "15px", ...FONT_FOOTNOTE}}>
-                            {(job.locations && job.locations.length) && (job.locations.slice(0,2)).map((location) =>{
-                                return (<div key={location.location_id} className={classes.locationStyle}>{location.label}</div>)
-                            })}
-                            {(job.locations && job.locations.length > 2) && <div style={{display: "inline-block"}}>{`+${job.locations.length - 2}`}</div>}
-                        </div>
                         <div>
-                            <div style={{display: "inline-block", marginRight: "10px"}}>
-                                <div style={{display: "flex"}} className={classes.requirementsStyle}>
-                                    <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
-                                        <i style={{lineHeight: "17px"}} className="fa-solid fa-briefcase"/>
-                                    </div>
-                                    <div style={{flex: 1}}>
-                                        {job_type.name}
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{display: "inline-block"}}>
-                                <div style={{display: "flex"}} className={classes.requirementsStyle}>
-                                    <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
-                                        <i style={{lineHeight: "17px"}} className="fa-solid fa-inbox"/>
-                                    </div>
-                                    <div style={{flex: 1}}>
-                                        {degree_requirement.name}
-                                    </div>
-                                </div>
-                            </div>
+                            <div style={{...COMMON.FONTS.H400, whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{job.job_title}</div>
+                            <div style={{color: COMMON.COLORS.DARK_GREY, ...COMMON.FONTS.P100, marginTop: "-2px",}}>{company.company_name}</div>
                         </div>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <div style={{marginBottom: "13px"}}>
+                            <StandardBadge label={"INDUSTRY 1"}/>
+                            <StandardBadge label={"INDUSTRY 2"}/>
+
+                        </div>
+
+                        <div style={{marginBottom: "0"}}>
+
+                            {(job.locations && job.locations.length) && (job.locations.slice(0,1)).map((location) =>{
+                                return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600}} key={location.location_id} label={location.label}/>)
+                            })}
+
+                            {(job.locations && job.locations.length > 1) && <div style={{display: "inline-block", ...COMMON.FONTS.H100, color: COMMON.COLORS.Y600 ,marginRight: "5px"}}>{`+${job.locations.length - 1}`}</div>}
+
+                            <StandardBadge label={job_type.name} iconLeft={true} icon={"fa-sharp fa-solid fa-briefcase"}/>
+
+
+                        </div>
+
                     </div>
                 </div>
             </div>

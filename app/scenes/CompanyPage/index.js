@@ -18,6 +18,7 @@ import CompanyHeader from "./components/CompanyHeader";
 import NavBar from "../../components/NavBar";
 import RacePieChart from "../../components/charts/RacePieChart";
 import GenderPieChart from "../../components/charts/GenderPieChart";
+import StandardBadge from "../../components/StandardBadge";
 
 const Styles = {
     container: {
@@ -132,7 +133,7 @@ class CompanyPage extends React.Component {
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                             </div>
 
-                            <div style={{display: selectedState === 2 ? "none" : null}} className={mc(classes.sectionContainer)}>
+                            <div style={{display: selectedState === 2 ? "none" : null, paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Representation by race / ethnicity</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
 
@@ -146,7 +147,7 @@ class CompanyPage extends React.Component {
                             </div>
 
                             <div style={{display: selectedState === 3 ? null : "none"}} className={mc(classes.sectionContainer)}>
-                                <div className={mc(classes.sectionMainTitle)}>Representation by gender</div>
+                                <div className={mc(classes.sectionMainTitle)}>Representation by gender binary</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                 <div className={mc(classes.racePieChartHolder)}>
                                     <GenderPieChart company_demographics={company_demographics}/>
@@ -156,28 +157,28 @@ class CompanyPage extends React.Component {
 
                             <div  style={{display: selectedState === 2 ? null : "none"}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Overview</div>
+                                <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                                 <div className={mc(classes.sectionSubtitle)}>Website</div>
                                 <div className={mc(classes.companyWebsite)}><a target={"_blank"} href={company.company_website}>{company.company_website}</a></div>
-                                {/*<div className={mc(classes.sectionSubtitle)}>Industry</div>*/}
-                                {/*<div className={mc(classes.overviewSection)}>Tech</div>*/}
+                                <div className={mc(classes.sectionSubtitle)}>Industry</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_industry_group}</div>
                                 {company.company_size ? <div>
                                     <div className={mc(classes.sectionSubtitle)}>Company Size</div>
                                     <div className={mc(classes.overviewSection)}>{company.company_size} employees</div>
                                 </div> : null}
-
-
                                 <div className={mc(classes.sectionSubtitle)}>Headquarters</div>
                                 <div className={mc(classes.overviewSection)}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
 
-                                <div className={mc(classes.sectionSubtitle)}>Company Founded</div>
+                                <div className={mc(classes.sectionSubtitle)}>Founded</div>
                                 <div className={mc(classes.overviewSection)}>{company.company_founded_year || 1984}</div>
+
+                                <div className={mc(classes.sectionSubtitle)}>Specialties</div>
+                                <div className={mc(classes.overviewSection)}>
+                                    <StandardBadge style={{marginTop: "15px"}} label={company.company_industry}/>
+                                </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
                 </div>
             </div>

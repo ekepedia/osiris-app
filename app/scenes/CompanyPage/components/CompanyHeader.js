@@ -9,7 +9,7 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import COMMON from "../../../common/index";
-import { mc } from "../../../common/helpers";
+import {httpSafeLink, mc} from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import StandardButton from "../../../components/StandardButton";
 
@@ -115,7 +115,7 @@ class PortfolioHeader extends React.Component {
                     </div>
                     <div className={classes.editHeaderButtonContainer}>
                         <div className={classes.editHeaderButton}>
-                            <a target={"_blank"} href={company.company_website}>
+                            <a target={"_blank"} href={httpSafeLink(company.company_website)}>
                                 <StandardButton label={"Learn More"} outline={false} icon={"fa-solid fa-compass"}/>
                             </a>
                         </div>

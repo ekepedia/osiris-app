@@ -69,12 +69,12 @@ const CompanyProfilePageStyles = {
         // marginBottom: "20px"
     },
     sectionContainer: {
-        padding: "25px 50px",
+        padding: "25px 35px",
         background: COLOR_WHITE,
         borderRadius: "6px",
         border: `1px solid ${LIGHT_GREY}`,
         color: OSIRIS_BLACK,
-        marginTop: "20px"
+        marginTop: "15px"
     },
     sectionMainTitle: {
         ...H600,
@@ -150,6 +150,9 @@ const CompanyProfilePageStyles = {
         paddingTop: "12px",
         borderTop: `1px solid ${N400}`,
         color: N700,
+        width: "calc(100% + 100px)",
+        marginLeft: "-50px",
+        paddingLeft: "0"
     }
 }
 

@@ -89,6 +89,7 @@ class AddSavedJobModal extends React.Component {
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditPortfolioModalHeader title={"Add Job"} onClose={onClose} />
                         </div>
+
                         <div style={{flex: 1, padding: "20px 25px"}}>
                             <div className={classes.inputLabel}>Company</div>
                             <Select
@@ -114,7 +115,7 @@ class AddSavedJobModal extends React.Component {
                             <div className={classes.inputLabel}>Post URL</div>
                             <StandardInput placeholder={"+ add URL"} value={apply_link} update={(v) => (this.setState({apply_link: v}))}/>
                             <div className={classes.inputLabel}>Status</div>
-                            <StandardSelect value={status_id} options={COMMON.CONSTS.STATUSES} update={(v) => {this.setState({status_id: v})}}/>
+                            <StandardSelect value={status_id} disableCustom={true} options={COMMON.CONSTS.STATUSES} update={(v) => {this.setState({status_id: v})}}/>
 
 
 

@@ -45,7 +45,7 @@ class EditPortfolioModalHeader extends React.PureComponent {
                     {title}
                 </div>
                 <div style={{flex: "0 0 8px", marginLeft: "10px"}} onClick={onClose}>
-                    <i style={{cursor: "pointer",  fontSize: "16px", lineHeight: "22.85px"}} className="fa-solid fa-xmark"/>
+                    <i style={{cursor: "pointer",  fontSize: "18px", lineHeight: "22.85px"}} className="fa-solid fa-xmark"/>
                 </div>
             </div>
         </div>);

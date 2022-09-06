@@ -29,6 +29,8 @@ import {
     STYLE_BUTTON_SUBHEADER
 } from "../common/styles";
 import JobCard from "./JobCard";
+import COMMON from "../common";
+import StandardBadge from "./StandardBadge";
 
 const Styles = {
     container: {
@@ -181,16 +183,18 @@ class JobDetails extends React.Component {
                     </div>
                     <div style={{marginBottom: "15px", ...FONT_HEADLINE_BOLD}}>
                         {(job.locations && job.locations.length) && (job.locations).map((location) =>{
-                            return (<div key={location.location_id} className={classes.locationStyle}>{location.label}</div>)
+                            return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600}} key={location.location_id} label={location.label}/>)
                         })}
                     </div>
                     <div>
+
                         <div style={{display: "inline-block", marginRight: "10px"}}>
                             <div style={{display: "flex"}} className={classes.requirementsStyle}>
                                 <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
                                     <i style={{lineHeight: "20px"}} className="fa-solid fa-briefcase"></i>
                                 </div>
                                 <div style={{flex: 1}}>
+
                                     {job_type.name}
                                 </div>
                             </div>

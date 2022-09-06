@@ -58,7 +58,7 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, style, value, options, update, color, background} = this.props;
+        let { classes, style, value, options, update, color, background, disableCustom} = this.props;
 
         style = style || {};
         update = update || (() => {});
@@ -68,7 +68,7 @@ class StandardInput extends React.Component {
         if (options && options.length && value) {
             options.forEach((option) => {
                 console.log(option.value, value, option.width)
-                if (option && option.value && (option.value + "" === value + "")) {
+                if (!disableCustom && option && option.value && (option.value + "" === value + "")) {
 
                     if (option.width)
                         width = option.width

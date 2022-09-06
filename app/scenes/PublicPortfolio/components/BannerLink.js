@@ -46,6 +46,8 @@ class SmallLink extends React.Component {
             <a style={{cursor: "pointer"}} href={link} target={"_blank"} >
                 <div className={mc(classes.linkContainer)} style={{height: currentHeight ? currentHeight : null}} ref={portfolioLinkRef}>
                     <CoverImageHolder url={url}/>
+                    <div className={mc(classes.linkOverlay)}/>
+                    <div className={mc(classes.linkOverlay)}/>
 
                     <div className={mc(classes.linkText)}>
                         <div style={{display: "flex"}}>

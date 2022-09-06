@@ -256,27 +256,20 @@ class EditSavedJobModal extends React.Component {
                                         }}/>
 
                                         <div className={classes.inputLabel}>Status</div>
-                                        <StandardSelect value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => (updateField("status_id", v))}/>
+                                        <StandardSelect disableCustom={true} value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => (updateField("status_id", v))}/>
 
                                     </div>
                                 </div>
-
-
-
-
-
-
-
                             </div>
                             <div style={{display: selectedState === 2 ? null : "none", paddingTop: "25px"}}>
 
 
-                                <div style={{display: "flex"}}>
-                                    <div style={{flex: 1, paddingRight: "40px"}}>
-                                        <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD, marginBottom: "10px"}}>About</div>
+                                <div>
+                                    <div style={{paddingRight: "40px"}}>
+                                        <div style={{...COMMON.FONTS.H600, marginBottom: "10px"}}>About</div>
                                         <div>{company.company_about}</div>
                                     </div>
-                                    <div style={{flex: 1}}>
+                                    <div>
                                         <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD,}}>Representation at Company</div>
                                         <div style={{...COMMON.FONTS.FONT_FOOTNOTE, color: COMMON.COLORS.DARK_GREY, marginBottom: "10px"}}>Identified by OSIRIS from {company.company_name}</div>
                                         <div style={{...COMMON.FONTS.FONT_FOOTNOTE_BOLD, marginBottom: "15px"}}>By gender</div>

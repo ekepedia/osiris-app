@@ -14,7 +14,7 @@ import UserLinkService from '../../services/UserLinkService';
 import UserGalleryService from '../../services/UserGalleryService';
 
 import COMMON from "../../common/index";
-import { mc, formatDuration } from "../../common/helpers";
+import {mc, formatDuration, httpSafeLink} from "../../common/helpers";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import PortfolioHeader from "./components/PortfolioHeader";
@@ -56,16 +56,6 @@ class PublicPortfolio extends React.Component {
         this.portfolioLinkRef = React.createRef();
     }
 
-    fixLink(link) {
-        if (!link)
-            return link;
-
-        if (link && link.indexOf("http") === -1) {
-            link = `https://${link}`;
-        }
-
-        return link;
-    }
     componentDidMount() {
         let { classes, client, match: { params } } = this.props;
 
@@ -79,13 +69,13 @@ class PublicPortfolio extends React.Component {
                 last_name: user.last_name
             });
 
-            user.user_instagram_link = this.fixLink(user.user_instagram_link);
-            user.user_tiktok_link = this.fixLink(user.user_tiktok_link);
-            user.user_clubhouse_link = this.fixLink(user.user_clubhouse_link);
-            user.user_instagram_link = this.fixLink(user.user_instagram_link);
-            user.user_website_link = this.fixLink(user.user_website_link);
-            user.user_vimeo_link = this.fixLink(user.user_vimeo_link);
-            user.user_youtube_link = this.fixLink(user.user_youtube_link);
+            user.user_instagram_link = httpSafeLink(user.user_instagram_link);
+            user.user_tiktok_link = httpSafeLink(user.user_tiktok_link);
+            user.user_clubhouse_link = httpSafeLink(user.user_clubhouse_link);
+            user.user_instagram_link = httpSafeLink(user.user_instagram_link);
+            user.user_website_link = httpSafeLink(user.user_website_link);
+            user.user_vimeo_link = httpSafeLink(user.user_vimeo_link);
+            user.user_youtube_link = httpSafeLink(user.user_youtube_link);
 
             if (user && user.user_id) {
                 this.loadUser(user.user_id)

@@ -11,6 +11,7 @@ import COMMON from "../../../common/index";
 import { mc, formatLargeNumber } from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import {TAG_GREY} from "../../../common/colors";
+import StandardBadge from "../../../components/StandardBadge";
 
 const Styles = {
     container: {
@@ -147,10 +148,8 @@ class CompanyIndexRow extends React.Component {
             </div>
 
             <div className={mc(classes.companyIndustryContainer)}>
-                <div className={mc(classes.companyIndustry)}>{company.company_industry}</div>
-                {/*<div className={mc(classes.companyIndustry)}>{company.company_industry_group}</div>*/}
+                <StandardBadge style={{marginLeft: "5px", marginRight: "0px", marginTop: "5.5px"}} label={company.company_industry}/>
             </div>
-
 
         </div>)
     }
