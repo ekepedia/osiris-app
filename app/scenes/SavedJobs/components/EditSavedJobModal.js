@@ -37,6 +37,8 @@ import {PieChart} from "react-minimal-pie-chart";
 import SavedJobNoteService from "../../../services/SavedJobNoteService";
 import SavedJobReminderService from "../../../services/SavedJobReminderService";
 import {FONT_H_400} from "../../../common/fonts";
+import GenderPieChart from "../../../components/charts/GenderPieChart";
+import RacePieChart from "../../../components/charts/RacePieChart";
 
 const Styles = {
     container: {
@@ -178,7 +180,7 @@ class EditSavedJobModal extends React.Component {
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
                         maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
-                        height: "fit-content"
+                        height: "750px"
                     }
                 }}
             >
@@ -265,95 +267,20 @@ class EditSavedJobModal extends React.Component {
 
 
                                 <div>
-                                    <div style={{paddingRight: "40px"}}>
-                                        <div style={{...COMMON.FONTS.H600, marginBottom: "10px"}}>About</div>
-                                        <div>{company.company_about}</div>
+                                    <div style={{marginBottom: "25px"}}>
+                                        <div className={mc(classes.sectionMainTitle)}>About Company</div>
+                                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
+                                        <div style={{...COMMON.FONTS.P200, color: COMMON.COLORS.N800}}>{company.company_about}</div>
                                     </div>
                                     <div>
-                                        <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD,}}>Representation at Company</div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE, color: COMMON.COLORS.DARK_GREY, marginBottom: "10px"}}>Identified by OSIRIS from {company.company_name}</div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE_BOLD, marginBottom: "15px"}}>By gender</div>
+                                        <div className={mc(classes.sectionMainTitle)}>Representation at Company</div>
+                                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from Company EEO-1 Form</div>
 
-                                        <div className={mc(classes.diversityStatsContainer)}>
-                                            <div className={mc(classes.pieChartHolder)}>
-                                                <div style={{height: "125px", width: "125px"}}>
-                                                    <PieChart
-                                                        lineWidth={30}
-                                                        startAngle={270}
-                                                        data={[
-                                                            { title: 'Female', value: company_demographics.employees_female, color: COMMON.COLORS.COLOR_GOLD },
-                                                            { title: 'Male', value: company_demographics.employees_male, color: COMMON.COLORS.OSIRIS_GREEN }
-                                                        ]
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div style={{flex: "0 0 160px", marginTop: "35.5px", marginRight: "0"}}>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Female</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_female}%</div>
-                                                </div>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Male</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_male}%</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE_BOLD, marginTop: "25px", marginBottom: "15px"}}>By race / ethnicity</div>
+                                        <div className={mc(classes.sectionTitle)} style={{margin: "15px 0"}}>By race / ethnicity</div>
+                                        <RacePieChart company_demographics={company_demographics}/>
 
-
-                                        <div className={mc(classes.diversityStatsContainer)}>
-                                            <div className={mc(classes.pieChartHolder)}>
-                                                <div style={{height: "125px", width: "125px"}}>
-                                                    <PieChart
-                                                        lineWidth={30}
-                                                        startAngle={270}
-                                                        data={[
-                                                            { title: 'Asian', value: company_demographics.employees_asian, color: COMMON.COLORS.COLOR_GOLD },
-                                                            { title: 'Black', value: company_demographics.employees_black, color: COMMON.COLORS.OSIRIS_GREEN },
-                                                            { title: 'White', value: company_demographics.employees_white, color: COMMON.COLORS.PIE_CHART_WHITE },
-                                                            { title: 'Native American', value: company_demographics.employees_indigenous, color: COMMON.COLORS.PIE_CHART_GREY },
-                                                            { title: 'Latinx', value: company_demographics.employees_latinx, color: COMMON.COLORS.OSIRIS_BLACK },
-                                                        ]}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div style={{flex: "0 0 160px", marginTop: "0px", marginRight: "0"}}>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Asian</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_asian}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Black</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_black}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_WHITE}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>White</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_white}%</div>
-                                                </div>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_GREY}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_indigenous || "--"}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_BLACK}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Hispanic/Latinx</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_latinx}%</div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
+                                        <div className={mc(classes.sectionTitle)} style={{margin: "15px 0"}}>By gender</div>
+                                        <GenderPieChart company_demographics={company_demographics}/>
 
                                     </div>
                                 </div>

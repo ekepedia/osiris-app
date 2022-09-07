@@ -75,9 +75,9 @@ class JobCard extends React.Component {
                         </div>
                     </div>
 
-                    <div style={{flex: 1}}>
+                    <div style={{flex: 1, overflow: "hidden"}}>
                         <div>
-                            <div style={{...COMMON.FONTS.H400, whiteSpace: "nowrap", textOverflow: "ellipsis"}}>{job.job_title}</div>
+                            <div style={{...COMMON.FONTS.H400, whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden"}}>{job.job_title}</div>
                             <div style={{color: COMMON.COLORS.DARK_GREY, ...COMMON.FONTS.P100, marginTop: "-2px",}}>{company.company_name}</div>
                         </div>
                     </div>

@@ -16,6 +16,7 @@ import {FONT_BODY_BOLD, FONT_HEADLINE, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD} f
 import {STYLE_BUTTON_HEADLINE, STYLE_BUTTON_SUBHEADER} from "../common/styles";
 
 import FilterDropdown from "./FilterDropdown";
+import StandardButton from "./StandardButton";
 
 const NAV_HEIGHT = 65;
 
@@ -158,6 +159,7 @@ class FilterBar extends React.Component {
                             onAdd={(id) => (addToField("selectedDegreeRequirements", id))}
                             onRemove={(id) => (removeFromField("selectedDegreeRequirements", id))}
                             onClear={() => (clearField("selectedDegreeRequirements"))}
+                            disableSearch={true}
                         />
                     </div>
                     <div className={classes.filterContainer}>
@@ -172,8 +174,8 @@ class FilterBar extends React.Component {
                         />
                     </div>
                 </div>
-                <div style={{flex: "0 0 200px", textAlign: "right"}}>
-                    <div style={{...STYLE_BUTTON_SUBHEADER, marginLeft: "auto"}} onClick={onAssistant}>Job Assistant</div>
+                <div style={{flex: "0 0 100px", textAlign: "right"}}>
+                    <StandardButton secondary={true} onClick={onAssistant} label={"Job Assistant"}/>
                 </div>
             </div>
 

@@ -31,10 +31,13 @@ import {
 import JobCard from "./JobCard";
 import COMMON from "../common";
 import StandardBadge from "./StandardBadge";
+import StandardButton from "./StandardButton";
+import CoverImageHolder from "./CoverImageHolder";
+import {mc} from "../common/helpers";
 
 const Styles = {
     container: {
-        padding: "50px",
+        padding: "25px 35px",
         '@media (max-width: 768px)': {
             padding: "0",
             display: "none",
@@ -42,9 +45,9 @@ const Styles = {
             overflow: "hidden"
         },
         marginBottom: "200px",
-        border: `1px solid ${COLOR_BORDER_GREY}`,
-        background: COLOR_WHITE,
-        borderRadius: "6px"
+        border: `1px solid ${COMMON.COLORS.N300}`,
+        background: COMMON.COLORS.N0,
+        borderRadius: "4px"
     },
     actionButton: {
         ...STYLE_BUTTON_SUBHEADER,
@@ -64,10 +67,29 @@ const Styles = {
         background: COLOR_BORDER_GREY,
         width: "100%",
         height: "1px"
+    },
+    sectionHeader: {
+        ...COMMON.FONTS.H600,
+        color: COMMON.COLORS.N900
+    },
+    sectionSubHeader: {
+        ...COMMON.FONTS.H100,
+        color: COMMON.COLORS.N800,
+        textTransform: "uppercase",
+        marginBottom: "15px"
+    },
+    bodyText: {
+        ...COMMON.FONTS.P200,
+        color: COMMON.COLORS.N800
+    },
+    jobHighlightsSubHeader: {
+        ...COMMON.FONTS.H500,
+        color: COMMON.COLORS.N800,
+        marginBottom: "5px"
     }
 };
 
-const SECTION_BUFFER = "40px";
+const SECTION_BUFFER = "32px";
 
 class JobDetails extends React.Component {
 
@@ -81,20 +103,6 @@ class JobDetails extends React.Component {
 
     componentDidMount() {
 
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(this.varSection1.clientHeight);
-        console.log("PREP", prevProps.job);
-        let { job} = this.props;
-
-        if (job && prevProps.job && job.job_id !== prevProps.job.job_id) {
-            console.log("SETTING SATe")
-            // this.setState({
-            //     this.varSection1.clientHeight
-            // });
-
-        }
     }
 
     render() {
@@ -112,11 +120,12 @@ class JobDetails extends React.Component {
 
         if (qualification && qualification.name) {
             try {
-                qualification.name = qualification.name.replace(/- /g, '<br/><br/><i class="fa-solid fa-check-double"></i> ').trim();
-                console.log(qualification.name, qualification.name.slice(0,10))
-                if (qualification.name.slice(0,10) === '<br/><br/>') {
-                    qualification.name = qualification.name.slice(10)
-                }
+                qualification.name = qualification.name.replace(/- /g, '• ').trim();
+                // qualification.name = qualification.name.replace(/- /g, '<br/><br/><i class="fa-solid fa-period"></i> ').trim();
+                // console.log(qualification.name, qualification.name.slice(0,10))
+                // if (qualification.name.slice(0,10) === '<br/><br/>') {
+                //     qualification.name = qualification.name.slice(10)
+                // }
             } catch (e) {
                 console.error(e)
             }
@@ -124,11 +133,11 @@ class JobDetails extends React.Component {
 
         if (responsibility && responsibility.name) {
             try {
-                responsibility.name = responsibility.name.replace(/- /g, '<br/><br/><i class="fa-solid fa-check-double"></i> ').trim();
-                console.log(responsibility.name, responsibility.name.slice(0,10))
-                if (responsibility.name.slice(0,10) === '<br/><br/>') {
-                    responsibility.name = responsibility.name.slice(10)
-                }
+                responsibility.name = responsibility.name.replace(/- /g, '• ').trim();
+                // console.log(responsibility.name, responsibility.name.slice(0,10))
+                // if (responsibility.name.slice(0,10) === '<br/><br/>') {
+                //     responsibility.name = responsibility.name.slice(10)
+                // }
             } catch (e) {
                 console.error(e)
             }
@@ -137,78 +146,35 @@ class JobDetails extends React.Component {
 
         return (<div className={classes.container}>
             <div>
-                <div style={{display: "flex", marginBottom: "25px"}}>
-
-                    <div style={{flex: "0 0 100px"}}>
-                        <div style={{borderRadius: "4px", border: `1px solid ${COLOR_BORDER_GREY}`, overflow: "hidden", width: "100%"}}>
-                            <img
-                                width={"100%"}
-                                src={company.company_logo}
-                            />
+                <div style={{display: "flex", marginBottom: "20px"}}>
+                    <div style={{flex: "0 0 45px", marginRight: "10px"}}>
+                        <div style={{borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
+                            <CoverImageHolder url={company.company_logo}/>
                         </div>
                     </div>
 
-                    <div style={{flex: 1, textAlign: "right"}}>
-                        {/*<div className={classes.actionButton} onClick={onApply}>*/}
-                        {/*    <div style={{display: "flex"}}>*/}
-                        {/*        <div style={{flex: 1}}>*/}
-                        {/*            Share*/}
-                        {/*        </div>*/}
-                        {/*        <div style={{flex: 1}}>*/}
-                        {/*        </div>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        {/*<div className={classes.actionButton}>*/}
-                        {/*    <div style={{display: "flex"}}>*/}
-                        {/*        <div style={{flex: 1}}>*/}
-                        {/*            Save*/}
-                        {/*        </div>*/}
-                        {/*        <div style={{flex: 1}}>*/}
-                        {/*        </div>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-                        <div className={classes.actionButton} onClick={onApply}>
-                            Apply Now
+                    <div style={{flex: 1, overflow: "hidden"}}>
+                        <div style={{marginBottom: "0"}}>
+                            <div style={{marginBottom: "0px", ...COMMON.FONTS.H700, color: COMMON.COLORS.N900, textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{job.job_title}</div>
+                            <div style={{...COMMON.FONTS.P200, color: COMMON.COLORS.N700}}>{company.company_name}</div>
                         </div>
                     </div>
-
-
-
+                    <div style={{flex: "0 0 157px", textAlign: "right"}}>
+                        <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                    </div>
                 </div>
 
                 <div style={{marginBottom: SECTION_BUFFER}}>
-                    <div style={{marginBottom: "10px"}}>
-                        <div style={{marginBottom: "0px", ...FONT_TITLE_2_BOLD}}>{job.job_title}</div>
-                        <div style={{color: COLOR_TEXT_GREY, ...FONT_SUBHEADER}}>{company.company_name} • {job.date_created_label}</div>
-                    </div>
-                    <div style={{marginBottom: "15px", ...FONT_HEADLINE_BOLD}}>
+
+                    <div style={{marginBottom: "0"}}>
                         {(job.locations && job.locations.length) && (job.locations).map((location) =>{
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600}} key={location.location_id} label={location.label}/>)
                         })}
+                        <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
+
                     </div>
+
                     <div>
-
-                        <div style={{display: "inline-block", marginRight: "10px"}}>
-                            <div style={{display: "flex"}} className={classes.requirementsStyle}>
-                                <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
-                                    <i style={{lineHeight: "20px"}} className="fa-solid fa-briefcase"></i>
-                                </div>
-                                <div style={{flex: 1}}>
-
-                                    {job_type.name}
-                                </div>
-                            </div>
-                        </div>
-                        <div style={{display: "inline-block", marginRight: "10px"}}>
-                            <div style={{display: "flex"}} className={classes.requirementsStyle}>
-                                <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
-                                    <i style={{lineHeight: "20px"}} className="fa-solid fa-inbox"/>
-                                </div>
-                                <div style={{flex: 1}}>
-                                    {degree_requirement.name}
-                                </div>
-                            </div>
-                        </div>
                         {(job.job_salary_estimate && job.job_salary_estimate.length) ? <div style={{display: "inline-block"}}>
                             <div style={{display: "flex"}} className={classes.requirementsStyle}>
                                 <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
@@ -224,59 +190,53 @@ class JobDetails extends React.Component {
                 </div>
 
                 <div style={{marginBottom: SECTION_BUFFER}}>
-                    <div style={{marginBottom: "0px", ...FONT_TITLE_2_BOLD, color: COLOR_GREEN}}>Role Overview</div>
-                    <div style={{marginBottom: "15px", ...FONT_SUBHEADER, color: COLOR_TEXT_GREY}}>Identified by OSIRIS from the original job post</div>
-                    <div style={{marginBottom: SECTION_BUFFER, ...FONT_SUBHEADER}}>{job.job_overview}</div>
-                    <div className={classes.borderLine}/>
+                    <div className={mc(classes.sectionHeader)}>Role Overview</div>
+                    <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
+                    <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
                 </div>
 
                 <div style={{marginBottom: SECTION_BUFFER}}>
-                    <div style={{marginBottom: "0px", ...FONT_TITLE_2_BOLD, color: COLOR_GREEN}}>Job Highlights</div>
-                    <div style={{marginBottom: "15px", ...FONT_SUBHEADER, color: COLOR_TEXT_GREY}}>Identified by OSIRIS from the original job post</div>
+                    <div className={mc(classes.sectionHeader)}>Job Highlights</div>
+                    <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
 
-                    <div style={{display: "flex", marginBottom: SECTION_BUFFER}}
-                         ref={ (div) => { this.varSection1 = div } }>
-                        <div style={{flex: 1, paddingRight: "20px"}}>
-                            <div style={{...FONT_BODY_BOLD, marginBottom: "10px"}}>Qualifications</div>
-                            <div dangerouslySetInnerHTML={{
+                    <div style={{marginBottom: SECTION_BUFFER}}>
+                        <div>
+                            <div className={mc(classes.jobHighlightsSubHeader)}>Qualifications</div>
+                            <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
                                 __html: qualification.name
                             }}/>
                         </div>
 
-                        <div style={{flex: 1}}>
-                            <div style={{...FONT_BODY_BOLD, marginBottom: "10px"}}>Responsibilities</div>
-                            <div dangerouslySetInnerHTML={{
+                        <div style={{marginTop: "25px"}}>
+                            <div className={mc(classes.jobHighlightsSubHeader)}>Responsibilities</div>
+                            <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
                                 __html: responsibility.name
                             }} />
                         </div>
                     </div>
-                    <div className={classes.borderLine}/>
+
                 </div>
 
                 <div style={{ marginBottom: "20px", display: !company.company_about ? "none" : null}}>
 
 
                     <div style={{display: "flex", marginBottom: "15px",}}>
-                        <div style={{flex: "0 0 45px", marginRight: "15px"}}>
-                            <div style={{borderRadius: "4px", border: `1px solid ${COLOR_BORDER_GREY}`, overflow: "hidden", width: "100%"}}>
-                                <img
-                                    width={"100%"}
-                                    src={company.company_logo}
-                                />
-                            </div>
-                        </div>
                         <div style={{flex: 1}}>
-                            <div style={{marginBottom: "0px", ...FONT_TITLE_2_BOLD, color: COLOR_GREEN}}>About Company</div>
-                            <div style={{...FONT_SUBHEADER, color: COLOR_TEXT_GREY}}>Identified by OSIRIS from Wikipedia</div>
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: 1}}>
+                                    <div className={mc(classes.sectionHeader)}>About Company</div>
+                                    <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from Wikipedia</div>
+                                </div>
+                                <div style={{flex: "0 0 140px"}}>
+                                    <StandardButton secondary={true} label={"More Company Info"}/>
+                                </div>
+
+                            </div>
+
+                            <div className={mc(classes.bodyText)}>{company.company_about}</div>
+
                         </div>
-
                     </div>
-
-                    <div style={{marginBottom: SECTION_BUFFER}}>
-                        <div>{company.company_about}</div>
-                    </div>
-
-                    <div className={classes.borderLine}/>
                 </div>
 
                 {/*<div style={{marginBottom: "20px"}}>*/}
@@ -300,20 +260,6 @@ class JobDetails extends React.Component {
                 {/*    <div className={classes.borderLine}/>*/}
                 {/*</div>*/}
 
-                <div>
-                    <div style={{...FONT_BODY_BOLD, color: COLOR_GREEN, display: "flex", margin: "20px 0", cursor: "pointer"}} onClick={() =>{
-                        forceCompany(company.company_id)
-                    }
-                    }>
-                        <div style={{flex: "0 0 20px", marginRight: "15px"}}>
-                            <i style={{lineHeight: "20px", fontSize: "20px"}} className="fa-solid fa-briefcase"></i>
-                        </div>
-                        <div style={{flex: 1}}>
-                            <div style={{color: COLOR_GREEN}}>See More {company.company_name} Jobs <i className="fa-solid fa-arrow-right"></i></div>
-                        </div>
-                    </div>
-                    <div className={classes.borderLine}/>
-                </div>
             </div>
         </div>)
     }

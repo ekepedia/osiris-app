@@ -103,7 +103,7 @@ export const STYLE_MODAL_CONTENT = {
     WebkitOverflowScrolling: 'touch',
     borderRadius: '6px',
     outline: 'none',
-    padding: '0'
+    padding: '15px'
 }
 
 

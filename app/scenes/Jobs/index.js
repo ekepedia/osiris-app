@@ -318,7 +318,7 @@ class Jobs extends React.Component {
                     />
                 </div>
 
-                {!this.state.hideBanner && <div style={{flex: "0 0 44px"}} className={classes.hideOnMobile}>
+                {false && <div style={{flex: "0 0 44px"}} className={classes.hideOnMobile}>
                     <JobAlertBanner
                         onSignUp={this.openJobAlerts.bind(this)}
                         onDismiss={() => {

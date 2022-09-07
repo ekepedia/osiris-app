@@ -205,7 +205,7 @@ class JobCards extends React.Component {
 
         return (<div className={classes.container}>
 
-            <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": ""} Jobs</div>
+            <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
             {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}>Mobile Coming Soon!</div>}
 
             {filteredJobs.map((job) => {

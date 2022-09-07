@@ -17,6 +17,9 @@ import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_GREEN, COLOR_GREEN_LIGHT, COLOR_WH
 import {FONT_BODY_BOLD, FONT_TITLE_2_BOLD, FONT_BODY, FONT_FOOTNOTE, FONT_SUBHEADER} from "../common/fonts";
 import {STYLE_MODAL_CONTENT, STYLE_MODAL_OVERLAY, MODAL_TIMING, STYLE_BUTTON_SUBHEADER} from "../common/styles";
 
+import COMMON from "../common/index";
+import StandardButton from "./StandardButton";
+
 const Styles = {
     container: {
         padding: "0",
@@ -126,7 +129,7 @@ class JobAssistantModal extends React.Component {
     renderHeader(title) {
         let { onClose} = this.props;
 
-        return (<div style={{...FONT_TITLE_2_BOLD}}>
+        return (<div style={{...COMMON.FONTS.H600}}>
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}}>
                     {title}
@@ -166,9 +169,7 @@ class JobAssistantModal extends React.Component {
                         </div>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1}}>
-                                <div className={classes.nextButton} onClick={() => {this.setState({page: 2})}}>
-                                    Continue
-                                </div>
+                                <StandardButton fullWidth={true} label={"Continue"} onClick={() => {this.setState({page: 2})}}/>
                             </div>
                         </div>
 
@@ -183,14 +184,10 @@ class JobAssistantModal extends React.Component {
                         </div>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, paddingRight: "10px"}}>
-                                <div className={classes.backButtom} onClick={() => {this.setState({page: 1})}}>
-                                    Back
-                                </div>
+                                <StandardButton secondary={true} fullWidth={true} label={"Back"} onClick={() => {this.setState({page: 1})}}/>
                             </div>
                             <div style={{flex: 1}}>
-                                <div className={classes.nextButton} onClick={() => {this.setState({page: 3})}}>
-                                    Continue
-                                </div>
+                                <StandardButton fullWidth={true} label={"Continue"} onClick={() => {this.setState({page: 3})}}/>
                             </div>
                         </div>
 
@@ -205,17 +202,12 @@ class JobAssistantModal extends React.Component {
                         </div>
                         <div style={{display: "flex"}}>
                             <div style={{flex: 1, paddingRight: "10px"}}>
-                                <div className={classes.backButtom} onClick={() => {this.setState({page: 2})}}>
-                                    Back
-                                </div>
+                                <StandardButton secondary={true} fullWidth={true} label={"Back"} onClick={() => {this.setState({page: 2})}}/>
                             </div>
                             <div style={{flex: 1}}>
-                                <div className={classes.nextButton} onClick={() => {
-                                    onSubmit();
-                                }}>
-                                    See Jobs
-                                </div>
+                                <StandardButton fullWidth={true} label={"See Jobs"} onClick={() => {onSubmit();}}/>
                             </div>
+
 
                         </div>
 
