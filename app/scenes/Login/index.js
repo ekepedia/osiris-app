@@ -13,6 +13,7 @@ import axios from "axios";
 import {mc} from "../../common/helpers";
 import StandardInput from "../../components/StandardInput";
 import StandardButton from "../../components/StandardButton";
+import NavBar from "../../components/NavBar";
 
 const Styles = {
     container: {
@@ -29,7 +30,7 @@ const Styles = {
         color: COMMON.COLORS.OSIRIS_GREEN
     },
     subContainer: {
-        maxWidth: "400px",
+        maxWidth: "330px",
         margin: "auto",
         marginTop: "calc(50vh - 182px)"
     },
@@ -47,7 +48,9 @@ const Styles = {
     disclaimerBold: {
         extend: "disclaimer",
         ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
-    }
+    },
+    ...COMMON.STYLES.GENERAL.NavigationStyles,
+
 };
 
 class Login extends React.Component {
@@ -79,27 +82,36 @@ class Login extends React.Component {
 
         const { username, password } = this.state;
 
-        return (<div className={classes.container}>
-
-            <div className={mc(classes.subContainer)}>
-                <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
-
-                <div className={mc(classes.inputLabel)}>Username</div>
-                <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
-
-                <div className={mc(classes.inputLabel)}>Password</div>
-                <StandardInput value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
-
-                <div className={mc(classes.buttonContainer)}>
-                    <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>
+        return (
+            <div className={classes.masterContainer}>
+                <div className={classes.masterNavContainer}>
+                    <NavBar />
                 </div>
+                <div className={classes.masterBodyContainer}>
+                    <div className={classes.container}>
 
-                <div className={mc(classes.disclaimer)}>
-                    By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
+                        <div className={mc(classes.subContainer)}>
+                            <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
+
+                            <div className={mc(classes.inputLabel)}>Username</div>
+                            <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
+
+                            <div className={mc(classes.inputLabel)}>Password</div>
+                            <StandardInput value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
+
+                            <div className={mc(classes.buttonContainer)}>
+                                <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>
+                            </div>
+
+                            <div className={mc(classes.disclaimer)}>
+                                By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-
-        </div>)
+        )
     }
 
 }

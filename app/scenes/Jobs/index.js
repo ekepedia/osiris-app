@@ -13,6 +13,7 @@ import DataService from '../../services/DataService';
 
 import { COLOR_WHITE } from "../../common/colors";
 import { FONT_BODY_BOLD } from "../../common/fonts";
+import COMMON from "../../common/index";
 
 import NavBar from "../../components/NavBar"
 import FilterBar from "../../components/FilterBar"
@@ -46,7 +47,8 @@ const Styles = {
         '@media (max-width: 768px)': {
             display: "block"
         },
-    }
+    },
+    ...COMMON.STYLES.GENERAL.NavigationStyles
 };
 
 class Jobs extends React.Component {
@@ -300,104 +302,99 @@ class Jobs extends React.Component {
 
         const SCROLL_PAD = "100px";
 
-        return (<div className={classes.container}>
-
-            <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
-                <div style={{flex: "0 0 50px"}}>
-                    <NavBar/>
+        return (
+            <div className={classes.masterContainer}>
+                <div className={classes.masterNavContainer}>
+                    <NavBar />
                 </div>
-                <div style={{flex: "0 0 50px"}} className={classes.hideOnMobile}>
-                    <FilterBar
-                        addToField={this.addToField.bind(this)}
-                        removeFromField={this.removeFromField.bind(this)}
-                        clearField={this.clearField.bind(this)}
+                <div className={classes.masterBodyContainer}>
+                    <div className={classes.container}>
 
-                        state={this.state}
+                        <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
+                            <div style={{flex: "0 0 50px"}} className={classes.hideOnMobile}>
+                                <FilterBar
+                                    addToField={this.addToField.bind(this)}
+                                    removeFromField={this.removeFromField.bind(this)}
+                                    clearField={this.clearField.bind(this)}
 
-                        onAssistant={this.openJobAssistant.bind(this)}
-                    />
-                </div>
+                                    state={this.state}
 
-                {false && <div style={{flex: "0 0 44px"}} className={classes.hideOnMobile}>
-                    <JobAlertBanner
-                        onSignUp={this.openJobAlerts.bind(this)}
-                        onDismiss={() => {
-                            this.setState({
-                                hideBanner: true
-                            })
-                        }}
-                    />
-                </div>}
-
-                <div style={{flex: 1,  height: "100%",}}>
-                    <div style={{ height: "100%",}}>
-                        <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
-                            <div className={classes.showOnMobile} style={{flex: 1, marginRight: "0", height: "100%", overflowY: "scroll"}}>
-                                <JobCards
-                                    jobs={this.jobs}
-                                    selectedJobId={this.state.selectedJobId}
-                                    selectedLocations={this.state.selectedLocations}
-                                    selectedCompanies={this.state.selectedCompanies}
-                                    selectedIndustries={this.state.selectedIndustries}
-                                    selectedAffinities={this.state.selectedAffinities}
-                                    selectedRoles={this.state.selectedRoles}
-                                    selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                    setSelectedJob={this.setSelectedJob.bind(this)}
-                                    mobile={true}
+                                    onAssistant={this.openJobAssistant.bind(this)}
                                 />
                             </div>
-                            <div className={classes.hideOnMobile} style={{flex: "0 0 356px", marginRight: "49px", height: "100%", overflowY: "scroll"}}>
-                                <JobCards
-                                    jobs={this.jobs}
-                                    selectedJobId={this.state.selectedJobId}
-                                    selectedLocations={this.state.selectedLocations}
-                                    selectedCompanies={this.state.selectedCompanies}
-                                    selectedIndustries={this.state.selectedIndustries}
-                                    selectedAffinities={this.state.selectedAffinities}
-                                    selectedRoles={this.state.selectedRoles}
-                                    selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                    setSelectedJob={this.setSelectedJob.bind(this)}
-                                />
-                            </div>
-                            <div className={classes.hideOnMobile} style={{flex: 1, height: "100%", overflowY: "scroll"}}>
-                                <JobDetails
-                                    job={this.state.selectedJob}
-                                    onApply={this.openApplyModal.bind(this)}
 
-                                    forceCompany={this.forceCompany.bind(this)}
-                                />
+                            <div style={{flex: 1,  height: "100%",}}>
+                                <div style={{ height: "100%",}}>
+                                    <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
+                                        <div className={classes.showOnMobile} style={{flex: 1, marginRight: "0", height: "100%", overflowY: "scroll"}}>
+                                            <JobCards
+                                                jobs={this.jobs}
+                                                selectedJobId={this.state.selectedJobId}
+                                                selectedLocations={this.state.selectedLocations}
+                                                selectedCompanies={this.state.selectedCompanies}
+                                                selectedIndustries={this.state.selectedIndustries}
+                                                selectedAffinities={this.state.selectedAffinities}
+                                                selectedRoles={this.state.selectedRoles}
+                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                setSelectedJob={this.setSelectedJob.bind(this)}
+                                                mobile={true}
+                                            />
+                                        </div>
+                                        <div className={classes.hideOnMobile} style={{flex: "0 0 356px", marginRight: "49px", height: "100%", overflowY: "scroll"}}>
+                                            <JobCards
+                                                jobs={this.jobs}
+                                                selectedJobId={this.state.selectedJobId}
+                                                selectedLocations={this.state.selectedLocations}
+                                                selectedCompanies={this.state.selectedCompanies}
+                                                selectedIndustries={this.state.selectedIndustries}
+                                                selectedAffinities={this.state.selectedAffinities}
+                                                selectedRoles={this.state.selectedRoles}
+                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                setSelectedJob={this.setSelectedJob.bind(this)}
+                                            />
+                                        </div>
+                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "100%", overflowY: "scroll"}}>
+                                            <JobDetails
+                                                job={this.state.selectedJob}
+                                                onApply={this.openApplyModal.bind(this)}
+
+                                                forceCompany={this.forceCompany.bind(this)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        <JobAlertSignUp
+                            open={this.state.showJobAlerts}
+                            onClose={this.closeJobAlerts.bind(this)}
+                            state={this.state}
+                        />
+
+                        <ApplyNowModal
+                            open={this.state.showApplyNow}
+                            job={this.state.selectedJob}
+                            onClose={this.closeApplyModal.bind(this)}
+                        />
+
+                        <JobAssistantModal
+                            open={this.state.showJobAssistant}
+                            job={this.state.selectedJob}
+                            onClose={this.closeJobAssistant.bind(this)}
+                            onSubmit={this.submitJobAssistant.bind(this)}
+
+                            addToField={this.addToField.bind(this)}
+                            removeFromField={this.removeFromField.bind(this)}
+
+                            state={this.state}
+                        />
+
+
                     </div>
                 </div>
             </div>
-
-            <JobAlertSignUp
-                open={this.state.showJobAlerts}
-                onClose={this.closeJobAlerts.bind(this)}
-                state={this.state}
-            />
-
-            <ApplyNowModal
-                open={this.state.showApplyNow}
-                job={this.state.selectedJob}
-                onClose={this.closeApplyModal.bind(this)}
-            />
-
-            <JobAssistantModal
-                open={this.state.showJobAssistant}
-                job={this.state.selectedJob}
-                onClose={this.closeJobAssistant.bind(this)}
-                onSubmit={this.submitJobAssistant.bind(this)}
-
-                addToField={this.addToField.bind(this)}
-                removeFromField={this.removeFromField.bind(this)}
-
-                state={this.state}
-            />
-
-
-        </div>)
+        );
     }
 
 }

@@ -41,13 +41,16 @@ const Styles = {
         marginBottom: "25px"
     },
     selectedFilters: {
-        height: "18px",
-        lineHeight: "18px",
-        width: "18px",
+        ...COMMON.FONTS.H100,
+        height: "20px",
+        lineHeight: "20px",
+        width: "20px",
         borderRadius: "100%",
         textAlign: "center",
-        background: COMMON.COLORS.N0,
-        color: COMMON.COLORS.B400 ,
+        background: COMMON.COLORS.N100,
+        color: COMMON.COLORS.N800,
+        border: `1px solid ${COMMON.COLORS.N600}`,
+        marginLeft: "8px"
     },
     input: {
         height: "100%",
@@ -106,15 +109,17 @@ class FilterDropdown extends React.Component {
 
         selectedOptions = selectedOptions || [];
 
+        let hasSelected = selectedOptions.length >= 1;
+
         return (<div className={classes.container} style={{
-            background: selectedOptions.length >= 1 ? COMMON.COLORS.B400 : null,
-            color: selectedOptions.length >= 1 ? COMMON.COLORS.N0 : null,
+            border: hasSelected ? `1px solid ${COMMON.COLORS.N600}` : null,
+            color: hasSelected ? COMMON.COLORS.N800 : null,
         }} ref={this.setWrapperRef}>
 
             <div style={{ height: "100%", position: "relative"}} onClick={() => {this.setState({show: !this.state.show})}}>
                 <div>
                     <div>
-                        <div style={{paddingRight: selectedOptions.length ? "32px" : "32px"}}>{label} {(selectedOptions.length >= 1 )&& <div style={{display: "inline-block"}}>
+                        <div style={{paddingRight: hasSelected ? "32px" : "32px"}}>{label}{hasSelected && <div style={{display: "inline-block"}}>
                             <div className={classes.selectedFilters}>{selectedOptions.length}</div>
                         </div>}</div>
 
@@ -174,7 +179,11 @@ class FilterDropdown extends React.Component {
                             return (
                                 <div key={option.id}>
                                     <div className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, borderLeft: selected ? `1px solid ${COMMON.COLORS.B400}`: null, borderTop: disableSearch && i === 0 ? "none" : null}} onClick={() => {selected ? onRemove(option.id) : onAdd(option.id)}}>
-                                        {option.label}
+
+                                        <div style={{display: "flex"}}>
+                                            <div style={{flex: 1}}>{option.label}</div>
+                                            <div style={{flex: "0 0 10px", display: selected ? null : "none"}}><i style={{cursor: "pointer",  fontSize: "13.5px", lineHeight: "16px"}} className="fa-solid fa-xmark"/></div>
+                                        </div>
                                     </div>
                                 </div>
                             );
