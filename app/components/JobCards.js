@@ -86,7 +86,7 @@ class JobCards extends React.Component {
 
                 if (job && job.companies) {
                     job.companies.forEach((company) => {
-                        if (selectedCompanies.indexOf(company.company_id) !== -1) {
+                        if (company && company.company_id && selectedCompanies.indexOf(company.company_id) !== -1) {
                             found = true
                         }
                     })

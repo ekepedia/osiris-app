@@ -108,19 +108,20 @@ class FilterBar extends React.Component {
                 <div style={{flex: 1}}>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Affinities"
+                            label="Affinity Tags"
                             placeholder="Add an affinity"
                             options={this.affinities}
                             selectedOptions={state["selectedAffinities"]}
                             onAdd={(id) => (addToField("selectedAffinities", id))}
                             onRemove={(id) => (removeFromField("selectedAffinities", id))}
                             onClear={() => (clearField("selectedAffinities"))}
+                            disableSearch={true}
                         />
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
                             label="Location"
-                            placeholder="Add a location"
+                            placeholder="Select location"
                             options={this.locations}
                             selectedOptions={state["selectedLocations"]}
                             onAdd={(id) => (addToField("selectedLocations", id))}
@@ -131,7 +132,7 @@ class FilterBar extends React.Component {
                     <div className={classes.filterContainer}>
                         <FilterDropdown
                             label="Company"
-                            placeholder="Add a company"
+                            placeholder="Select company"
                             options={this.companies}
                             selectedOptions={state["selectedCompanies"]}
                             onAdd={(id) => (addToField("selectedCompanies", id))}
@@ -141,8 +142,20 @@ class FilterBar extends React.Component {
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Sector"
-                            placeholder="Add a sector"
+                            label="Role"
+                            placeholder="Select Role"
+                            options={this.roles}
+                            selectedOptions={state["selectedRoles"]}
+                            onAdd={(id) => (addToField("selectedRoles", id))}
+                            onRemove={(id) => (removeFromField("selectedRoles", id))}
+                            onClear={() => (clearField("selectedRoles"))}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <FilterDropdown
+                            label="Industry"
+                            placeholder="Select Industry"
                             options={this.industries}
                             selectedOptions={state["selectedIndustries"]}
                             onAdd={(id) => (addToField("selectedIndustries", id))}
@@ -152,7 +165,7 @@ class FilterBar extends React.Component {
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Degree Requirements"
+                            label="Degree"
                             placeholder="Add a Requirement"
                             options={this.degree_requirements}
                             selectedOptions={state["selectedDegreeRequirements"]}
@@ -160,17 +173,6 @@ class FilterBar extends React.Component {
                             onRemove={(id) => (removeFromField("selectedDegreeRequirements", id))}
                             onClear={() => (clearField("selectedDegreeRequirements"))}
                             disableSearch={true}
-                        />
-                    </div>
-                    <div className={classes.filterContainer}>
-                        <FilterDropdown
-                            label="Roles"
-                            placeholder="Add a Role"
-                            options={this.roles}
-                            selectedOptions={state["selectedRoles"]}
-                            onAdd={(id) => (addToField("selectedRoles", id))}
-                            onRemove={(id) => (removeFromField("selectedRoles", id))}
-                            onClear={() => (clearField("selectedRoles"))}
                         />
                     </div>
                 </div>

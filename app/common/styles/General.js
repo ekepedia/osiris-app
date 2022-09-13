@@ -6,6 +6,11 @@ const alignmentStyles = {
     centerAlignContainer: {
         position: "relative"
     },
+    centerAlignContainerFill: {
+        extend: "centerAlignContainer",
+        height: "100%",
+        width: "100%"
+    },
     centerAlignObject: {
         position: "absolute",
         top: "50%",
@@ -16,6 +21,10 @@ const alignmentStyles = {
         position: "absolute",
         top: "50%",
         transform: "translate(0%,-50%)",
+    },
+    verticalAlignObjectFill: {
+        extend: "verticalAlignObject",
+        width: "100%"
     },
 }
 

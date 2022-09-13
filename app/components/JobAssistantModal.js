@@ -6,6 +6,7 @@ import { gql } from 'apollo-boost';
 import { Query } from '@apollo/react-components';
 import { withApollo } from 'react-apollo';
 import { withRouter, Link} from 'react-router-dom';
+import Select from "react-select";
 
 import injectSheet from 'react-jss';
 
@@ -19,6 +20,7 @@ import {STYLE_MODAL_CONTENT, STYLE_MODAL_OVERLAY, MODAL_TIMING, STYLE_BUTTON_SUB
 
 import COMMON from "../common/index";
 import StandardButton from "./StandardButton";
+import StandardMultiSelect from "./StandardMultiSelect";
 
 const Styles = {
     container: {
@@ -27,48 +29,31 @@ const Styles = {
             padding: "0",
         },
     },
-    nextButton: {
-        ...STYLE_BUTTON_SUBHEADER,
+    optionStyle: {
+        ...COMMON.FONTS.P100,
         width: "100%",
-        height: "40px",
-        lineHeight: "40px",
-        textAlign: "center",
-        marginTop: "15px",
-        padding: "0",
-        opacity: 1,
-        transition: `opacity 250ms ease-in-out`
-    },
-    backButtom: {
-        ...STYLE_BUTTON_SUBHEADER,
-        width: "100%",
-        height: "40px",
-        lineHeight: "40px",
-        textAlign: "center",
-        marginTop: "15px",
-        padding: "0",
-        opacity: 1,
-        transition: `opacity 250ms ease-in-out`,
-        border: `1px solid ${COLOR_GREEN}`,
-        color: COLOR_GREEN,
-        background: "none"
-    },
-    inputStyle: {...STYLE_BUTTON_SUBHEADER,
-        width: "100%",
-        height: "40px",
-        lineHeight: "40px",
-        textAlign: "center",
-        marginTop: "15px",
+        height: "32px",
+        lineHeight: "32px",
+        textAlign: "left",
+        marginBottom: "10px",
         outline: "none",
         cursor: "pointer",
-        border: `1px solid ${COLOR_BORDER_GREY}`,
-        color: COLOR_BLACK,
-        background: COLOR_WHITE,
-        padding: "0 10px",
+        border: `1px solid ${COMMON.COLORS.N400}`,
+        color: COMMON.COLORS.N600,
+        background: COMMON.COLORS.N0,
+        padding: "0 12px",
+        borderRadius: "4px"
     },
     optionContainer: {
-        height: "200px",
+        maxHeight: "200px",
         overflowY: "scroll"
-    }
+    },
+    modalTitle: {
+        ...COMMON.FONTS.H600,
+        color: COMMON.COLORS.N900,
+        marginBottom: "25px"
+    },
+    ...COMMON.STYLES.GENERAL.AlignmentStyles
 };
 
 class JobAssistantModal extends React.Component {
@@ -103,6 +88,20 @@ class JobAssistantModal extends React.Component {
 
     }
 
+    findLabel(options, id) {
+        if (!options || !options.length || !id)
+            return null
+
+        let label = null;
+
+        options.map((option) => {
+            if (option.id + "" === id + "")
+                label = option.label
+        })
+
+        return label;
+    }
+
     renderOptions(options, field) {
 
         let { classes, open, onClose, job, state, addToField, removeFromField} = this.props;
@@ -117,32 +116,57 @@ class JobAssistantModal extends React.Component {
                 onClick={(e) => {
                     selected ? removeFromField(field, option.id) : addToField(field, option.id)
                 }}
-                className={classes.inputStyle}
+                className={classes.optionStyle}
                 style={{
-                    background: selected ? COLOR_GREEN_LIGHT : null,
-                    border: selected ? `1px solid ${COLOR_GREEN}` : null,
+                    color: selected ? COMMON.COLORS.N800 : null,
                 }}
-            >{option.label} {selected ? <i class="fa-solid fa-check"></i> : null}</div>)
+            ><div style={{
+                fontSize: "11.75px",
+                border: "none",
+                display: "inline-block",
+                marginRight: "8px",
+                color: selected ? COMMON.COLORS.N600 : COMMON.COLORS.N400
+            }}>{selected ? <i className="fa-solid fa-square-check"></i> : <i class="fa-regular fa-square"></i>}</div>{option.label}</div>)
         })
     }
 
-    renderHeader(title) {
+    renderHeader() {
         let { onClose} = this.props;
+        return (<div>
+            <div style={{textAlign: "right"}} onClick={onClose}>
+                <i style={{cursor: "pointer", lineHeight: "11px", fontSize: "17.5px", color: COMMON.COLORS.N600}} className="fa-solid fa-xmark"/>
+            </div>
+        </div>)
+    }
 
-        return (<div style={{...COMMON.FONTS.H600}}>
-            <div style={{display: "flex"}}>
-                <div style={{flex: 1}}>
-                    {title}
+    renderFooter() {
+        const { page } = this.state || {};
+        const { onSubmit, onClose } = this.props || {};
+
+        return (<div style={{textAlign: "right"}}>
+            <div style={{...COMMON.FONTS.H300, display: "inline-block", marginRight: "10px", lineHeight: "32px", cursor: "pointer", color: COMMON.COLORS.N700,}}>
+                <div onClick={() => {
+                    page <= 1 ? onClose() : this.setState({page: page - 1});
+                }}>
+                    {page === 1 ? "Cancel" : "Back"}
                 </div>
-                <div style={{flex: "0 0 15px", marginLeft: "10px"}} onClick={onClose}>
-                    <i style={{cursor: "pointer", lineHeight: "33px", fontSize: "13px"}} className="fa-solid fa-x"/>
-                </div>
+            </div>
+            <div style={{display: "inline-block", }}>
+                <StandardButton fullWidth={false} label={page === 3 ? "See Jobs" : "Next"} onClick={() => {
+                    page === 3 ? onSubmit() : this.setState({page: page + 1} )
+                }}/>
             </div>
         </div>)
     }
 
     render() {
-        let { classes, open, onClose, onSubmit, job, state, addToField, removeFromField} = this.props;
+        let { classes, open, onClose, onSubmit, job, state, addToField, removeFromField, overrideField} = this.props;
+
+        const selectedIndustries = state["selectedIndustries"];
+        const selectedIndustriesOptions = (selectedIndustries || []).map((id) => ({value: id, label: this.findLabel(this.industries, id)}));
+
+        const selectedLocations = state["selectedLocations"];
+        const selectedLocationsOptions = (selectedLocations || []).map((id) => ({value: id, label: this.findLabel(this.locations, id)}));
 
         return (<div className={classes.container}>
             <Modal
@@ -153,68 +177,78 @@ class JobAssistantModal extends React.Component {
                         ...STYLE_MODAL_OVERLAY
                     },
                     content: {
-                        ...STYLE_MODAL_CONTENT,
-                        height: "350px"
-                    }
+                        ...COMMON.STYLES.STANDARD_MODAL_CONTAINER,
+                        height: "498px"
+                    },
                 }}
             >
                 <div>
-
-                    {this.state.page === 1 && <div>
-                        <div>
-                            {this.renderHeader("What type of job are you looking for?")}
-                        </div>
-                        <div className={classes.optionContainer}>
-                            {this.renderOptions(this.roles, "selectedRoles")}
-                        </div>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1}}>
-                                <StandardButton fullWidth={true} label={"Continue"} onClick={() => {this.setState({page: 2})}}/>
+                    <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+                        <div style={{flex: "0 0 16px"}}>
+                            <div>
+                                {this.renderHeader()}
                             </div>
                         </div>
+                        <div style={{flex: 1}}>
+                            {this.state.page === 1 && <div className={classes.centerAlignContainerFill}>
+                                <div className={classes.verticalAlignObjectFill}>
+                                    <div className={classes.modalTitle}>
+                                        What type of job are you looking for?
+                                    </div>
+                                    <div className={classes.optionContainer}>
+                                        {this.renderOptions(this.roles, "selectedRoles")}
+                                    </div>
+                                </div>
+                            </div>}
 
-                    </div>}
+                            {this.state.page === 2 && <div className={classes.centerAlignContainerFill}>
+                                <div className={classes.verticalAlignObjectFill}>
+                                    <div className={classes.modalTitle}>
+                                        What industries are you interested in?
+                                    </div>
 
-                    {this.state.page === 2 && <div>
-                        <div>
-                            {this.renderHeader("What industries are you most interested in?")}
+                                    <div>
+                                        <StandardMultiSelect
+                                            value={selectedIndustriesOptions}
+                                            options={(this.industries || []).map((option) => ({
+                                                value: option.id,
+                                                label: option.label
+                                            }))}
+                                            onChange={(ids) => {
+                                                overrideField("selectedIndustries", ids)
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>}
+
+                            {this.state.page === 3 && <div className={classes.centerAlignContainerFill}>
+                                <div className={classes.verticalAlignObjectFill}>
+                                    <div className={classes.modalTitle}>
+                                        What locations are you interested in?
+                                    </div>
+                                    <div>
+                                        <StandardMultiSelect
+                                            value={selectedLocationsOptions}
+                                            options={(this.locations || []).map((option) => ({
+                                                value: option.id,
+                                                label: option.label
+                                            }))}
+                                            onChange={(ids) => {
+                                                overrideField("selectedLocations", ids)
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            </div>}
                         </div>
-                        <div className={classes.optionContainer}>
-                            {this.renderOptions(this.industries, "selectedIndustries")}
-                        </div>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1, paddingRight: "10px"}}>
-                                <StandardButton secondary={true} fullWidth={true} label={"Back"} onClick={() => {this.setState({page: 1})}}/>
+                        <div style={{flex: "0 0 32px"}}>
+                            <div>
+                                {this.renderFooter()}
                             </div>
-                            <div style={{flex: 1}}>
-                                <StandardButton fullWidth={true} label={"Continue"} onClick={() => {this.setState({page: 3})}}/>
-                            </div>
                         </div>
-
-                    </div>}
-
-                    {this.state.page === 3 && <div>
-                        <div>
-                            {this.renderHeader("What locations are you most interested in?")}
-                        </div>
-                        <div className={classes.optionContainer}>
-                            {this.renderOptions(this.locations, "selectedLocations")}
-                        </div>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1, paddingRight: "10px"}}>
-                                <StandardButton secondary={true} fullWidth={true} label={"Back"} onClick={() => {this.setState({page: 2})}}/>
-                            </div>
-                            <div style={{flex: 1}}>
-                                <StandardButton fullWidth={true} label={"See Jobs"} onClick={() => {onSubmit();}}/>
-                            </div>
-
-
-                        </div>
-
-                    </div>}
-
-
-
+                    </div>
                 </div>
             </Modal>
         </div>)

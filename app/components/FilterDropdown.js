@@ -135,14 +135,14 @@ class FilterDropdown extends React.Component {
 
             { this.state.show && <div style={{
                 position: "absolute",
-                top: 32,
+                top: 36,
                 left: 0,
                 zIndex: 1,
                 background: COMMON.COLORS.N0,
                 border: `1px solid ${COMMON.COLORS.N300}`,
                 borderRadius: "4px",
                 width: "240px",
-                height: "215px",
+                maxHeight: "215px",
                 paddingTop: "0",
                 overflow: "hidden"
             }}>
@@ -156,7 +156,7 @@ class FilterDropdown extends React.Component {
                         <input className={classes.input} placeholder={placeholder} value={this.state.filter} onChange={(e) => (this.setState({filter: e.target.value}))}/>
                     </div>
 
-                    <div style={{flex: 1, padding: "0", overflowY: "scroll"}}>
+                    <div style={{flex: 1, padding: "0", overflowY: "scroll", maxHeight: "183px"}}>
 
                         {options.map((option, i) => {
 
@@ -165,21 +165,20 @@ class FilterDropdown extends React.Component {
 
                             const selected = selectedOptions && selectedOptions.indexOf(option.id) !== -1;
 
-                            if (filter && filter.length) {
-                                let label = (option.label || "").toLowerCase();
+                            let label = (option.label || "").toLowerCase();
 
+                            if (filter && filter.length) {
                                 if (label.indexOf(filter.toLowerCase()) === -1) {
                                     return null;
                                 }
-
-                                if (!label)
-                                    return null;
                             }
+
+                            if (!label || !label.length)
+                                return null;
 
                             return (
                                 <div key={option.id}>
                                     <div className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, borderLeft: selected ? `1px solid ${COMMON.COLORS.B400}`: null, borderTop: disableSearch && i === 0 ? "none" : null}} onClick={() => {selected ? onRemove(option.id) : onAdd(option.id)}}>
-
                                         <div style={{display: "flex"}}>
                                             <div style={{flex: 1}}>{option.label}</div>
                                             <div style={{flex: "0 0 10px", display: selected ? null : "none"}}><i style={{cursor: "pointer",  fontSize: "13.5px", lineHeight: "16px"}} className="fa-solid fa-xmark"/></div>

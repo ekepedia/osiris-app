@@ -109,7 +109,6 @@ class AddSavedJobModal extends React.Component {
                                 }}
                             />
 
-
                             <div className={classes.inputLabel}>Job title</div>
                             <StandardInput placeholder={"Ex: Engineer"} value={job_title} update={(v) => (this.setState({job_title: v}))}/>
                             <div className={classes.inputLabel}>Post URL</div>

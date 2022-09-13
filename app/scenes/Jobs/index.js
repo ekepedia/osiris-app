@@ -220,6 +220,13 @@ class Jobs extends React.Component {
         this.setState({[field]: selected})
     }
 
+    overrideField(field, ids) {
+        let selected = this.state[field];
+        selected = ids;
+        selected = _.uniq(selected);
+        this.setState({[field]: selected})
+    }
+
     removeFromField(field, id) {
         let selected = this.state[field];
 
@@ -372,7 +379,7 @@ class Jobs extends React.Component {
                             state={this.state}
                         />
 
-                        <ApplyNowModal
+                        <JobAlertSignUp
                             open={this.state.showApplyNow}
                             job={this.state.selectedJob}
                             onClose={this.closeApplyModal.bind(this)}
@@ -385,6 +392,7 @@ class Jobs extends React.Component {
                             onSubmit={this.submitJobAssistant.bind(this)}
 
                             addToField={this.addToField.bind(this)}
+                            overrideField={this.overrideField.bind(this)}
                             removeFromField={this.removeFromField.bind(this)}
 
                             state={this.state}
