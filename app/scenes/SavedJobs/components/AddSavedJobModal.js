@@ -19,6 +19,7 @@ import StandardSelect from "../../../components/StandardSelect";
 import axios from "axios";
 import Select from "react-select/creatable";
 import {companyCustomSearch} from "../../../common/helpers";
+import CompanySelect from "../../../components/CompanySelect";
 
 const Styles = {
     container: {
@@ -92,22 +93,10 @@ class AddSavedJobModal extends React.Component {
 
                         <div style={{flex: 1, padding: "20px 25px"}}>
                             <div className={classes.inputLabel}>Company</div>
-                            <Select
-                                height="31px"
-                                isClearable={true}
-                                placeholder="Choose a company ..."
-                                options={options}
-                                filterOption={companyCustomSearch}
-                                styles={{indicatorSeparator: () => ({display: "none"})}}
-                                onChange={(e) => {
-                                    console.log("ON CHANGE", e)
-                                    if (e && e.value) {
-                                        this.setState({
-                                            company_id: e.value
-                                        })
-                                    }
-                                }}
-                            />
+
+                            <CompanySelect options={options} onChange={(company_id) => {
+                                this.setState({company_id});
+                            }}/>
 
                             <div className={classes.inputLabel}>Job title</div>
                             <StandardInput placeholder={"Ex: Engineer"} value={job_title} update={(v) => (this.setState({job_title: v}))}/>

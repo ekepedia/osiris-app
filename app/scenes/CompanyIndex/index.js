@@ -15,6 +15,7 @@ import {mc, formatLargeNumber } from "../../common/helpers";
 import CompanyIndexRow from "./components/CompanyIndexRow";
 import StandardInput from "../../components/StandardInput";
 import NavBar from "../../components/NavBar";
+import StandardMultiSelect from "../../components/StandardMultiSelect";
 
 const Styles = {
     container: {
@@ -38,6 +39,12 @@ class CompanyIndex extends React.Component {
             maxEmployees: 10000,
             femaleEmployeeFilter: 0,
             bipocEmployeeFilter: 0,
+            locations: [],
+            locationsOptions: [],
+            selectedLocations: [],
+            industries: [],
+            industriesOptions: [],
+            selectedIndustries: [],
         };
     }
 
@@ -67,8 +74,59 @@ class CompanyIndex extends React.Component {
             this.setState({
                 companies,
                 // maxEmployees: max
-            })
+            });
+
+            this.loadCompanyLocations(companies);
+            this.loadCompanyIndustries(companies);
         })
+    }
+
+    loadCompanyLocations(companies) {
+        let locations = [];
+        let locationsOptions = [];
+        // {company.company_city || "San Diego"}, {company.company_state || "CA"}
+        companies.forEach((company) => {
+            locations.push(`${company.company_city}, ${company.company_state}`);
+        });
+
+        locations = _.uniq(locations);
+        locationsOptions = locations.map((location) => {
+            return {
+                value: location,
+                label: location
+            }
+        })
+        console.log("new locations,", locations);
+        console.log("new locationsOptions,", locationsOptions);
+        this.setState({
+            locations,
+            locationsOptions
+        })
+
+    }
+
+    loadCompanyIndustries(companies) {
+        let industries = [];
+        let industriesOptions = [];
+        // {company.company_city || "San Diego"}, {company.company_state || "CA"}
+        companies.forEach((company) => {
+            industries.push(company.company_industry);
+        });
+
+        industries = _.uniq(industries);
+        industriesOptions = industries.map((industry) => {
+            return {
+                value: industry,
+                label: industry
+            }
+        })
+        console.log("new locations,", industries);
+        console.log("new locationsOptions,", industriesOptions);
+        this.setState({
+            industries,
+            industriesOptions
+        })
+
     }
 
     loadCompanyDemographics() {
@@ -91,9 +149,26 @@ class CompanyIndex extends React.Component {
         })
     }
 
+
+    findLabel(options, id) {
+        if (!options || !options.length || !id)
+            return null
+
+        let label = null;
+
+        console.log(options, id)
+        options.map((option) => {
+            if (option.value + "" === id + "")
+                label = option.label
+        })
+
+        console.log("FOUND THE LABEL", label)
+        return label;
+    }
+
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { companies, company_demographics_map, companyNameFilter, minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+        let { companies, company_demographics_map, companyNameFilter, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
 
         company_demographics_map = company_demographics_map || {};
 
@@ -112,16 +187,45 @@ class CompanyIndex extends React.Component {
                                     <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/>Company Search</div>
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => (this.setState({companyNameFilter: v}))}/>
 
-                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-building"/>Company Details</div>
+                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-briefcase"/>Company Spotlights</div>
+                                    <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>Industry</div>
+
+                                    <StandardMultiSelect
+                                        value={(selectedIndustries || []).map((id) => ({value: id, label: this.findLabel(industriesOptions, id)}))}
+                                        options={industriesOptions}
+                                        onChange={(ids) => {
+                                            this.setState({
+                                                selectedIndustries: ids
+                                            })
+                                        }}
+                                        hideIndicator={true}
+                                    />
+                                    <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>Headquarters</div>
+
+                                    <StandardMultiSelect
+                                        value={(selectedLocations || []).map((id) => ({value: id, label: this.findLabel(locationsOptions, id)}))}
+                                        options={locationsOptions}
+                                        onChange={(ids) => {
+                                            this.setState({
+                                                selectedLocations: ids
+                                            })
+                                        }}
+                                        hideIndicator={true}
+                                    />
+
+
+
 
                                     <div>
-                                        <div className={mc(classes.companySubFilterLabel)}>Employee Count</div>
+                                        <div style={{marginTop: "10px"}}  className={mc(classes.companySubFilterLabel)}>Employee Count</div>
                                         <input type="range" min={minEmployees} max={maxEmployees} value={employeeFilter} className="slider" onChange={(e) =>{
                                             this.setState({employeeFilter: e.target.value})
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
-                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-user-group"/>Representation</div>
+
+                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-chart-pie"/>Representation</div>
+
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>Female Representation</div>
                                         <input type="range" min={0} max={100} value={femaleEmployeeFilter} className="slider" onChange={(e) =>{
@@ -129,6 +233,7 @@ class CompanyIndex extends React.Component {
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(femaleEmployeeFilter)}%</div>
                                     </div>
+
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>BIPOC Representation</div>
                                         <input type="range" min={0} max={100} value={bipocEmployeeFilter} className="slider" onChange={(e) =>{
@@ -186,6 +291,29 @@ class CompanyIndex extends React.Component {
                                                 return null;
 
                                             if (parseFloat(bipocEmployeeFilter) >= 1 && !bipoc_respresentation)
+                                                return null;
+                                        }
+
+                                        if (selectedLocations && selectedLocations.length) {
+                                            const company_location = `${company.company_city}, ${company.company_state}`;
+                                            let found = false;
+                                            selectedLocations.forEach((location) => {
+                                                if (company_location === location)
+                                                    found = true
+                                            });
+
+                                            if (!found)
+                                                return null;
+                                        }
+
+                                        if (selectedIndustries && selectedIndustries.length) {
+                                            let found = false;
+                                            selectedIndustries.forEach((industry) => {
+                                                if (company.company_industry === industry)
+                                                    found = true
+                                            });
+
+                                            if (!found)
                                                 return null;
                                         }
 

@@ -39,6 +39,7 @@ import SavedJobReminderService from "../../../services/SavedJobReminderService";
 import {FONT_H_400} from "../../../common/fonts";
 import GenderPieChart from "../../../components/charts/GenderPieChart";
 import RacePieChart from "../../../components/charts/RacePieChart";
+import CompanySelect from "../../../components/CompanySelect";
 
 const Styles = {
     container: {
@@ -219,25 +220,13 @@ class EditSavedJobModal extends React.Component {
                                         <div style={{display: "flex"}}>
                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                 <div className={classes.inputLabel}>Company</div>
-                                                <Select
-                                                    height="31px"
-                                                    isClearable={true}
-                                                    placeholder="Choose a company ..."
-                                                    options={options}
-                                                    filterOption={companyCustomSearch}
-                                                    styles={{indicatorSeparator: () => ({display: "none"})}}
-                                                    value={option_map[job.company_id]}
-                                                    onChange={(e) => {
-                                                        console.log("ON SELECT CHANGE", e)
-                                                        if (e && e.value) {
-                                                            updateJobField("company_id", e.value)
-                                                        }
-                                                    }}
-                                                />
+                                                <CompanySelect value={option_map[job.company_id]} options={options} onChange={(company_id) => {
+                                                    updateJobField("company_id", company_id)
+                                                }}/>
                                             </div>
                                             <div style={{flex: 1}}>
                                                 <div className={classes.inputLabel}>Job title</div>
-                                                <StandardInput style={{height: "38px"}} placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
+                                                <StandardInput placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
                                             </div>
                                         </div>
 

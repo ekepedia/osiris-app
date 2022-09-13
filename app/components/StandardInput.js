@@ -30,6 +30,10 @@ const Styles = {
         outline: "none",
         width: "100%",
         background: "none",
+        "&:hover": {
+            borderColor: COMMON.COLORS.N600,
+        },
+        color: COMMON.COLORS.N800
         // TODO "&:focus-visible": {
         //
         // }
@@ -59,7 +63,7 @@ class StandardInput extends React.Component {
             {type === "textarea" ?
                 <textarea style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
                 :
-                <input  style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
+                <input type={type} style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
 
             }
         </div>)

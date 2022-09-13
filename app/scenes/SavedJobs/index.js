@@ -113,7 +113,13 @@ class SavedJobs extends React.Component {
                 options.push({
                     value: company.company_id,
                     company: company,
-                    label: (<div><img src={company.company_logo_url} style={{height: "20px", width: "20px", borderRadius: "4px", marginRight: "5px"}}/><span style={{...COMMON.FONTS.FONT_SUBHEADER}}>{company.company_name}</span></div>)
+                    label: (<div><img src={company.company_logo_url} style={{
+                        height: "20px",
+                        width: "20px",
+                        borderRadius: "4px",
+                        marginRight: "5px",
+                        border: `1px solid ${COMMON.COLORS.N300}`
+                    }}/><span style={{...COMMON.FONTS.P100}}>{company.company_name}</span></div>)
                 });
                 company_map[company.company_id] = company;
             });

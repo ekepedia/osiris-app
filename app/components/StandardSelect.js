@@ -24,19 +24,23 @@ const Styles = {
     inputStyle: {
         height: "31px",
         padding: "6px 8px",
-        ...COMMON.FONTS.FONT_SUBHEADER,
-        borderRadius: "8px",
-        border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
+        ...COMMON.FONTS.P100,
+        borderRadius: "4px",
+        border: `1px solid ${COMMON.COLORS.N400}`,
+        color: COMMON.COLORS.N800,
         outline: "none",
         width: "100%",
         "mozAppearance": "none",
         "webkitAppearance": "none",
         "appearance": "none",
-        background: "url('/img/select-down.png')",
+        background: "url('/img/custom-select-caret.png')",
+        "&:hover": {
+            borderColor: COMMON.COLORS.N600,
+        },
         "backgroundRepeat": "no-repeat",
-        "backgroundPositionX": "calc(100% - 10.5px)",
-        "backgroundPositionY": "11.5px",
-        "backgroundSize": "10px auto"
+        "backgroundPositionX": "calc(100% - 11px)",
+        "backgroundPositionY": "5px",
+        "backgroundSize": "20px auto"
         // TODO "&:focus-visible": {
         //
         // }

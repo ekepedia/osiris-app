@@ -12,8 +12,8 @@ import injectSheet from 'react-jss';
 import DataService from '../services/DataService';
 
 import COMMON from "../common/index";
-import { mc } from "../common/helpers";
-import Select from "react-select";
+import {companyCustomSearch, mc} from "../common/helpers";
+import Select from "react-select/creatable";
 
 const Styles = {
     container: {
@@ -24,7 +24,7 @@ const Styles = {
     },
 };
 
-class StandardMultiSelect extends React.Component {
+class CompanySelect extends React.Component {
 
     constructor(props) {
         super(props);
@@ -39,7 +39,7 @@ class StandardMultiSelect extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, value, options, onChange, hideIndicator } = this.props;
+        let { classes, onChange, options, value, hideIndicator } = this.props;
 
         const DropdownIndicator = () => {
             return (<div style={{width: "32px", display: hideIndicator ? "none" : null}}>
@@ -49,26 +49,29 @@ class StandardMultiSelect extends React.Component {
 
         return (<div className={classes.container}>
             <Select
-                isMulti={true}
-                isClearable={false}
+                height="31px"
+                isClearable={true}
+                placeholder="Choose a company ..."
+                options={options}
+                maxMenuHeight={200}
                 value={value}
-                onChange={(e) => {
-                    console.log("the original e", e)
-                    let ids = e.map((val) => (val.value));
-                    onChange(ids);
-                }}
-                maxMenuHeight={140}
+                components={{DropdownIndicator}}
+
+                filterOption={companyCustomSearch}
                 styles={{
                     control: (provided, state) => ({
                         ...provided,
-                        minHeight: '32px',
+                        minHeight: '30px',
                         boxShadow: state.isFocused ? null : null,
                         borderColor: COMMON.COLORS.N400,
-                        outline: "none"
+                        outline: "none",
+                        "&:hover": {
+                            borderColor: COMMON.COLORS.N600,
+                        }
                     }),
                     valueContainer: (provided, state) => ({
                         ...provided,
-                        minHeight: '32px',
+                        height: '30px',
                         padding: '2px 2px'
                     }),
                     input: (provided, state) => ({
@@ -80,7 +83,7 @@ class StandardMultiSelect extends React.Component {
                     placeholder: (provided, state) => ({
                         ...provided,
                         ...COMMON.FONTS.P100,
-                        color: COMMON.COLORS.N800,
+                        color: COMMON.COLORS.N600,
                         padding: "0 2px"
                     }),
                     indicatorSeparator: (provided, state) => ({
@@ -89,16 +92,19 @@ class StandardMultiSelect extends React.Component {
                     }),
                     indicatorsContainer: (provided, state) => ({
                         ...provided,
-                        minHeight: '32px',
+                        minHeight: '30px',
                     }),
-                    multiValue: (provided, state) => ({
+                    clearIndicator: (provided, state) => ({
+                        ...provided,
+                        display: "none"
+                    }),
+                    singleValue: (provided, state) => ({
                         ...provided,
                         marginRight: '6px',
                         ...COMMON.FONTS.P100,
                         color: COMMON.COLORS.N800,
-                        background: COMMON.COLORS.N200,
                     }),
-                    multiValueLabel: (provided, state) => ({
+                    singleValueLabel: (provided, state) => ({
                         ...provided,
                         marginRight: '6px',
                         ...COMMON.FONTS.P100,
@@ -110,15 +116,16 @@ class StandardMultiSelect extends React.Component {
                         color: COMMON.COLORS.N800
                     }),
                 }}
-
-                components={{DropdownIndicator}}
-
-                options={options}
+                onChange={(e) => {
+                    if (e && e.value) {
+                        if(onChange) onChange(e.value)
+                    }
+                }}
             />
         </div>)
     }
 
 }
 
-export default withApollo(withRouter(injectSheet(Styles)(StandardMultiSelect)));
+export default withApollo(withRouter(injectSheet(Styles)(CompanySelect)));
 
