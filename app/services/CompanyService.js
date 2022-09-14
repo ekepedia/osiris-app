@@ -105,7 +105,7 @@ CompanyService.getCompanies = ({
             is_verified,
             batch_id,
             airtable_batch_id,
-            is_clearbit_import: true
+            is_clearbit_import: false
         };
 
         client.query({query: CompaniesQuery, variables, fetchPolicy: "no-cache"}).then((response) => {

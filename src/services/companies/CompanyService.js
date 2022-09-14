@@ -1,7 +1,9 @@
+
 const async = require("async");
 const axios = require("axios");
 const _ = require("lodash");
 const moment = require("moment");
+
 
 const DatabaseService = require("../DatabaseService");
 
@@ -11,6 +13,9 @@ let knex = null;
 const COMPANY_TABLE = "companies";
 const SERVICE_NAME = "Company Service";
 const SERVICE_DEFAULT_TABLE = COMPANY_TABLE;
+
+const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
+const OSIRIS_DATA_BASE = "appMzGF6dxRHZfubu";
 
 module.exports.COMPANY_TABLE = COMPANY_TABLE;
 
@@ -25,6 +30,36 @@ module.exports.init = function (connection) {
     // construct_questions();
     // import_data();
     // import_demo_data();
+
+    return;
+    load_locations({}).then(({locations, location_map}) => {
+        load_industries({}).then(({industries, industry_map}) => {
+            load_dei({}).then(({dei_data, dei_data_map}) => {
+
+                return;
+                dei_data.forEach((dei) => {
+
+                    get_companies({
+                        airtable_company_id: dei.airtable_company_id
+                    }).then((companies) =>{
+                        if (companies && companies.length) {
+                            const {company_id} = companies[0];
+                            const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+
+                            CompanyDemographicService.create_company_demographic(
+                                {...dei, company_id}
+                            ).then((d) => {
+                                console.log(d)
+                            })
+                        }
+                    })
+
+                })
+                // import_airtable_companies({location_map, industry_map, dei_data_map});
+            });
+        });
+    });
+
 };
 
 module.exports.get_companies = get_companies;
@@ -34,6 +69,7 @@ function get_companies({
                            company_name,
                            company_size,
                            company_founded_year,
+                           airtable_company_id,
                            company_city,
                            company_city_id,
                            company_city_lower,
@@ -53,6 +89,7 @@ function get_companies({
 
     const query = DatabaseService.generate_query({
         company_id,
+        airtable_company_id,
         company_name,
         company_size,
         company_founded_year,
@@ -90,6 +127,7 @@ function create_company({
                             airtable_company_id,
                             company_name,
                             company_logo_url,
+                            cover_photo_url,
                             company_size,
                             company_about,
                             company_website,
@@ -118,6 +156,7 @@ function create_company({
             airtable_company_id,
             company_name,
             company_logo_url,
+            cover_photo_url,
             company_size,
             company_about,
             company_website,
@@ -156,6 +195,7 @@ function edit_company({
                             airtable_company_id,
                             company_name,
                             company_logo_url,
+                            cover_photo_url,
                             company_size,
                             company_about,
                             company_website,
@@ -184,6 +224,7 @@ function edit_company({
             airtable_company_id,
             company_name,
             company_logo_url,
+            cover_photo_url,
             company_size,
             company_about,
             company_website,
@@ -280,9 +321,61 @@ function import_data() {
     })
 }
 
+
+function import_airtable_companies({location_map, industry_map, dei_data_map}) {
+
+    const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+
+
+    axios.get(`https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Companies?`, {
+        headers: {
+            'Authorization': `Bearer ${AIR_TABLE_KEY}`
+        }
+    }).then((res) => {
+        // console.log(res.data.records)
+        res.data.records.forEach((record) => {
+            // console.log(record.fields)
+
+            let { fields } = record;
+
+            let new_dei_data = dei_data_map[record.id] || {};
+            // console.log(fields["Industry"][0]);
+
+            const new_company = {
+                is_clearbit_import: false,
+                airtable_company_id: record.id,
+                company_name: fields["Company"],
+                company_logo_url: fields["Logo"] && fields["Logo"].length ? fields["Logo"][0].url : null,
+                cover_photo_url: fields["Banner"] && fields["Banner"].length ? fields["Banner"][0].url : null,
+                company_city: location_map[fields["Location"][0]].city,
+                company_state: location_map[fields["Location"][0]].state,
+                company_about: fields["About"],
+                company_website: fields["Site"],
+                company_founded_year: fields["Founded"],
+                company_size: dei_data_map[record.id] ? dei_data_map[record.id].employees : null,
+                company_industry: industry_map[fields["Industry"][0]].name,
+                company_industry_group: industry_map[fields["Industry"][0]].name
+            }
+
+            console.log(new_company, new_dei_data);
+
+            create_company(new_company).then((company_id) => {
+                console.log(company_id)
+                new_dei_data = {...new_dei_data, company_id};
+                CompanyDemographicService.create_company_demographic(new_dei_data).then((id) => {
+                    console.log(id)
+                })
+            })
+
+        })
+    });
+
+}
+
 function import_demo_data() {
     const data = require("./data/data-export-v4.json");
     const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+
     Object.values(data).forEach((company) => {
 
         const clearbit_company_id = company.companyID;
@@ -342,6 +435,7 @@ function import_demo_data() {
                     console.log(new_demo_data);
                     console.log(_.uniq(all_eths))
 
+
                     CompanyDemographicService.create_company_demographic(new_demo_data).then((id) => {
                         console.log(id)
                     })
@@ -353,7 +447,7 @@ function import_demo_data() {
 }
 
 function mass_delete() {
-    knex(SERVICE_DEFAULT_TABLE).whereNot({user_id: 7}).del().then(() => {
+    knex(SERVICE_DEFAULT_TABLE).where({}).del().then(() => {
     }).catch((err) => {
     });
 }
@@ -489,5 +583,157 @@ function construct_questions() {
         csvWriter
             .writeRecords(questions)
             .then(()=> console.log('The CSV file was written successfully'));
+    })
+}
+
+function load_locations() {
+
+    let locations = [{
+        location_id: "remote",
+        id: "remote",
+        city: "Remote",
+        state: "Remote",
+        label: "Remote"
+    }];
+    let location_map = {
+        "remote": {
+            location_id: "remote",
+            id: "remote",
+            city: "Remote",
+            state: "Remote",
+            label: "Remote"
+        }
+    };
+
+    return new Promise((resolve, reject) => {
+        axios.get(`https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Locations?`, {
+            headers: {
+                'Authorization': `Bearer ${AIR_TABLE_KEY}`
+            }
+        }).then((res) => {
+
+            res.data.records.forEach((record) =>{
+                let fields = record.fields || {};
+
+                let location = {
+                    location_id: record.id,
+                    id: record.id,
+                    label: fields['Name'],
+                    city: fields['City'],
+                    state: fields['State']
+                }
+
+                if (fields['Jobs'] && fields['Jobs'].length) {
+                    locations.push(location);
+                }
+
+                location_map[location.location_id] = location;
+            });
+
+            resolve({
+                locations,
+                location_map
+            });
+        });
+    })
+}
+
+function load_industries({industries, industry_map, offset}) {
+
+    industries = industries || [];
+    industry_map = industry_map || {};
+
+    let url = `https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Industries?`;
+
+    if (offset) {
+        url += `offset=${offset}`
+    }
+
+    return new Promise((resolve, reject) => {
+        axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${AIR_TABLE_KEY}`
+            }
+        }).then((res) => {
+
+            res.data.records.forEach((record) =>{
+                let fields = record.fields || {};
+
+                let industry = {
+                    industry_id: record.id,
+                    id: record.id,
+                    label: fields['Name'],
+                    industry: fields['Name'],
+                    name: fields['Name'],
+                }
+
+                industries.push(industry);
+
+                industry_map[industry.industry_id] = industry;
+            });
+
+            resolve({
+                industries,
+                industry_map
+            });
+        });
+    })
+}
+
+function load_dei({dei_data, dei_data_map, offset}) {
+
+    let url = `https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/DE%26I%20Data?`;
+
+    if (offset) {
+        url += `offset=${offset}`
+    }
+
+    dei_data = dei_data || [];
+    dei_data_map = dei_data_map || {};
+
+    return new Promise((resolve, reject) => {
+        axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${AIR_TABLE_KEY}`
+            }
+        }).then((res) => {
+
+            res.data.records.forEach((record) =>{
+                let fields = record.fields || {};
+
+                let dei = {
+                    dei_id: record.id,
+                    id: record.id,
+                    employees_female: Math.round(fields['Female']*10000)/100,
+                    employees_male: Math.round(fields['Male']*10000)/100,
+                    employees_black: Math.round(fields['Black or African American']*10000)/100,
+                    employees_white: Math.round(fields['White']*10000)/100,
+                    employees_asian: Math.round(fields['Asian']*10000)/100,
+                    employees_latinx: Math.round(fields['Hispanic or Latino']*10000)/100,
+                    employees_indigenous: Math.round(fields['Native Hawaiian or Other Pacific Islander']*10000)/100,
+                    employees_multi: Math.round(fields['Native Hawaiian or Other Pacific Islander']*10000)/100,
+                    year: fields['Year'],
+                    employees: fields['Number of Employees'],
+                    airtable_company_id: fields['Company'][0],
+                }
+
+                dei_data.push(dei);
+
+                dei_data_map[dei.airtable_company_id] = dei;
+            });
+
+            if (res.data.offset) {
+                load_dei({dei_data, dei_data_map, offset: res.data.offset}).then((data) => {
+                    resolve(data)
+                })
+            } else {
+                resolve({
+                    dei_data,
+                    dei_data_map
+                });
+            }
+
+
+        });
     })
 }

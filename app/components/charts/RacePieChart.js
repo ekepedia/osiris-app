@@ -78,6 +78,10 @@ class RacePieChart extends React.Component {
         company_demographics = company_demographics || {};
         const spacing = 0.75;
 
+        const cleanValue = (value) => {
+            if (!value) return value;
+            return value < 1 ? 1 : value;
+        }
         return (<div className={classes.container}>
             <div className={mc(classes.pieChartHolder)}>
                 <div style={{height: "140px", width: "140px"}}>
@@ -89,12 +93,12 @@ class RacePieChart extends React.Component {
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                             { title: 'Black', value: company_demographics.employees_black, color: COMMON.COLORS.CHART_VIOLET },
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
-                            { title: 'Latinx', value: company_demographics.employees_latinx, color: COMMON.COLORS.CHART_TEAL },
+                            { title: 'Latinx', value: cleanValue(company_demographics.employees_latinx), color: COMMON.COLORS.CHART_TEAL },
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
-                            // { title: 'Native American', value: company_demographics.employees_indigenous || 0, color: COMMON.COLORS.CHART_PINK },
-                            // { title: '--', value: spacing, color: COMMON.COLORS.N0 },
-                            // { title: 'Multi', value: company_demographics.employees_multi || 0, color: COMMON.COLORS.CHART_ORANGE },
-                            // { title: '--', value: spacing, color: COMMON.COLORS.N0 },
+                            { title: 'Native American', value: cleanValue(company_demographics.employees_indigenous), color: COMMON.COLORS.CHART_PINK },
+                            { title: '--', value: spacing, color: COMMON.COLORS.N0 },
+                            { title: 'Multi', value: cleanValue(company_demographics.employees_multi), color: COMMON.COLORS.CHART_ORANGE },
+                            { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                             { title: 'White', value: company_demographics.employees_white, color: COMMON.COLORS.N400 },
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                         ]}

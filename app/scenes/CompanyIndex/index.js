@@ -57,7 +57,7 @@ class CompanyIndex extends React.Component {
         let { client } = this.props;
 
         CompanyService.getCompanies({client}).then((companies) => {
-            console.log("LOADED COMPANIES", companies);
+            // console.log("LOADED COMPANIES", companies);
 
             let max = 0;
 
@@ -96,8 +96,8 @@ class CompanyIndex extends React.Component {
                 label: location
             }
         })
-        console.log("new locations,", locations);
-        console.log("new locationsOptions,", locationsOptions);
+        // console.log("new locations,", locations);
+        // console.log("new locationsOptions,", locationsOptions);
         this.setState({
             locations,
             locationsOptions
@@ -120,8 +120,8 @@ class CompanyIndex extends React.Component {
                 label: industry
             }
         })
-        console.log("new locations,", industries);
-        console.log("new locationsOptions,", industriesOptions);
+        // console.log("new locations,", industries);
+        // console.log("new locationsOptions,", industriesOptions);
         this.setState({
             industries,
             industriesOptions
@@ -133,18 +133,26 @@ class CompanyIndex extends React.Component {
         let { client } = this.props;
 
         CompanyDemographicService.getCompanyDemographics({client}).then((company_demographics) => {
-            console.log("LOADED COMPANY DEMOGRAPHICS", company_demographics);
+            // console.log("LOADED COMPANY DEMOGRAPHICS", company_demographics);
 
             let company_demographics_map = {};
+            let company_demographics_yearly_map = {};
 
             if (company_demographics && company_demographics.length) {
                 company_demographics.map((company_demographic) => {
                     company_demographics_map[company_demographic.company_id] = company_demographic;
+
+                    company_demographics_yearly_map[company_demographic.company_id] = company_demographics_yearly_map[company_demographic.company_id] || {};
+                    company_demographics_yearly_map[company_demographic.company_id][company_demographic.year] = company_demographic;
                 })
             }
+
+            // console.log(company_demographics_yearly_map)
+
             this.setState({
                 company_demographics,
-                company_demographics_map
+                company_demographics_map,
+                company_demographics_yearly_map
             })
         })
     }
@@ -156,21 +164,29 @@ class CompanyIndex extends React.Component {
 
         let label = null;
 
-        console.log(options, id)
+        // console.log(options, id)
         options.map((option) => {
             if (option.value + "" === id + "")
                 label = option.label
         })
 
-        console.log("FOUND THE LABEL", label)
+        // console.log("FOUND THE LABEL", label)
         return label;
     }
 
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { companies, company_demographics_map, companyNameFilter, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+        let { companies, company_demographics_map, company_demographics_yearly_map, companyNameFilter, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
 
         company_demographics_map = company_demographics_map || {};
+        company_demographics_yearly_map = company_demographics_yearly_map || {};
+
+        const getMaxYear = (company_id) => {
+            let mapping = company_demographics_yearly_map[company_id];
+            if (!mapping || !Object.keys(mapping) || !Object.keys(mapping).length) return null;
+
+            return Math.max(...Object.keys(mapping).map((v) => (parseFloat(v))));
+        };
 
         return (
             <div className={classes.masterContainer}>
@@ -213,9 +229,6 @@ class CompanyIndex extends React.Component {
                                         hideIndicator={true}
                                     />
 
-
-
-
                                     <div>
                                         <div style={{marginTop: "10px"}}  className={mc(classes.companySubFilterLabel)}>Employee Count</div>
                                         <input type="range" min={minEmployees} max={maxEmployees} value={employeeFilter} className="slider" onChange={(e) =>{
@@ -251,7 +264,8 @@ class CompanyIndex extends React.Component {
 
                                         const { company_id } = company;
 
-                                        const company_demographics = company_demographics_map[company_id] || {};
+
+                                        const company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][getMaxYear(company_id)] || {}) : {};
 
                                         let bipoc_numbers = parseFloat(company_demographics.employees_asian || "0") +
                                             parseFloat(company_demographics.employees_black || "0") +

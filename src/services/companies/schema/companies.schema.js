@@ -9,6 +9,7 @@ module.exports = function (connection) {
 
         table.string('company_name');
         table.string('company_logo_url', 2000);
+        table.string('cover_photo_url', 2000);
 
         table.string('company_size');
         table.string('company_about', 5000);
