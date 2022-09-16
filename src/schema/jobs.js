@@ -27,6 +27,13 @@ const typeDef = gql`
         job_salary_estimate: String,
         company_name: String,
 
+        job_deadline: String,
+        job_type: [String],
+        
+        job_sectors: [String],
+        job_locations: [String],
+        job_degree_requirements:[String],
+
         job_title: String,
         job_overview: String
         job_qualifications: String
@@ -34,6 +41,7 @@ const typeDef = gql`
 
         submitted_by_id: String
 
+        diverse_candidates: Boolean
         is_active: Boolean
         is_verified: Boolean
         is_user_submitted: Boolean

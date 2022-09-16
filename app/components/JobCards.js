@@ -179,7 +179,7 @@ class JobCards extends React.Component {
                     unFilteredJobs.push(job);
                 }
             } else {
-                console.log(job.companies.length, job.companies, job.companies[0])
+                // console.log(job.companies.length, job.companies, job.companies[0])
             }
         });
 

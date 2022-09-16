@@ -105,7 +105,7 @@ class PortfolioHeader extends React.Component {
         return (<div className={classes.container}>
             <div className={classes.superContainer}>
                 <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
-                    <CoverImageHolder url={"https://i.imgur.com/tM97NWQ.png"}/>
+                    <CoverImageHolder url={company.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                 </div>
                 <div className={classes.profileHeaderContainer} style={{paddingBottom: 0}}>
                     <div className={classes.profileImageContainer}>

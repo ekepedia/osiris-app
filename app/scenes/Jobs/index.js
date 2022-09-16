@@ -23,6 +23,7 @@ import JobDetails from "../../components/JobDetails";
 import JobAlertBanner from "../../components/JobAlertBanner";
 import ApplyNowModal from "../../components/ApplyNowModal";
 import JobAssistantModal from "../../components/JobAssistantModal";
+import CompanyService from "../../services/CompanyService";
 
 const Styles = {
     container: {
@@ -175,25 +176,6 @@ class Jobs extends React.Component {
             }
         ];
 
-        DataService.getJobs().then(({jobs}) => {
-            console.log("jobs", jobs);
-            this.jobs = jobs;
-
-            let selectedJob;
-
-            jobs.forEach((job) => {
-                if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {
-                    selectedJob = job
-                }
-            });
-
-            this.setState({
-                jobs,
-                selectedJobId: selectedJob.job_id,
-                selectedJob
-            });
-        })
-
         this.state = {
             showJobAlerts: false,
             showApplyNow: false,
@@ -210,7 +192,57 @@ class Jobs extends React.Component {
     }
 
     componentDidMount() {
+        this.loadCompanies().then(({companies, company_map}) => {
+            this.loadJobs({companies, company_map});
 
+        })
+    }
+
+    loadCompanies() {
+        let { client } = this.props;
+
+        return new Promise((resolve, reject) => {
+            CompanyService.getCompanies({client}).then((companies) => {
+                let company_map = {};
+
+                companies.forEach((company) => {
+                    company_map[company.company_id] = company
+                })
+
+                this.setState({
+                    companies,
+                    company_map
+                });
+                resolve({companies, company_map})
+            })
+        })
+
+    }
+
+
+    loadJobs({companies, company_map}) {
+        DataService.getJobs().then(({jobs}) => {
+            let selectedJob;
+
+            jobs = jobs.map((job) => {
+                job.companies = [company_map[job.company_id]];
+                return job;
+            })
+
+            jobs.forEach((job) => {
+                if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {
+                    selectedJob = job
+                }
+            });
+
+            this.jobs = jobs;
+
+            this.setState({
+                jobs,
+                selectedJobId: selectedJob.job_id,
+                selectedJob
+            });
+        })
     }
 
     addToField(field, id) {
@@ -325,6 +357,7 @@ class Jobs extends React.Component {
                                     clearField={this.clearField.bind(this)}
 
                                     state={this.state}
+                                    jobs={this.state.jobs}
 
                                     onAssistant={this.openJobAssistant.bind(this)}
                                 />
@@ -377,11 +410,13 @@ class Jobs extends React.Component {
                             open={this.state.showJobAlerts}
                             onClose={this.closeJobAlerts.bind(this)}
                             state={this.state}
+                            jobs={this.jobs}
                         />
 
                         <JobAlertSignUp
                             open={this.state.showApplyNow}
                             job={this.state.selectedJob}
+                            jobs={this.jobs}
                             onClose={this.closeApplyModal.bind(this)}
                         />
 

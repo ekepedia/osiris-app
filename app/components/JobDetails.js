@@ -149,7 +149,7 @@ class JobDetails extends React.Component {
                 <div style={{display: "flex", marginBottom: "20px"}}>
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div style={{borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
-                            <CoverImageHolder url={company.company_logo}/>
+                            <CoverImageHolder url={company.company_logo_url}/>
                         </div>
                     </div>
 
@@ -171,7 +171,10 @@ class JobDetails extends React.Component {
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600}} key={location.location_id} label={location.label}/>)
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
-
+                        {company.glassdoor_overall ? <StandardBadge label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
+                        {company.glassdoor_work_life ? <StandardBadge label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
+                        {company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
+                        {company.glassdoor_compensation ? <StandardBadge label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
                     </div>
 
                     <div>

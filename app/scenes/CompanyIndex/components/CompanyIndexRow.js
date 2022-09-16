@@ -96,11 +96,28 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, company, company_demographics, bipoc_respresentation} = this.props;
+        let { classes, company, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
 
         company_demographics = company_demographics || {};
         company = company || {};
         bipoc_respresentation = bipoc_respresentation || 0;
+
+        let bipoc_respresentation_change_label = "";
+        let female_respresentation_change_label = "";
+
+        const convertYear = (year) => {
+            if (!year) return year;
+
+            return (year + "").slice(2);
+        }
+
+        if (bipoc_respresentation_change) {
+            bipoc_respresentation_change_label = `${bipoc_respresentation_change > 0 ? '+' : ''}${bipoc_respresentation_change}% BIPOC \`${convertYear(previousYear)}-\`${convertYear(currentYear)}`;
+        }
+
+        if (female_respresentation_change) {
+            female_respresentation_change_label = `${female_respresentation_change > 0 ? '+' : ''}${female_respresentation_change}% FEMALE \`${convertYear(previousYear)}-\`${convertYear(currentYear)}`;
+        }
 
         return (<div className={classes.container}>
             <div className={mc(classes.companyLogo)}>
@@ -118,7 +135,7 @@ class CompanyIndexRow extends React.Component {
             </div>
             <div className={mc(classes.companyEmployeeContainer)}>
                 <div className={mc(classes.companyHeader)}>
-                    <i className="fa-solid fa-user-group"/>{company.company_size  ?formatLargeNumber(company.company_size) : "--"}
+                    <i className="fa-solid fa-user-group"/>{company.company_size ? formatLargeNumber(company.company_size) : "--"}
                 </div>
                 <div className={mc(classes.companySubHeader)}>
                     EMPLOYEES
@@ -132,7 +149,13 @@ class CompanyIndexRow extends React.Component {
                     </div> : <div>—</div> }
                 </div>
                 <div className={mc(classes.companySubHeader)}>
-                    —
+                    {female_respresentation_change ? <StandardBadge style={{
+                        marginLeft: "0",
+                        marginRight: "0px",
+                        marginTop: "0",
+                        background: female_respresentation_change > 0 ? COMMON.COLORS.G200 : COMMON.COLORS.R100,
+                        color: female_respresentation_change > 0 ? COMMON.COLORS.G600 : COMMON.COLORS.R600,
+                    }} label={female_respresentation_change_label}/> : <div>—</div>}
                 </div>
             </div>
 
@@ -143,7 +166,13 @@ class CompanyIndexRow extends React.Component {
                     </div> : <div>—</div>}
                 </div>
                 <div className={mc(classes.companySubHeader)}>
-                    —
+                    {bipoc_respresentation_change ? <StandardBadge style={{
+                        marginLeft: "0",
+                        marginRight: "0px",
+                        marginTop: "0",
+                        background: bipoc_respresentation_change > 0 ? COMMON.COLORS.G200 : COMMON.COLORS.R100,
+                        color: bipoc_respresentation_change > 0 ? COMMON.COLORS.G600 : COMMON.COLORS.R600,
+                    }} label={bipoc_respresentation_change_label}/> : <div>—</div>}
                 </div>
             </div>
 

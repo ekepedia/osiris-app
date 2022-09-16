@@ -31,31 +31,29 @@ module.exports.init = function (connection) {
     // import_data();
     // import_demo_data();
 
-    return;
     load_locations({}).then(({locations, location_map}) => {
         load_industries({}).then(({industries, industry_map}) => {
             load_dei({}).then(({dei_data, dei_data_map}) => {
 
-                return;
-                dei_data.forEach((dei) => {
-
-                    get_companies({
-                        airtable_company_id: dei.airtable_company_id
-                    }).then((companies) =>{
-                        if (companies && companies.length) {
-                            const {company_id} = companies[0];
-                            const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
-
-                            CompanyDemographicService.create_company_demographic(
-                                {...dei, company_id}
-                            ).then((d) => {
-                                console.log(d)
-                            })
-                        }
-                    })
-
-                })
-                // import_airtable_companies({location_map, industry_map, dei_data_map});
+                // dei_data.forEach((dei) => {
+                //
+                //     get_companies({
+                //         airtable_company_id: dei.airtable_company_id
+                //     }).then((companies) =>{
+                //         if (companies && companies.length) {
+                //             const {company_id} = companies[0];
+                //             const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+                //
+                //             CompanyDemographicService.create_company_demographic(
+                //                 {...dei, company_id}
+                //             ).then((d) => {
+                //                 console.log(d)
+                //             })
+                //         }
+                //     })
+                //
+                // })
+                import_airtable_companies({location_map, industry_map, dei_data_map});
             });
         });
     });
@@ -84,7 +82,14 @@ function get_companies({
                            clearbit_company_id,
                            is_clearbit_import,
                            company_industry,
-                           company_industry_group
+                           company_industry_group,
+                           glassdoor_overall,
+                           glassdoor_culture,
+                           glassdoor_diversity,
+                           glassdoor_work_life,
+                           glassdoor_senior_management,
+                           glassdoor_compensation,
+                           glassdoor_career,
 }) {
 
     const query = DatabaseService.generate_query({
@@ -107,7 +112,14 @@ function get_companies({
         clearbit_company_id,
         is_clearbit_import,
         company_industry,
-        company_industry_group
+        company_industry_group,
+        glassdoor_overall,
+        glassdoor_culture,
+        glassdoor_diversity,
+        glassdoor_work_life,
+        glassdoor_senior_management,
+        glassdoor_compensation,
+        glassdoor_career,
     });
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
@@ -146,7 +158,14 @@ function create_company({
                             clearbit_company_id,
                             is_clearbit_import,
                             company_industry,
-                            company_industry_group
+                            company_industry_group,
+                            glassdoor_overall,
+                            glassdoor_culture,
+                            glassdoor_diversity,
+                            glassdoor_work_life,
+                            glassdoor_senior_management,
+                            glassdoor_compensation,
+                            glassdoor_career,
                         }) {
     return new Promise((resolve, reject) => {
         if (!company_name)
@@ -175,7 +194,14 @@ function create_company({
             clearbit_company_id,
             is_clearbit_import,
             company_industry,
-            company_industry_group
+            company_industry_group,
+            glassdoor_overall,
+            glassdoor_culture,
+            glassdoor_diversity,
+            glassdoor_work_life,
+            glassdoor_senior_management,
+            glassdoor_compensation,
+            glassdoor_career,
         });
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("company_id").then((rows) => {
@@ -214,7 +240,14 @@ function edit_company({
                           clearbit_company_id,
                           is_clearbit_import,
                           company_industry,
-                          company_industry_group
+                          company_industry_group,
+                          glassdoor_overall,
+                          glassdoor_culture,
+                          glassdoor_diversity,
+                          glassdoor_work_life,
+                          glassdoor_senior_management,
+                          glassdoor_compensation,
+                          glassdoor_career,
 }) {
     return new Promise((resolve, reject) => {
         if (!company_id)
@@ -243,7 +276,14 @@ function edit_company({
             clearbit_company_id,
             is_clearbit_import,
             company_industry,
-            company_industry_group
+            company_industry_group,
+            glassdoor_overall,
+            glassdoor_culture,
+            glassdoor_diversity,
+            glassdoor_work_life,
+            glassdoor_senior_management,
+            glassdoor_compensation,
+            glassdoor_career,
         };
 
         knex(SERVICE_DEFAULT_TABLE).where({company_id}).update(query).then(() =>{
@@ -357,15 +397,42 @@ function import_airtable_companies({location_map, industry_map, dei_data_map}) {
                 company_industry_group: industry_map[fields["Industry"][0]].name
             }
 
-            console.log(new_company, new_dei_data);
+            // console.log(new_company, new_dei_data);
 
-            create_company(new_company).then((company_id) => {
-                console.log(company_id)
-                new_dei_data = {...new_dei_data, company_id};
-                CompanyDemographicService.create_company_demographic(new_dei_data).then((id) => {
-                    console.log(id)
+            // create_company(new_company).then((company_id) => {
+            //     console.log(company_id)
+            //     new_dei_data = {...new_dei_data, company_id};
+            //     CompanyDemographicService.create_company_demographic(new_dei_data).then((id) => {
+            //         console.log(id)
+            //     })
+            // })
+
+            get_companies({
+                    airtable_company_id: record.id
+                }).then((companies) =>{
+                    if (companies && companies.length) {
+                        const {company_id} = companies[0];
+
+                        if (company_id) {
+                            let company_glassdoor = {
+                                company_id,
+                                glassdoor_overall: fields["Glassdoor Overall"],
+                                glassdoor_culture: fields["Glassdoor Culture & Values"],
+                                glassdoor_diversity: fields["Glassdoor Diversity & Inclusion"],
+                                glassdoor_work_life: fields["Glassdoor Work/Life Balance"],
+                                glassdoor_senior_management: fields["Glassdoor Senior Management"],
+                                glassdoor_compensation: fields["Glassdoor Compensation and Benefits"],
+                                glassdoor_career: fields["Glassdoor Career Opportunities"],
+                            }
+
+                            // edit_company(company_glassdoor).then((d) => {
+                            //     console.log(d)
+                            // })
+
+                            // console.log(company_glassdoor);
+                        }
+                    }
                 })
-            })
 
         })
     });

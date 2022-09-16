@@ -19,6 +19,7 @@ const typeDef = gql`
         airtable_company_id: String,
         company_name: String,
         company_logo_url: String,
+        cover_photo_url: String,
 
 
         company_size: String,
@@ -39,6 +40,14 @@ const typeDef = gql`
         company_industry: String
         company_industry_group: String
         
+        glassdoor_career: String
+        glassdoor_compensation: String
+        glassdoor_senior_management: String
+        glassdoor_work_life: String
+        glassdoor_diversity: String
+        glassdoor_culture: String
+        glassdoor_overall: String
+        
         is_hidden: Boolean
         is_verified: Boolean
         is_clearbit_import: Boolean
@@ -51,7 +60,7 @@ const typeDef = gql`
         airtable_company_id: String,
         company_name: String,
         company_logo_url: String,
-
+        cover_photo_url: String,
 
         company_size: String,
         company_about: String
@@ -70,6 +79,14 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+
+        glassdoor_career: String
+        glassdoor_compensation: String
+        glassdoor_senior_management: String
+        glassdoor_work_life: String
+        glassdoor_diversity: String
+        glassdoor_culture: String
+        glassdoor_overall: String
         
         is_hidden: Boolean
         is_verified: Boolean
@@ -84,6 +101,7 @@ const typeDef = gql`
         airtable_company_id: String,
         company_name: String,
         company_logo_url: String,
+        cover_photo_url: String,
 
 
         company_size: String,
@@ -103,6 +121,14 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+
+        glassdoor_career: String
+        glassdoor_compensation: String
+        glassdoor_senior_management: String
+        glassdoor_work_life: String
+        glassdoor_diversity: String
+        glassdoor_culture: String
+        glassdoor_overall: String
         
         is_hidden: Boolean
         is_verified: Boolean
@@ -117,6 +143,7 @@ const typeDef = gql`
         airtable_company_id: String,
         company_name: String,
         company_logo_url: String,
+        cover_photo_url: String,
 
 
         company_size: String,
@@ -136,6 +163,14 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+
+        glassdoor_career: String
+        glassdoor_compensation: String
+        glassdoor_senior_management: String
+        glassdoor_work_life: String
+        glassdoor_diversity: String
+        glassdoor_culture: String
+        glassdoor_overall: String
 
         is_hidden: Boolean
         is_verified: Boolean

@@ -101,21 +101,21 @@ export const CHART_ORANGE = "#FF9D66"; COLORS.CHART_ORANGE = CHART_ORANGE;
 
 // COLORS
 export const B100 = "#EBF0FF"; COLORS.B100 = B100;
-
+export const B200 = "#D6E0FF"; COLORS.B200 = B200;
 export const B400 = "#3366FF"; COLORS.B400 = B400;
+export const B500 = "#2952CC"; COLORS.B500 = B400;
+
+export const V100 = "#E7E4F9"; COLORS.V100 = V100;
+export const V600 = "#524988"; COLORS.V600 = V600;
 
 export const Y100 = "#FFEFD2"; COLORS.Y100 = Y100;
-
 export const Y600 = "#66460D"; COLORS.Y600 = Y600;
 
 export const O100 = "#F8E3DA"; COLORS.O100 = O100;
-
 export const O600 = "#85462B"; COLORS.O600 = O600;
 
 export const G200 = "#DCF2EA"; COLORS.G200 = G200;
-
 export const G600 = "#317159"; COLORS.G600 = G600;
 
 export const R100 = "#F9DADA"; COLORS.R100 = R100;
-
 export const R600 = "#7D2828"; COLORS.R600 = R600;

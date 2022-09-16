@@ -166,7 +166,7 @@ class JobAssistantModal extends React.Component {
         const selectedIndustriesOptions = (selectedIndustries || []).map((id) => ({value: id, label: this.findLabel(this.industries, id)}));
 
         const selectedLocations = state["selectedLocations"];
-        const selectedLocationsOptions = (selectedLocations || []).map((id) => ({value: id, label: this.findLabel(this.locations, id)}));
+        const selectedLocationsOptions = (selectedLocations  || []).map((id) => ({value: id, label: this.findLabel(this.locations, id)}));
 
         return (<div className={classes.container}>
             <Modal

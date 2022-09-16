@@ -61,17 +61,19 @@ class JobCard extends React.Component {
 
         let company = job.companies && job.companies.length ? job.companies[0] : {};
         let job_type = job.job_types && job.job_types.length ? job.job_types[0] : {};
+        let industry = job.industries && job.industries.length ? job.industries[0].name : "";
         let qualification = job.qualifications && job.qualifications.length ? job.qualifications[0] : {};
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
 
+        console.log(industry, job.industries)
         return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
             <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "6px", overflow: "hidden"}}>
                 <div style={{display: "flex", marginBottom: "7px"}}>
 
                     <div style={{flex: "0 0 38px", marginRight: "8px", height: "38px"}}>
                         <div style={{borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden"}}>
-                            <CoverImageHolder url={company.company_logo} />
+                            <CoverImageHolder url={company.company_logo_url} />
                         </div>
                     </div>
 
@@ -85,9 +87,8 @@ class JobCard extends React.Component {
                 <div>
                     <div>
                         <div style={{marginBottom: "13px"}}>
-                            <StandardBadge label={"INDUSTRY 1"}/>
-                            <StandardBadge label={"INDUSTRY 2"}/>
-
+                            <StandardBadge label={industry}/>
+                            <StandardBadge label={company.company_industry}/>
                         </div>
 
                         <div style={{marginBottom: "0"}}>
@@ -100,6 +101,7 @@ class JobCard extends React.Component {
 
                             <StandardBadge label={job_type.name} iconLeft={true} icon={"fa-sharp fa-solid fa-briefcase"}/>
 
+                            {company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
 
                         </div>
 

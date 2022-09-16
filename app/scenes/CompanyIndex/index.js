@@ -188,6 +188,38 @@ class CompanyIndex extends React.Component {
             return Math.max(...Object.keys(mapping).map((v) => (parseFloat(v))));
         };
 
+        const getYearAndComparisonYear = (company_id) => {
+            let mapping = company_demographics_yearly_map[company_id];
+            if (!mapping || !Object.keys(mapping) || !Object.keys(mapping).length) return {};
+
+            let years = (Object.keys(mapping).map((v) => (parseFloat(v))) || []).sort((a,b) => (b-a));
+
+            if (years.length <= 1) {
+                return {
+                    currentYear: years[0],
+                    previousYear: null
+                }
+            }
+
+            return {
+                currentYear: years[0],
+                previousYear: years[1],
+            }
+        };
+
+        const getBipocRepresentation = (company_demographics) => {
+            let bipoc_numbers = parseFloat(company_demographics.employees_asian || "0") +
+                parseFloat(company_demographics.employees_black || "0") +
+                parseFloat(company_demographics.employees_latinx || "0") +
+                parseFloat(company_demographics.employees_indigenous || "0");
+
+            let white_numbers = parseFloat(company_demographics.employees_white || "0")
+
+            let bipoc_respresentation = Math.round((bipoc_numbers/(white_numbers + bipoc_numbers)) * 1000)/10;
+
+            return bipoc_respresentation;
+        };
+
         return (
             <div className={classes.masterContainer}>
                 <div className={classes.masterNavContainer}>
@@ -265,16 +297,20 @@ class CompanyIndex extends React.Component {
                                         const { company_id } = company;
 
 
-                                        const company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][getMaxYear(company_id)] || {}) : {};
+                                        const {currentYear, previousYear} = getYearAndComparisonYear(company_id);
 
-                                        let bipoc_numbers = parseFloat(company_demographics.employees_asian || "0") +
-                                            parseFloat(company_demographics.employees_black || "0") +
-                                            parseFloat(company_demographics.employees_latinx || "0") +
-                                            parseFloat(company_demographics.employees_indigenous || "0");
+                                        const company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][currentYear] || {}) : {};
+                                        const previous_company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][previousYear] || {}) : {};
 
-                                        let white_numbers = parseFloat(company_demographics.employees_white || "0")
+                                        const bipoc_respresentation = getBipocRepresentation(company_demographics);
+                                        const previous_bipoc_respresentation = previousYear ? getBipocRepresentation(previous_company_demographics) : null;
+                                        const bipoc_respresentation_change = previousYear ? Math.round((bipoc_respresentation - previous_bipoc_respresentation)*100)/100 : null;
 
-                                        let bipoc_respresentation = Math.round((bipoc_numbers/(white_numbers + bipoc_numbers)) * 1000)/10;
+                                        const female_respresentation = company_demographics.employees_female;
+                                        const previous_female_respresentation = previousYear ? previous_company_demographics.employees_female : null;
+                                        const female_respresentation_change = previousYear ? Math.round((female_respresentation - previous_female_respresentation)*100)/100 : null;
+
+                                        // console.log(company.company_name, female_respresentation, previous_female_respresentation);
 
                                         if (companyNameFilter && companyNameFilter.length) {
                                             const filter = companyNameFilter.toLowerCase();
@@ -334,7 +370,7 @@ class CompanyIndex extends React.Component {
                                         if (!company.company_logo_url)
                                             return null;
 
-                                        return (<CompanyIndexRow {...{company, company_demographics, bipoc_respresentation}}/>);
+                                        return (<CompanyIndexRow key={company_id} {...{company, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
 
                                     })}
                                 </div> : null}</div>

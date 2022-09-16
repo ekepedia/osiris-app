@@ -48,19 +48,24 @@ class JobAlertSignUp extends React.Component {
         this.state = {
             email: "",
         };
+    }
 
-        this.industries = [];
-        this.industry_map = {};
+    constructIndustryOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.industries && job.industries.length) {
+                job.industries.forEach((industry) => {
+                    dedup_map[industry.id] = industry
+                })
+            }
+        });
 
-        DataService.getIndustries().then(({industries}) => {
-            this.industries = industries;
 
-            industries.forEach((industry) => {
-                this.industry_map[industry.id] = industry;
-            })
-            this.setState({ industries});
-        })
+        this.industries = Object.values(dedup_map);
+        console.log(this.industries)
 
+        return this.industries
     }
 
     componentDidMount() {
@@ -107,7 +112,13 @@ class JobAlertSignUp extends React.Component {
     }
 
     render() {
-        let { classes, open, onClose, state, job } = this.props;
+        let { classes, open, onClose, state, job, jobs } = this.props;
+
+        this.industries = this.constructIndustryOptions(jobs)
+        this.industry_map = {};
+        this.industries.forEach((industry) => {
+            this.industry_map[industry.id] = industry;
+        })
 
         let industry = "";
 

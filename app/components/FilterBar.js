@@ -90,6 +90,60 @@ class FilterBar extends React.Component {
 
     }
 
+    constructLocationOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.locations && job.locations.length) {
+                job.locations.forEach((location) => {
+                    dedup_map[location.location_id] = location
+                })
+            }
+        });
+
+        this.locations = Object.values(dedup_map);
+        return this.locations
+    }
+
+    constructIndustryOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.industries && job.industries.length) {
+                job.industries.forEach((industry) => {
+                    dedup_map[industry.id] = industry
+                })
+            }
+        });
+
+
+        this.industries = Object.values(dedup_map);
+        console.log(this.industries)
+
+        return this.industries
+    }
+
+    constructCompanyOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.companies && job.companies.length) {
+                job.companies.forEach((company) => {
+                    if (!company) return;1
+                    dedup_map[company.company_id] = {
+                        ...company,
+                        id: company.company_id,
+                        label: company.company_name,
+                        company_id: company.company_id
+                    }
+                })
+            }
+        });
+
+        this.companies = Object.values(dedup_map);
+        return this.companies
+    }
+
     render() {
         let { classes, client, match: { params },
             addToField,
@@ -97,11 +151,16 @@ class FilterBar extends React.Component {
             clearField,
 
             state,
+            jobs,
 
             onAssistant
         } = this.props;
 
         console.log(state)
+
+        this.locations = this.constructLocationOptions(jobs);
+        this.companies = this.constructCompanyOptions(jobs);
+        this.industries = this.constructIndustryOptions(jobs);
 
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
