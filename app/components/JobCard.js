@@ -66,7 +66,6 @@ class JobCard extends React.Component {
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
 
-        console.log(industry, job.industries)
         return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
             <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "6px", overflow: "hidden"}}>
                 <div style={{display: "flex", marginBottom: "7px"}}>

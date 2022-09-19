@@ -81,6 +81,15 @@ class FilterBar extends React.Component {
 
         this.affinities = [];
         DataService.getAffinities().then(({affinities}) => {
+            affinities = affinities.map((affinity) => {
+                if (!affinity) return affinity;
+                if (affinity.label && affinity.label.indexOf("dates") === -1)
+                    return null
+                return affinity
+            });
+
+            affinities = _.without(affinities, null);
+
             this.affinities = affinities;
             this.setState({ affinities});
         })

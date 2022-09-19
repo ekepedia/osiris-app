@@ -31,15 +31,23 @@ const CompanyPageStyles = {
     },
     LHSContainer: {
         flex: "0 0 315px",
-        paddingRight: "50px",
+        marginRight: "50px",
+        height: "calc(100vh - 177px)",
+        overflow: "scroll",
+        borderRadius: "4px",
+        border: `1px solid ${N400}`
     },
     RHSContainer: {
         flex: 1,
+        height: "calc(100vh - 177px)",
+        overflow: "scroll",
+        borderRadius: "4px",
+        border: `1px solid ${N400}`
     },
     companyFilterContainer: {
         ...FONT_FOOTNOTE_BOLD,
-        borderRadius: "6px",
-        border: `1px solid ${LIGHT_GREY}`,
+        // borderRadius: "6px",
+        // border: `1px solid ${LIGHT_GREY}`,
         padding: "20px",
         background: COLOR_WHITE
     },

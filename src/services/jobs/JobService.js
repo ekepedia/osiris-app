@@ -271,7 +271,9 @@ module.exports.format_jobs_for_job_board = format_jobs_for_job_board;
 
 function format_jobs_for_job_board() {
     return new Promise((resolve, reject) => {
-        get_jobs({}).then((jobs) => {
+        get_jobs({
+            is_user_submitted: false
+        }).then((jobs) => {
             jobs = jobs.map((job) => {
 
                 return {

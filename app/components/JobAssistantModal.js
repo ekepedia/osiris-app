@@ -139,6 +139,36 @@ class JobAssistantModal extends React.Component {
         </div>)
     }
 
+    constructIndustryOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.industries && job.industries.length) {
+                job.industries.forEach((industry) => {
+                    dedup_map[industry.id] = industry
+                })
+            }
+        });
+
+        this.industries = Object.values(dedup_map);
+        return this.industries
+    }
+
+    constructLocationOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.locations && job.locations.length) {
+                job.locations.forEach((location) => {
+                    dedup_map[location.location_id] = location
+                })
+            }
+        });
+
+        this.locations = Object.values(dedup_map);
+        return this.locations
+    }
+
     renderFooter() {
         const { page } = this.state || {};
         const { onSubmit, onClose } = this.props || {};
@@ -160,13 +190,16 @@ class JobAssistantModal extends React.Component {
     }
 
     render() {
-        let { classes, open, onClose, onSubmit, job, state, addToField, removeFromField, overrideField} = this.props;
+        let { classes, open, onClose, onSubmit, job, jobs, state, addToField, removeFromField, overrideField} = this.props;
 
         const selectedIndustries = state["selectedIndustries"];
         const selectedIndustriesOptions = (selectedIndustries || []).map((id) => ({value: id, label: this.findLabel(this.industries, id)}));
 
         const selectedLocations = state["selectedLocations"];
         const selectedLocationsOptions = (selectedLocations  || []).map((id) => ({value: id, label: this.findLabel(this.locations, id)}));
+
+        this.industries = this.constructIndustryOptions(jobs);
+        this.locations = this.constructLocationOptions(jobs);
 
         return (<div className={classes.container}>
             <Modal

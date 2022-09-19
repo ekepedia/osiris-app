@@ -123,12 +123,12 @@ class JobAlertSignUp extends React.Component {
         let industry = "";
 
         if (job && job.industries && job.industries.length) {
-            industry = job.industries[0].label
+            industry = (job.industries[0] || {}).label
         } else if (state && state["selectedIndustries"] && state["selectedIndustries"].length) {
-            industry = this.industry_map[state["selectedIndustries"][0]].name
+            industry = (this.industry_map[state["selectedIndustries"][0]] || {}).name
         }
 
-        industry = industry.toLowerCase();
+        industry = (industry + "").toLowerCase();
 
         return (<div className={classes.container}>
             <Modal

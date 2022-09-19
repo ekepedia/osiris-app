@@ -423,6 +423,8 @@ class Jobs extends React.Component {
                         <JobAssistantModal
                             open={this.state.showJobAssistant}
                             job={this.state.selectedJob}
+                            jobs={this.state.jobs}
+
                             onClose={this.closeJobAssistant.bind(this)}
                             onSubmit={this.submitJobAssistant.bind(this)}
 
