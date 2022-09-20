@@ -289,7 +289,7 @@ class CompanyIndex extends React.Component {
 
                                 </div>
                             </div>
-                            <div className={mc(classes.RHSContainer)}>
+                            <div className={mc(classes.RHSContainer)} style={{border: companies && companies.length ? null : "none"}}>
                                 <div>{companies && companies.length ? <div>
 
                                     {companies.map((company) => {

@@ -85,6 +85,7 @@
     "react-router-dom": "^5.1.2",
     "react-select": "^5.4.0",
     "react-slick": "^0.29.0",
+    "react-tooltip": "^4.2.21",
     "redis": "^3.0.2",
     "slick-carousel": "^1.8.1",
     "store": "^2.0.12",

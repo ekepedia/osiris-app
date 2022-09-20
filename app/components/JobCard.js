@@ -67,7 +67,7 @@ class JobCard extends React.Component {
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
 
         return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
-            <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "6px", overflow: "hidden"}}>
+            <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "4px", overflow: "hidden"}}>
                 <div style={{display: "flex", marginBottom: "7px"}}>
 
                     <div style={{flex: "0 0 38px", marginRight: "8px", height: "38px"}}>
@@ -100,7 +100,7 @@ class JobCard extends React.Component {
 
                             <StandardBadge label={job_type.name} iconLeft={true} icon={"fa-sharp fa-solid fa-briefcase"}/>
 
-                            {company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
+                            {company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
 
                         </div>
 

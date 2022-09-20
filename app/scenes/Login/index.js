@@ -73,6 +73,7 @@ class Login extends React.Component {
 
             if (data.data.success) {
                 window.location.pathname = `/edit/${data.data.data.user_login.user_id}`;
+                localStorage.user_id = data.data.data.user_login.user_id;
             }
         })
     }

@@ -151,3 +151,40 @@ a:hover {
 ::placeholder { /* Most modern browsers support this now. */
     color:    #8F95B2;
 }
+
+.tool-tip-styles {
+    margin: 0 !important;
+    padding: 8px !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    border-radius: 4px !important;
+    text-transform: capitalize !important;
+}
+
+@keyframes flickerAnimation {
+    0%   { opacity:0.75; }
+    50%  { opacity:0; }
+    100% { opacity:0.75; }
+}
+@-o-keyframes flickerAnimation{
+    0%   { opacity:0.75; }
+    50%  { opacity:0; }
+    100% { opacity:0.75; }
+}
+@-moz-keyframes flickerAnimation{
+    0%   { opacity:0.75; }
+    50%  { opacity:0; }
+    100% { opacity:0.75; }
+}
+@-webkit-keyframes flickerAnimation{
+    0%   { opacity:0.75; }
+    50%  { opacity:0; }
+    100% { opacity:0.75; }
+}
+
+.animate-flicker {
+    -webkit-animation: flickerAnimation 1s infinite;
+    -moz-animation: flickerAnimation 1s infinite;
+    -o-animation: flickerAnimation 1s infinite;
+    animation: flickerAnimation 1s infinite;
+}

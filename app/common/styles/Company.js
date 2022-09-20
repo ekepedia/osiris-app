@@ -32,14 +32,16 @@ const CompanyPageStyles = {
     LHSContainer: {
         flex: "0 0 315px",
         marginRight: "50px",
-        height: "calc(100vh - 177px)",
+        height: "fit-content",
+        maxHeight: "calc(100vh - 177px)",
         overflow: "scroll",
         borderRadius: "4px",
         border: `1px solid ${N400}`
     },
     RHSContainer: {
         flex: 1,
-        height: "calc(100vh - 177px)",
+        maxHeight: "calc(100vh - 177px)",
+        height: "fit-content",
         overflow: "scroll",
         borderRadius: "4px",
         border: `1px solid ${N400}`

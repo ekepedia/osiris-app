@@ -24,6 +24,7 @@ import JobAlertBanner from "../../components/JobAlertBanner";
 import ApplyNowModal from "../../components/ApplyNowModal";
 import JobAssistantModal from "../../components/JobAssistantModal";
 import CompanyService from "../../services/CompanyService";
+import LoadingJobCard from "../../components/LoadingJobCard";
 
 const Styles = {
     container: {
@@ -188,6 +189,7 @@ class Jobs extends React.Component {
             selectedDegreeRequirements: [],
             selectedJobId: this.jobs[0].job_id,
             selectedJob: this.jobs[0],
+            loading: true
         };
     }
 
@@ -240,7 +242,8 @@ class Jobs extends React.Component {
             this.setState({
                 jobs,
                 selectedJobId: selectedJob.job_id,
-                selectedJob
+                selectedJob,
+                loading: false
             });
         })
     }
@@ -341,9 +344,11 @@ class Jobs extends React.Component {
 
         const SCROLL_PAD = "100px";
 
+        let { loading } = this.state;
+
         return (
             <div className={classes.masterContainer}>
-                <div className={classes.masterNavContainer}>
+                <div className={classes.masterNavContainer} style={{borderBottom: "none"}}>
                     <NavBar />
                 </div>
                 <div className={classes.masterBodyContainer}>
@@ -369,6 +374,7 @@ class Jobs extends React.Component {
                                         <div className={classes.showOnMobile} style={{flex: 1, marginRight: "0", height: "100%", overflowY: "scroll"}}>
                                             <JobCards
                                                 jobs={this.jobs}
+                                                loading={loading}
                                                 selectedJobId={this.state.selectedJobId}
                                                 selectedLocations={this.state.selectedLocations}
                                                 selectedCompanies={this.state.selectedCompanies}
@@ -383,6 +389,7 @@ class Jobs extends React.Component {
                                         <div className={classes.hideOnMobile} style={{flex: "0 0 356px", marginRight: "49px", height: "100%", overflowY: "scroll"}}>
                                             <JobCards
                                                 jobs={this.jobs}
+                                                loading={loading}
                                                 selectedJobId={this.state.selectedJobId}
                                                 selectedLocations={this.state.selectedLocations}
                                                 selectedCompanies={this.state.selectedCompanies}
@@ -393,7 +400,7 @@ class Jobs extends React.Component {
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
                                             />
                                         </div>
-                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "100%", overflowY: "scroll"}}>
+                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "100%", overflowY: "scroll", display: loading ? "none" : null}}>
                                             <JobDetails
                                                 job={this.state.selectedJob}
                                                 onApply={this.openApplyModal.bind(this)}

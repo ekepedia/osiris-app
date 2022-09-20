@@ -1,5 +1,5 @@
 import {FONT_FOOTNOTE} from "../fonts";
-import {DARK_GREY} from "../colors";
+import {DARK_GREY, N400} from "../colors";
 import {NAV_HEIGHT} from "../consts";
 
 const alignmentStyles = {
@@ -45,7 +45,8 @@ const NavigationStyles = {
         flexDirection: "column"
     },
     masterNavContainer: {
-        flex: `0 0 ${NAV_HEIGHT}px`
+        flex: `0 0 ${NAV_HEIGHT}px`,
+        borderBottom: `1px solid ${N400}`
     },
     masterBodyContainer: {
         flex: 1,

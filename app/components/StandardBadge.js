@@ -6,6 +6,7 @@ import { gql } from 'apollo-boost';
 import { Query } from '@apollo/react-components';
 import { withApollo } from 'react-apollo';
 import { withRouter, Link} from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 import injectSheet from 'react-jss';
 
@@ -50,10 +51,17 @@ class StandardBadge extends React.Component {
     }
 
     render() {
-        let { classes, style, label, icon, iconStyle, iconLeft } = this.props;
+        let { classes, style, label, icon, iconStyle, iconLeft, tooltip } = this.props;
 
-        return (<div style={style} className={classes.badgeStyle}>
+        let id = Math.random() + "";
+
+        let incom = `Employees rate Morgan Stanley 3.6/5 <br/>on Glassdoor for work/life`;
+
+        return (<div style={style} className={classes.badgeStyle} data-tip data-for={id}>
             {icon && iconLeft ? <span style={{marginRight: "4.25px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span> : null}{label}{icon && !iconLeft ? <span style={{marginLeft: "4.25px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span> : null}
+            {tooltip ? <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
+                <div dangerouslySetInnerHTML={(() => ({__html: tooltip}))()}/>
+            </ReactTooltip> : null}
         </div>)
     }
 

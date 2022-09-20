@@ -12,6 +12,7 @@ import { mc, formatLargeNumber } from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import {TAG_GREY} from "../../../common/colors";
 import StandardBadge from "../../../components/StandardBadge";
+import ReactTooltip from "react-tooltip";
 
 const Styles = {
     container: {
@@ -105,6 +106,9 @@ class CompanyIndexRow extends React.Component {
         let bipoc_respresentation_change_label = "";
         let female_respresentation_change_label = "";
 
+        let id1 = Math.random() + "";
+        let id2 = Math.random() + "";
+
         const convertYear = (year) => {
             if (!year) return year;
 
@@ -145,7 +149,7 @@ class CompanyIndexRow extends React.Component {
             <div className={mc(classes.companyGenderContainer)}>
                 <div className={mc(classes.companyHeader)}>
                     {company_demographics.employees_female ||company_demographics.employees_male ? <div>
-                        {company_demographics.employees_male || "--"}% Male / {company_demographics.employees_female || "--"}% Female
+                        {company_demographics.employees_male || "--"}% Male / {company_demographics.employees_female || "--"}% Female<i className="fa-solid fa-circle-info" data-tip data-for={id2} style={{marginLeft: "3px", color: COMMON.COLORS.N500}}/>
                     </div> : <div>—</div> }
                 </div>
                 <div className={mc(classes.companySubHeader)}>
@@ -162,7 +166,7 @@ class CompanyIndexRow extends React.Component {
             <div className={mc(classes.companyRaceContainer)}>
                 <div className={mc(classes.companyHeader)}>
                     {bipoc_respresentation ? <div>
-                        {bipoc_respresentation}% BIPOC
+                        {bipoc_respresentation}% BIPOC<i className="fa-solid fa-circle-info" data-tip data-for={id1} style={{marginLeft: "3px", color: COMMON.COLORS.N500}}/>
                     </div> : <div>—</div>}
                 </div>
                 <div className={mc(classes.companySubHeader)}>
@@ -179,6 +183,18 @@ class CompanyIndexRow extends React.Component {
             <div className={mc(classes.companyIndustryContainer)}>
                 <StandardBadge style={{marginLeft: "5px", marginRight: "0px", marginTop: "5.5px"}} label={company.company_industry}/>
             </div>
+
+            <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id1} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
+                Black, Indigenous, (and)<br/> People of Color
+            </ReactTooltip>
+
+            <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id2} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
+                To align with U.S. government reporting<br/>
+                requirements, data on this website uses<br/>
+                the traditional gender categories of male<br/>
+                and female. osiris deeply respects that<br/>
+                gender is not binary.
+            </ReactTooltip>
 
         </div>)
     }

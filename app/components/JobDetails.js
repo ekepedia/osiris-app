@@ -148,7 +148,9 @@ class JobDetails extends React.Component {
             <div>
                 <div style={{display: "flex", marginBottom: "20px"}}>
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
-                        <div style={{borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
+                        <div onClick={() => {
+                            window.open(`/companies/${company.company_id}`, "_blank");
+                        }} style={{borderRadius: "4px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
                             <CoverImageHolder url={company.company_logo_url}/>
                         </div>
                     </div>
@@ -156,7 +158,9 @@ class JobDetails extends React.Component {
                     <div style={{flex: 1, overflow: "hidden"}}>
                         <div style={{marginBottom: "0"}}>
                             <div style={{marginBottom: "0px", ...COMMON.FONTS.H700, color: COMMON.COLORS.N900, textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{job.job_title}</div>
-                            <div style={{...COMMON.FONTS.P200, color: COMMON.COLORS.N700}}>{company.company_name}</div>
+                            <div onClick={() => {
+                                window.open(`/companies/${company.company_id}`, "_blank");
+                            }} style={{...COMMON.FONTS.P200,cursor:"pointer", color: COMMON.COLORS.N700}}>{company.company_name}</div>
                         </div>
                     </div>
                     <div style={{flex: "0 0 157px", textAlign: "right"}}>
@@ -171,10 +175,10 @@ class JobDetails extends React.Component {
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600, marginBottom: "5px"}} key={location.location_id} label={location.label}/>)
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
-                        {company.glassdoor_overall ? <StandardBadge label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
-                        {company.glassdoor_work_life ? <StandardBadge label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
-                        {company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
-                        {company.glassdoor_compensation ? <StandardBadge label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
+                        {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
+                        {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
+                        {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
+                        {company.glassdoor_compensation ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_compensation}/5 on<br/>Glassdoor for compensation`} label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
                     </div>
 
                     <div>

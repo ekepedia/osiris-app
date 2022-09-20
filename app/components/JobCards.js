@@ -15,6 +15,7 @@ import { COLOR_WHITE } from "../common/colors";
 import { FONT_BODY_BOLD, FONT_TITLE_3_BOLD, FONT_TITLE_3 } from "../common/fonts";
 
 import JobCard from "./JobCard";
+import LoadingJobCard from "./LoadingJobCard";
 
 const Styles = {
     container: {
@@ -196,7 +197,7 @@ class JobCards extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, mobile} = this.props;
+        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, mobile, loading} = this.props;
 
 
         const { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
@@ -208,19 +209,26 @@ class JobCards extends React.Component {
             <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
             {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}>Mobile Coming Soon!</div>}
 
-            {filteredJobs.map((job) => {
-                return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                    <JobCard job={job} selectedJobId={selectedJobId}/>
+            {loading ? [1,2,3,4,5].map((k) => {
+                return (<div className={classes.cardPadding} key={k}>
+                    <LoadingJobCard />
                 </div>);
-            })}
+            }) : <div>
+                {filteredJobs.map((job) => {
+                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                        <JobCard job={job} selectedJobId={selectedJobId}/>
+                    </div>);
+                })}
 
-            {(filteredJobs && filteredJobs.length >= 1 && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
+                {(filteredJobs && filteredJobs.length >= 1 && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
 
-            {unFilteredJobs.map((job) => {
-                return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                    <JobCard job={job} selectedJobId={selectedJobId}/>
-                </div>);
-            })}
+                {unFilteredJobs.map((job) => {
+                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                        <JobCard job={job} selectedJobId={selectedJobId}/>
+                    </div>);
+                })}
+            </div>}
+
         </div>);
     }
 

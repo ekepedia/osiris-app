@@ -138,9 +138,12 @@ class SavedJobs extends React.Component {
     }
 
     loadSavedJobs() {
-        let { client } = this.props;
+        let { client, match: { params } } = this.props;
 
-        SavedJobService.getSavedJobs({client}).then((saved_jobs) => {
+        SavedJobService.getSavedJobs({
+            client,
+            user_id: params.user_id
+        }).then((saved_jobs) => {
             // console.log("LOADED SAVED", saved_jobs);
 
             saved_jobs = saved_jobs.sort((a, b) => {
@@ -158,9 +161,12 @@ class SavedJobs extends React.Component {
     }
 
     loadSavedJobNotes() {
-        let { client } = this.props;
+        let { client, match: { params } } = this.props;
 
-        SavedJobNoteService.getSavedJobNotes({client}).then((saved_job_notes) => {
+        SavedJobNoteService.getSavedJobNotes({
+            client,
+            user_id: params.user_id
+        }).then((saved_job_notes) => {
             console.log("LOADED SAVED NOTES", saved_job_notes);
 
             saved_job_notes = saved_job_notes.sort((a, b) => {
