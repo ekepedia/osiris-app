@@ -99,7 +99,15 @@ class NavBar extends React.Component {
     loadUser() {
         let {  client, } = this.props;
 
-        UserService.getUser({client, user_id: "1"}).then((user) => {
+        const user_id = localStorage.user_id;
+
+        if (!user_id) {
+            return this.setState({
+                user: {}
+            })
+        }
+
+        UserService.getUser({client, user_id}).then((user) => {
             console.log("NAV USER", user);
             localStorage.user = JSON.stringify(user);
             this.setState({
@@ -141,7 +149,7 @@ class NavBar extends React.Component {
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
-                    <Link to={"/saved-jobs/" + user.user_id }>
+                    {user && user.user_id ? <Link to={"/saved-jobs/" + user.user_id }>
                         <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
                                 <i className="fa-solid fa-briefcase" style={{marginRight: "5px"}}/>Saved Jobs
@@ -149,16 +157,22 @@ class NavBar extends React.Component {
                             </div>
                             {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
                         </div>
-                    </Link>
+                    </Link> : <Link to={"/login"}>
+                        <div className={classes.linkStyle} style={{color: path.indexOf("/login") !== -1  ? COMMON.COLORS.B400 : null}}>
+                            Login
+                            {path.indexOf("/login") !== -1 && <div className={classes.selectedLink}/>}
+                        </div>
+                    </Link>}
                 </div>
-                <div style={{flex: "0 0 30px"}}>
-                    <Link to={"/edit/" + user.user_id}>
+                <div style={{flex: user && user.user_id ? "0 0 30px" : 0}}>
+                    {user && user.user_id ? <Link to={"/edit/" + user.user_id}>
                         <div  className={classes.profileContainer}>
                             <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
                                 <CoverImageHolder url={user.profile_photo_url}/>
                             </div>
                         </div>
-                    </Link>
+                    </Link> : null}
+
                 </div>
             </div>
 
