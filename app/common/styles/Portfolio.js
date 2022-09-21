@@ -304,7 +304,7 @@ const ClaimPortfolioStyles = {
         maxWidth: "875px",
         margin: "auto",
         height: "100%",
-        marginTop: "5vh"
+        // marginTop: "9vh"
     },
     headerTitle: {
         ...FONT_TITLE_2_BOLD,

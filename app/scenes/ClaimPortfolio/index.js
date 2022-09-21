@@ -26,6 +26,7 @@ const Styles = {
         '@media (max-width: 768px)': {
             padding: "0",
         },
+        background: COMMON.COLORS.N0
     },
     ...COMMON.STYLES.PORTFOLIO.ClaimPortfolioStyles,
     ...COMMON.STYLES.GENERAL.AlignmentStyles,
@@ -57,6 +58,7 @@ class ClaimPortfolio extends React.Component {
                 last_name: user.last_name,
                 username: user.username,
                 user_id: user.user_id,
+                claim_page_photo_url: user.claim_page_photo_url,
             });
         })
 
@@ -81,53 +83,62 @@ class ClaimPortfolio extends React.Component {
 
         const { username, password, user } = this.state;
 
+        let claim_page_photo_url = user.claim_page_photo_url; //"/img/temp-profile.png";
+
         return (<div className={classes.container}>
-            <NavBar />
-            <div style={{height: "calc(100% - 65px)"}}>
+            {/*<NavBar />*/}
+            <div style={{height: "calc(100% )"}}>
 
-                <div className={mc(classes.subContainer)}>
-                    <div style={{display: "flex", height: "fit-content"}} >
-                        <div style={{flex: 0.44}} >
+                <div className={classes.centerAlignContainerFill}>
+                    <div className={classes.verticalAlignObjectFill}>
+                        <div className={mc(classes.subContainer)}>
+                            <div style={{display: "flex", height: "fit-content"}} >
+                                <div style={{flex: 0.44}} >
 
-                            <div className={mc(classes.centerAlignContainer)} style={{height:"100%", width: "100%"}}>
-                                <div className={mc(classes.verticalAlignObject)}>
-                                    <div className={mc(classes.headerTitle)}>Welcome to OSIRIS, {user.first_name} 👋🏾</div>
+                                    <div className={mc(classes.centerAlignContainer)} style={{height:"100%", width: "100%"}}>
+                                        <div className={mc(classes.verticalAlignObject)}>
+                                            <div className={mc(classes.headerTitle)}>Welcome to OSIRIS, {user.first_name} 👋🏾</div>
 
-                                    <div className={mc(classes.bodyText)}>
-                                        <span>You're one of the first people to get access to our platform!</span> We're building a professional network for the multi-hyphenate generation.<br/>
-                                        <br/>
-                                        <span>We've created a unique OSIRIS Portfolio for you that serves as your user profile on OSIRIS and is a shareable link in bio tool.</span> We'd love to have you on our platform.<br/>
-                                        <br/>
-                                        Best,<br/>
-                                        <div>
-                                            <img className={mc(classes.imageSignature)} src={"/img/Miles & Eke.png"}/>
+                                            <div className={mc(classes.bodyText)}>
+                                                <span>You're one of the first people to get access to our platform!</span> We're building a professional network for the multi-hyphenate generation.<br/>
+                                                <br/>
+                                                <span>We've created a unique OSIRIS Portfolio for you that serves as your user profile on OSIRIS and is a shareable link in bio tool.</span> We'd love to have you on our platform.<br/>
+                                                <br/>
+                                                Best,<br/>
+                                                <div>
+                                                    <img className={mc(classes.imageSignature)} src={"/img/Miles & Eke.png"}/>
+                                                </div>
+                                            </div>
+
+                                            <div className={mc(classes.buttonContainer)}>
+                                                <StandardButton label={"Claim Portfolio →"} onClick={() => (this.setState({openClaimModal: true}))}/>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className={mc(classes.buttonContainer)}>
-                                        <StandardButton label={"Claim Portfolio →"} onClick={() => (this.setState({openClaimModal: true}))}/>
+
+
+                                    <ClaimModal onClose={() => {this.setState({openClaimModal: false})}} onSubmit={() => {this.signup(); this.setState({openClaimModal: false})}} open={this.state.openClaimModal} {...{username, password}} onUpdate={(field, v) => {
+                                        this.setState({[field]: v});
+                                    }}/>
+
+                                </div>
+                                <div style={{flex: 0.56, height: "fit-content"}}>
+                                    <div className={mc(classes.iframeSuperContainer)} style={{backgroundImage: `url('${claim_page_photo_url}')`}}>
+                                        <div className={mc(classes.iframeContainer)}>
+                                            {/*<iframe  className={mc(classes.iframe)} src={"/ue/" + user.username} />*/}
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
 
-
-
-                            <ClaimModal onClose={() => {this.setState({openClaimModal: false})}} onSubmit={() => {this.signup(); this.setState({openClaimModal: false})}} open={this.state.openClaimModal} {...{username, password}} onUpdate={(field, v) => {
-                                this.setState({[field]: v});
-                            }}/>
-
-                        </div>
-                        <div style={{flex: 0.56, height: "fit-content"}}>
-                            <div className={mc(classes.iframeSuperContainer)}>
-                                <div className={mc(classes.iframeContainer)}>
-                                    <iframe  className={mc(classes.iframe)} src={"/ue/" + user.username} />
                                 </div>
                             </div>
 
                         </div>
+
                     </div>
 
                 </div>
+
 
             </div>
 
