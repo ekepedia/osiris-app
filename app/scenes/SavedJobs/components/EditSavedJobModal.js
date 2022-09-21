@@ -157,8 +157,10 @@ class EditSavedJobModal extends React.Component {
         option_map = option_map || {};
         company_map = company_map || {};
         company_demographics = company_demographics || {};
+        const has_demographics = company_demographics && company_demographics.employees_male;
 
         let company = company_map[job.company_id] || {};
+
 
         const setSelectedState = (selectedState) => {
             this.setState({
@@ -188,7 +190,7 @@ class EditSavedJobModal extends React.Component {
                 <div style={{...STYLE_MODAL_SUPER_SUPER_CONTAINER, height: "100%"}}>
                     <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
                         <div style={{flex: "0 0 51px", padding: "25px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
-                            <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map}/>
+                            <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map} has_demographics={has_demographics}/>
                         </div>
                         <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingTop: "0px"}}>
                             <div style={{
@@ -261,7 +263,7 @@ class EditSavedJobModal extends React.Component {
                                         <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                         <div style={{...COMMON.FONTS.P200, color: COMMON.COLORS.N800}}>{company.company_about}</div>
                                     </div>
-                                    <div>
+                                    <div style={{display: has_demographics ? null : "none"}}>
                                         <div className={mc(classes.sectionMainTitle)}>Representation at Company</div>
                                         <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from Company EEO-1 Form</div>
 
@@ -551,7 +553,7 @@ class EditSavedJobModal extends React.Component {
                                         SavedJobService.deleteSavedJob({client, saved_job_id: saved_job.saved_job_id}).then(() =>{
                                             onClose ? onClose() : null;
                                             refetch ? refetch() : null;
-                                        })
+                                        });
                                     }
                                 }}/>
                             </div>

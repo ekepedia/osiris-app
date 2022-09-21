@@ -27,7 +27,8 @@ const Styles = {
         },
         background: COMMON.COLORS.N0,
         overflow: "hidden",
-        cursor: "pointer"
+        cursor: "pointer",
+        borderRadius: "4px"
     },
     locationStyle: {
         ...STYLE_BUTTON_FOOTNOTE_OUTLINE,

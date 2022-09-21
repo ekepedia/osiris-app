@@ -41,6 +41,7 @@ const typeDef = gql`
         employees_asexual: Float,
         
         employees_multi: Float,
+        employees_hawaiian: Float,
         year: Float,
         
         is_hidden: Boolean
@@ -75,6 +76,7 @@ const typeDef = gql`
         employees_asexual: Float,
 
         employees_multi: Float,
+        employees_hawaiian: Float,
         year: Float,
         
         is_hidden: Boolean
@@ -110,6 +112,7 @@ const typeDef = gql`
         employees_asexual: Float,
 
         employees_multi: Float,
+        employees_hawaiian: Float,
         year: Float,
 
         is_hidden: Boolean
@@ -145,6 +148,7 @@ const typeDef = gql`
         employees_asexual: Float,
 
         employees_multi: Float,
+        employees_hawaiian: Float,
         year: Float,
 
         is_hidden: Boolean

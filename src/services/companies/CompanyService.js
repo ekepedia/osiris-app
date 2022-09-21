@@ -53,7 +53,7 @@ module.exports.init = function (connection) {
                 //     })
                 //
                 // })
-                import_airtable_companies({location_map, industry_map, dei_data_map});
+                // import_airtable_companies({location_map, industry_map, dei_data_map});
             });
         });
     });
@@ -777,8 +777,10 @@ function load_dei({dei_data, dei_data_map, offset}) {
                     employees_white: Math.round(fields['White']*10000)/100,
                     employees_asian: Math.round(fields['Asian']*10000)/100,
                     employees_latinx: Math.round(fields['Hispanic or Latino']*10000)/100,
-                    employees_indigenous: Math.round(fields['Native Hawaiian or Other Pacific Islander']*10000)/100,
-                    employees_multi: Math.round(fields['Native Hawaiian or Other Pacific Islander']*10000)/100,
+                    employees_indigenous: Math.round(fields['American Indian or Alaska Native']*10000)/100,
+                    employees_multi: Math.round(fields['Two or More Races']*10000)/100,
+                    employees_hawaiian: Math.round(fields['Native Hawaiian or Other Pacific Islander']*10000)/100,
+                    employees_bipoc: Math.round(fields['BIPOC']*10000)/100,
                     year: fields['Year'],
                     employees: fields['Number of Employees'],
                     airtable_company_id: fields['Company'][0],

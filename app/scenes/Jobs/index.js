@@ -400,7 +400,7 @@ class Jobs extends React.Component {
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
                                             />
                                         </div>
-                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "100%", overflowY: "scroll", display: loading ? "none" : null}}>
+                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>
                                             <JobDetails
                                                 job={this.state.selectedJob}
                                                 onApply={this.openApplyModal.bind(this)}

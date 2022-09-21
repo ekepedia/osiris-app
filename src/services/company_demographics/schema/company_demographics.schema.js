@@ -23,6 +23,7 @@ module.exports = function (connection) {
         table.float('employees_latinx');
         table.float('employees_indigenous');
         table.float('employees_multi');
+        table.float('employees_hawaiian');
         table.float('year');
 
         table.float('employees_lgbtq');

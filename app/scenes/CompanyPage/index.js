@@ -107,8 +107,8 @@ class CompanyPage extends React.Component {
             company_id
         } = company;
 
-        const company_demographics = company_demographics_map[company_id] || {}
-
+        const company_demographics = company_demographics_map[company_id] || {};
+        const has_demographics = company_demographics && company_demographics.employees_male;
 
         return (
 
@@ -122,7 +122,7 @@ class CompanyPage extends React.Component {
                         <div className={classes.mainContainer}>
 
                             <div className={mc(classes.headerContainer)}>
-                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
+                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} has_demographics={has_demographics} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
                                 }}/>
                             </div>
@@ -133,7 +133,7 @@ class CompanyPage extends React.Component {
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                             </div>
 
-                            <div style={{display: selectedState === 2 ? "none" : null, paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
+                            <div style={{display: selectedState === 2 || !has_demographics ? "none" : null, paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Representation by race / ethnicity</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
 
@@ -146,7 +146,7 @@ class CompanyPage extends React.Component {
                                 </div>
                             </div>
 
-                            <div style={{display: selectedState === 3 ? null : "none"}} className={mc(classes.sectionContainer)}>
+                            <div style={{display: selectedState === 3 && has_demographics ? null : "none"}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Representation by gender binary</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                 <div className={mc(classes.racePieChartHolder)}>

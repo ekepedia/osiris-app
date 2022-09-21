@@ -97,6 +97,8 @@ class RacePieChart extends React.Component {
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                             { title: 'Native American', value: cleanValue(company_demographics.employees_indigenous), color: COMMON.COLORS.CHART_PINK },
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
+                            { title: 'Hawaiian', value: cleanValue(company_demographics.employees_hawaiian), color: COMMON.COLORS.B400 },
+                            { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                             { title: 'Multi', value: cleanValue(company_demographics.employees_multi), color: COMMON.COLORS.CHART_ORANGE },
                             { title: '--', value: spacing, color: COMMON.COLORS.N0 },
                             { title: 'White', value: company_demographics.employees_white, color: COMMON.COLORS.N400 },
@@ -125,11 +127,16 @@ class RacePieChart extends React.Component {
                 </div>
 
             </div>
-            <div className={mc(classes.pieChartLabelContainer)}>
+            <div className={mc(classes.pieChartLabelContainer)} style={{marginTop: "26px"}}>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_PINK}}/>
                     <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
                     <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_indigenous || "—"}{company_demographics.employees_indigenous ? "%" : ""}</div>
+                </div>
+                <div className={mc(classes.pieChartLabelHolder)}>
+                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.B400}}/>
+                    <div className={mc(classes.pieChartLabelName)}>Native Hawaiian</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_hawaiian || "—"}{company_demographics.employees_hawaiian ? "%" : ""}</div>
                 </div>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_ORANGE}}/>

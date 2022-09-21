@@ -128,7 +128,7 @@ class JobAlertSignUp extends React.Component {
             industry = (this.industry_map[state["selectedIndustries"][0]] || {}).name
         }
 
-        industry = (industry + "").toLowerCase();
+        // industry = (industry + "").toLowerCase();
 
         return (<div className={classes.container}>
             <Modal
@@ -156,7 +156,7 @@ class JobAlertSignUp extends React.Component {
                             <div className={classes.centerAlignContainerFill}>
                                 <div className={classes.verticalAlignObjectFill}>
                                     <div className={classes.modalTitle}>
-                                        Get more {industry} opportunities directly in your inbox
+                                        Get more <span style={{textTransform: "capitalize"}}>{industry}</span> opportunities directly in your inbox
                                     </div>
                                     <div className={classes.modalSubTitle}>
                                         Timing is everything! Sign up for {industry} job alerts to give yourself the best chance of getting accepted

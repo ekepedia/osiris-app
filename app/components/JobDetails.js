@@ -47,7 +47,9 @@ const Styles = {
         marginBottom: "200px",
         border: `1px solid ${COMMON.COLORS.N300}`,
         background: COMMON.COLORS.N0,
-        borderRadius: "4px"
+        borderRadius: "4px",
+        height: "100%",
+        overflowY: "scroll"
     },
     actionButton: {
         ...STYLE_BUTTON_SUBHEADER,
@@ -235,7 +237,9 @@ class JobDetails extends React.Component {
                                     <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from Wikipedia</div>
                                 </div>
                                 <div style={{flex: "0 0 140px"}}>
-                                    <StandardButton secondary={true} label={"More Company Info"}/>
+                                    <StandardButton onClick={() => {
+                                        window.open(`/companies/${company.company_id}`, "_blank");
+                                    }} secondary={true} label={"More Company Info"}/>
                                 </div>
 
                             </div>

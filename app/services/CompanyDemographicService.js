@@ -29,6 +29,7 @@ CompanyDemographicService.getCompanyDemographics = ({
                                                         employees_queer,
                                                         employees_asexual,
                                                         employees_multi,
+                                                        employees_hawaiian,
                                                         year,
                                                         is_hidden,
                                                         batch_id,
@@ -69,6 +70,7 @@ CompanyDemographicService.getCompanyDemographics = ({
                     employees_queer
                     employees_asexual
                     employees_multi,
+                    employees_hawaiian,
                     year,
                     is_hidden
                     batch_id

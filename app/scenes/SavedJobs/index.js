@@ -366,7 +366,16 @@ class SavedJobs extends React.Component {
 
                                     </div>)
                                 })}
-                            </div> : null}</div>
+                            </div> : <div>
+
+                                <div style={{padding: "20px", textAlign: "center"}}>
+                                    <div style={{fontSize: "14px"}}>You haven't saved any jobs yet! Click below to save your first job</div>
+                                    <div style={{marginTop: "20px"}}>
+                                        <StandardButton label={"Add Job"} onClick={() => (this.setState({openAddSavedJobModal: true}))}/>
+                                    </div>
+                                </div>
+
+                            </div>}</div>
                         </div>
 
                         <EditSavedJobModal refetch={() => {this.loadSavedJobs();}} onSubmit={() => {this.submitEditSavedJob(); this.submitEditJob();}} company_map={company_map}  company_demographics={selectedcompany_demographics} option_map={option_map} jobs_map={jobs_map} options={options} job={selectedJob} saved_job={selectedSavedJob} updateField={this.updateSelectedSavedJob} updateJobField={this.updateSelectedJob} open={openEditSavedJobModal} onClose={() => (this.setState({openEditSavedJobModal: false}))}/>

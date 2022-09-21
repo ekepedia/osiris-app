@@ -36,7 +36,7 @@ class CompanyIndex extends React.Component {
         this.state = {
             minEmployees: 0,
             employeeFilter: 0,
-            maxEmployees: 10000,
+            maxEmployees: 20000,
             femaleEmployeeFilter: 0,
             bipocEmployeeFilter: 0,
             locations: [],
@@ -217,7 +217,7 @@ class CompanyIndex extends React.Component {
 
             let bipoc_respresentation = Math.round((bipoc_numbers/(white_numbers + bipoc_numbers)) * 1000)/10;
 
-            return bipoc_respresentation;
+            return company_demographics.employees_bipoc || bipoc_respresentation;
         };
 
         return (
