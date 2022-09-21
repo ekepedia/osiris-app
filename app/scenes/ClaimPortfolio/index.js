@@ -47,7 +47,7 @@ class ClaimPortfolio extends React.Component {
         let {  match: { params } } = this.props;
 
 
-        UserService.getUser({client, user_id: params.user_id}).then((user) => {
+        UserService.getUser({client, username: params.user_id}).then((user) => {
             console.log("user,", user);
             user = user || {};
             this.setState({
@@ -56,16 +56,17 @@ class ClaimPortfolio extends React.Component {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 username: user.username,
+                user_id: user.user_id,
             });
         })
 
     }
 
     signup() {
-        const {  password} = this.state;
+        const { password, user_id } = this.state;
         let {  match: { params } } = this.props;
 
-        axios.post("/api/sign-up", {user_id: params.user_id, password}).then((data) => {
+        axios.post("/api/sign-up", {user_id, password}).then((data) => {
             console.log(data.data)
 
             if (data.data.success) {

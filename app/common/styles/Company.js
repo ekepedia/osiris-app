@@ -116,9 +116,9 @@ const CompanyProfilePageStyles = {
         color: N800
     },
     companyWebsite: {
-        color: COLOR_GOLD,
+        color: B400,
         '& a': {
-            color: COLOR_GOLD,
+            color: B400,
         }
     },
     diversityStatsContainer: {

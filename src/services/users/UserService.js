@@ -25,7 +25,7 @@ module.exports.init = function (connection) {
 
     console.log("SQL: User Service Successfully Initialized");
 
-    // test_endpoints();
+    test_endpoints();
 };
 
 module.exports.get_users = get_users;
@@ -135,6 +135,24 @@ function test_endpoints() {
 
             // console.log(users);
 
+            let clean_users = {};
+
+            Object.values(users).forEach((user) => {
+                // console.log(user.user_stage)
+                if (user.user_stage && user.user_stage.indexOf("Stage 0") !== -1) {
+                    // console.log(user);
+
+                    clean_users[user.airtable_user_id] = user;
+
+                    user.username = `${user.first_name}${user.last_name}`.toLowerCase();
+                    // create_user(user).then((rs) => {
+                    //     console.log(user.username, rs)
+                    // })
+                }
+            })
+
+            // console.log(clean_users);
+
             // SUBMIT EDITS
             // Object.values(users).forEach((user) => {
             //     edit_user(user).then((rs) => {
@@ -150,15 +168,16 @@ function test_endpoints() {
             //     })
             // });
 
-            // load_experiences_from_airtable({users, companies, create: false}).then(() => {
-            //
-            // });
-            //
-            // load_education_from_airtable({users, companies, create: false}).then(() => {
+            // load_experiences_from_airtable({users: clean_users, companies, create: false}).then(() => {
             //
             // });
 
-            // load_links_from_airtable({users, companies, create: false}).then(() => {
+            //
+            // load_education_from_airtable({users: clean_users, companies, create: false}).then(() => {
+            //
+            // });
+
+            // load_links_from_airtable({users: clean_users, companies, create: false}).then(() => {
             //
             // });
         })
@@ -183,7 +202,7 @@ function load_users_from_airtable() {
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
                 // if (!fields.user_id && fields["Status"] === "Done"){
-                if (fields.user_id){
+                if (fields["Status"] === "Done"){
                     const {
                         user_id,
                         Name
@@ -201,8 +220,9 @@ function load_users_from_airtable() {
                     const user_vimeo_link = fields["Vimeo"];
                     const user_tiktok_link = fields["TikTok"];
                     const user_main_contact_email = fields["Email"];
+                    const user_status = fields["Status"];
 
-                    const status = fields["Status"];
+                    const user_stage = fields["Stage"];
 
                     const cover_photo_url = Header && Header.length ? Header[0].url : undefined;
                     const profile_photo_url = Profile && Profile.length ? Profile[0].url : undefined;
@@ -221,7 +241,8 @@ function load_users_from_airtable() {
                         user_website_link,
                         user_vimeo_link,
                         user_tiktok_link,
-                        user_main_contact_email
+                        user_main_contact_email,
+                        user_stage
                     };
 
                 }
@@ -268,14 +289,14 @@ function load_companies_from_airtable({offset, companies}) {
                     let hs = h.split(", ");
 
                     if (hs.length === 2) {
-                        console.log("COMPANY CITY STATE", hs[0], hs[1]);
+                        // console.log("COMPANY CITY STATE", hs[0], hs[1]);
                         company_city = hs[0];
                         company_state = hs[1];
                         company_city_lower = company_city.toLowerCase();
                         company_state_lower = company_state.toLowerCase();
                     }
                 }
-                console.log("COMPANY CITY STATE AGAIN", company_city, company_state);
+                // console.log("COMPANY CITY STATE AGAIN", company_city, company_state);
 
                 const company = {
                     airtable_company_id: record.id,
@@ -327,28 +348,29 @@ function load_experiences_from_airtable({users, companies, offset, create}) {
 
             res.data.records.forEach((record) => {
                 let fields = record.fields || {};
+                // console.log(record.id, fields["Associated Person"], offset)
                 if (fields["Associated Person"]){
                     let airtable_user_id = fields["Associated Person"][0];
-                    let airtable_company_id = fields["Companies"][0];
                     const user = users[airtable_user_id];
-                    const company = companies[airtable_company_id];
 
                     if (user && user.user_id !== 7) {
 
                         let start_date = fields["Start Date"];
                         let end_date = fields["End Date"];
                         let title = fields["Role"];
+                        let company_name = ((fields["Company Name 1"] || fields["Company Name 2"]) || [])[0] || null
+                        let company_logo_url = (((fields["Logo (from Companies [New])"] || fields["Company Logo"]) || [])[0] || {}).url || null;
 
                         const experience = {
                             user_id: user.user_id,
-                            company_name: company.name,
-                            company_logo_url: company.logo,
+                            company_name,
+                            company_logo_url,
                             start_date: start_date ? new Date(start_date).getTime() : undefined,
                             end_date: end_date ? new Date(end_date).getTime() : undefined,
                             role_name: title
                         }
 
-                        // console.log( user.user_id, user.Name,  experience);
+                        console.log( user.user_id, user.Name,  experience);
                         //
                         if (create) {
                             UserExperienceService.create_user_experience(experience).then((id) => {
@@ -382,27 +404,28 @@ function load_education_from_airtable({users, companies, create}) {
                 let fields = record.fields || {};
                 if (fields["Associated Person"]){
                     let airtable_user_id = fields["Associated Person"][0];
-                    let airtable_school_id = fields["School"][0];
 
                     const user = users[airtable_user_id];
-                    const school = companies[airtable_school_id];
 
                     if (user && user.user_id !== 7) {
 
                         let start_year = fields["Start Year"];
                         let end_year = fields["End Year"];
                         let title = fields["Role"];
+                        let school_name = ((fields["School Name 1"] || fields["School Name 2"]) || [])[0] || null;
+
+                        let school_logo_url = (((fields["Logo (from School [New])"] || fields["Company Logo"]) || [])[0] || {}).url || null;
 
                         const education = {
                             user_id: user.user_id,
-                            school_name: school.name,
-                            school_logo_url: school.logo,
+                            school_name,
+                            school_logo_url,
                             degree_name: title,
                             start_date: start_year ? new Date(`9/1/${start_year}`).getTime() : undefined,
                             end_date: end_year ? new Date(`5/30/${end_year}`).getTime() : undefined,
                         }
 
-                        // console.log( user.user_id, user.Name, education);
+                        console.log( user.user_id, education);
                         //
                         if (create) {
                             UserEducationService.create_user_education(education).then((id) => {
@@ -488,7 +511,7 @@ function load_links_from_airtable({users, companies, create}) {
                                     gallery_order: i,
                                 };
 
-                                // console.log(gallery)
+                                console.log(gallery)
 
                                 if (create) {
                                     UserGalleryService.create_user_gallery(gallery).then((id) => {

@@ -231,7 +231,7 @@ class PublicPortfolio extends React.Component {
         UserEducationService.getUserEducation({client, user_id, is_hidden: false}).then((user_educations) => {
             user_educations = user_educations || [];
             user_educations = user_educations.map((user_education) => {
-                const time = `${moment(parseFloat(user_education.start_date)).format("YYYY")} - ${moment(parseFloat(user_education.end_date)).format("YYYY")}`
+                const time = user_education.start_date ? `${moment(parseFloat(user_education.start_date)).format("YYYY")} - ${user_education.end_date ? moment(parseFloat(user_education.end_date)).format("YYYY") : ''}` : "";
                 return { ...user_education, time }
             })
             user_educations = user_educations.sort((a, b) => { return (a.start_date - b.start_date) * -1});
