@@ -142,6 +142,13 @@ app.post("/api/upload-user-img", function (req, res) {
     }
 });
 
+const DemoTrackingService = require("./src/services/demo_tracking/DemoTrackingService");
+app.post("/api/tracking/v1", function (req, res) {
+    DemoTrackingService.create_demo_tracking(req.body).then((tracking_id) => {
+        res.json(tracking_id);
+    })
+})
+
 app.get("*", function (req, res) {
     res.render("main");
 });

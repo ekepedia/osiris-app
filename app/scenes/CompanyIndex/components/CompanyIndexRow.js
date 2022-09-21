@@ -1,16 +1,12 @@
 import React from "react";
-import _ from "lodash";
-import moment from "moment";
 
-import { withApollo } from 'react-apollo';
-import { withRouter, Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
 
 import COMMON from "../../../common/index";
 import { mc, formatLargeNumber } from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
-import {TAG_GREY} from "../../../common/colors";
 import StandardBadge from "../../../components/StandardBadge";
 import ReactTooltip from "react-tooltip";
 
@@ -82,7 +78,7 @@ const Styles = {
     }
 };
 
-class CompanyIndexRow extends React.Component {
+class CompanyIndexRow extends React.PureComponent {
 
     constructor(props) {
         super(props);
@@ -90,10 +86,6 @@ class CompanyIndexRow extends React.Component {
         this.state = {
 
         };
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
@@ -201,5 +193,5 @@ class CompanyIndexRow extends React.Component {
 
 }
 
-export default withApollo(withRouter(injectSheet(Styles)(CompanyIndexRow)));
+export default injectSheet(Styles)(CompanyIndexRow);
 

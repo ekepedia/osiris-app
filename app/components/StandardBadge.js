@@ -1,20 +1,11 @@
 import React from "react";
-import _ from "lodash";
-import moment from "moment";
 
-import { gql } from 'apollo-boost';
-import { Query } from '@apollo/react-components';
-import { withApollo } from 'react-apollo';
-import { withRouter, Link} from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 
 import injectSheet from 'react-jss';
 
-import DataService from '../services/DataService';
-
 import COMMON from "../common/index";
 import { mc } from "../common/helpers";
-
 
 const Styles = {
     badgeStyle: (props) => {
@@ -36,18 +27,12 @@ const Styles = {
     }
 };
 
-class StandardBadge extends React.Component {
+class StandardBadge extends React.PureComponent {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-
-        };
-    }
-
-    componentDidMount() {
-
+        this.state = {};
     }
 
     render() {
@@ -67,5 +52,5 @@ class StandardBadge extends React.Component {
 
 }
 
-export default withApollo(withRouter(injectSheet(Styles)(StandardBadge)));
+export default injectSheet(Styles)(StandardBadge);
 

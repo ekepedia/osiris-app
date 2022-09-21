@@ -16,6 +16,7 @@ import CompanyIndexRow from "./components/CompanyIndexRow";
 import StandardInput from "../../components/StandardInput";
 import NavBar from "../../components/NavBar";
 import StandardMultiSelect from "../../components/StandardMultiSelect";
+import TrackingService from "../../services/TrackingService";
 
 const Styles = {
     container: {
@@ -45,6 +46,7 @@ class CompanyIndex extends React.Component {
             industries: [],
             industriesOptions: [],
             selectedIndustries: [],
+            companyNameFilter: ""
         };
     }
 
@@ -233,7 +235,10 @@ class CompanyIndex extends React.Component {
                             <div className={mc(classes.LHSContainer)}>
                                 <div className={mc(classes.companyFilterContainer)}>
                                     <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/>Company Search</div>
-                                    <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => (this.setState({companyNameFilter: v}))}/>
+                                    <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => {
+                                        this.setState({companyNameFilter: v});
+                                        TrackingService.trackSubmit({page: "company-search", sub_page: "company-name", value: v});
+                                    }}/>
 
                                     <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-briefcase"/>Company Spotlights</div>
                                     <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>Industry</div>
