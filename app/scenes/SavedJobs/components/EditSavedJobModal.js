@@ -183,21 +183,25 @@ class EditSavedJobModal extends React.Component {
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
                         maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
-                        height: "750px"
+                        height: "fit-content"
                     }
                 }}
             >
                 <div style={{...STYLE_MODAL_SUPER_SUPER_CONTAINER, height: "100%"}}>
-                    <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
-                        <div style={{flex: "0 0 51px", padding: "25px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                    <div style={{...COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER,  maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,}}>
+                        <div style={{flex: "0 0 51px", padding: "25px 35px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map} has_demographics={has_demographics}/>
                         </div>
-                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingTop: "0px"}}>
+                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingLeft: "35px", paddingRight: "35px", paddingTop: "0px", overflow: "scroll"}}>
                             <div style={{
                                 height: "45px",
                                 lineHeight: "45px",
                                 marginTop: "0",
-                                borderTop: "none"
+                                borderTop: "none",
+                                width: "calc(100% + 70px)",
+                                marginLeft: "-35px",
+                                paddingLeft: "35px",
+                                borderBottom: `1px solid ${COMMON.COLORS.N400}`
                             }}>
                                 <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
                                     Info
@@ -544,7 +548,7 @@ class EditSavedJobModal extends React.Component {
                                 </div>)}
                             </div>
                         </div>
-                        <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                        <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 35px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
 
                             <div style={{display: "inline-block", marginRight: "10px"}}>
                                 <StandardButton outline={true} label={"Delete Saved Job"} size={"S"} onClick={() => {

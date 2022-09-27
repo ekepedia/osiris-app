@@ -13,6 +13,7 @@ import DataService from '../services/DataService';
 
 import { COLOR_WHITE } from "../common/colors";
 import { FONT_BODY_BOLD, FONT_TITLE_3_BOLD, FONT_TITLE_3 } from "../common/fonts";
+import COMMON from "../common/index";
 
 import JobCard from "./JobCard";
 import LoadingJobCard from "./LoadingJobCard";
@@ -202,6 +203,7 @@ class JobCards extends React.Component {
 
         const { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
 
+        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 
 
         return (<div className={classes.container}>
@@ -220,7 +222,19 @@ class JobCards extends React.Component {
                     </div>);
                 })}
 
-                {(filteredJobs && filteredJobs.length >= 1 && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
+                {(usingFilters && !filteredJobs.length) ? <div style={{
+                    padding: "15px",
+                    border: `1px solid ${COMMON.COLORS.N400}`,
+                    borderRadius: "4px",
+                    background: COMMON.COLORS.N0
+                }}>
+                    <div style={{...COMMON.FONTS.H400}}>No Perfect Matches</div>
+                    <div style={{...COMMON.FONTS.P100}}>
+                        We are actively adding jobs to our board, but in the meantime, check out these additional opportunities!
+                    </div>
+                </div>: null}
+
+                {(usingFilters && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
 
                 {unFilteredJobs.map((job) => {
                     return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
