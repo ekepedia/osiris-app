@@ -121,7 +121,7 @@ class PortfolioHeader extends React.Component {
                         </div>
                     </div>
                     <div className={classes.profileHeaderName}>{company.company_name}</div>
-                    <div className={classes.profileHeaderBio}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
+                    <div className={classes.profileHeaderBio}>{company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
                     <div className={classes.companyTabs}>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
                             <span style={{color: selectedState === 1 ? COMMON.COLORS.B400 : null}}>Home</span>

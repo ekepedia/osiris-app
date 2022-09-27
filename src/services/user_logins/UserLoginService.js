@@ -25,9 +25,10 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
-    // get_user_logins({user_id: "eke"}).then((logins) => {
+    // get_user_logins({}).then((logins) => {
     //     console.log("logins", logins)
     // });
+    // remove_user_login({user_login_id: "17"}).then()
     //
     // login_user({user_id: "eke", password: "pass123"}).then((g) => {
     //     console.log("GOOD", g)

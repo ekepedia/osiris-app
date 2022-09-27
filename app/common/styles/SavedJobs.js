@@ -50,7 +50,10 @@ const SavedJobPageStyles = {
         ...H300,
         lineHeight: "48px",
         cursor: "pointer",
-        color: N900
+        color: N900,
+        whiteSpace: "nowrap",
+        textOverflow: "ellipsis",
+        overflow: "hidden"
     },
     rowContainerHeader: {
         extend: 'rowContainer',

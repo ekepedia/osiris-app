@@ -13,7 +13,7 @@ import COMMON from "../../common";
 import CompanyService from "../../services/CompanyService";
 import { PieChart } from 'react-minimal-pie-chart';
 import CompanyDemographicService from "../../services/CompanyDemographicService";
-import {mc} from "../../common/helpers";
+import {formatLargeNumber, mc} from "../../common/helpers";
 import CompanyHeader from "./components/CompanyHeader";
 import NavBar from "../../components/NavBar";
 import RacePieChart from "../../components/charts/RacePieChart";
@@ -165,13 +165,13 @@ class CompanyPage extends React.Component {
                                 <div className={mc(classes.overviewSection)}>{company.company_industry_group}</div>
                                 {company.company_size ? <div>
                                     <div className={mc(classes.sectionSubtitle)}>Company Size</div>
-                                    <div className={mc(classes.overviewSection)}>{company.company_size} employees</div>
+                                    <div className={mc(classes.overviewSection)}>{formatLargeNumber(company.company_size)} employees</div>
                                 </div> : null}
                                 <div className={mc(classes.sectionSubtitle)}>Headquarters</div>
-                                <div className={mc(classes.overviewSection)}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
 
                                 <div className={mc(classes.sectionSubtitle)}>Founded</div>
-                                <div className={mc(classes.overviewSection)}>{company.company_founded_year || 1984}</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_founded_year || "--"}</div>
 
                                 <div className={mc(classes.sectionSubtitle)}>Specialties</div>
                                 <div className={mc(classes.overviewSection)}>

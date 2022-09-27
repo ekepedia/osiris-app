@@ -125,7 +125,7 @@ class CompanyIndexRow extends React.PureComponent {
                         {company.company_name}
                     </div>
                     <div className={mc(classes.companyLocation)}>
-                        {company.company_city || "San Diego"}, {company.company_state || "CA"}
+                        {company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}
                     </div>
                 </Link>
             </div>
@@ -184,7 +184,7 @@ class CompanyIndexRow extends React.PureComponent {
                 To align with U.S. government reporting<br/>
                 requirements, data on this website uses<br/>
                 the traditional gender categories of male<br/>
-                and female. osiris deeply respects that<br/>
+                and female. OSIRIS deeply respects that<br/>
                 gender is not binary.
             </ReactTooltip>
 
