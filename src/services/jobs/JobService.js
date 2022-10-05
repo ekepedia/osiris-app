@@ -19,7 +19,6 @@ module.exports.JOBS_TABLE = JOBS_TABLE;
 
 const join_character = ";@;";
 
-
 module.exports.init = function (connection) {
     init = true;
     knex = connection;
@@ -305,13 +304,6 @@ function format_jobs_for_job_board() {
                         label: job.job_type,
                         name: job.job_type,
                     }],
-
-                    // job_types:  [{
-                    //     job_type_id: job.job_type,
-                    //     id: job.job_type,
-                    //     label: job.job_type,
-                    //     name: job.job_type,
-                    // }],
 
                     qualifications: [
                         {
