@@ -9,6 +9,7 @@ module.exports = function (connection) {
 
         table.string('company_name');
         table.string('company_logo_url', 2000);
+        table.string('cover_photo_url', 2000);
 
         table.string('company_size');
         table.string('company_about', 5000);
@@ -24,6 +25,14 @@ module.exports = function (connection) {
         table.string('company_state_id');
         table.string('company_state_lower');
         table.string('company_zip_code')
+
+        table.float('glassdoor_overall');
+        table.float('glassdoor_culture');
+        table.float('glassdoor_diversity');
+        table.float('glassdoor_work_life');
+        table.float('glassdoor_senior_management');
+        table.float('glassdoor_compensation');
+        table.float('glassdoor_career');
 
         table.string('company_industry');
         table.string('company_industry_group');

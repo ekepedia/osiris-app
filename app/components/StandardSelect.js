@@ -24,19 +24,23 @@ const Styles = {
     inputStyle: {
         height: "31px",
         padding: "6px 8px",
-        ...COMMON.FONTS.FONT_SUBHEADER,
-        borderRadius: "8px",
-        border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
+        ...COMMON.FONTS.P100,
+        borderRadius: "4px",
+        border: `1px solid ${COMMON.COLORS.N400}`,
+        color: COMMON.COLORS.N800,
         outline: "none",
         width: "100%",
         "mozAppearance": "none",
         "webkitAppearance": "none",
         "appearance": "none",
-        background: "url('/img/select-down.png')",
+        background: "url('/img/custom-select-caret.png')",
+        "&:hover": {
+            borderColor: COMMON.COLORS.N600,
+        },
         "backgroundRepeat": "no-repeat",
-        "backgroundPositionX": "calc(100% - 10.5px)",
-        "backgroundPositionY": "11.5px",
-        "backgroundSize": "10px auto"
+        "backgroundPositionX": "calc(100% - 11px)",
+        "backgroundPositionY": "5px",
+        "backgroundSize": "20px auto"
         // TODO "&:focus-visible": {
         //
         // }
@@ -58,13 +62,43 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, style, value, options, update, color} = this.props;
+        let { classes, style, value, options, update, color, background, disableCustom} = this.props;
 
         style = style || {};
         update = update || (() => {});
 
+        let width = null;
+
+        if (options && options.length && value) {
+            options.forEach((option) => {
+                console.log(option.value, value, option.width)
+                if (!disableCustom && option && option.value && (option.value + "" === value + "")) {
+
+                    if (option.width)
+                        width = option.width
+
+                    if (option.color)
+                        color = option.color
+
+                    if (option.background)
+                        background = option.background
+
+                }
+            })
+        }
+
+        let selectStyle = {...style, color: color ? color : null, background: background ? background : null};
+
+        if (width) {
+            console.log("we found width");
+            selectStyle.width = width;
+            console.log(selectStyle);
+        } else {
+            console.log("nope!")
+        }
+
         return (<div className={classes.container}>
-            <select className={classes.inputStyle} style={{background: color ? color : null, ...style}} value={value} onChange={(e) => (update(e.target.value))}>
+            <select className={classes.inputStyle} style={selectStyle} value={value} onChange={(e) => (update(e.target.value))}>
                 {options.map((option) => {
                     return (<option value={option.value}>{option.label}</option>)
                 })}

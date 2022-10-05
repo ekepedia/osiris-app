@@ -13,9 +13,12 @@ import COMMON from "../../common";
 import CompanyService from "../../services/CompanyService";
 import { PieChart } from 'react-minimal-pie-chart';
 import CompanyDemographicService from "../../services/CompanyDemographicService";
-import {mc} from "../../common/helpers";
+import {formatLargeNumber, mc} from "../../common/helpers";
 import CompanyHeader from "./components/CompanyHeader";
 import NavBar from "../../components/NavBar";
+import RacePieChart from "../../components/charts/RacePieChart";
+import GenderPieChart from "../../components/charts/GenderPieChart";
+import StandardBadge from "../../components/StandardBadge";
 
 const Styles = {
     container: {
@@ -27,6 +30,9 @@ const Styles = {
     ...COMMON.STYLES.COMPANY.CompanyPageStyles,
     ...COMMON.STYLES.COMPANY.CompanyProfilePageStyles,
     ...COMMON.STYLES.GENERAL.NavigationStyles,
+    racePieChartHolder: {
+        marginTop: "20px"
+    }
 };
 
 class CompanyPage extends React.Component {
@@ -101,8 +107,8 @@ class CompanyPage extends React.Component {
             company_id
         } = company;
 
-        const company_demographics = company_demographics_map[company_id] || {}
-
+        const company_demographics = company_demographics_map[company_id] || {};
+        const has_demographics = company_demographics && company_demographics.employees_male;
 
         return (
 
@@ -116,137 +122,63 @@ class CompanyPage extends React.Component {
                         <div className={classes.mainContainer}>
 
                             <div className={mc(classes.headerContainer)}>
-                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
+                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} has_demographics={has_demographics} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
                                 }}/>
                             </div>
 
                             <div style={{display: selectedState === 1 ? null : "none"}} className={mc(classes.sectionContainer)}>
-                                <div className={mc(classes.sectionTitle)}>About</div>
+                                <div className={mc(classes.sectionMainTitle)}>About Company</div>
+                                <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                             </div>
 
-                            <div style={{display: selectedState === 2 ? "none" : null}} className={mc(classes.sectionContainer)}>
-                                <div className={mc(classes.sectionTitle)}>Representation by race / ethnicity</div>
+                            <div style={{display: selectedState === 2 || !has_demographics ? "none" : null, paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
+                                <div className={mc(classes.sectionMainTitle)}>Representation by race / ethnicity</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
-                                <div className={mc(classes.diversityStatsContainer)}>
-                                    <div className={mc(classes.pieChartHolder)}>
-                                        <div style={{height: "125px", width: "125px"}}>
-                                            <PieChart
-                                                lineWidth={30}
-                                                startAngle={270}
-                                                data={[
-                                                    { title: 'Asian', value: company_demographics.employees_asian, color: COMMON.COLORS.COLOR_GOLD },
-                                                    { title: 'Black', value: company_demographics.employees_black, color: COMMON.COLORS.OSIRIS_GREEN },
-                                                    { title: 'White', value: company_demographics.employees_white, color: COMMON.COLORS.PIE_CHART_WHITE },
-                                                    { title: 'Native American', value: company_demographics.employees_indigenous, color: COMMON.COLORS.PIE_CHART_GREY },
-                                                    { title: 'Latinx', value: company_demographics.employees_latinx, color: COMMON.COLORS.OSIRIS_BLACK },
-                                                ]}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div style={{flex: "0 0 140px", maxWidth: "140px", marginTop: "8.5px", marginRight: "40px"}}>
 
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Asian</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_asian}%</div>
-                                        </div>
-
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Black</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_black}%</div>
-                                        </div>
-
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_WHITE}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>White</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_white}%</div>
-                                        </div>
-
-                                    </div>
-                                    <div style={{flex: "0 0 195px", marginTop: "24.5px"}}>
-
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_GREY}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_indigenous || "--"}%</div>
-                                        </div>
-
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_BLACK}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Hispanic/Latinx</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_latinx}%</div>
-                                        </div>
-                                    </div>
+                                <div className={mc(classes.racePieChartHolder)}>
+                                    <RacePieChart company_demographics={company_demographics}/>
                                 </div>
 
-                                <div onClick={() => {this.setState({selectedState: 3})}} style={{display: selectedState === 1 ? null : "none", cursor: "pointer", marginTop: "25px", textAlign: "center", paddingTop: "14.5px", borderTop: `1px solid ${COMMON.COLORS.LIGHT_GREY}`, color: COMMON.COLORS.DARK_GREY, ...COMMON.FONTS.FONT_SUBHEADER_BOLD}}>
+                                <div className={mc(classes.seeMoreDetails)} onClick={() => {this.setState({selectedState: 3})}} style={{display: selectedState === 1 ? null : "none"}}>
                                     <div>See all details</div>
                                 </div>
                             </div>
 
-                            <div style={{display: selectedState === 3 ? null : "none"}} className={mc(classes.sectionContainer)}>
-                                <div className={mc(classes.sectionTitle)}>Representation by gender</div>
+                            <div style={{display: selectedState === 3 && has_demographics ? null : "none"}} className={mc(classes.sectionContainer)}>
+                                <div className={mc(classes.sectionMainTitle)}>Representation by gender binary</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
-                                <div className={mc(classes.diversityStatsContainer)}>
-                                    <div className={mc(classes.pieChartHolder)}>
-                                        <div style={{height: "125px", width: "125px"}}>
-                                            <PieChart
-                                                lineWidth={30}
-                                                startAngle={270}
-                                                data={[
-                                                    { title: 'Female', value: company_demographics.employees_female, color: COMMON.COLORS.COLOR_GOLD },
-                                                    { title: 'Male', value: company_demographics.employees_male, color: COMMON.COLORS.OSIRIS_GREEN }
-                                                    ]
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                    <div style={{flex: "0 0 140px", maxWidth: "140px", marginTop: "38.5px", marginRight: "40px"}}>
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Female</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_female}%</div>
-                                        </div>
-                                    </div>
-                                    <div style={{flex: "0 0 140px", marginTop: "38.5px"}}>
-                                        <div className={mc(classes.pieChartLabelHolder)}>
-                                            <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                            <div className={mc(classes.pieChartLabelName)}>Male</div>
-                                            <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_male}%</div>
-                                        </div>
-                                    </div>
+                                <div className={mc(classes.racePieChartHolder)}>
+                                    <GenderPieChart company_demographics={company_demographics}/>
                                 </div>
-
                             </div>
 
 
                             <div  style={{display: selectedState === 2 ? null : "none"}} className={mc(classes.sectionContainer)}>
-                                <div className={mc(classes.sectionTitle)}>Overview</div>
+                                <div className={mc(classes.sectionMainTitle)}>Overview</div>
+                                <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                                 <div className={mc(classes.sectionSubtitle)}>Website</div>
-                                <div className={mc(classes.companyWebsite)}><a target={"_blank"} style={{color: COMMON.COLORS.COLOR_GOLD}} href={company.company_website}>{company.company_website}</a></div>
-                                {/*<div className={mc(classes.sectionSubtitle)}>Industry</div>*/}
-                                {/*<div className={mc(classes.overviewSection)}>Tech</div>*/}
+                                <div className={mc(classes.companyWebsite)}><a target={"_blank"} href={company.company_website}>{company.company_website}</a></div>
+                                <div className={mc(classes.sectionSubtitle)}>Industry</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_industry_group}</div>
                                 {company.company_size ? <div>
                                     <div className={mc(classes.sectionSubtitle)}>Company Size</div>
-                                    <div className={mc(classes.overviewSection)}>{company.company_size} employees</div>
+                                    <div className={mc(classes.overviewSection)}>{formatLargeNumber(company.company_size)} employees</div>
                                 </div> : null}
-
-
                                 <div className={mc(classes.sectionSubtitle)}>Headquarters</div>
-                                <div className={mc(classes.overviewSection)}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
 
-                                <div className={mc(classes.sectionSubtitle)}>Company Founded</div>
-                                <div className={mc(classes.overviewSection)}>{company.company_founded_year || 1984}</div>
+                                <div className={mc(classes.sectionSubtitle)}>Founded</div>
+                                <div className={mc(classes.overviewSection)}>{company.company_founded_year || "--"}</div>
+
+                                <div className={mc(classes.sectionSubtitle)}>Specialties</div>
+                                <div className={mc(classes.overviewSection)}>
+                                    <StandardBadge style={{marginTop: "15px"}} label={company.company_industry}/>
+                                </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
                 </div>
             </div>

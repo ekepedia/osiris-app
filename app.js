@@ -56,11 +56,25 @@ app.use(fileUpload());
 const DatabaseService = require("./src/services/DatabaseService");
 const DemoUserService = require("./src/services/demo_users/DemoUserService");
 const UserLoginService = require("./src/services/user_logins/UserLoginService");
+const JobService = require("./src/services/jobs/JobService");
 
 UserLoginService.set_routes(app);
 
-app.get("/api/jobs", function (req, res) {
+app.get("/api/jobs-old", function (req, res) {
     DemoUserService.get_jobs().then(({jobs}) => {
+        res.json({ jobs });
+    }).catch((err) => {
+        res.json({ jobs: [] });
+    });
+});
+
+app.get("/api/jobs", function (req, res) {
+
+    res.json({
+        jobs: JobService.WEBSCRAPED_JOBS
+    });
+    return;
+    JobService.format_jobs_for_job_board().then((jobs) => {
         res.json({ jobs });
     }).catch((err) => {
         res.json({ jobs: [] });
@@ -132,6 +146,13 @@ app.post("/api/upload-user-img", function (req, res) {
         res.json()
     }
 });
+
+const DemoTrackingService = require("./src/services/demo_tracking/DemoTrackingService");
+app.post("/api/tracking/v1", function (req, res) {
+    DemoTrackingService.create_demo_tracking(req.body).then((tracking_id) => {
+        res.json(tracking_id);
+    })
+})
 
 app.get("*", function (req, res) {
     res.render("main");

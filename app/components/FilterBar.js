@@ -16,6 +16,7 @@ import {FONT_BODY_BOLD, FONT_HEADLINE, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD} f
 import {STYLE_BUTTON_HEADLINE, STYLE_BUTTON_SUBHEADER} from "../common/styles";
 
 import FilterDropdown from "./FilterDropdown";
+import StandardButton from "./StandardButton";
 
 const NAV_HEIGHT = 65;
 
@@ -80,6 +81,15 @@ class FilterBar extends React.Component {
 
         this.affinities = [];
         DataService.getAffinities().then(({affinities}) => {
+            affinities = affinities.map((affinity) => {
+                if (!affinity) return affinity;
+                if (affinity.label && affinity.label.indexOf("dates") === -1)
+                    return null
+                return affinity
+            });
+
+            affinities = _.without(affinities, null);
+
             this.affinities = affinities;
             this.setState({ affinities});
         })
@@ -89,6 +99,60 @@ class FilterBar extends React.Component {
 
     }
 
+    constructLocationOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.locations && job.locations.length) {
+                job.locations.forEach((location) => {
+                    dedup_map[location.location_id] = location
+                })
+            }
+        });
+
+        this.locations = Object.values(dedup_map);
+        return this.locations
+    }
+
+    constructIndustryOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.industries && job.industries.length) {
+                job.industries.forEach((industry) => {
+                    dedup_map[industry.id] = industry
+                })
+            }
+        });
+
+
+        this.industries = Object.values(dedup_map);
+        console.log(this.industries)
+
+        return this.industries
+    }
+
+    constructCompanyOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.companies && job.companies.length) {
+                job.companies.forEach((company) => {
+                    if (!company) return;1
+                    dedup_map[company.company_id] = {
+                        ...company,
+                        id: company.company_id,
+                        label: company.company_name,
+                        company_id: company.company_id
+                    }
+                })
+            }
+        });
+
+        this.companies = Object.values(dedup_map);
+        return this.companies
+    }
+
     render() {
         let { classes, client, match: { params },
             addToField,
@@ -96,30 +160,36 @@ class FilterBar extends React.Component {
             clearField,
 
             state,
+            jobs,
 
             onAssistant
         } = this.props;
 
         console.log(state)
 
+        this.locations = this.constructLocationOptions(jobs);
+        this.companies = this.constructCompanyOptions(jobs);
+        this.industries = this.constructIndustryOptions(jobs);
+
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}}>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Affinities"
+                            label="Affinity Tags"
                             placeholder="Add an affinity"
                             options={this.affinities}
                             selectedOptions={state["selectedAffinities"]}
                             onAdd={(id) => (addToField("selectedAffinities", id))}
                             onRemove={(id) => (removeFromField("selectedAffinities", id))}
                             onClear={() => (clearField("selectedAffinities"))}
+                            disableSearch={true}
                         />
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
                             label="Location"
-                            placeholder="Add a location"
+                            placeholder="Select location"
                             options={this.locations}
                             selectedOptions={state["selectedLocations"]}
                             onAdd={(id) => (addToField("selectedLocations", id))}
@@ -130,7 +200,7 @@ class FilterBar extends React.Component {
                     <div className={classes.filterContainer}>
                         <FilterDropdown
                             label="Company"
-                            placeholder="Add a company"
+                            placeholder="Select company"
                             options={this.companies}
                             selectedOptions={state["selectedCompanies"]}
                             onAdd={(id) => (addToField("selectedCompanies", id))}
@@ -140,8 +210,20 @@ class FilterBar extends React.Component {
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Sector"
-                            placeholder="Add a sector"
+                            label="Role"
+                            placeholder="Select Role"
+                            options={this.roles}
+                            selectedOptions={state["selectedRoles"]}
+                            onAdd={(id) => (addToField("selectedRoles", id))}
+                            onRemove={(id) => (removeFromField("selectedRoles", id))}
+                            onClear={() => (clearField("selectedRoles"))}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <FilterDropdown
+                            label="Industry"
+                            placeholder="Select Industry"
                             options={this.industries}
                             selectedOptions={state["selectedIndustries"]}
                             onAdd={(id) => (addToField("selectedIndustries", id))}
@@ -151,29 +233,19 @@ class FilterBar extends React.Component {
                     </div>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
-                            label="Degree Requirements"
+                            label="Degree"
                             placeholder="Add a Requirement"
                             options={this.degree_requirements}
                             selectedOptions={state["selectedDegreeRequirements"]}
                             onAdd={(id) => (addToField("selectedDegreeRequirements", id))}
                             onRemove={(id) => (removeFromField("selectedDegreeRequirements", id))}
                             onClear={() => (clearField("selectedDegreeRequirements"))}
-                        />
-                    </div>
-                    <div className={classes.filterContainer}>
-                        <FilterDropdown
-                            label="Roles"
-                            placeholder="Add a Role"
-                            options={this.roles}
-                            selectedOptions={state["selectedRoles"]}
-                            onAdd={(id) => (addToField("selectedRoles", id))}
-                            onRemove={(id) => (removeFromField("selectedRoles", id))}
-                            onClear={() => (clearField("selectedRoles"))}
+                            disableSearch={true}
                         />
                     </div>
                 </div>
-                <div style={{flex: "0 0 200px", textAlign: "right"}}>
-                    <div style={{...STYLE_BUTTON_SUBHEADER, marginLeft: "auto"}} onClick={onAssistant}>Job Assistant</div>
+                <div style={{flex: "0 0 100px", textAlign: "right"}}>
+                    <StandardButton secondary={true} onClick={onAssistant} label={"Job Assistant"}/>
                 </div>
             </div>
 

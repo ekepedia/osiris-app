@@ -11,6 +11,7 @@ module.exports = function (connection) {
 
         table.string('profile_photo_url');
         table.string('cover_photo_url');
+        table.string('claim_page_photo_url');
         table.string('bio', 2000);
 
         table.string('user_twitter_link');

@@ -5,8 +5,8 @@ module.exports = function (connection) {
     connection.schema.createTable(COMPANY_DEMOGRAPHIC_TABLE, function (table) {
         table.increments('company_demographic_id').primary();
 
-        table.string('company_id').unique();
-        table.string('airtable_company_id').unique();
+        table.string('company_id');
+        table.string('airtable_company_id');
 
         table.float('employees_female');
         table.float('employees_male');
@@ -22,6 +22,9 @@ module.exports = function (connection) {
         table.float('employees_asian');
         table.float('employees_latinx');
         table.float('employees_indigenous');
+        table.float('employees_multi');
+        table.float('employees_hawaiian');
+        table.float('year');
 
         table.float('employees_lgbtq');
         table.float('employees_lesbian');

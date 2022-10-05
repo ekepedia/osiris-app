@@ -13,8 +13,10 @@ import DataService from '../services/DataService';
 
 import { COLOR_WHITE } from "../common/colors";
 import { FONT_BODY_BOLD, FONT_TITLE_3_BOLD, FONT_TITLE_3 } from "../common/fonts";
+import COMMON from "../common/index";
 
 import JobCard from "./JobCard";
+import LoadingJobCard from "./LoadingJobCard";
 
 const Styles = {
     container: {
@@ -86,7 +88,7 @@ class JobCards extends React.Component {
 
                 if (job && job.companies) {
                     job.companies.forEach((company) => {
-                        if (selectedCompanies.indexOf(company.company_id) !== -1) {
+                        if (company && company.company_id && selectedCompanies.indexOf(company.company_id) !== -1) {
                             found = true
                         }
                     })
@@ -179,7 +181,7 @@ class JobCards extends React.Component {
                     unFilteredJobs.push(job);
                 }
             } else {
-                console.log(job.companies.length, job.companies, job.companies[0])
+                // console.log(job.companies.length, job.companies, job.companies[0])
             }
         });
 
@@ -196,31 +198,51 @@ class JobCards extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, mobile} = this.props;
+        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, mobile, loading} = this.props;
 
 
         const { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
 
+        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 
 
         return (<div className={classes.container}>
 
-            <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": ""} Jobs</div>
+            <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
             {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}>Mobile Coming Soon!</div>}
 
-            {filteredJobs.map((job) => {
-                return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                    <JobCard job={job} selectedJobId={selectedJobId}/>
+            {loading ? [1,2,3,4,5].map((k) => {
+                return (<div className={classes.cardPadding} key={k}>
+                    <LoadingJobCard />
                 </div>);
-            })}
+            }) : <div>
+                {filteredJobs.map((job) => {
+                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                        <JobCard job={job} selectedJobId={selectedJobId}/>
+                    </div>);
+                })}
 
-            {(filteredJobs && filteredJobs.length >= 1 && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
+                {(usingFilters && !filteredJobs.length) ? <div style={{
+                    padding: "15px",
+                    border: `1px solid ${COMMON.COLORS.N400}`,
+                    borderRadius: "4px",
+                    background: COMMON.COLORS.N0
+                }}>
+                    <div style={{...COMMON.FONTS.H400}}>No Perfect Matches</div>
+                    <div style={{...COMMON.FONTS.P100}}>
+                        We are actively adding jobs to our board, but in the meantime, check out these additional opportunities!
+                    </div>
+                </div>: null}
 
-            {unFilteredJobs.map((job) => {
-                return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                    <JobCard job={job} selectedJobId={selectedJobId}/>
-                </div>);
-            })}
+                {(usingFilters && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
+
+                {unFilteredJobs.map((job) => {
+                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                        <JobCard job={job} selectedJobId={selectedJobId}/>
+                    </div>);
+                })}
+            </div>}
+
         </div>);
     }
 

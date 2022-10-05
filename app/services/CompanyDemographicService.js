@@ -28,6 +28,9 @@ CompanyDemographicService.getCompanyDemographics = ({
                                                         employees_gay,
                                                         employees_queer,
                                                         employees_asexual,
+                                                        employees_multi,
+                                                        employees_hawaiian,
+                                                        year,
                                                         is_hidden,
                                                         batch_id,
                                                         airtable_batch_id,
@@ -38,11 +41,13 @@ CompanyDemographicService.getCompanyDemographics = ({
                 $company_id: String,
                 $company_demographic_id: String,
                 $airtable_company_id: String,
+                $year: Float,
             ){
                 company_demographics(input:{
                     company_id: $company_id,
                     company_demographic_id: $company_demographic_id,
                     airtable_company_id: $airtable_company_id,
+                    year: $year,
                 }) {
                     company_demographic_id
                     company_id
@@ -64,6 +69,9 @@ CompanyDemographicService.getCompanyDemographics = ({
                     employees_gay
                     employees_queer
                     employees_asexual
+                    employees_multi,
+                    employees_hawaiian,
+                    year,
                     is_hidden
                     batch_id
                     airtable_batch_id
@@ -75,6 +83,7 @@ CompanyDemographicService.getCompanyDemographics = ({
             company_demographic_id,
             company_id,
             airtable_company_id,
+            year
         };
 
         client.query({query: CompanyDemographicsQuery, variables, fetchPolicy: "no-cache"}).then((response) => {

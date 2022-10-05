@@ -51,6 +51,7 @@ UserService.getUser = ({client, username, user_id}) => {
                     first_name
                     last_name
                     profile_photo_url
+                    claim_page_photo_url
                     cover_photo_url
                     bio
 

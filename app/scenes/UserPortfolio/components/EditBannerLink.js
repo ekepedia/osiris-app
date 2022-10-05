@@ -69,6 +69,8 @@ class SmallLink extends React.Component {
             <div style={{ opacity: is_hidden ? 0.5 : 1}}>
                 <div className={mc(classes.linkContainer)} style={{height: currentHeight ? currentHeight : null}} ref={portfolioLinkRef}>
                     <CoverImageHolder url={url}/>
+                    <div className={mc(classes.linkOverlay)}/>
+                    <div className={mc(classes.linkOverlay)}/>
 
                     <div className={mc(classes.editToggleDeleteFloatingContainer)}>
                         <div className={mc(classes.editToggleDeleteContainer)}>

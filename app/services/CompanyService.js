@@ -67,6 +67,7 @@ CompanyService.getCompanies = ({
                     airtable_company_id
                     company_name
                     company_logo_url
+                    cover_photo_url
                     company_size
                     company_about
                     company_website
@@ -85,6 +86,14 @@ CompanyService.getCompanies = ({
                     is_clearbit_import
                     company_industry
                     company_industry_group
+
+                    glassdoor_career
+                    glassdoor_compensation
+                    glassdoor_senior_management
+                    glassdoor_work_life
+                    glassdoor_diversity
+                    glassdoor_culture
+                    glassdoor_overall
                 }
             }
         `;
@@ -105,7 +114,7 @@ CompanyService.getCompanies = ({
             is_verified,
             batch_id,
             airtable_batch_id,
-            is_clearbit_import: true
+            is_clearbit_import: false
         };
 
         client.query({query: CompaniesQuery, variables, fetchPolicy: "no-cache"}).then((response) => {

@@ -1,4 +1,4 @@
-import {LIGHT_GREY, OSIRIS_BLACK, COLOR_WHITE, OSIRIS_GREEN, DARK_GREY} from "../colors";
+import {COLOR_WHITE, OSIRIS_GREEN, DARK_GREY, B400, N0, N700, N900, N400, N500} from "../colors";
 import {
     FONT_FOOTNOTE_BOLD,
     FONT_SUBHEADER,
@@ -14,7 +14,7 @@ import {
     FONT_TITLE_1_BOLD,
     FONT_TITLE_3,
     FONT_TITLE_3_BOLD,
-    FONT_HEADLINE
+    FONT_HEADLINE, P200, H600, H400, H300, P100
 } from "../fonts";
 
 const StandardCardStyles = {
@@ -22,7 +22,7 @@ const StandardCardStyles = {
         padding: "15px",
         marginTop: "10px",
         overflow: "hidden",
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         borderRadius: "6px",
         '@media (max-width: 768px)': {
             marginTop: "10px",
@@ -30,11 +30,11 @@ const StandardCardStyles = {
         },
     },
     cardImageContainer: {
-        flex: "0 0 51px",
-        height: "51px",
-        marginRight: "15px",
+        flex: "0 0 40px",
+        height: "40px",
+        marginRight: "10px",
         overflow: "hidden",
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         borderRadius: "6px",
         '@media (max-width: 768px)': {
             flex: "0 0 45px",
@@ -43,9 +43,9 @@ const StandardCardStyles = {
         },
     },
     cardTitle: {
-        ...FONT_SUBHEADER_BOLD,
+        ...H400,
+        color: N900,
         marginTop: "0px",
-        lineHeight: "19px",
         '@media (max-width: 768px)': {
             ...FONT_FOOTNOTE_BOLD,
             marginTop: "0px",
@@ -54,19 +54,18 @@ const StandardCardStyles = {
     },
     cardSmallLinkTitle: {
         extend: 'cardTitle',
-        color: OSIRIS_BLACK,
-        marginTop: "8px",
+        marginTop: "0",
         '@media (max-width: 768px)': {
-            marginTop: "8px",
-            ...FONT_FOOTNOTE_BOLD,
+            marginTop: "0",
+            // ...FONT_FOOTNOTE_BOLD,
         },
     },
     cardEducationTitle: {
         extend: 'cardTitle',
-        marginTop: "9.5px",
+        marginTop: "0",
         '@media (max-width: 768px)': {
-            marginTop: "6.5px",
-            ...FONT_FOOTNOTE_BOLD,
+            marginTop: "0",
+            // ...FONT_FOOTNOTE_BOLD,
         },
     },
     cardSubTitle: {
@@ -97,7 +96,7 @@ const StandardCardStyles = {
 
 const PortfolioHeaderStyles = {
     superContainer: {
-        border: `1px solid ${LIGHT_GREY}`, borderRadius: "6px", overflow: "hidden"
+        border: `1px solid ${N400}`, borderRadius: "6px", overflow: "hidden"
     },
     profileHeaderContainer: {
         padding: "75px 35px",
@@ -128,7 +127,7 @@ const PortfolioHeaderStyles = {
     profileImage:{
         height: "100px",
         width: "100px",
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         borderRadius: "4px",
         overflow: "hidden",
         backgroundSize: "cover",
@@ -152,21 +151,22 @@ const PortfolioHeaderStyles = {
         marginLeft: "5px"
     },
     profileHeaderName:{
-        ...FONT_TITLE_2_BOLD,
+        ...H600,
         '@media (max-width: 768px)': {
             ...FONT_HEADLINE_BOLD,
         },
     },
     profileHeaderBio:{
-        ...FONT_SUBHEADER,
+        ...P200,
+        color: N700,
         whiteSpace: "pre-line",
         '@media (max-width: 768px)': {
             ...FONT_CAPTION_1,
         },
     },
     socialLink: {
-        background: OSIRIS_GREEN,
-        color: COLOR_WHITE,
+        background: B400,
+        color: N0,
         height: "22px",
         width: "22px",
         textAlign: "center",
@@ -193,7 +193,7 @@ const PortfolioPageStyles = {
         },
     },
     sectionContainer: {
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         borderRadius: "6px",
         overflow: "hidden",
         padding: "25px 35px",
@@ -211,7 +211,7 @@ const PortfolioPageStyles = {
         },
     },
     sectionExperienceContainer: {
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         borderRadius: "6px",
         overflow: "hidden",
         padding: "0",
@@ -228,7 +228,7 @@ const PortfolioPageStyles = {
         padding: "10px",
         textAlign: "center",
         cursor: "pointer",
-        borderTop: `1px solid ${LIGHT_GREY}`,
+        borderTop: `1px solid ${N400}`,
         ...FONT_SUBHEADER_BOLD,
         color: DARK_GREY,
         '@media (max-width: 768px)': {
@@ -237,29 +237,30 @@ const PortfolioPageStyles = {
         },
     },
     sectionTitle: {
-        ...FONT_HEADLINE_BOLD,
+        ...H400,
+        color: N900,
         '@media (max-width: 768px)': {
-            ...FONT_CAPTION_2_BOLD,
+            ...H400,
         },
     },
     sectionSubTitle: {
-        ...FONT_CAPTION_2,
-        color: DARK_GREY,
+        ...P100,
+        color: N700,
         '@media (max-width: 768px)': {
-            ...FONT_CAPTION_3,
+            ...P100,
         },
     },
     linkText: {
         position: "absolute",
         width: "100%",
-        bottom: "25px",
-        color: COLOR_WHITE,
-        padding: "0 25px",
-        ...FONT_SUBHEADER_BOLD,
+        bottom: "10px",
+        color: N0,
+        padding: "0 10px",
+        ...H300,
         '@media (max-width: 768px)': {
-            ...FONT_CAPTION_2_BOLD,
-            padding: "0 12px",
-            bottom: "11px",
+            ...H300,
+            padding: "0 10px",
+            bottom: "10px",
         },
     },
     linkContainer: {
@@ -271,6 +272,13 @@ const PortfolioPageStyles = {
         '@media (max-width: 768px)': {
             // height: "191px",
         },
+    },
+    linkOverlay: {
+        background: "linear-gradient(0deg, rgba(0,0,0,0.5), rgba(0,0,0,0))",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        width: "100%"
     },
     plusIcon: {
         fontSize: "12.5px",
@@ -285,7 +293,7 @@ const PortfolioPageStyles = {
         height: "95px",
         width: "95px",
         borderRadius: "6px",
-        border: `1px solid ${LIGHT_GREY}`,
+        border: `1px solid ${N400}`,
         overflow: "hidden"
     }
 }
@@ -296,7 +304,7 @@ const ClaimPortfolioStyles = {
         maxWidth: "875px",
         margin: "auto",
         height: "100%",
-        marginTop: "5vh"
+        // marginTop: "9vh"
     },
     headerTitle: {
         ...FONT_TITLE_2_BOLD,
@@ -363,7 +371,7 @@ const EditToggleDeleteStyles = {
     },
     editToggleDeleteContainer: {
         display: "flex",
-        color: OSIRIS_GREEN,
+        color: N500,
         fontSize: "13px"
     },
     editToggleDeleteEdit: {
@@ -376,7 +384,10 @@ const EditToggleDeleteStyles = {
     editToggleDeleteToggle: {
         flex: 1,
         fontSize: "20px",
-        cursor: "pointer"
+        cursor: "pointer",
+        "& .fa-toggle-on": {
+            color: B400
+        }
     },
     editToggleDeleteDelete: {
         flex: 1,

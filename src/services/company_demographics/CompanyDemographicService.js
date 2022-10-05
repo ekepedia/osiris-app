@@ -19,7 +19,6 @@ module.exports.init = function (connection) {
     knex = connection;
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
-
     // test_endpoints();
     // mass_delete();
 };
@@ -47,6 +46,9 @@ function get_company_demographics({
                                       employees_gay,
                                       employees_queer,
                                       employees_asexual,
+                                      employees_multi,
+                                      employees_hawaiian,
+                                      year,
                                       is_hidden,
                                       batch_id,
                                       airtable_batch_id,
@@ -73,6 +75,9 @@ function get_company_demographics({
         employees_gay,
         employees_queer,
         employees_asexual,
+        employees_multi,
+        employees_hawaiian,
+        year,
         is_hidden,
         batch_id,
         airtable_batch_id,
@@ -111,13 +116,16 @@ function create_company_demographic({
                                         employees_gay,
                                         employees_queer,
                                         employees_asexual,
+                                        employees_multi,
+                                        employees_hawaiian,
+                                        year,
                                         is_hidden,
                                         batch_id,
                                         airtable_batch_id,
                         }) {
     return new Promise((resolve, reject) => {
-        if (!company_id)
-            return reject(new Error("Missing company_id"));
+        if (!company_id || !year)
+            return reject(new Error("Missing year"));
 
         const query = DatabaseService.generate_query({
             company_id,
@@ -139,18 +147,33 @@ function create_company_demographic({
             employees_gay,
             employees_queer,
             employees_asexual,
+            employees_multi,
+            employees_hawaiian,
+            year,
             is_hidden,
             batch_id,
             airtable_batch_id,
         });
 
-        knex(SERVICE_DEFAULT_TABLE).insert(query).returning("company_demographic_id").then((rows) => {
-            const company_demographic_id = rows[0];
+        get_company_demographics({company_id, year}).then((rows) => {
+            if (rows && rows.length) {
+                let { company_demographic_id } = rows[0];
+                edit_company_demographic({company_demographic_id, ...query}).then(() => {
+                    return resolve(company_demographic_id);
+                }).catch((err) => {
+                    return reject(err);
+                })
+            } else {
+                knex(SERVICE_DEFAULT_TABLE).insert(query).returning("company_demographic_id").then((rows) => {
+                    const company_demographic_id = rows[0];
 
-            return resolve(company_demographic_id);
-        }).catch((err) => {
-            return reject(err);
+                    return resolve(company_demographic_id);
+                }).catch((err) => {
+                    return reject(err);
+                });
+            }
         });
+
     });
 }
 
@@ -177,6 +200,9 @@ function edit_company_demographic({
                                       employees_gay,
                                       employees_queer,
                                       employees_asexual,
+                                      employees_multi,
+                                      employees_hawaiian,
+                                      year,
                                       is_hidden,
                                       batch_id,
                                       airtable_batch_id,
@@ -205,6 +231,9 @@ function edit_company_demographic({
             employees_gay,
             employees_queer,
             employees_asexual,
+            employees_multi,
+            employees_hawaiian,
+            year,
             is_hidden,
             batch_id,
             airtable_batch_id,
@@ -261,7 +290,7 @@ function test_endpoints() {
 }
 
 function mass_delete() {
-    knex(SERVICE_DEFAULT_TABLE).whereNot({user_id: 7}).del().then(() => {
+    knex(SERVICE_DEFAULT_TABLE).where({}).del().then(() => {
     }).catch((err) => {
     });
 }

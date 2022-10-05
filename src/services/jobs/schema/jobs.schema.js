@@ -7,9 +7,17 @@ module.exports = function (connection) {
         table.string('airtable_job_id').unique();
 
         table.string('company_id');
+        table.string('airtable_company_id');
         table.string('user_id');
         table.string('date_created');
         table.string('date_created_label');
+
+        table.string('job_deadline');
+        table.string('job_type');
+
+        table.string('job_sectors', 2000);
+        table.string('job_locations', 2000);
+        table.string('job_degree_requirements', 2000);
 
         table.string('apply_link', 2000);
         table.string('job_salary_estimate');
@@ -21,6 +29,8 @@ module.exports = function (connection) {
         table.string('job_responsibilities', 5000);
 
         table.string('submitted_by_id');
+
+        table.boolean('diverse_candidates').defaultTo(false);
 
         table.boolean('is_verified').defaultTo(false);
         table.boolean('is_active').defaultTo(true);

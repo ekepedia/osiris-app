@@ -45,7 +45,7 @@
 
         console.log(window.location)
 
-        if (window.location && window.location.host && window.location.host.indexOf("www.osiris.works") !== -1) {
+        if (window.location && window.location.host && (window.location.host.indexOf("www.osiris.works") !== -1 || window.location.host.indexOf("beta.osiris.works") !== -1)) {
             gtag('config', 'G-DJHZLTB8NS');
         } else {
             gtag('config', 'G-9JMPPPXN1J');

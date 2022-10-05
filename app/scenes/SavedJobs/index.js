@@ -113,7 +113,13 @@ class SavedJobs extends React.Component {
                 options.push({
                     value: company.company_id,
                     company: company,
-                    label: (<div><img src={company.company_logo_url} style={{height: "20px", width: "20px", borderRadius: "4px", marginRight: "5px"}}/><span style={{...COMMON.FONTS.FONT_SUBHEADER}}>{company.company_name}</span></div>)
+                    label: (<div><img src={company.company_logo_url} style={{
+                        height: "20px",
+                        width: "20px",
+                        borderRadius: "4px",
+                        marginRight: "5px",
+                        border: `1px solid ${COMMON.COLORS.N300}`
+                    }}/><span style={{...COMMON.FONTS.P100}}>{company.company_name}</span></div>)
                 });
                 company_map[company.company_id] = company;
             });
@@ -132,9 +138,12 @@ class SavedJobs extends React.Component {
     }
 
     loadSavedJobs() {
-        let { client } = this.props;
+        let { client, match: { params } } = this.props;
 
-        SavedJobService.getSavedJobs({client}).then((saved_jobs) => {
+        SavedJobService.getSavedJobs({
+            client,
+            user_id: params.user_id
+        }).then((saved_jobs) => {
             // console.log("LOADED SAVED", saved_jobs);
 
             saved_jobs = saved_jobs.sort((a, b) => {
@@ -152,9 +161,12 @@ class SavedJobs extends React.Component {
     }
 
     loadSavedJobNotes() {
-        let { client } = this.props;
+        let { client, match: { params } } = this.props;
 
-        SavedJobNoteService.getSavedJobNotes({client}).then((saved_job_notes) => {
+        SavedJobNoteService.getSavedJobNotes({
+            client,
+            user_id: params.user_id
+        }).then((saved_job_notes) => {
             console.log("LOADED SAVED NOTES", saved_job_notes);
 
             saved_job_notes = saved_job_notes.sort((a, b) => {
@@ -281,35 +293,28 @@ class SavedJobs extends React.Component {
 
                                 </div>
                                 <div style={{flex: "0 0 58x", lineHeight: "initial", marginTop: "6px"}}>
-                                    <StandardButton size={"S"} label={"Add Job"} onClick={() => (this.setState({openAddSavedJobModal: true}))}/>
+                                    <StandardButton label={"Add Job"} onClick={() => (this.setState({openAddSavedJobModal: true}))}/>
                                 </div>
                             </div>
                         </div>
                         <div className={mc(classes.mainContainer)}>
-
-
-
-                            <div style={{display: "flex", background: "#FAFBFF"}}>
-                                <div style={{flex: 1, color: COMMON.COLORS.N_700,}}>
-                                    <div style={{display: "flex"}}>
-                                        <div className={mc(classes.rowContainer)} style={{flex: 1}}>
-                                            Role
-                                        </div>
-                                        <div className={mc(classes.rowContainer)} style={{flex: 1}}>
-                                            Company
-                                        </div>
-                                        <div className={mc(classes.rowContainer)} style={{flex: 0.5}}>
-                                            Role Type
-                                        </div>
-                                    </div>
+                            <div className={mc(classes.rowHeaderSuperContainer)}>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: 1}}>
+                                    Role
                                 </div>
-                                <div className={mc(classes.rowContainer)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: 1}}>
+                                    Company
+                                </div>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: 0.5}}>
+                                    Role Type
+                                </div>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
                                     Salary
                                 </div>
-                                <div className={mc(classes.rowContainer)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
                                     Deadline
                                 </div>
-                                <div className={mc(classes.rowContainer)} style={{flex: "0 0 200px", color: COMMON.COLORS.N_700,}}>
+                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 200px", color: COMMON.COLORS.N_700,}}>
                                     Application Status
                                 </div>
                             </div>
@@ -322,35 +327,26 @@ class SavedJobs extends React.Component {
                                     let company_name = job.company_id && company_map ? (company_map[job.company_id] || {}).company_name : job.company_name
                                     let company_logo = job.company_id && company_map ? (company_map[job.company_id] || {}).company_logo_url : null;
 
-                                    return (<div style={{display: "flex"}} className={mc(classes.savedJobRow)}>
-                                        {jobs_map ? <div style={{flex: 1}}>
-                                            <div style={{display: "flex"}}>
-                                                <div className={mc(classes.rowContainer)} style={{flex: 1, cursor: "pointer", ...COMMON.FONTS.FONT_SUBHEADER_BOLD}}
-                                                     onClick={() => {this.setState({selectedSavedJob: saved_job, selectedJob: job, selectedcompany_demographics: company_demographics, openEditSavedJobModal: true});}}
-                                                >{(jobs_map[saved_job.job_id] || {}).job_title}</div>
-                                                <div className={mc(classes.rowContainer)} style={{flex: 1}}>
+                                    if (!jobs_map)
+                                        return;
+                                    return (<div className={mc(classes.savedJobRow)}>
+                                        <div className={mc(classes.jobTitle)}
+                                             style={{flex: 1}}
+                                             onClick={() => {this.setState({selectedSavedJob: saved_job, selectedJob: job, selectedcompany_demographics: company_demographics, openEditSavedJobModal: true});}}
+                                        >
+                                            {(jobs_map[saved_job.job_id] || {}).job_title}
+                                        </div>
 
-                                                    <div style={{height: "100%", width: "100%", position: "relative", paddingLeft: "25px"}}>
-                                                        <div style={{
-                                                            position: "absolute",
-                                                            height: "20px",
-                                                            width: "20px",
-                                                            marginRight: "5px",
-                                                            top: "6.5px",
-                                                            left: 0,
-                                                            borderRadius: "6px",
-                                                            overflow: "hidden",
-                                                            border: `1px solid ${COMMON.COLORS.LIGHT_GREY}`
-                                                        }}>
-                                                            <CoverImageHolder url={company_logo}/>
-                                                        </div>{company_name}
-                                                    </div>
-                                                </div>
-                                                <div className={mc(classes.rowContainer)} style={{flex: 0.5}}>
-                                                    Full Time
-                                                </div>
+                                        <div className={mc(classes.rowContainer)} style={{flex: 1}}>
+                                            <div style={{height: "100%", width: "100%", position: "relative", paddingLeft: "25px"}}>
+                                                <div className={mc(classes.companyLogoContainer)}>
+                                                    <CoverImageHolder url={company_logo}/>
+                                                </div>{company_name}
                                             </div>
-                                        </div> : null}
+                                        </div>
+                                        <div className={mc(classes.rowContainer)} style={{flex: 0.5}}>
+                                            <span className={mc(classes.roleTypeContainer)}><i className="fa-solid fa-briefcase"/>Full Time</span>
+                                        </div>
 
                                         <div className={mc(classes.rowContainer)} style={{flex: "0 0 150px"}}>
                                             {saved_job.job_salary || "--"}
@@ -359,7 +355,7 @@ class SavedJobs extends React.Component {
                                             {saved_job.job_deadline && parseFloat(saved_job.job_deadline) ? moment(parseFloat(saved_job.job_deadline)).format("MMM D YYYY") : "--"}
                                         </div>
                                         <div className={mc(classes.rowContainer)} style={{flex: "0 0 200px", lineHeight: "initial"}}>
-                                            <StandardSelect style={{border: "none"}} color={this.returnColor(saved_job.status_id)} value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => {
+                                            <StandardSelect style={{...COMMON.STYLES.SAVED_JOBS.SavedJobPageStyles.statusSelectStyle}} color={this.returnColor(saved_job.status_id)} value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => {
                                                 console.log("updating status:", v);
                                                 SavedJobService.editSavedJob({client, saved_job_id: saved_job.saved_job_id, status_id: v}).then((d) => {
                                                     console.log("Edited Saved Job:", d);
@@ -370,7 +366,16 @@ class SavedJobs extends React.Component {
 
                                     </div>)
                                 })}
-                            </div> : null}</div>
+                            </div> : <div>
+
+                                <div style={{padding: "20px", textAlign: "center"}}>
+                                    <div style={{fontSize: "14px"}}>You haven't saved any jobs yet! Click below to save your first job</div>
+                                    <div style={{marginTop: "20px"}}>
+                                        <StandardButton label={"Add Job"} onClick={() => (this.setState({openAddSavedJobModal: true}))}/>
+                                    </div>
+                                </div>
+
+                            </div>}</div>
                         </div>
 
                         <EditSavedJobModal refetch={() => {this.loadSavedJobs();}} onSubmit={() => {this.submitEditSavedJob(); this.submitEditJob();}} company_map={company_map}  company_demographics={selectedcompany_demographics} option_map={option_map} jobs_map={jobs_map} options={options} job={selectedJob} saved_job={selectedSavedJob} updateField={this.updateSelectedSavedJob} updateJobField={this.updateSelectedJob} open={openEditSavedJobModal} onClose={() => (this.setState({openEditSavedJobModal: false}))}/>

@@ -21,6 +21,7 @@ const typeDef = gql`
         first_name: String
         profile_photo_url: String
         cover_photo_url: String
+        claim_page_photo_url: String
         bio: String
 
         user_twitter_link: String, 
@@ -43,6 +44,7 @@ const typeDef = gql`
         last_name: String
         profile_photo_url: String
         cover_photo_url: String
+        claim_page_photo_url: String
         bio: String
 
         user_twitter_link: String,
@@ -64,6 +66,7 @@ const typeDef = gql`
         last_name: String
         profile_photo_url: String
         cover_photo_url: String
+        claim_page_photo_url: String
         bio: String
 
         user_twitter_link: String,

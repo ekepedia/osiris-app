@@ -37,6 +37,9 @@ import {PieChart} from "react-minimal-pie-chart";
 import SavedJobNoteService from "../../../services/SavedJobNoteService";
 import SavedJobReminderService from "../../../services/SavedJobReminderService";
 import {FONT_H_400} from "../../../common/fonts";
+import GenderPieChart from "../../../components/charts/GenderPieChart";
+import RacePieChart from "../../../components/charts/RacePieChart";
+import CompanySelect from "../../../components/CompanySelect";
 
 const Styles = {
     container: {
@@ -154,8 +157,10 @@ class EditSavedJobModal extends React.Component {
         option_map = option_map || {};
         company_map = company_map || {};
         company_demographics = company_demographics || {};
+        const has_demographics = company_demographics && company_demographics.employees_male;
 
         let company = company_map[job.company_id] || {};
+
 
         const setSelectedState = (selectedState) => {
             this.setState({
@@ -183,16 +188,20 @@ class EditSavedJobModal extends React.Component {
                 }}
             >
                 <div style={{...STYLE_MODAL_SUPER_SUPER_CONTAINER, height: "100%"}}>
-                    <div style={COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER}>
-                        <div style={{flex: "0 0 51px", padding: "25px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
-                            <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map}/>
+                    <div style={{...COMMON.STYLES.STYLE_MODAL_SUPER_CONTAINER,  maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,}}>
+                        <div style={{flex: "0 0 51px", padding: "25px 35px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                            <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map} has_demographics={has_demographics}/>
                         </div>
-                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingTop: "0px"}}>
+                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingLeft: "35px", paddingRight: "35px", paddingTop: "0px", overflow: "scroll"}}>
                             <div style={{
                                 height: "45px",
                                 lineHeight: "45px",
                                 marginTop: "0",
-                                borderTop: "none"
+                                borderTop: "none",
+                                width: "calc(100% + 70px)",
+                                marginLeft: "-35px",
+                                paddingLeft: "35px",
+                                borderBottom: `1px solid ${COMMON.COLORS.N400}`
                             }}>
                                 <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
                                     Info
@@ -211,34 +220,19 @@ class EditSavedJobModal extends React.Component {
                                     {selectedState === 4 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>
                             </div>
-
                             <div style={{display: selectedState === 1 ? null : "none"}}>
-
                                 <div style={{display: "flex"}}>
                                     <div style={{flex: 1, marginRight: "50px"}}>
-
                                         <div style={{display: "flex"}}>
                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                 <div className={classes.inputLabel}>Company</div>
-                                                <Select
-                                                    height="31px"
-                                                    isClearable={true}
-                                                    placeholder="Choose a company ..."
-                                                    options={options}
-                                                    filterOption={companyCustomSearch}
-                                                    styles={{indicatorSeparator: () => ({display: "none"})}}
-                                                    value={option_map[job.company_id]}
-                                                    onChange={(e) => {
-                                                        console.log("ON SELECT CHANGE", e)
-                                                        if (e && e.value) {
-                                                            updateJobField("company_id", e.value)
-                                                        }
-                                                    }}
-                                                />
+                                                <CompanySelect value={option_map[job.company_id]} options={options} onChange={(company_id) => {
+                                                    updateJobField("company_id", company_id)
+                                                }}/>
                                             </div>
                                             <div style={{flex: 1}}>
                                                 <div className={classes.inputLabel}>Job title</div>
-                                                <StandardInput style={{height: "38px"}} placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
+                                                <StandardInput placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
                                             </div>
                                         </div>
 
@@ -259,111 +253,29 @@ class EditSavedJobModal extends React.Component {
                                         }}/>
 
                                         <div className={classes.inputLabel}>Status</div>
-                                        <StandardSelect value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => (updateField("status_id", v))}/>
+                                        <StandardSelect disableCustom={true} value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => (updateField("status_id", v))}/>
 
                                     </div>
                                 </div>
-
-
-
-
-
-
-
                             </div>
                             <div style={{display: selectedState === 2 ? null : "none", paddingTop: "25px"}}>
 
 
-                                <div style={{display: "flex"}}>
-                                    <div style={{flex: 1, paddingRight: "40px"}}>
-                                        <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD, marginBottom: "10px"}}>About</div>
-                                        <div>{company.company_about}</div>
+                                <div>
+                                    <div style={{marginBottom: "25px"}}>
+                                        <div className={mc(classes.sectionMainTitle)}>About Company</div>
+                                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
+                                        <div style={{...COMMON.FONTS.P200, color: COMMON.COLORS.N800}}>{company.company_about}</div>
                                     </div>
-                                    <div style={{flex: 1}}>
-                                        <div style={{...COMMON.FONTS.FONT_SUBHEADER_BOLD,}}>Representation at Company</div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE, color: COMMON.COLORS.DARK_GREY, marginBottom: "10px"}}>Identified by OSIRIS from {company.company_name}</div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE_BOLD, marginBottom: "15px"}}>By gender</div>
+                                    <div style={{display: has_demographics ? null : "none"}}>
+                                        <div className={mc(classes.sectionMainTitle)}>Representation at Company</div>
+                                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from Company EEO-1 Form</div>
 
-                                        <div className={mc(classes.diversityStatsContainer)}>
-                                            <div className={mc(classes.pieChartHolder)}>
-                                                <div style={{height: "125px", width: "125px"}}>
-                                                    <PieChart
-                                                        lineWidth={30}
-                                                        startAngle={270}
-                                                        data={[
-                                                            { title: 'Female', value: company_demographics.employees_female, color: COMMON.COLORS.COLOR_GOLD },
-                                                            { title: 'Male', value: company_demographics.employees_male, color: COMMON.COLORS.OSIRIS_GREEN }
-                                                        ]
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div style={{flex: "0 0 160px", marginTop: "35.5px", marginRight: "0"}}>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Female</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_female}%</div>
-                                                </div>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Male</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_male}%</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style={{...COMMON.FONTS.FONT_FOOTNOTE_BOLD, marginTop: "25px", marginBottom: "15px"}}>By race / ethnicity</div>
+                                        <div className={mc(classes.sectionTitle)} style={{margin: "15px 0"}}>By race / ethnicity</div>
+                                        <RacePieChart company_demographics={company_demographics}/>
 
-
-                                        <div className={mc(classes.diversityStatsContainer)}>
-                                            <div className={mc(classes.pieChartHolder)}>
-                                                <div style={{height: "125px", width: "125px"}}>
-                                                    <PieChart
-                                                        lineWidth={30}
-                                                        startAngle={270}
-                                                        data={[
-                                                            { title: 'Asian', value: company_demographics.employees_asian, color: COMMON.COLORS.COLOR_GOLD },
-                                                            { title: 'Black', value: company_demographics.employees_black, color: COMMON.COLORS.OSIRIS_GREEN },
-                                                            { title: 'White', value: company_demographics.employees_white, color: COMMON.COLORS.PIE_CHART_WHITE },
-                                                            { title: 'Native American', value: company_demographics.employees_indigenous, color: COMMON.COLORS.PIE_CHART_GREY },
-                                                            { title: 'Latinx', value: company_demographics.employees_latinx, color: COMMON.COLORS.OSIRIS_BLACK },
-                                                        ]}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div style={{flex: "0 0 160px", marginTop: "0px", marginRight: "0"}}>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.COLOR_GOLD}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Asian</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_asian}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_GREEN}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Black</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_black}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_WHITE}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>White</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_white}%</div>
-                                                </div>
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.PIE_CHART_GREY}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_indigenous || "--"}%</div>
-                                                </div>
-
-                                                <div className={mc(classes.pieChartLabelHolder, classes.pieChartLabelHolderTwo)}>
-                                                    <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.OSIRIS_BLACK}}/>
-                                                    <div className={mc(classes.pieChartLabelName)}>Hispanic/Latinx</div>
-                                                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_latinx}%</div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
+                                        <div className={mc(classes.sectionTitle)} style={{margin: "15px 0"}}>By gender</div>
+                                        <GenderPieChart company_demographics={company_demographics}/>
 
                                     </div>
                                 </div>
@@ -636,7 +548,7 @@ class EditSavedJobModal extends React.Component {
                                 </div>)}
                             </div>
                         </div>
-                        <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 25px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
+                        <div style={{flex: "0 0 54px", textAlign: "right", padding: "13px 35px",  borderTop: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
 
                             <div style={{display: "inline-block", marginRight: "10px"}}>
                                 <StandardButton outline={true} label={"Delete Saved Job"} size={"S"} onClick={() => {
@@ -645,7 +557,7 @@ class EditSavedJobModal extends React.Component {
                                         SavedJobService.deleteSavedJob({client, saved_job_id: saved_job.saved_job_id}).then(() =>{
                                             onClose ? onClose() : null;
                                             refetch ? refetch() : null;
-                                        })
+                                        });
                                     }
                                 }}/>
                             </div>

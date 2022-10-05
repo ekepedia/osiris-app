@@ -22,14 +22,18 @@ const Styles = {
         },
     },
     inputStyle: {
-        height: "31px",
-        padding: "6px 8px",
-        ...COMMON.FONTS.FONT_SUBHEADER,
-        borderRadius: "8px",
-        border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
+        height: "32px",
+        padding: "12px 8px",
+        ...COMMON.FONTS.P100,
+        borderRadius: "4px",
+        border: `1px solid ${COMMON.COLORS.N400}`,
         outline: "none",
         width: "100%",
         background: "none",
+        "&:hover": {
+            borderColor: COMMON.COLORS.N600,
+        },
+        color: COMMON.COLORS.N800
         // TODO "&:focus-visible": {
         //
         // }
@@ -59,7 +63,7 @@ class StandardInput extends React.Component {
             {type === "textarea" ?
                 <textarea style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
                 :
-                <input  style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
+                <input type={type} style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
 
             }
         </div>)

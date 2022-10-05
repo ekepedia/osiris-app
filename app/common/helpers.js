@@ -56,3 +56,14 @@ export function formatLargeNumber (num) {
     }
     return num;
 }
+
+export function httpSafeLink(link) {
+    if (!link)
+        return link;
+
+    if (link && link.indexOf("http") === -1) {
+        link = `http://${link}`;
+    }
+
+    return link;
+}

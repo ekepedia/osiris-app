@@ -20,7 +20,7 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
-    test_endpoints();
+    // test_endpoints();
 };
 
 module.exports.get_saved_job_reminders = get_saved_job_reminders;

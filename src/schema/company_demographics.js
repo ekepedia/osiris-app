@@ -40,6 +40,10 @@ const typeDef = gql`
         employees_queer: Float,
         employees_asexual: Float,
         
+        employees_multi: Float,
+        employees_hawaiian: Float,
+        year: Float,
+        
         is_hidden: Boolean
 
         batch_id: String
@@ -71,6 +75,10 @@ const typeDef = gql`
         employees_queer: Float,
         employees_asexual: Float,
 
+        employees_multi: Float,
+        employees_hawaiian: Float,
+        year: Float,
+        
         is_hidden: Boolean
 
         batch_id: String
@@ -103,6 +111,10 @@ const typeDef = gql`
         employees_queer: Float,
         employees_asexual: Float,
 
+        employees_multi: Float,
+        employees_hawaiian: Float,
+        year: Float,
+
         is_hidden: Boolean
 
         batch_id: String
@@ -134,6 +146,10 @@ const typeDef = gql`
         employees_gay: Float,
         employees_queer: Float,
         employees_asexual: Float,
+
+        employees_multi: Float,
+        employees_hawaiian: Float,
+        year: Float,
 
         is_hidden: Boolean
 

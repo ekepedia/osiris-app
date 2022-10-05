@@ -9,7 +9,7 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import COMMON from "../../../common/index";
-import { mc } from "../../../common/helpers";
+import {httpSafeLink, mc} from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import StandardButton from "../../../components/StandardButton";
 
@@ -98,14 +98,14 @@ class PortfolioHeader extends React.Component {
     }
 
     render() {
-        let { classes, company, selectedState, setSelectedState} = this.props;
+        let { classes, company, selectedState, setSelectedState, has_demographics} = this.props;
 
         company = company || {};
 
         return (<div className={classes.container}>
             <div className={classes.superContainer}>
                 <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
-                    <CoverImageHolder url={"https://i.imgur.com/tM97NWQ.png"}/>
+                    <CoverImageHolder url={company.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                 </div>
                 <div className={classes.profileHeaderContainer} style={{paddingBottom: 0}}>
                     <div className={classes.profileImageContainer}>
@@ -115,29 +115,24 @@ class PortfolioHeader extends React.Component {
                     </div>
                     <div className={classes.editHeaderButtonContainer}>
                         <div className={classes.editHeaderButton}>
-                            <a target={"_blank"} href={company.company_website}>
-                                <StandardButton label={"Learn More"} outline={false}/>
+                            <a target={"_blank"} href={httpSafeLink(company.company_website)}>
+                                <StandardButton label={"Learn More"} outline={false} icon={"fa-solid fa-compass"}/>
                             </a>
                         </div>
                     </div>
                     <div className={classes.profileHeaderName}>{company.company_name}</div>
-                    <div className={classes.profileHeaderBio}>{company.company_city || "Boston"}, {company.company_state || "MA"}</div>
-                    <div style={{
-                        height: "45px",
-                        lineHeight: "45px",
-                        marginTop: "25px",
-                        borderTop: `1px solid ${COMMON.COLORS.LIGHT_GREY}`
-                    }}>
+                    <div className={classes.profileHeaderBio}>{company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
+                    <div className={classes.companyTabs}>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
-                            Home
+                            <span style={{color: selectedState === 1 ? COMMON.COLORS.B400 : null}}>Home</span>
                             {selectedState === 1 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
-                            About
+                            <span style={{color: selectedState === 2 ? COMMON.COLORS.B400 : null}}>About</span>
                             {selectedState === 2 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
-                        <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
-                            DE&I
+                        <div style={{display: has_demographics ? null : "none"}} className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
+                            <span style={{color: selectedState === 3 ? COMMON.COLORS.B400 : null}}>DE&I</span>
                             {selectedState === 3 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                     </div>

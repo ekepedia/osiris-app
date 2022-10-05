@@ -1,3 +1,7 @@
+import {G200, G600, N100, N600, N700, O100, O600, R100, R600, Y100, Y600} from "./colors";
+
+export const NAV_HEIGHT = 48;
+
 const MONTHS = [
     {value: 1, label: "Jan"},
     {value: 2, label: "Feb"},
@@ -14,12 +18,12 @@ const MONTHS = [
 ]
 
 const STATUSES = [
-    {value: 1, label: "Wishlist"},
-    {value: 2, label: "Applied"},
-    {value: 3, label: "Interviewing"},
-    {value: 4, label: "Offer"},
-    {value: 5, label: "Rejected"},
-    {value: 6, label: "Withdrawn"},
+    {value: 1, label: "Wishlist", width: "55px", color: N700, background: N100},
+    {value: 2, label: "Applied", width: "50px", color: Y600, background: Y100},
+    {value: 3, label: "Interviewing", width: "80px", color: O600, background: O100},
+    {value: 4, label: "Offer Received", width: "90", color: G600, background: G200},
+    {value: 5, label: "Rejected", width: "58px", color: R600, background: R100},
+    {value: 6, label: "Withdrawn", width: "70px", color: N700, background: N100},
 ]
 
 let years = [];

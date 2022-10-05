@@ -1,5 +1,5 @@
-import {COLOR_BORDER_GREY, COLOR_GREEN, COLOR_TEXT_GREY, COLOR_WHITE} from "./colors";
-import {FONT_FOOTNOTE, FONT_FOOTNOTE_BOLD, FONT_HEADLINE_BOLD, FONT_SUBHEADER, FONT_SUBHEADER_BOLD} from "./fonts";
+import {COLOR_BORDER_GREY, COLOR_GREEN, COLOR_TEXT_GREY, COLOR_WHITE, N300, N400} from "./colors";
+import {FONT_FOOTNOTE, FONT_FOOTNOTE_BOLD, FONT_HEADLINE_BOLD, FONT_SUBHEADER, FONT_SUBHEADER_BOLD, H500} from "./fonts";
 
 export const MODAL_TIMING = 250;
 
@@ -103,9 +103,8 @@ export const STYLE_MODAL_CONTENT = {
     WebkitOverflowScrolling: 'touch',
     borderRadius: '6px',
     outline: 'none',
-    padding: '0'
+    padding: '15px'
 }
-
 
 
 // BORDER
@@ -168,7 +167,7 @@ export const EDIT_PORTFOLIO_MODAL = {
     DEFAULT_MODAL_HEIGHT: "100%",
     DEFAULT_MODAL_MAX_HEIGHT: "90vh",
     MODAL_HEADER: {
-        ...FONT_HEADLINE_BOLD
+        ...H500
     }
 }
 
@@ -202,3 +201,23 @@ export const STYLES = {
     COMPANY,
     SAVED_JOBS
 }
+
+
+export const STANDARD_MODAL_CONTAINER = {
+    position: 'absolute',
+    top: '0',
+    left: 0,
+    right: 0,
+    margin: "auto",
+    maxWidth: "480px",
+    width: "calc(100% - 20px)",
+    bottom: '100px',
+    border: `1px solid ${N400}`,
+    background: '#fff',
+    overflow: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    borderRadius: '6px',
+    outline: 'none',
+    padding: '25px'
+}
+STYLES.STANDARD_MODAL_CONTAINER = STANDARD_MODAL_CONTAINER;
