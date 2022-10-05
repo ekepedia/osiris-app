@@ -7,7 +7,16 @@ const Users = require("./users");
 const FeedbackUsers = require("./feedback_users");
 const DemoTrackings = require("./demo_tracking");
 const DemoSohoApplications = require("./demo_soho_application");
-
+const UserEducations = require("./user_educations");
+const UserExperiences = require("./user_experiences");
+const UserLinks = require("./user_links");
+const UserGalleries = require("./user_galleries");
+const Companies = require("./companies");
+const CompanyDemographics = require("./company_demographics");
+const Jobs = require("./jobs");
+const SavedJobs = require("./saved_jobs");
+const SavedJobNotes = require("./saved_job_notes");
+const SavedJobReminders = require("./saved_job_reminders");
 
 // Main Query Schema
 const Query = gql`
@@ -46,8 +55,17 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.typeDef,
         DemoTrackings.typeDef,
         DemoSohoApplications.typeDef,
+        UserEducations.typeDef,
+        UserExperiences.typeDef,
+        UserLinks.typeDef,
+        UserGalleries.typeDef,
+        Companies.typeDef,
+        CompanyDemographics.typeDef,
+        Jobs.typeDef,
+        SavedJobs.typeDef,
+        SavedJobNotes.typeDef,
+        SavedJobReminders.typeDef,
     ],
-
     resolvers: merge(
         resolvers,
         DemoUsers.resolver,
@@ -55,6 +73,16 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.resolver,
         DemoTrackings.resolver,
         DemoSohoApplications.resolver,
+        UserEducations.resolver,
+        UserExperiences.resolver,
+        UserLinks.resolver,
+        UserGalleries.resolver,
+        Companies.resolver,
+        CompanyDemographics.resolver,
+        Jobs.resolver,
+        SavedJobs.resolver,
+        SavedJobNotes.resolver,
+        SavedJobReminders.resolver,
     )
 });
 

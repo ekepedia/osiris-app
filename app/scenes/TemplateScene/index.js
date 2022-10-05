@@ -8,7 +8,8 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import DataService from '../../services/DataService';
-import { COLOR_WHITE } from "../../common/colors";
+import COMMON from "../../common";
+import {mc} from "../../common/helpers";
 
 const Styles = {
     container: {

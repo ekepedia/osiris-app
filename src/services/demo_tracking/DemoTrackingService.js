@@ -39,35 +39,35 @@ module.exports.create_demo_tracking = create_demo_tracking;
 
 function create_demo_tracking({user_id, type, version, timestamp, custom_1, custom_2, custom_3, custom_4, custom_5, custom_6, custom_7, custom_8, custom_9, custom_10 }) {
     return new Promise((resolve, reject) => {
-        if (!user_id)
-            return reject(new Error("Missing user_id"));
+        // if (!user_id)
+        //     return reject(new Error("Missing user_id"));
 
-        const url = "https://29b8-151-203-12-169.ngrok.io/god-view/" + user_id;
+        // const url = "https://29b8-151-203-12-169.ngrok.io/god-view/" + user_id;
 
         const query = DatabaseService.generate_query({user_id, type, version, timestamp, custom_1, custom_2, custom_3, custom_4, custom_5, custom_6, custom_7, custom_8, custom_9, custom_10 });
 
         knex(DEMO_TRACKING_TABLE).insert(query).returning("tracking_id").then((rows) => {
             const tracking_id = rows[0];
 
-            if (type === "2") {
-                DemoUserService.get_demo_users({user_id}).then((demo_users) => {
-                    if (demo_users && demo_users.length) {
-                        const demo_user = demo_users[0]
+            // if (type === "2") {
+            //     DemoUserService.get_demo_users({user_id}).then((demo_users) => {
+            //         if (demo_users && demo_users.length) {
+            //             const demo_user = demo_users[0]
+            //
+            //             const name = demo_user.first_name && demo_user.last_name ? (`${demo_user.first_name} ${demo_user.last_name}`) : (
+            //                 demo_user.first_name ? demo_user.first_name : demo_user.email_address
+            //             )
+            //
+            //             post_to_slack(`*New Login*\nHey Guys, ${name} just logged into the OSIRIS App :tada:\n<${url}|View Full Activity>`);
+            //         } else {
+            //             post_to_slack(`*New Login*\nHey Guys, ${user_id} just logged into the OSIRIS App :tada:\n<${url}|View Full Activity>`);
+            //         }
+            //     })
+            // }
 
-                        const name = demo_user.first_name && demo_user.last_name ? (`${demo_user.first_name} ${demo_user.last_name}`) : (
-                            demo_user.first_name ? demo_user.first_name : demo_user.email_address
-                        )
-
-                        post_to_slack(`*New Login*\nHey Guys, ${name} just logged into the OSIRIS App :tada:\n<${url}|View Full Activity>`);
-                    } else {
-                        post_to_slack(`*New Login*\nHey Guys, ${user_id} just logged into the OSIRIS App :tada:\n<${url}|View Full Activity>`);
-                    }
-                })
-            }
-
-            if (type === "1") {
-                post_to_slack(`*New Sign Up*\nHey Guys, ${custom_1} just signed up for the OSIRIS App :tada:\n<${url}|View Full Activity>`);
-            }
+            // if (type === "1") {
+            //     post_to_slack(`*New Sign Up*\nHey Guys, ${custom_1} just signed up for the OSIRIS App :tada:\n<${url}|View Full Activity>`);
+            // }
 
             return resolve(tracking_id);
         }).catch((err) => {

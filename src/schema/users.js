@@ -19,6 +19,21 @@ const typeDef = gql`
         user_id: String!,
         username: String,
         first_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        claim_page_photo_url: String
+        bio: String
+
+        user_twitter_link: String, 
+        user_clubhouse_link: String,
+        user_instagram_link: String,
+        user_website_link: String,
+        user_tiktok_link: String,
+        user_youtube_link: String,
+        user_vimeo_link: String,
+        user_main_contact_email: String,
+        user_main_contact_phone: String,
+
         last_name: String
         archived: Boolean
     }
@@ -27,6 +42,21 @@ const typeDef = gql`
         username: String,
         first_name: String
         last_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        claim_page_photo_url: String
+        bio: String
+
+        user_twitter_link: String,
+        user_clubhouse_link: String,
+        user_instagram_link: String,
+        user_website_link: String,
+        user_tiktok_link: String,
+        
+        user_youtube_link: String,
+        user_vimeo_link: String,
+        user_main_contact_email: String,
+        user_main_contact_phone: String,
     }
 
     input EditUserInput {
@@ -34,6 +64,20 @@ const typeDef = gql`
         username: String,
         first_name: String
         last_name: String
+        profile_photo_url: String
+        cover_photo_url: String
+        claim_page_photo_url: String
+        bio: String
+
+        user_twitter_link: String,
+        user_clubhouse_link: String,
+        user_instagram_link: String,
+        user_website_link: String,
+        user_tiktok_link: String,
+        user_youtube_link: String,
+        user_vimeo_link: String,
+        user_main_contact_email: String,
+        user_main_contact_phone: String,
     }
     
     input QueryUser {

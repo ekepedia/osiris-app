@@ -47,5 +47,9 @@ module.exports = {
     },
     plugins: [
         new LiveReloadPlugin()
-    ]
+    ],
+    watchOptions: {
+        aggregateTimeout: 600,
+        // poll: 1000,
+    },
 };

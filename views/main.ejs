@@ -8,15 +8,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <link rel="icon" href="/img/logo 2.ico">
+    <link rel="icon" href="/img/favicon.ico">
 
-    <title>OSIRIS - Analytics</title>
-    <meta property="og:title" content="OSIRIS - Job Board">
-    <meta property="og:site_name" content="OSIRIS - Job Board">
+    <title>OSIRIS - Finding your dream job doesn’t have to suck</title>
+    <meta property="og:title" content="OSIRIS - Finding your dream job doesn’t have to suck">
+    <meta property="og:site_name" content="OSIRIS - Finding your dream job doesn’t have to suck">
     <meta property="og:url" content="https://jobs.osiris.works/">
-    <meta property="og:description" content="The LinkedIn For People of Color">
+    <meta property="og:description" content="OSIRIS provides you with the community, tools, and data to make better career decisions">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://i.imgur.com/xr1Npsr.png">
+    <meta property="og:image" content="https://stripe-camo.global.ssl.fastly.net/a7a50b12a67746e3b93823ebacb2a536a3df879019a01863632fe7a8325a0949/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a6446387853307734536d6447616d70474d4464544e555a6b66475a6662476c325a563930596a4a3665576c72624664614e6a646b52455979516b78725931425a62455130306b676c7149777753">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -37,14 +37,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QJW2J68X1Z"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DJHZLTB8NS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-QJW2J68X1Z');
+        console.log(window.location)
+
+        if (window.location && window.location.host && (window.location.host.indexOf("www.osiris.works") !== -1 || window.location.host.indexOf("beta.osiris.works") !== -1)) {
+            gtag('config', 'G-DJHZLTB8NS');
+        } else {
+            gtag('config', 'G-9JMPPPXN1J');
+        }
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-modal/3.14.3/react-modal.min.js"
@@ -56,6 +61,23 @@
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
     />
+
+    <script>
+        window.intercomSettings = {
+            api_base: "https://api-iam.intercom.io",
+            app_id: "lcoc53ye"
+        };
+    </script>
+
+    <script>
+        // We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/lcoc53ye'
+        (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/lcoc53ye';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+    </script>
+
+    <!-- Add the slick-theme.css if you want default styling -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <!-- Add the slick-theme.css if you want default styling -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 </head>
 
 <body>
@@ -73,6 +95,8 @@
 
     <script src="/js/script.min.js"></script>
     <script src="http://localhost:35729/livereload.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
 </div>
 
 </body>

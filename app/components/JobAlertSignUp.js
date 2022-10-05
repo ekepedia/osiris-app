@@ -16,6 +16,9 @@ import DataService from '../services/DataService';
 import {COLOR_BLACK, COLOR_BORDER_GREY, COLOR_WHITE} from "../common/colors";
 import {FONT_BODY_BOLD, FONT_TITLE_2_BOLD, FONT_BODY, FONT_FOOTNOTE, FONT_SUBHEADER} from "../common/fonts";
 import {STYLE_MODAL_CONTENT, STYLE_MODAL_OVERLAY, MODAL_TIMING, STYLE_BUTTON_SUBHEADER} from "../common/styles";
+import COMMON from "../common";
+import StandardButton from "./StandardButton";
+import StandardInput from "./StandardInput";
 
 const Styles = {
     container: {
@@ -24,6 +27,17 @@ const Styles = {
             padding: "0",
         },
     },
+    modalTitle: {
+        ...COMMON.FONTS.H600,
+        color: COMMON.COLORS.N900,
+        marginBottom: "10px"
+    },
+    modalSubTitle: {
+        ...COMMON.FONTS.P200,
+        color: COMMON.COLORS.N900,
+        marginBottom: "25px"
+    },
+    ...COMMON.STYLES.GENERAL.AlignmentStyles
 };
 
 class JobAlertSignUp extends React.Component {
@@ -32,37 +46,89 @@ class JobAlertSignUp extends React.Component {
         super(props);
 
         this.state = {
-            email: ""
+            email: "",
         };
+    }
 
-        this.industries = [];
-        this.industry_map = {};
+    constructIndustryOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.industries && job.industries.length) {
+                job.industries.forEach((industry) => {
+                    dedup_map[industry.id] = industry
+                })
+            }
+        });
 
-        DataService.getIndustries().then(({industries}) => {
-            this.industries = industries;
 
-            industries.forEach((industry) => {
-                this.industry_map[industry.id] = industry;
-            })
-            this.setState({ industries});
-        })
+        this.industries = Object.values(dedup_map);
+        console.log(this.industries)
 
+        return this.industries
     }
 
     componentDidMount() {
 
     }
 
+    renderHeader() {
+        let { onClose} = this.props;
+        return (<div>
+            <div style={{textAlign: "right"}} onClick={onClose}>
+                <i style={{cursor: "pointer", lineHeight: "11px", fontSize: "17.5px", color: COMMON.COLORS.N600}} className="fa-solid fa-xmark"/>
+            </div>
+        </div>)
+    }
+
+    renderFooter() {
+        const { page } = this.state || {};
+        const { onSubmit, onClose, label, job } = this.props || {};
+
+        let company = "";
+
+        if (job && job.companies && job.companies.length) {
+            company = job.companies[0].company_name
+        }
+
+        // company = company.toLowerCase();
+
+        return (<div style={{textAlign: "right"}}>
+            <div style={{...COMMON.FONTS.H300, display: "inline-block", marginRight: "10px", lineHeight: "32px", cursor: "pointer", color: COMMON.COLORS.N700,}}>
+                <div onClick={() => {
+                    onClose()
+                }}>
+                    Cancel
+                </div>
+            </div>
+            <div style={{display: "inline-block", }}>
+                <StandardButton fullWidth={false} label={company && company.length ? `Continue to ${company}` : "Continue to Jobs"} onClick={() => {
+                    if (onClose) onClose();
+
+                    if (job) window.open(job.apply_link, "_blank");
+                }}/>
+            </div>
+        </div>)
+    }
+
     render() {
-        let { classes, open, onClose, state } = this.props;
+        let { classes, open, onClose, state, job, jobs } = this.props;
+
+        this.industries = this.constructIndustryOptions(jobs)
+        this.industry_map = {};
+        this.industries.forEach((industry) => {
+            this.industry_map[industry.id] = industry;
+        })
 
         let industry = "";
 
-        if (state && state["selectedIndustries"] && state["selectedIndustries"].length) {
-            industry = this.industry_map[state["selectedIndustries"][0]].name
+        if (job && job.industries && job.industries.length) {
+            industry = (job.industries[0] || {}).label
+        } else if (state && state["selectedIndustries"] && state["selectedIndustries"].length) {
+            industry = (this.industry_map[state["selectedIndustries"][0]] || {}).name
         }
 
-        industry = industry.toLowerCase();
+        // industry = (industry + "").toLowerCase();
 
         return (<div className={classes.container}>
             <Modal
@@ -73,64 +139,40 @@ class JobAlertSignUp extends React.Component {
                         ...STYLE_MODAL_OVERLAY
                     },
                     content: {
-                        ...STYLE_MODAL_CONTENT,
-                        height: industry && industry.length ? "330px" : "287px"
+                        ...COMMON.STYLES.STANDARD_MODAL_CONTAINER,
+                        height: "498px",
                     }
                 }}
             >
                 <div>
 
-                    <div style={{...FONT_TITLE_2_BOLD}}>
-                        <div style={{display: "flex"}}>
-                            <div style={{flex: 1}}>
-                                Get the latest {industry} opportunities directly in your inbox
+                    <div style={{display: "flex", flexDirection: "column", height: "100%"}}>
+                        <div style={{flex: "0 0 16px"}}>
+                            <div>
+                                {this.renderHeader()}
                             </div>
-                            <div style={{flex: "0 0 15px", marginLeft: "10px"}} onClick={onClose}>
-                                <i style={{cursor: "pointer", lineHeight: "33px", fontSize: "13px"}} className="fa-solid fa-x"></i>
+                        </div>
+                        <div style={{flex: 1}}>
+                            <div className={classes.centerAlignContainerFill}>
+                                <div className={classes.verticalAlignObjectFill}>
+                                    <div className={classes.modalTitle}>
+                                        Get more <span style={{textTransform: "capitalize"}}>{industry}</span> opportunities directly in your inbox
+                                    </div>
+                                    <div className={classes.modalSubTitle}>
+                                        Timing is everything! Sign up for {industry} job alerts to give yourself the best chance of getting accepted
+                                    </div>
+                                    <div>
+                                        <StandardInput placeholder={"Email Address"}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{flex: "0 0 32px"}}>
+                            <div>
+                                {this.renderFooter()}
                             </div>
                         </div>
                     </div>
-                    <div style={{...FONT_SUBHEADER, marginTop: "15px"}}>
-                        Timing is everything! Sign up for {industry} job alerts to give yourself the best chance to be the first application employers see
-                    </div>
-                    <div>
-                        <input
-
-                            value={this.state.email}
-                            onChange={(e) => {
-                                this.setState({
-                                    email: e.target.value
-                                });
-                            }}
-                            placeholder={"Email Address"}
-                            style={{...STYLE_BUTTON_SUBHEADER,
-                                width: "100%",
-                                height: "40px",
-                                lineHeight: "40px",
-                                textAlign: "center",
-                                marginTop: "15px",
-                                outline: "none",
-                                cursor: "default",
-                                border: `1px solid ${COLOR_BORDER_GREY}`,
-                                color: COLOR_BLACK,
-                                background: COLOR_WHITE,
-                                padding: "0 10px"
-                            }}
-                        />
-                    </div>
-                    <div style={{...STYLE_BUTTON_SUBHEADER,
-                        width: "100%",
-                        height: "40px",
-                        lineHeight: "40px",
-                        textAlign: "center",
-                        marginTop: "15px",
-                        padding: "0",
-                        opacity: this.state.email && this.state.email.length ? 1: 0.5,
-                        transition: `opacity 250ms ease-in-out`
-                    }} onClick={onClose}>
-                        Send Me Opportunities
-                    </div>
-
                 </div>
             </Modal>
         </div>)
