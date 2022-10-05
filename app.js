@@ -69,6 +69,11 @@ app.get("/api/jobs-old", function (req, res) {
 });
 
 app.get("/api/jobs", function (req, res) {
+
+    res.json({
+        jobs: JobService.WEBSCRAPED_JOBS
+    });
+    return;
     JobService.format_jobs_for_job_board().then((jobs) => {
         res.json({ jobs });
     }).catch((err) => {

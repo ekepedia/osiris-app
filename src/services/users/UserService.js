@@ -26,9 +26,6 @@ module.exports.init = function (connection) {
     console.log("SQL: User Service Successfully Initialized");
 
     // test_endpoints();
-    get_users({}).then((users) => {
-        console.log(users)
-    })
 };
 
 module.exports.get_users = get_users;
