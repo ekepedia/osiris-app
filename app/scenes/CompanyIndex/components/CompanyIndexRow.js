@@ -43,10 +43,13 @@ const Styles = {
         }
     },
     companyGenderContainer: {
-        flex: "0 0 220px"
+        flex: "0 0 140px"
     },
     companyRaceContainer: {
-        flex: "0 0 130px"
+        flex: "0 0 120px"
+    },
+    companyGlassdoorContainer: {
+        flex: "0 0 260px",
     },
     companyIndustryContainer: {
         flex: 1,
@@ -141,7 +144,7 @@ class CompanyIndexRow extends React.PureComponent {
             <div className={mc(classes.companyGenderContainer)}>
                 <div className={mc(classes.companyHeader)}>
                     {company_demographics.employees_female ||company_demographics.employees_male ? <div>
-                        {company_demographics.employees_male || "--"}% Male / {company_demographics.employees_female || "--"}% Female<i className="fa-solid fa-circle-info" data-tip data-for={id2} style={{marginLeft: "3px", color: COMMON.COLORS.N500}}/>
+                        {company_demographics.employees_male || "--"}% M / {company_demographics.employees_female || "--"}% F<i className="fa-solid fa-circle-info" data-tip data-for={id2} style={{marginLeft: "3px", color: COMMON.COLORS.N500}}/>
                     </div> : <div>—</div> }
                 </div>
                 <div className={mc(classes.companySubHeader)}>
@@ -172,9 +175,17 @@ class CompanyIndexRow extends React.PureComponent {
                 </div>
             </div>
 
+            <div className={mc(classes.companyGlassdoorContainer)}>
+                {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall}`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600, marginTop: "5.5px"}}/> : null}
+                {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600, marginTop: "5.5px"}}/> : null}
+                {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500, marginTop: "5.5px"}}/> : null}
+            </div>
+
             <div className={mc(classes.companyIndustryContainer)}>
                 <StandardBadge style={{marginLeft: "5px", marginRight: "0px", marginTop: "5.5px"}} label={company.company_industry}/>
             </div>
+
+
 
             <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id1} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
                 Black, Indigenous, (and)<br/> People of Color
