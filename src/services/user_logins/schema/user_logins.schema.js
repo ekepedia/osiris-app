@@ -6,6 +6,7 @@ module.exports = function (connection) {
         table.increments('user_login_id').primary();
 
         table.string('user_id').notNullable();
+        table.string('user_email').unique();
         table.string('password_hash');
 
         table.boolean('is_archived').defaultTo(false);

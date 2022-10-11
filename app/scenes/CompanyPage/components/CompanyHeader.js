@@ -89,7 +89,7 @@ class PortfolioHeader extends React.Component {
 
         const currentHeight = currentWidth * RATIO;
 
-        console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
+        // console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
 
         this.setState({
             currentWidth,

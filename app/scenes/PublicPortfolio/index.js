@@ -127,14 +127,14 @@ class PublicPortfolio extends React.Component {
 
 
         if (gallery) {
-            console.log("RESIZED GALLERY", node.clientWidth, currentHeight, node.clientHeight)
+            // console.log("RESIZED GALLERY", node.clientWidth, currentHeight, node.clientHeight)
 
             this.setState({
                 currentGalleryWidth: currentWidth,
                 currentGalleryHeight: currentHeight
             });
         } else {
-            console.log("RESIZED LINK", node.clientWidth, currentHeight, node.clientHeight)
+            // console.log("RESIZED LINK", node.clientWidth, currentHeight, node.clientHeight)
 
             this.setState({
                 currentWidth,
