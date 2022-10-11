@@ -7,6 +7,9 @@ const bcrypt = require("bcrypt");
 const DatabaseService = require("../DatabaseService");
 const UserService = require("../users/UserService");
 
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 const saltRounds = 10;
 const jwtSecret = "RnVP6iJZDQOCb4G0Y7Hbk9aybWgFiVvATw4f1i0M";
 
@@ -36,11 +39,11 @@ module.exports.init = function (connection) {
     //     console.log("BAD", b)
     // })
 
-    // login_user_by_username({username: "jason", password: "password"}).then((data) => {
-    //     console.log("LOGO ", data);
-    // }).catch((e) => {
-    //     console.log("e", e);
-    // })
+    login_user_by_email({user_email: "eke@osiris.works", password: "password"}).then((data) => {
+        console.log("LOGO ", data);
+    }).catch((e) => {
+        console.log("e", e);
+    })
     //
     // create_user_login({user_id: 7, password: "pass123"}).then((ul) => {
     //     console.log("created login", ul)
@@ -56,9 +59,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_logins = get_user_logins;
 
-function get_user_logins({user_id, user_login_id}) {
+function get_user_logins({user_id, user_email, user_login_id}) {
 
-    const query = DatabaseService.generate_query({user_login_id, user_id});
+    const query = DatabaseService.generate_query({user_login_id, user_email, user_id});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -73,7 +76,7 @@ function get_user_logins({user_id, user_login_id}) {
 
 module.exports.create_user_login = create_user_login;
 
-function create_user_login({user_id, password}) {
+function create_user_login({user_id, user_email, password}) {
 
     return new Promise((resolve, reject) => {
         if (!user_id || !password)
@@ -89,7 +92,7 @@ function create_user_login({user_id, password}) {
             bcrypt.hash(password, saltRounds, function(err, hash) {
                 const password_hash = hash;
 
-                const query = DatabaseService.generate_query({user_id, password_hash});
+                const query = DatabaseService.generate_query({user_id, user_email, password_hash});
 
                 knex(SERVICE_DEFAULT_TABLE).insert(query).returning("user_login_id").then((rows) => {
                     const user_login_id = rows[0];
@@ -142,9 +145,34 @@ function login_user_by_username({username, password}) {
             }
         })
     });
-
 }
 
+module.exports.login_user_by_email = login_user_by_email;
+
+function login_user_by_email({user_email, password}) {
+    return new Promise((resolve, reject) => {
+
+        if (!user_email) {
+            return reject(new Error("Missing user email"));
+        }
+
+        get_user_logins({user_email}).then((users) => {
+            if (users && users.length) {
+                const user = users[0];
+                login_user({
+                    user_id: user.user_id,
+                    password
+                }).then((data) => {
+                    resolve(data)
+                }).catch((error) => {
+                    reject(error);
+                })
+            } else {
+                reject(new Error("User not found"));
+            }
+        })
+    });
+}
 
 module.exports.login_user = login_user;
 
@@ -178,13 +206,51 @@ function login_user({user_id, password}) {
     });
 }
 
+function sign_up_user({user, user_email, password}) {
+    return new Promise((resolve, reject) => {
+        UserService.create_user(user).then((user_id) => {
+            create_user_login({user_id, user_email, password}).then((data) => {
+                send_welcome_email({user_id, user_email, user});
+                return resolve({data, user_id});
+            }).catch((error) => {
+                reject(error);
+            });
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}
+
+function send_welcome_email({user_id, user_email, user}) {
+    const msg = {
+        to: [user_email],
+        from: 'eke@osiris.works',
+        templateId: "d-0084bb3bfead4f3e96990373ee87540f",
+        dynamic_template_data: {
+            user: {
+                ...user,
+                user_id
+            }
+        }
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => {
+            console.log(`Sent welcome email to ${user_email}, user_id = ${user_id}`);
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
+
 module.exports.set_routes = set_routes;
 
 function set_routes (app) {
     app.post("/api/login", function (req, res) {
-        const { username, password } = req.body;
-        console.log("Logging in for user:", username);
-        login_user_by_username({username, password}).then((data)=>{
+        const { user_email, password } = req.body;
+        console.log("Logging in for user:", user_email);
+        login_user_by_email({user_email, password}).then((data)=>{
             console.log("data", data)
             res.json(DatabaseService.return_standard_success({data}));
         }).catch((error) => {
@@ -200,10 +266,28 @@ function set_routes (app) {
         create_user_login({user_id, password}).then((data)=>{
             console.log("data", data)
             res.json(DatabaseService.return_standard_success({data:{...data, user_id}}));
+
         }).catch((error) => {
             console.log("error", error, error.toString())
             error = error && error.toString ? error.toString() : error;
             res.json(DatabaseService.return_standard_error({error}));
         });
     });
+
+    app.post("/api/v2/sign-up", function (req, res) {
+        console.log("BOTDD", req.body)
+        let { user, user_email, password } = req.body;
+        user = user || {};
+        if (!user.username) {
+            user.username = user_email;
+        }
+        sign_up_user({user, user_email, password}).then(({data, user_id}) => {
+            console.log("data", data)
+            res.json(DatabaseService.return_standard_success({data:{...data, user_id}}));
+        }).catch((error) => {
+            console.log("error", error, error.toString())
+            error = error && error.toString ? error.toString() : error;
+            res.json(DatabaseService.return_standard_error({error}));
+        });
+    })
 }

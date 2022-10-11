@@ -10,6 +10,8 @@ import { withRouter, Link} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import DataService from '../services/DataService';
+import AuthService from '../services/AuthService';
+import EventService from '../services/EventService';
 
 import {
     COLOR_BLACK,
@@ -94,24 +96,17 @@ class NavBar extends React.Component {
 
     componentDidMount() {
         this.loadUser();
+        EventService.on(EventService.events.UPDATE_USER, () => {
+            this.loadUser();
+        })
     }
 
     loadUser() {
         let {  client, } = this.props;
 
-        const user_id = localStorage.user_id;
-
-        if (!user_id) {
-            return this.setState({
-                user: {}
-            })
-        }
-
-        UserService.getUser({client, user_id}).then((user) => {
-            console.log("NAV USER", user);
-            localStorage.user = JSON.stringify(user);
+        AuthService.getCurrentUser().then((user) => {
             this.setState({
-                user
+                user: user || {}
             })
         })
     }
@@ -125,7 +120,7 @@ class NavBar extends React.Component {
 
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
-                <div style={{flex: 1}} className={classes.logoStyle}>
+                <div style={{flex: "0 0 100px"}} className={classes.logoStyle}>
                     <Link to={"/"} style={{color: COMMON.COLORS.N900}}>
                         <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
                     </Link>
@@ -161,6 +156,20 @@ class NavBar extends React.Component {
                         <div className={classes.linkStyle} style={{color: path.indexOf("/login") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Login
                             {path.indexOf("/login") !== -1 && <div className={classes.selectedLink}/>}
+                        </div>
+                    </Link>}
+                    {user && user.user_id ? <Link to={"/login/"} onClick={() => {
+                        AuthService.logoutUser()
+                    }}>
+                        <div className={classes.linkStyle}>
+                            <div>
+                                Logout
+                            </div>
+                        </div>
+                    </Link> : <Link to={"/sign-up"}>
+                        <div className={classes.linkStyle} style={{color: path.indexOf("/sign-up") !== -1  ? COMMON.COLORS.B400 : null}}>
+                            Sign Up
+                            {path.indexOf("/sign-up") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>}
                 </div>

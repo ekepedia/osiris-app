@@ -10,6 +10,7 @@ import ClaimPortfolio from "../../scenes/ClaimPortfolio/index";
 import CompanyIndex from "../../scenes/CompanyIndex/index";
 import CompanyPage from "../../scenes/CompanyPage/index";
 import SavedJobs from "../../scenes/SavedJobs/index";
+import SignUp from "../../scenes/SignUp/index";
 
 import {withApollo} from "react-apollo";
 
@@ -26,6 +27,7 @@ class Routing extends React.Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route exact path='/login' component={Login}/>
+                    <Route exact path='/sign-up' component={SignUp}/>
                     <Route exact path='/claim/:user_id' component={ClaimPortfolio}/>
                     <Route exact path='/jobs' component={Jobs}/>
                     <Route exact path='/edit/:user_id' component={UserPortfolio}/>
