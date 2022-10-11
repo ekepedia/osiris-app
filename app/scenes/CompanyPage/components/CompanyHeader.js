@@ -12,6 +12,7 @@ import COMMON from "../../../common/index";
 import {httpSafeLink, mc} from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import StandardButton from "../../../components/StandardButton";
+import StandardBadge from "../../../components/StandardBadge";
 
 const Styles = {
     container: {
@@ -122,6 +123,12 @@ class PortfolioHeader extends React.Component {
                     </div>
                     <div className={classes.profileHeaderName}>{company.company_name}</div>
                     <div className={classes.profileHeaderBio}>{company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
+                    <div style={{marginTop: "10px"}}>
+                        {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
+                        {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
+                        {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
+                        {company.glassdoor_compensation ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_compensation}/5 on<br/>Glassdoor for compensation`} label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
+                    </div>
                     <div className={classes.companyTabs}>
                         <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
                             <span style={{color: selectedState === 1 ? COMMON.COLORS.B400 : null}}>Home</span>
