@@ -137,8 +137,8 @@ class PortfolioHeader extends React.Component {
         } = user;
 
         let center_align = "calc( 50% - 12.5px)";
-        let center_style_profile = {top: profile_photo_url ? 20: center_align, right: profile_photo_url ? 20: center_align, border: profile_photo_url ? null: "none"};
-        let center_style_cover = {top: cover_photo_url ? null: center_align, right: cover_photo_url ? null: center_align, border: cover_photo_url ? null: "none"};
+        let center_style_profile = {top: profile_photo_url ? null : center_align, right: profile_photo_url ? null : center_align, border: profile_photo_url ? null: "none"};
+        let center_style_cover = {top: cover_photo_url ? 20: center_align, right: cover_photo_url ? 20: center_align, border: cover_photo_url ? null: "none"};
         let has_link = (user_instagram_link || user_main_contact_email || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
 
         return (<div className={classes.container}>

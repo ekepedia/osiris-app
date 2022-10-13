@@ -104,8 +104,8 @@ class Login extends React.Component {
                         <div className={mc(classes.subContainer)}>
                             <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
 
-                            <div className={mc(classes.inputLabel)}>Username</div>
-                            <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
+                            <div className={mc(classes.inputLabel)}>Email</div>
+                            <StandardInput value={username} placeholder={"Input Email"} update={(v) => (this.setState({username: v}))}/>
 
                             <div className={mc(classes.inputLabel)}>Password</div>
                             <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>

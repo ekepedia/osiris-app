@@ -32,7 +32,7 @@ const Styles = {
         overflow: "hidden"
     },
     companyNameContainer: {
-        flex: "0 0 233px"
+        flex: "0 0 180px"
     },
     companyEmployeeContainer: {
         flex: "0 0 95px",
@@ -49,7 +49,7 @@ const Styles = {
         flex: "0 0 120px"
     },
     companyGlassdoorContainer: {
-        flex: "0 0 260px",
+        flex: "0 0 240px",
     },
     companyIndustryContainer: {
         flex: 1,
