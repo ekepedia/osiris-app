@@ -96,7 +96,9 @@ const StandardCardStyles = {
 
 const PortfolioHeaderStyles = {
     superContainer: {
-        border: `1px solid ${N400}`, borderRadius: "6px", overflow: "hidden"
+        border: `1px solid ${N400}`,
+        borderRadius: "6px",
+        overflow: "hidden"
     },
     profileHeaderContainer: {
         padding: "75px 35px",
