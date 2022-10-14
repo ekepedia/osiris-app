@@ -39,11 +39,11 @@ module.exports.init = function (connection) {
     //     console.log("BAD", b)
     // })
 
-    login_user_by_email({user_email: "eke@osiris.works", password: "password"}).then((data) => {
-        console.log("LOGO ", data);
-    }).catch((e) => {
-        console.log("e", e);
-    })
+    // login_user_by_email({user_email: "eke@osiris.works", password: "password"}).then((data) => {
+    //     console.log("LOGO ", data);
+    // }).catch((e) => {
+    //     console.log("e", e);
+    // })
     //
     // create_user_login({user_id: 7, password: "pass123"}).then((ul) => {
     //     console.log("created login", ul)

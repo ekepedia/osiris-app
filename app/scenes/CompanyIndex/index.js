@@ -17,6 +17,8 @@ import StandardInput from "../../components/StandardInput";
 import NavBar from "../../components/NavBar";
 import StandardMultiSelect from "../../components/StandardMultiSelect";
 import TrackingService from "../../services/TrackingService";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 const Styles = {
     container: {
@@ -46,7 +48,8 @@ class CompanyIndex extends React.Component {
             industries: [],
             industriesOptions: [],
             selectedIndustries: [],
-            companyNameFilter: ""
+            companyNameFilter: "",
+            MAX_RESULTS: 10
         };
     }
 
@@ -176,18 +179,45 @@ class CompanyIndex extends React.Component {
         return label;
     }
 
-    render() {
-        let { classes, client, match: { params } } = this.props;
-        let { companies, company_demographics_map, company_demographics_yearly_map, companyNameFilter, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+    resetMaxResults() {
+        this.setState({
+            MAX_RESULTS: 10
+        })
+    }
+
+    filterCompanies() {
+        let { companies,
+            company_demographics_map,
+            company_demographics_yearly_map,
+            companyNameFilter,
+            selectedLocations,
+            selectedIndustries,
+            employeeFilter,
+            femaleEmployeeFilter,
+            bipocEmployeeFilter,
+            MAX_RESULTS
+        } = this.state;
+
+        if (!companies || !companies.length)
+            return {
+                filtered_companies: [],
+                available: 0
+            }
 
         company_demographics_map = company_demographics_map || {};
         company_demographics_yearly_map = company_demographics_yearly_map || {};
 
-        const getMaxYear = (company_id) => {
-            let mapping = company_demographics_yearly_map[company_id];
-            if (!mapping || !Object.keys(mapping) || !Object.keys(mapping).length) return null;
+        const getBipocRepresentation = (company_demographics) => {
+            let bipoc_numbers = parseFloat(company_demographics.employees_asian || "0") +
+                parseFloat(company_demographics.employees_black || "0") +
+                parseFloat(company_demographics.employees_latinx || "0") +
+                parseFloat(company_demographics.employees_indigenous || "0");
 
-            return Math.max(...Object.keys(mapping).map((v) => (parseFloat(v))));
+            let white_numbers = parseFloat(company_demographics.employees_white || "0")
+
+            let bipoc_respresentation = Math.round((bipoc_numbers/(white_numbers + bipoc_numbers)) * 1000)/10;
+
+            return company_demographics.employees_bipoc || bipoc_respresentation;
         };
 
         const getYearAndComparisonYear = (company_id) => {
@@ -209,18 +239,101 @@ class CompanyIndex extends React.Component {
             }
         };
 
-        const getBipocRepresentation = (company_demographics) => {
-            let bipoc_numbers = parseFloat(company_demographics.employees_asian || "0") +
-                parseFloat(company_demographics.employees_black || "0") +
-                parseFloat(company_demographics.employees_latinx || "0") +
-                parseFloat(company_demographics.employees_indigenous || "0");
+        let filtered_companies = companies.map((company, i) => {
 
-            let white_numbers = parseFloat(company_demographics.employees_white || "0")
+            const { company_id } = company;
 
-            let bipoc_respresentation = Math.round((bipoc_numbers/(white_numbers + bipoc_numbers)) * 1000)/10;
+            const {currentYear, previousYear} = getYearAndComparisonYear(company_id);
 
-            return company_demographics.employees_bipoc || bipoc_respresentation;
-        };
+            const company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][currentYear] || {}) : {};
+            const previous_company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][previousYear] || {}) : {};
+
+            const bipoc_respresentation = getBipocRepresentation(company_demographics);
+            const previous_bipoc_respresentation = previousYear ? getBipocRepresentation(previous_company_demographics) : null;
+            const bipoc_respresentation_change = previousYear ? Math.round((bipoc_respresentation - previous_bipoc_respresentation)*100)/100 : null;
+
+            const female_respresentation = company_demographics.employees_female;
+            const previous_female_respresentation = previousYear ? previous_company_demographics.employees_female : null;
+            const female_respresentation_change = previousYear ? Math.round((female_respresentation - previous_female_respresentation)*100)/100 : null;
+
+            // console.log(company.company_name, female_respresentation, previous_female_respresentation);
+
+            if (companyNameFilter && companyNameFilter.length) {
+                const filter = companyNameFilter.toLowerCase();
+                const name = (company.company_name || "").toLowerCase();
+
+                if (name.indexOf(filter) === -1)
+                    return null;
+            }
+
+            if (employeeFilter) {
+                if (parseFloat(company.company_size) < parseFloat(employeeFilter))
+                    return null;
+
+                if (parseFloat(employeeFilter) >= 1 && !company.company_size)
+                    return null;
+            }
+
+            if (femaleEmployeeFilter) {
+                if (parseFloat(company_demographics.employees_female) < parseFloat(femaleEmployeeFilter))
+                    return null;
+
+                if (parseFloat(femaleEmployeeFilter) >= 1 && !company_demographics.employees_female)
+                    return null;
+            }
+
+            if (bipocEmployeeFilter) {
+                if (bipoc_respresentation < parseFloat(bipocEmployeeFilter))
+                    return null;
+
+                if (parseFloat(bipocEmployeeFilter) >= 1 && !bipoc_respresentation)
+                    return null;
+            }
+
+            if (selectedLocations && selectedLocations.length) {
+                const company_location = `${company.company_city}, ${company.company_state}`;
+                let found = false;
+                selectedLocations.forEach((location) => {
+                    if (company_location === location)
+                        found = true
+                });
+
+                if (!found)
+                    return null;
+            }
+
+            if (selectedIndustries && selectedIndustries.length) {
+                let found = false;
+                selectedIndustries.forEach((industry) => {
+                    if (company.company_industry === industry)
+                        found = true
+                });
+
+                if (!found)
+                    return null;
+            }
+
+            if (!company.company_logo_url)
+                return null;
+
+
+
+            return (<CompanyIndexRow key={company_id} {...{company, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+        })
+
+        filtered_companies = _.without(filtered_companies, null);
+
+        return {
+            filtered_companies: filtered_companies.slice(0, MAX_RESULTS),
+            available: filtered_companies.length
+        }
+    }
+
+    render() {
+        let { classes, client, match: { params } } = this.props;
+        let { MAX_RESULTS, companies, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+
+        let {filtered_companies, available} = this.filterCompanies();
 
         return (
             <div className={classes.masterContainer}>
@@ -236,7 +349,12 @@ class CompanyIndex extends React.Component {
                                 <div className={mc(classes.companyFilterContainer)}>
                                     <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/>Company Search</div>
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => {
-                                        this.setState({companyNameFilter: v});
+                                        this.resetMaxResults();
+
+                                        this.setState({
+                                            companyNameFilter: v,
+                                            MAX_RESULTS: 10
+                                        });
                                         TrackingService.trackSubmit({page: "company-search", sub_page: "company-name", value: v});
                                     }}/>
 
@@ -294,91 +412,36 @@ class CompanyIndex extends React.Component {
 
                                 </div>
                             </div>
-                            <div className={mc(classes.RHSContainer)} style={{border: companies && companies.length ? null : "none"}}>
-                                <div>{companies && companies.length ? <div>
+                            <div className={mc(classes.RHSContainer)} id="scrollableDiv" style={{border: companies && companies.length ? null : "none"}}>
+                                <InfiniteScroll
+                                    dataLength={MAX_RESULTS}
+                                    next={() => {
+                                        console.log("loading more!", MAX_RESULTS);
+                                        this.setState({
+                                            MAX_RESULTS: MAX_RESULTS + 10
+                                        })
+                                    }}
+                                    hasMore={available > MAX_RESULTS}
+                                    scrollThreshold={"200px"}
+                                    scrollableTarget="scrollableDiv"
+                                    loader={<div className="loader" key={0}></div>}
+                                    endMessage={
+                                        <div style={{ textAlign: 'center' }}>
 
-                                    {companies.map((company) => {
+                                        </div>
+                                    }
+                                >
+                                    {filtered_companies && filtered_companies.length ? filtered_companies : <div>
+                                        <div style={{textAlign: "center", background: COMMON.COLORS.N0, padding: "20px"}}>
+                                            {companies && companies.length ? <div>
+                                                We couldn't find a company that fit your exact criteria, but we are actively adding more!
+                                            </div> : <div>
+                                                We're pulling in the data--just a second!
+                                            </div>}
 
-                                        const { company_id } = company;
-
-
-                                        const {currentYear, previousYear} = getYearAndComparisonYear(company_id);
-
-                                        const company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][currentYear] || {}) : {};
-                                        const previous_company_demographics = company_demographics_yearly_map[company_id] ? (company_demographics_yearly_map[company_id][previousYear] || {}) : {};
-
-                                        const bipoc_respresentation = getBipocRepresentation(company_demographics);
-                                        const previous_bipoc_respresentation = previousYear ? getBipocRepresentation(previous_company_demographics) : null;
-                                        const bipoc_respresentation_change = previousYear ? Math.round((bipoc_respresentation - previous_bipoc_respresentation)*100)/100 : null;
-
-                                        const female_respresentation = company_demographics.employees_female;
-                                        const previous_female_respresentation = previousYear ? previous_company_demographics.employees_female : null;
-                                        const female_respresentation_change = previousYear ? Math.round((female_respresentation - previous_female_respresentation)*100)/100 : null;
-
-                                        // console.log(company.company_name, female_respresentation, previous_female_respresentation);
-
-                                        if (companyNameFilter && companyNameFilter.length) {
-                                            const filter = companyNameFilter.toLowerCase();
-                                            const name = (company.company_name || "").toLowerCase();
-
-                                            if (name.indexOf(filter) === -1)
-                                                return null;
-                                        }
-
-                                        if (employeeFilter) {
-                                            if (parseFloat(company.company_size) < parseFloat(employeeFilter))
-                                                return null;
-
-                                            if (parseFloat(employeeFilter) >= 1 && !company.company_size)
-                                                return null;
-                                        }
-
-                                        if (femaleEmployeeFilter) {
-                                            if (parseFloat(company_demographics.employees_female) < parseFloat(femaleEmployeeFilter))
-                                                return null;
-
-                                            if (parseFloat(femaleEmployeeFilter) >= 1 && !company_demographics.employees_female)
-                                                return null;
-                                        }
-
-                                        if (bipocEmployeeFilter) {
-                                            if (bipoc_respresentation < parseFloat(bipocEmployeeFilter))
-                                                return null;
-
-                                            if (parseFloat(bipocEmployeeFilter) >= 1 && !bipoc_respresentation)
-                                                return null;
-                                        }
-
-                                        if (selectedLocations && selectedLocations.length) {
-                                            const company_location = `${company.company_city}, ${company.company_state}`;
-                                            let found = false;
-                                            selectedLocations.forEach((location) => {
-                                                if (company_location === location)
-                                                    found = true
-                                            });
-
-                                            if (!found)
-                                                return null;
-                                        }
-
-                                        if (selectedIndustries && selectedIndustries.length) {
-                                            let found = false;
-                                            selectedIndustries.forEach((industry) => {
-                                                if (company.company_industry === industry)
-                                                    found = true
-                                            });
-
-                                            if (!found)
-                                                return null;
-                                        }
-
-                                        if (!company.company_logo_url)
-                                            return null;
-
-                                        return (<CompanyIndexRow key={company_id} {...{company, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
-
-                                    })}
-                                </div> : null}</div>
+                                        </div>
+                                    </div>}
+                                </InfiniteScroll>
                             </div>
                         </div>
 
