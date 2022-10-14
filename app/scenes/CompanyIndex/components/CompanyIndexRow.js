@@ -187,17 +187,17 @@ class CompanyIndexRow extends React.PureComponent {
 
 
 
-            {/*<ReactTooltip multiline={true} className={"tool-tip-styles"} id={id1} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>*/}
-            {/*    Black, Indigenous, (and)<br/> People of Color*/}
-            {/*</ReactTooltip>*/}
+            <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id1} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
+                Black, Indigenous, (and)<br/> People of Color
+            </ReactTooltip>
 
-            {/*<ReactTooltip multiline={true} className={"tool-tip-styles"} id={id2} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>*/}
-            {/*    To align with U.S. government reporting<br/>*/}
-            {/*    requirements, data on this website uses<br/>*/}
-            {/*    the traditional gender categories of male<br/>*/}
-            {/*    and female. OSIRIS deeply respects that<br/>*/}
-            {/*    gender is not binary.*/}
-            {/*</ReactTooltip>*/}
+            <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id2} place={"bottom"} padding={"0px"} backgroundColor={COMMON.COLORS.N800}>
+                To align with U.S. government reporting<br/>
+                requirements, data on this website uses<br/>
+                the traditional gender categories of male<br/>
+                and female. OSIRIS deeply respects that<br/>
+                gender is not binary.
+            </ReactTooltip>
 
         </div>)
     }
