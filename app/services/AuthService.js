@@ -52,6 +52,7 @@ AuthService.setCurrentUser = ({user, user_id}) => {
                 current_user = user;
                 localStorage.current_user = JSON.stringify(current_user);
                 EventService.emit(EventService.events.UPDATE_USER, user);
+                updateIntercomObject();
             })
         }
     }
@@ -59,6 +60,7 @@ AuthService.setCurrentUser = ({user, user_id}) => {
     localStorage.current_user = JSON.stringify(current_user);
     localStorage.current_user_id = JSON.stringify(current_user_id);
     EventService.emit(EventService.events.UPDATE_USER, user);
+    updateIntercomObject();
 }
 
 AuthService.reloadCurrentUser = reloadCurrentUser;
@@ -88,6 +90,17 @@ function logoutUser() {
     localStorage.current_user_id = null;
 }
 
+function updateIntercomObject() {
+    if (window && current_user) {
+        window.intercomSettings = window.intercomSettings || {};
+        window.intercomSettings.name = `${current_user.first_name} ${current_user.last_name}`;
+        window.intercomSettings.email = current_user.username;
+        window.intercomSettings.created_at = current_user.created_at;
+
+        (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/lcoc53ye';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(document.readyState==='complete'){l();}else if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+
+    }
+}
 
 function init () {
     let current_user_string = localStorage.current_user;
@@ -104,8 +117,11 @@ function init () {
     console.log("INIT Auth Service:", current_user_id, current_user);
     reloadCurrentUser().then();
 
-    console.log("abote to meit!")
+    console.log("abote to meit!");
 
+    console.log(window);
+
+    updateIntercomObject();
 }
 
 
