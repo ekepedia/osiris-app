@@ -128,7 +128,7 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, company, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
+        let { classes, id, company, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
 
         let { expanded } = this.state
         company_demographics = company_demographics || {};
@@ -160,7 +160,7 @@ class CompanyIndexRow extends React.Component {
             female_respresentation_change_label = `${female_respresentation_change > 0 ? '+' : ''}${female_respresentation_change}% change`;
         }
 
-        return (<div className={classes.container}>
+        return (<div className={classes.container} id={id}>
             <div className={classes.subContainer}>
                 <div className={mc(classes.companyLogo)}>
                     <CoverImageHolder url={company.company_logo_url} />

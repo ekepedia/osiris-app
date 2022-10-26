@@ -60,7 +60,7 @@ class CompanyIndex extends React.Component {
             selectedIndustries: [],
             companyNameFilter: "",
             MAX_RESULTS: 10,
-            sort_param: SORTS.BIPOC,
+            sort_param: SORTS.NAME,
             reverse: false
         };
     }
