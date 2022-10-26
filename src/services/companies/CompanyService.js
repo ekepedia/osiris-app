@@ -40,6 +40,7 @@ module.exports.init = function (connection) {
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
+        console.log("SET PRELOADED DATA:", companies.length )
     })
 
     let in_locations = [{
