@@ -17,6 +17,8 @@ const SERVICE_DEFAULT_TABLE = COMPANY_TABLE;
 const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 const OSIRIS_DATA_BASE = "appMzGF6dxRHZfubu";
 
+let PRELOADED_DATA = [];
+
 module.exports.COMPANY_TABLE = COMPANY_TABLE;
 
 module.exports.init = function (connection) {
@@ -25,13 +27,39 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
+    // knex(COMPANY_TABLE).where({batch_id: "glassdoor_s_0_n_11000"}).del().then(() => {
+    // }).catch((err) => {
+    // });
+
+    // import_glassdoor_companies();
     // test_endpoints();
     // mass_delete();
     // construct_questions();
     // import_data();
     // import_demo_data();
 
-    load_locations({}).then(({locations, location_map}) => {
+    get_companies({is_clearbit_import: false}).then((companies) => {
+        PRELOADED_DATA = companies;
+    })
+
+    let in_locations = [{
+        location_id: "remote",
+        id: "remote",
+        city: "Remote",
+        state: "Remote",
+        label: "Remote"
+    }];
+    let in_location_map = {
+        "remote": {
+            location_id: "remote",
+            id: "remote",
+            city: "Remote",
+            state: "Remote",
+            label: "Remote"
+        }
+    };
+
+    load_locations({locations: in_locations, location_map: in_location_map}).then(({locations, location_map}) => {
         load_industries({}).then(({industries, industry_map}) => {
             load_dei({}).then(({dei_data, dei_data_map}) => {
 
@@ -83,6 +111,7 @@ function get_companies({
                            is_clearbit_import,
                            company_industry,
                            company_industry_group,
+                           glassdoor_reviews,
                            glassdoor_overall,
                            glassdoor_culture,
                            glassdoor_diversity,
@@ -113,6 +142,7 @@ function get_companies({
         is_clearbit_import,
         company_industry,
         company_industry_group,
+        glassdoor_reviews,
         glassdoor_overall,
         glassdoor_culture,
         glassdoor_diversity,
@@ -122,14 +152,19 @@ function get_companies({
         glassdoor_career,
     });
 
+    console.log("COMPANY QUERY", query, (query.is_clearbit_import === false && !query.company_id));
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
     return new Promise((resolve, reject) => {
-        knexQuery.then((rows) => {
-            return resolve(rows);
-        }).catch((err) => {
-            return reject(err);
-        });
+        if (PRELOADED_DATA && PRELOADED_DATA.length && (query.is_clearbit_import === false && !query.company_id)) {
+            return resolve(PRELOADED_DATA);
+        } else {
+            knexQuery.then((rows) => {
+                return resolve(rows);
+            }).catch((err) => {
+                return reject(err);
+            });
+        }
     });
 }
 
@@ -159,6 +194,7 @@ function create_company({
                             is_clearbit_import,
                             company_industry,
                             company_industry_group,
+                            glassdoor_reviews,
                             glassdoor_overall,
                             glassdoor_culture,
                             glassdoor_diversity,
@@ -195,6 +231,7 @@ function create_company({
             is_clearbit_import,
             company_industry,
             company_industry_group,
+            glassdoor_reviews,
             glassdoor_overall,
             glassdoor_culture,
             glassdoor_diversity,
@@ -241,6 +278,7 @@ function edit_company({
                           is_clearbit_import,
                           company_industry,
                           company_industry_group,
+                          glassdoor_reviews,
                           glassdoor_overall,
                           glassdoor_culture,
                           glassdoor_diversity,
@@ -277,6 +315,7 @@ function edit_company({
             is_clearbit_import,
             company_industry,
             company_industry_group,
+            glassdoor_reviews,
             glassdoor_overall,
             glassdoor_culture,
             glassdoor_diversity,
@@ -362,24 +401,33 @@ function import_data() {
 }
 
 
-function import_airtable_companies({location_map, industry_map, dei_data_map}) {
+function import_airtable_companies({location_map, industry_map, dei_data_map, offset}) {
 
-    const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+    const CompanyDemographicService = require("../company_demographics/CompanyDemographicService");
 
+    let url = `https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Companies?`;
 
-    axios.get(`https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Companies?`, {
+    if (offset) {
+        url += `offset=${offset}`
+    }
+
+    axios.get(url, {
         headers: {
             'Authorization': `Bearer ${AIR_TABLE_KEY}`
         }
     }).then((res) => {
         // console.log(res.data.records)
+        console.log("OFFSET:", res.data.offset)
         res.data.records.forEach((record) => {
-            // console.log(record.fields)
+            console.log(record.id)
 
             let { fields } = record;
 
             let new_dei_data = dei_data_map[record.id] || {};
-            // console.log(fields["Industry"][0]);
+            console.log(fields["Company"], fields["Location"]);
+
+            if (!fields["Location"])
+                return;
 
             const new_company = {
                 is_clearbit_import: false,
@@ -394,10 +442,20 @@ function import_airtable_companies({location_map, industry_map, dei_data_map}) {
                 company_founded_year: fields["Founded"],
                 company_size: dei_data_map[record.id] ? dei_data_map[record.id].employees : null,
                 company_industry: industry_map[fields["Industry"][0]].name,
-                company_industry_group: industry_map[fields["Industry"][0]].name
+                company_industry_group: industry_map[fields["Industry"][0]].name,
+                batch_id: "R2-10-13-2022-13:00",
+                glassdoor_overall: fields["Glassdoor Overall"],
+                glassdoor_culture: fields["Glassdoor Culture & Values"],
+                glassdoor_diversity: fields["Glassdoor Diversity & Inclusion"],
+                glassdoor_work_life: fields["Glassdoor Work/Life Balance"],
+                glassdoor_senior_management: fields["Glassdoor Senior Management"],
+                glassdoor_compensation: fields["Glassdoor Compensation and Benefits"],
+                glassdoor_career: fields["Glassdoor Career Opportunities"],
             }
 
             // console.log(new_company, new_dei_data);
+            // return;
+
 
             // create_company(new_company).then((company_id) => {
             //     console.log(company_id)
@@ -407,34 +465,40 @@ function import_airtable_companies({location_map, industry_map, dei_data_map}) {
             //     })
             // })
 
-            get_companies({
-                    airtable_company_id: record.id
-                }).then((companies) =>{
-                    if (companies && companies.length) {
-                        const {company_id} = companies[0];
+            // get_companies({
+            //     airtable_company_id: record.id
+            // }).then((companies) => {
+            //     if (companies && companies.length) {
+            //         const {company_id} = companies[0];
+            //
+            //         if (company_id) {
+            //             let company_glassdoor = {
+            //                 company_id,
+            //                 glassdoor_overall: fields["Glassdoor Overall"],
+            //                 glassdoor_culture: fields["Glassdoor Culture & Values"],
+            //                 glassdoor_diversity: fields["Glassdoor Diversity & Inclusion"],
+            //                 glassdoor_work_life: fields["Glassdoor Work/Life Balance"],
+            //                 glassdoor_senior_management: fields["Glassdoor Senior Management"],
+            //                 glassdoor_compensation: fields["Glassdoor Compensation and Benefits"],
+            //                 glassdoor_career: fields["Glassdoor Career Opportunities"],
+            //             }
+            //
+            //             // edit_company(company_glassdoor).then((d) => {
+            //             //     console.log(d)
+            //             // })
+            //
+            //             // console.log(company_glassdoor);
+            //         }
+            //     }
+            // })
 
-                        if (company_id) {
-                            let company_glassdoor = {
-                                company_id,
-                                glassdoor_overall: fields["Glassdoor Overall"],
-                                glassdoor_culture: fields["Glassdoor Culture & Values"],
-                                glassdoor_diversity: fields["Glassdoor Diversity & Inclusion"],
-                                glassdoor_work_life: fields["Glassdoor Work/Life Balance"],
-                                glassdoor_senior_management: fields["Glassdoor Senior Management"],
-                                glassdoor_compensation: fields["Glassdoor Compensation and Benefits"],
-                                glassdoor_career: fields["Glassdoor Career Opportunities"],
-                            }
+        });
 
-                            // edit_company(company_glassdoor).then((d) => {
-                            //     console.log(d)
-                            // })
-
-                            // console.log(company_glassdoor);
-                        }
-                    }
-                })
-
-        })
+        if (res.data.offset) {
+            import_airtable_companies({location_map, industry_map, dei_data_map, offset: res.data.offset});
+        } else {
+            return;
+        }
     });
 
 }
@@ -653,32 +717,22 @@ function construct_questions() {
     })
 }
 
-function load_locations() {
+function load_locations({locations, location_map, offset}) {
 
-    let locations = [{
-        location_id: "remote",
-        id: "remote",
-        city: "Remote",
-        state: "Remote",
-        label: "Remote"
-    }];
-    let location_map = {
-        "remote": {
-            location_id: "remote",
-            id: "remote",
-            city: "Remote",
-            state: "Remote",
-            label: "Remote"
-        }
-    };
+    let url = `https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Locations?`;
+
+    if (offset) {
+        url += `offset=${offset}`
+    }
 
     return new Promise((resolve, reject) => {
-        axios.get(`https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Locations?`, {
+        axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${AIR_TABLE_KEY}`
             }
         }).then((res) => {
 
+            console.log("LOCATION STUFF", res.data.offset, res.data.records.length)
             res.data.records.forEach((record) =>{
                 let fields = record.fields || {};
 
@@ -697,10 +751,16 @@ function load_locations() {
                 location_map[location.location_id] = location;
             });
 
-            resolve({
-                locations,
-                location_map
-            });
+            if (res.data.offset) {
+                load_locations({locations, location_map, offset: res.data.offset}).then((data) => {
+                    resolve(data)
+                })
+            } else {
+                resolve({
+                    locations,
+                    location_map
+                });
+            }
         });
     })
 }
@@ -783,7 +843,7 @@ function load_dei({dei_data, dei_data_map, offset}) {
                     employees_bipoc: Math.round(fields['BIPOC']*10000)/100,
                     year: fields['Year'],
                     employees: fields['Number of Employees'],
-                    airtable_company_id: fields['Company'][0],
+                    airtable_company_id: fields['Company'] ? fields['Company'][0] : null,
                 }
 
                 dei_data.push(dei);
@@ -806,3 +866,35 @@ function load_dei({dei_data, dei_data_map, offset}) {
         });
     })
 }
+
+const csv = require('csv-parser');
+const fs = require('fs');
+
+function import_glassdoor_companies() {
+    const filename = "glassdoor_set_1.csv";
+
+    let i = 0;
+    fs.createReadStream(__dirname + `/../../../data/${filename}`)
+        .pipe(csv())
+        .on('data', (company) => {
+
+            company = {
+                ...company,
+                glassdoor_compensation: company.glassdoor_compensation || null,
+                glassdoor_culture: company.glassdoor_culture || null,
+                glassdoor_overall: company.glassdoor_overall || null,
+                glassdoor_work_life: company.glassdoor_work_life || null,
+                batch_id: "glassdoor_s_0_n_11000_v1"
+            }
+
+            console.log(company, ++i)
+            // create_company(company).then((id) => {
+            //     console.log(id)
+            // })
+
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+}
+

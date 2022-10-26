@@ -7,7 +7,7 @@ import { withRouter, Link} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
 
-import DataService from '../../services/DataService';
+import AuthService from '../../services/AuthService';
 import COMMON from "../../common/index";
 import axios from "axios";
 import {mc} from "../../common/helpers";
@@ -58,7 +58,10 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            username: "",
+            password: ""
+        };
     }
 
     componentDidMount() {
@@ -68,13 +71,20 @@ class Login extends React.Component {
     login() {
         const { username, password } = this.state;
 
-        axios.post("/api/login", {username, password}).then((data) => {
-            console.log("LOGIN", data.data);
+        axios.post("/api/login", {user_email: username, password}).then((data) => {
 
-            if (data.data.success) {
-                window.location.pathname = `/edit/${data.data.data.user_login.user_id}`;
-                localStorage.user_id = data.data.data.user_login.user_id;
+            if (data && data.data) {
+                console.log("LOGIN", data.data);
+
+                if (data.data.success) {
+                    let user_id = data.data.data.user_login.user_id;
+                    window.location.pathname = `/edit/${user_id}`;
+                    AuthService.setCurrentUser({user_id})
+                }
+            } else {
+                alert("An error has occured while attempting to login");
             }
+
         })
     }
 
@@ -94,11 +104,11 @@ class Login extends React.Component {
                         <div className={mc(classes.subContainer)}>
                             <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
 
-                            <div className={mc(classes.inputLabel)}>Username</div>
-                            <StandardInput value={username} placeholder={"Input Username"} update={(v) => (this.setState({username: v}))}/>
+                            <div className={mc(classes.inputLabel)}>Email</div>
+                            <StandardInput value={username} placeholder={"Input Email"} update={(v) => (this.setState({username: v}))}/>
 
                             <div className={mc(classes.inputLabel)}>Password</div>
-                            <StandardInput value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
+                            <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
 
                             <div className={mc(classes.buttonContainer)}>
                                 <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>

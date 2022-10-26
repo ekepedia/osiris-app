@@ -47,6 +47,7 @@ const typeDef = gql`
         glassdoor_diversity: String
         glassdoor_culture: String
         glassdoor_overall: String
+        glassdoor_reviews: String
         
         is_hidden: Boolean
         is_verified: Boolean
@@ -87,6 +88,7 @@ const typeDef = gql`
         glassdoor_diversity: String
         glassdoor_culture: String
         glassdoor_overall: String
+        glassdoor_reviews: String
         
         is_hidden: Boolean
         is_verified: Boolean
@@ -129,6 +131,7 @@ const typeDef = gql`
         glassdoor_diversity: String
         glassdoor_culture: String
         glassdoor_overall: String
+        glassdoor_reviews: String
         
         is_hidden: Boolean
         is_verified: Boolean
@@ -171,6 +174,7 @@ const typeDef = gql`
         glassdoor_diversity: String
         glassdoor_culture: String
         glassdoor_overall: String
+        glassdoor_reviews: String
 
         is_hidden: Boolean
         is_verified: Boolean

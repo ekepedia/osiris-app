@@ -227,7 +227,7 @@ class Jobs extends React.Component {
             let selectedJob;
 
             jobs = jobs.map((job) => {
-                job.companies = [company_map[job.company_id]];
+                job.companies = job.companies ? job.companies : [company_map[job.company_id]];
                 return job;
             })
 

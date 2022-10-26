@@ -198,33 +198,40 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                <div style={{marginBottom: SECTION_BUFFER}}>
-                    <div className={mc(classes.sectionHeader)}>Role Overview</div>
-                    <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
-                    <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
-                </div>
+                {job.job_html ? <div>
+                    <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
 
-                <div style={{marginBottom: SECTION_BUFFER}}>
-                    <div className={mc(classes.sectionHeader)}>Job Highlights</div>
-                    <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
-
+                </div> : <div>
                     <div style={{marginBottom: SECTION_BUFFER}}>
-                        <div>
-                            <div className={mc(classes.jobHighlightsSubHeader)}>Qualifications</div>
-                            <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
-                                __html: qualification.name
-                            }}/>
-                        </div>
-
-                        <div style={{marginTop: "25px"}}>
-                            <div className={mc(classes.jobHighlightsSubHeader)}>Responsibilities</div>
-                            <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
-                                __html: responsibility.name
-                            }} />
-                        </div>
+                        <div className={mc(classes.sectionHeader)}>Role Overview</div>
+                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
+                        <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
                     </div>
 
-                </div>
+                    <div style={{marginBottom: SECTION_BUFFER}}>
+                        <div className={mc(classes.sectionHeader)}>Job Highlights</div>
+                        <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from the original job post</div>
+
+                        <div style={{marginBottom: SECTION_BUFFER}}>
+                            <div>
+                                <div className={mc(classes.jobHighlightsSubHeader)}>Qualifications</div>
+                                <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
+                                    __html: qualification.name
+                                }}/>
+                            </div>
+
+                            <div style={{marginTop: "25px"}}>
+                                <div className={mc(classes.jobHighlightsSubHeader)}>Responsibilities</div>
+                                <div className={mc(classes.bodyText)} style={{whiteSpace: "pre-line"}} dangerouslySetInnerHTML={{
+                                    __html: responsibility.name
+                                }} />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>}
+
+
 
                 <div style={{ marginBottom: "20px", display: !company.company_about ? "none" : null}}>
 

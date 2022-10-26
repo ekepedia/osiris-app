@@ -152,14 +152,14 @@ class UserPortfolio extends React.Component {
 
 
         if (gallery) {
-            console.log("RESIZED GALLERY", node.clientWidth, currentHeight, node.clientHeight)
+            // console.log("RESIZED GALLERY", node.clientWidth, currentHeight, node.clientHeight)
 
             this.setState({
                 currentGalleryWidth: currentWidth,
                 currentGalleryHeight: currentHeight
             });
         } else {
-            console.log("RESIZED LINK", node.clientWidth, currentHeight, node.clientHeight)
+            // console.log("RESIZED LINK", node.clientWidth, currentHeight, node.clientHeight)
 
             this.setState({
                 currentWidth,
@@ -498,6 +498,7 @@ class UserPortfolio extends React.Component {
 
         UserLinkService.getUserLink({client, user_id: params.user_id}).then((user_links) => {
             console.log("loeaded user_links", user_links)
+            user_links = user_links || [];
             user_links = user_links.sort((a, b) => {
                 return (this.convertType(a) - this.convertType(b))
             });

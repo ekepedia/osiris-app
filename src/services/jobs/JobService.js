@@ -3,6 +3,9 @@ const axios = require("axios");
 const _ = require("lodash");
 const moment = require("moment");
 
+const csv = require('csv-parser');
+const fs = require('fs');
+
 const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 const JOBS_BASE = "appZJyAhamGamN0SI";
 
@@ -15,7 +18,10 @@ const JOBS_TABLE = "jobs";
 const SERVICE_NAME = "Jobs Service";
 const SERVICE_DEFAULT_TABLE = JOBS_TABLE;
 
+let WEBSCRAPED_JOBS = [];
+
 module.exports.JOBS_TABLE = JOBS_TABLE;
+module.exports.WEBSCRAPED_JOBS = WEBSCRAPED_JOBS;
 
 const join_character = ";@;";
 
@@ -29,6 +35,7 @@ module.exports.init = function (connection) {
     // mass_delete();
     // import_airtable_jobs();
     // format_jobs_for_job_board();
+    import_webscraper_jobs();
 };
 
 module.exports.get_jobs = get_jobs;
@@ -454,6 +461,104 @@ function import_airtable_jobs() {
         });
 
     });
+}
+
+function import_webscraper_jobs() {
+    const filename = "221004 - 1646- lever-scraper - various.csv";
+
+    fs.createReadStream(__dirname + `/../../../data/${filename}`)
+        .pipe(csv())
+        .on('data', (job) => {
+
+            let job_locations = process_locations(job);
+            job_locations = job_locations.map((location) => {
+                return {
+                    location_id: location,
+                    id: location,
+                    city: location,
+                    state: location,
+                    label: location
+                }
+            });
+
+            let job_sector = job.job_sector.replace("/","").trim();
+
+            let company = job["web-scraper-start-url"];
+            let job_for_board = {
+                job_id: Math.random(),
+                date_created: new Date().getTime(),
+                apply_link: job["apply_link-href"],
+                locations: job_locations,
+                job_salary_estimate: null,
+
+                date_created_label: null,
+                job_title: job.job_title,
+                job_overview: "",
+                industries: {
+                    industry_id: job_sector,
+                    id: job_sector,
+                    label: job_sector,
+                    name: job_sector,
+                },
+                job_types: [{
+                    job_type_id: job.job_type,
+                    id: job.job_type,
+                    label: job.job_type,
+                    name: job.job_type,
+                }],
+                qualifications: [],
+                responsibilities: [],
+                degree_requirements: [],
+                company_id: null,
+                companies: [{
+                    company_name: company,
+                    company_website: company,
+                    company_logo_url: null,
+                    company_industry: null
+                }],
+                affinities: [],
+                job_html: job.job_html
+            };
+
+            // console.log(job_for_board)
+            WEBSCRAPED_JOBS.push(job_for_board);
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+}
+
+function process_locations(job) {
+
+    if (!job)
+        return []
+    let { job_location } = job;
+    let split_locations = job_location.split("/");
+    split_locations = split_locations.map((l) => ((l || "").trim()))
+    split_locations = _.flattenDeep(split_locations.map((l) => {return (l || "").split(" or")}))
+
+    split_locations = _.without(split_locations, '')
+    split_locations = split_locations.map((l) => (clean_location(l || "")));
+    split_locations = _.flattenDeep(split_locations);
+    split_locations = split_locations.map((l) => ((l || "").trim()))
+
+    return split_locations;
+}
+
+function clean_location(location) {
+    if (location === "Telecommuter")
+        return "Remote"
+
+    if (location === "NYC")
+        return "New York, NY"
+
+    if (location === "DC")
+        return "Washington, DC"
+
+    if (location === "NYC, DC,")
+        return ["New York, NY", "Washington, DC"]
+
+    return location
 }
 
 function mass_delete() {

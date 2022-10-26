@@ -28,13 +28,14 @@ const Styles = {
         top: "-12.5",
         right: "-12.5",
         background: COMMON.COLORS.COLOR_WHITE,
-        border: `1px solid ${COMMON.COLORS.LIGHT_GREY}`,
+        border: `1px solid ${COMMON.COLORS.N400}`,
         textAlign: "center",
         cursor: "pointer"
     },
     cameraIcon: {
         fontSize: "13px",
-        lineHeight: "23px"
+        lineHeight: "23px",
+        color: `1px solid ${COMMON.COLORS.N400}`,
     },
     ...COMMON.STYLES.PORTFOLIO.PortfolioHeaderStyles
 };
@@ -105,7 +106,7 @@ class PortfolioHeader extends React.Component {
 
         const currentHeight = currentWidth * RATIO;
 
-        console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
+        // console.log("RESIZED HEADER", node.clientWidth, currentHeight, node.clientHeight, "ratio:", RATIO)
 
         this.setState({
             currentWidth,
@@ -135,13 +136,16 @@ class PortfolioHeader extends React.Component {
             user_vimeo_link
         } = user;
 
+        let center_align = "calc( 50% - 12.5px)";
+        let center_style_profile = {top: profile_photo_url ? null : center_align, right: profile_photo_url ? null : center_align, border: profile_photo_url ? null: "none"};
+        let center_style_cover = {top: cover_photo_url ? 20: center_align, right: cover_photo_url ? 20: center_align, border: cover_photo_url ? null: "none"};
         let has_link = (user_instagram_link || user_main_contact_email || user_clubhouse_link || user_youtube_link || user_twitter_link || user_website_link || user_tiktok_link || user_vimeo_link);
 
         return (<div className={classes.container}>
             <div className={classes.superContainer}>
-                <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
-                    <CoverImageHolder url={cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
-                    <div className={classes.cameraIconContainer} style={{top: 20, right: 20}} onClick={() => {this.uploadCoverPhoto()}}>
+                <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{background: profile_photo_url ? null : COMMON.COLORS.N200, height: this.state.currentHeight ? this.state.currentHeight : null}}>
+                    <CoverImageHolder url={cover_photo_url}/>
+                    <div className={classes.cameraIconContainer} style={{...center_style_cover}} onClick={() => {this.uploadCoverPhoto()}}>
                         <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
                         <input type={"file"} style={{display: "none"}} ref={this.profileCoverUpload} onChange={(e) => {
                             uploadCoverPhoto ? uploadCoverPhoto(e) : null
@@ -150,9 +154,9 @@ class PortfolioHeader extends React.Component {
                 </div>
                 <div className={classes.profileHeaderContainer}>
                     <div className={classes.profileImageContainer}>
-                        <div className={classes.profileImage} style={{overflow: "initial"}}>
+                        <div className={classes.profileImage} style={{overflow: "initial", background: profile_photo_url ? null : COMMON.COLORS.N0}}>
                             <CoverImageHolder url={profile_photo_url}/>
-                            <div className={classes.cameraIconContainer} onClick={() => {this.uploadProfilePhoto()}} >
+                            <div style={{...center_style_profile}} className={classes.cameraIconContainer} onClick={() => {this.uploadProfilePhoto()}} >
                                 <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
                                 <input type={"file"} style={{display: "none"}} ref={this.profilePhotoUpload} onChange={(e) => {
                                     uploadProfilePhoto ? uploadProfilePhoto(e) : null

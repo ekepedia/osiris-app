@@ -26,9 +26,6 @@ module.exports.init = function (connection) {
     console.log("SQL: User Service Successfully Initialized");
 
     // test_endpoints();
-    get_users({}).then((users) => {
-        console.log(users)
-    })
 };
 
 module.exports.get_users = get_users;
@@ -63,8 +60,8 @@ function create_user({username, first_name, last_name, profile_photo_url, cover_
     username = clean_username(username);
 
     return new Promise((resolve, reject) => {
-        if (!username)
-            return reject(new Error("Missing username"));
+        // if (!username)
+        //     return reject(new Error("Missing username"));
 
         const query = DatabaseService.generate_query({username, first_name, last_name, profile_photo_url, cover_photo_url, claim_page_photo_url, bio, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone});
 
