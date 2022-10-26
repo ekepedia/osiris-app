@@ -42,6 +42,11 @@ const CompanyPageStyles = {
         flex: 1,
         maxHeight: "calc(100vh - 177px)",
         height: "fit-content",
+        overflow: "hidden",
+    },
+    RHSScrollContainer: {
+        maxHeight: "calc(100vh - 177px)",
+        height: "fit-content",
         overflow: "scroll",
         borderRadius: "4px",
         border: `1px solid ${N400}`

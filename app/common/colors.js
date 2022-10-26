@@ -109,6 +109,7 @@ export const V100 = "#E7E4F9"; COLORS.V100 = V100;
 export const V600 = "#524988"; COLORS.V600 = V600;
 
 export const Y100 = "#FFEFD2"; COLORS.Y100 = Y100;
+export const Y400 = "#FFB020"; COLORS.Y400 = Y400;
 export const Y600 = "#66460D"; COLORS.Y600 = Y600;
 
 export const O100 = "#F8E3DA"; COLORS.O100 = O100;
@@ -118,4 +119,5 @@ export const G200 = "#DCF2EA"; COLORS.G200 = G200;
 export const G600 = "#317159"; COLORS.G600 = G600;
 
 export const R100 = "#F9DADA"; COLORS.R100 = R100;
+export const R400 = "#D14343"; COLORS.R400 = R400;
 export const R600 = "#7D2828"; COLORS.R600 = R600;
