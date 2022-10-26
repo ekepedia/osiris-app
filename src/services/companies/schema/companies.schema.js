@@ -5,6 +5,7 @@ module.exports = function (connection) {
     connection.schema.createTable(COMPANY_TABLE, function (table) {
         table.increments('company_id').primary();
         table.string('airtable_company_id').unique();
+        table.string('glassdoor_company_id').unique();
         table.string('clearbit_company_id').unique();
 
         table.string('company_name');
@@ -33,6 +34,7 @@ module.exports = function (connection) {
         table.float('glassdoor_senior_management');
         table.float('glassdoor_compensation');
         table.float('glassdoor_career');
+        table.string('glassdoor_reviews').alter();
 
         table.string('company_industry');
         table.string('company_industry_group');

@@ -94,6 +94,7 @@ CompanyService.getCompanies = ({
                     glassdoor_diversity
                     glassdoor_culture
                     glassdoor_overall
+                    glassdoor_reviews
                 }
             }
         `;

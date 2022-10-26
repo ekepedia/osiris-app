@@ -17,6 +17,8 @@ const SERVICE_DEFAULT_TABLE = COMPANY_TABLE;
 const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 const OSIRIS_DATA_BASE = "appMzGF6dxRHZfubu";
 
+let PRELOADED_DATA = [];
+
 module.exports.COMPANY_TABLE = COMPANY_TABLE;
 
 module.exports.init = function (connection) {
@@ -25,11 +27,20 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
+    // knex(COMPANY_TABLE).where({batch_id: "glassdoor_s_0_n_11000"}).del().then(() => {
+    // }).catch((err) => {
+    // });
+
+    // import_glassdoor_companies();
     // test_endpoints();
     // mass_delete();
     // construct_questions();
     // import_data();
     // import_demo_data();
+
+    get_companies({is_clearbit_import: false}).then((companies) => {
+        PRELOADED_DATA = companies;
+    })
 
     let in_locations = [{
         location_id: "remote",
@@ -100,6 +111,7 @@ function get_companies({
                            is_clearbit_import,
                            company_industry,
                            company_industry_group,
+                           glassdoor_reviews,
                            glassdoor_overall,
                            glassdoor_culture,
                            glassdoor_diversity,
@@ -130,6 +142,7 @@ function get_companies({
         is_clearbit_import,
         company_industry,
         company_industry_group,
+        glassdoor_reviews,
         glassdoor_overall,
         glassdoor_culture,
         glassdoor_diversity,
@@ -139,14 +152,19 @@ function get_companies({
         glassdoor_career,
     });
 
+    console.log("COMPANY QUERY", query, (query.is_clearbit_import === false && !query.company_id));
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
     return new Promise((resolve, reject) => {
-        knexQuery.then((rows) => {
-            return resolve(rows);
-        }).catch((err) => {
-            return reject(err);
-        });
+        if (PRELOADED_DATA && PRELOADED_DATA.length && (query.is_clearbit_import === false && !query.company_id)) {
+            return resolve(PRELOADED_DATA);
+        } else {
+            knexQuery.then((rows) => {
+                return resolve(rows);
+            }).catch((err) => {
+                return reject(err);
+            });
+        }
     });
 }
 
@@ -176,6 +194,7 @@ function create_company({
                             is_clearbit_import,
                             company_industry,
                             company_industry_group,
+                            glassdoor_reviews,
                             glassdoor_overall,
                             glassdoor_culture,
                             glassdoor_diversity,
@@ -212,6 +231,7 @@ function create_company({
             is_clearbit_import,
             company_industry,
             company_industry_group,
+            glassdoor_reviews,
             glassdoor_overall,
             glassdoor_culture,
             glassdoor_diversity,
@@ -258,6 +278,7 @@ function edit_company({
                           is_clearbit_import,
                           company_industry,
                           company_industry_group,
+                          glassdoor_reviews,
                           glassdoor_overall,
                           glassdoor_culture,
                           glassdoor_diversity,
@@ -294,6 +315,7 @@ function edit_company({
             is_clearbit_import,
             company_industry,
             company_industry_group,
+            glassdoor_reviews,
             glassdoor_overall,
             glassdoor_culture,
             glassdoor_diversity,
@@ -844,3 +866,35 @@ function load_dei({dei_data, dei_data_map, offset}) {
         });
     })
 }
+
+const csv = require('csv-parser');
+const fs = require('fs');
+
+function import_glassdoor_companies() {
+    const filename = "glassdoor_set_1.csv";
+
+    let i = 0;
+    fs.createReadStream(__dirname + `/../../../data/${filename}`)
+        .pipe(csv())
+        .on('data', (company) => {
+
+            company = {
+                ...company,
+                glassdoor_compensation: company.glassdoor_compensation || null,
+                glassdoor_culture: company.glassdoor_culture || null,
+                glassdoor_overall: company.glassdoor_overall || null,
+                glassdoor_work_life: company.glassdoor_work_life || null,
+                batch_id: "glassdoor_s_0_n_11000_v1"
+            }
+
+            console.log(company, ++i)
+            // create_company(company).then((id) => {
+            //     console.log(id)
+            // })
+
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+}
+

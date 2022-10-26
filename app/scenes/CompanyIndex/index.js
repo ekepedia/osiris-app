@@ -60,8 +60,8 @@ class CompanyIndex extends React.Component {
             selectedIndustries: [],
             companyNameFilter: "",
             MAX_RESULTS: 10,
-            sort_param: SORTS.NAME,
-            reverse: false
+            sort_param: SORTS.BIPOC,
+            reverse: true
         };
     }
 
@@ -79,7 +79,11 @@ class CompanyIndex extends React.Component {
             },
         ], (err) => {
             console.log("BOTH DONE!!!", err);
+            console.time("PROCESS COMPANIES");
+
             let { processed_companies } = this.processCompanies(this.state);
+            console.timeEnd("PROCESS COMPANIES");
+
             this.setState({
                 companies: processed_companies
             })
@@ -100,8 +104,10 @@ class CompanyIndex extends React.Component {
         let pay_count = 0;
 
         return new Promise((resolve) => {
+            console.time("LOAD COMPANIES");
             CompanyService.getCompanies({client}).then((companies) => {
                 // console.log("LOADED COMPANIES", companies);
+                console.timeEnd("LOAD COMPANIES");
 
                 let max = 0;
 
