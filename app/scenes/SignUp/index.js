@@ -80,7 +80,8 @@ class SignUp extends React.Component {
 
                 if (data.data.success) {
                     let user_id = data.data.data.user_id;
-                    window.location.pathname = `/edit/${user_id}`;
+                    // window.location.pathname = `/edit/${user_id}`;
+                    window.location.pathname = `/companies`;
                     AuthService.setCurrentUser({user_id})
                 } else {
                     alert("That email is already taken!");
