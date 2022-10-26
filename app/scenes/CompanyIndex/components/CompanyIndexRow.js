@@ -144,6 +144,8 @@ class CompanyIndexRow extends React.Component {
         let id_worklife = Math.random() + "";
         let id_pay = Math.random() + "";
 
+        let default_reviews = "1.1K";
+
         const convertYear = (year) => {
             if (!year) return year;
 
@@ -293,21 +295,21 @@ class CompanyIndexRow extends React.Component {
             <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id_overall} place={"bottom"} padding={"0px"} textColor={COMMON.COLORS.N800} backgroundColor={COMMON.COLORS.N0}>
                 <div style={{...COMMON.FONTS.H400, color: COMMON.COLORS.N900}}>Overall Company Rating</div>
                 <div style={{marginTop: "5px"}}>{company.glassdoor_overall} {this.generateStars(company.glassdoor_overall)} {this.generateAverageTag(company.glassdoor_overall, overall_average)}</div>
-                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: 1.1k</div>
+                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: {company.glassdoor_reviews || default_reviews}</div>
                 <div style={{...COMMON.FONTS.H300, textAlign: "right", marginTop: "12.5px"}}>Data from <img style={{height: "11px"}} src={"/img/glassdoor-logo.svg"}/></div>
             </ReactTooltip>
 
             <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id_worklife} place={"bottom"} padding={"0px"} textColor={COMMON.COLORS.N800} backgroundColor={COMMON.COLORS.N0}>
                 <div style={{...COMMON.FONTS.H400, color: COMMON.COLORS.N900}}>Work-Life Balance Rating</div>
                 <div style={{marginTop: "5px"}}>{company.glassdoor_work_life} {this.generateStars(company.glassdoor_work_life)} {this.generateAverageTag(company.glassdoor_work_life, worklife_average)}</div>
-                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: 1.1k</div>
+                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: {company.glassdoor_reviews || default_reviews}</div>
                 <div style={{...COMMON.FONTS.H300, textAlign: "right", marginTop: "12.5px"}}>Data from <img style={{height: "11px"}} src={"/img/glassdoor-logo.svg"}/></div>
             </ReactTooltip>
 
             <ReactTooltip multiline={true} className={"tool-tip-styles"} id={id_pay} place={"bottom"} padding={"0px"} textColor={COMMON.COLORS.N800} backgroundColor={COMMON.COLORS.N0}>
                 <div style={{...COMMON.FONTS.H400, color: COMMON.COLORS.N900}}>Pay Rating</div>
                 <div style={{marginTop: "5px"}}>{company.glassdoor_compensation} {this.generateStars(company.glassdoor_compensation)} {this.generateAverageTag(company.glassdoor_compensation, pay_average)}</div>
-                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: 1.1k</div>
+                <div style={{...COMMON.FONTS.H300, color: COMMON.COLORS.N800, marginTop: "5px"}}>Total Reviews: {company.glassdoor_reviews || default_reviews}</div>
                 <div style={{...COMMON.FONTS.H300, textAlign: "right", marginTop: "12.5px"}}>Data from <img style={{height: "11px"}} src={"/img/glassdoor-logo.svg"}/></div>
             </ReactTooltip>
 
