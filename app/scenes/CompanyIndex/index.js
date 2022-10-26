@@ -6,6 +6,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter, Link} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
+import async from 'async';
 
 import DataService from '../../services/DataService';
 import COMMON from "../../common";
@@ -19,6 +20,15 @@ import StandardMultiSelect from "../../components/StandardMultiSelect";
 import TrackingService from "../../services/TrackingService";
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+const SORTS = {
+    BIPOC: 1,
+    FEMALE: 2,
+    SIZE: 3,
+    NAME: 4,
+    OVERALL: 5,
+    WORKLIFE: 6,
+    PAY: 7,
+}
 
 const Styles = {
     container: {
@@ -49,40 +59,100 @@ class CompanyIndex extends React.Component {
             industriesOptions: [],
             selectedIndustries: [],
             companyNameFilter: "",
-            MAX_RESULTS: 10
+            MAX_RESULTS: 10,
+            sort_param: SORTS.BIPOC,
+            reverse: false
         };
     }
 
     componentDidMount() {
-        this.loadCompanies();
-        this.loadCompanyDemographics();
+        async.parallel([
+            (cb) =>  {
+                this.loadCompanies().then(() => {
+                    cb();
+                });
+            },
+            (cb) => {
+                this.loadCompanyDemographics().then(() => {
+                    cb();
+                });
+            },
+        ], (err) => {
+            console.log("BOTH DONE!!!", err);
+            let { processed_companies } = this.processCompanies(this.state);
+            this.setState({
+                companies: processed_companies
+            })
+
+        })
     }
 
     loadCompanies() {
         let { client } = this.props;
 
-        CompanyService.getCompanies({client}).then((companies) => {
-            // console.log("LOADED COMPANIES", companies);
+        let overall_sum = 0;
+        let overall_count = 0;
 
-            let max = 0;
+        let worklife_sum = 0;
+        let worklife_count = 0;
 
-            companies = companies.sort((a, b) => {
+        let pay_sum = 0;
+        let pay_count = 0;
 
-                max = Math.max(a.company_size, Math.max(b.company_size, max))
+        return new Promise((resolve) => {
+            CompanyService.getCompanies({client}).then((companies) => {
+                // console.log("LOADED COMPANIES", companies);
 
-                let nameA = a.company_name || "";
-                let nameB = b.company_name || "";
+                let max = 0;
 
-                return nameA.localeCompare(nameB);
-            });
+                companies = companies.sort((a, b) => {
 
-            this.setState({
-                companies,
-                // maxEmployees: max
-            });
+                    max = Math.max(a.company_size, Math.max(b.company_size, max))
 
-            this.loadCompanyLocations(companies);
-            this.loadCompanyIndustries(companies);
+                    let nameA = a.company_name || "";
+                    let nameB = b.company_name || "";
+
+                    return nameA.localeCompare(nameB);
+                });
+
+                companies.forEach((company) => {
+                    if (company.glassdoor_overall) {
+                        overall_sum += parseFloat(company.glassdoor_overall);
+                        overall_count += 1;
+                    }
+
+                    if (company.glassdoor_work_life) {
+                        worklife_sum += parseFloat(company.glassdoor_work_life);
+                        worklife_count += 1;
+                    }
+
+                    if (company.glassdoor_compensation) {
+                        pay_sum += parseFloat(company.glassdoor_compensation);
+                        pay_count += 1;
+                    }
+                })
+
+                const overall_average = overall_sum/overall_count;
+                const worklife_average = worklife_sum/worklife_count;
+                const pay_average = pay_sum/pay_count;
+
+                this.setState({
+                    companies,
+                    overall_average,
+                    worklife_average,
+                    pay_average
+                    // maxEmployees: max
+                });
+
+                this.loadCompanyLocations(companies);
+                this.loadCompanyIndustries(companies);
+
+                resolve({companies,
+                    overall_average,
+                    worklife_average,
+                    pay_average});
+            })
+
         })
     }
 
@@ -137,28 +207,37 @@ class CompanyIndex extends React.Component {
     loadCompanyDemographics() {
         let { client } = this.props;
 
-        CompanyDemographicService.getCompanyDemographics({client}).then((company_demographics) => {
-            // console.log("LOADED COMPANY DEMOGRAPHICS", company_demographics);
+        return new Promise((resolve) => {
+            CompanyDemographicService.getCompanyDemographics({client}).then((company_demographics) => {
+                // console.log("LOADED COMPANY DEMOGRAPHICS", company_demographics);
 
-            let company_demographics_map = {};
-            let company_demographics_yearly_map = {};
+                let company_demographics_map = {};
+                let company_demographics_yearly_map = {};
 
-            if (company_demographics && company_demographics.length) {
-                company_demographics.map((company_demographic) => {
-                    company_demographics_map[company_demographic.company_id] = company_demographic;
+                if (company_demographics && company_demographics.length) {
+                    company_demographics.map((company_demographic) => {
+                        company_demographics_map[company_demographic.company_id] = company_demographic;
 
-                    company_demographics_yearly_map[company_demographic.company_id] = company_demographics_yearly_map[company_demographic.company_id] || {};
-                    company_demographics_yearly_map[company_demographic.company_id][company_demographic.year] = company_demographic;
-                })
-            }
+                        company_demographics_yearly_map[company_demographic.company_id] = company_demographics_yearly_map[company_demographic.company_id] || {};
+                        company_demographics_yearly_map[company_demographic.company_id][company_demographic.year] = company_demographic;
+                    })
+                }
 
-            // console.log(company_demographics_yearly_map)
+                // console.log(company_demographics_yearly_map)
 
-            this.setState({
-                company_demographics,
-                company_demographics_map,
-                company_demographics_yearly_map
+                this.setState({
+                    company_demographics,
+                    company_demographics_map,
+                    company_demographics_yearly_map
+                });
+
+                resolve({
+                    company_demographics,
+                    company_demographics_map,
+                    company_demographics_yearly_map
+                });
             })
+
         })
     }
 
@@ -185,25 +264,9 @@ class CompanyIndex extends React.Component {
         })
     }
 
-    filterCompanies() {
-        let { companies,
-            company_demographics_map,
-            company_demographics_yearly_map,
-            companyNameFilter,
-            selectedLocations,
-            selectedIndustries,
-            employeeFilter,
-            femaleEmployeeFilter,
-            bipocEmployeeFilter,
-            MAX_RESULTS
-        } = this.state;
+    processCompanies({companies, company_demographics_map, company_demographics_yearly_map,}) {
 
-        if (!companies || !companies.length)
-            return {
-                filtered_companies: [],
-                available: 0
-            }
-
+        companies = companies || [];
         company_demographics_map = company_demographics_map || {};
         company_demographics_yearly_map = company_demographics_yearly_map || {};
 
@@ -239,8 +302,7 @@ class CompanyIndex extends React.Component {
             }
         };
 
-        let filtered_companies = companies.map((company, i) => {
-
+        let processed_companies = companies.map((company) => {
             const { company_id } = company;
 
             const {currentYear, previousYear} = getYearAndComparisonYear(company_id);
@@ -256,7 +318,57 @@ class CompanyIndex extends React.Component {
             const previous_female_respresentation = previousYear ? previous_company_demographics.employees_female : null;
             const female_respresentation_change = previousYear ? Math.round((female_respresentation - previous_female_respresentation)*100)/100 : null;
 
-            // console.log(company.company_name, female_respresentation, previous_female_respresentation);
+            return {
+                ...company,
+                company_demographics,
+                previous_company_demographics,
+                bipoc_respresentation,
+                female_respresentation,
+                bipoc_respresentation_change,
+                female_respresentation_change,
+                currentYear,
+                previousYear
+            }
+        })
+
+        console.log(processed_companies);
+        return {
+            processed_companies
+        };
+    }
+
+    filterCompanies(companies) {
+        let {
+            company_demographics_map,
+            company_demographics_yearly_map,
+            companyNameFilter,
+            selectedLocations,
+            selectedIndustries,
+            employeeFilter,
+            femaleEmployeeFilter,
+            bipocEmployeeFilter,
+            MAX_RESULTS,
+            overall_average,
+            worklife_average,
+            pay_average
+        } = this.state;
+
+        if (!companies || !companies.length)
+            return {
+                filtered_companies: [],
+                available: 0
+            }
+
+        let filtered_companies = companies.map((company, i) => {
+            const { company_id,
+                bipoc_respresentation,
+                bipoc_respresentation_change,
+                female_respresentation,
+                company_demographics,
+                female_respresentation_change,
+                currentYear,
+                previousYear
+            } = company;
 
             if (companyNameFilter && companyNameFilter.length) {
                 const filter = companyNameFilter.toLowerCase();
@@ -316,9 +428,7 @@ class CompanyIndex extends React.Component {
             if (!company.company_logo_url)
                 return null;
 
-
-
-            return (<CompanyIndexRow key={company_id} {...{company, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+            return (<CompanyIndexRow id={`company-index-row-${i}`} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
         })
 
         filtered_companies = _.without(filtered_companies, null);
@@ -329,11 +439,71 @@ class CompanyIndex extends React.Component {
         }
     }
 
+    sortCompanies(companies, sort_param, reverse) {
+        let sorted_companies = [];
+        companies = companies || [];
+
+        if (sort_param === SORTS.SIZE) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.company_size || 0;
+                let sizeB = b.company_size || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        } else if (sort_param === SORTS.BIPOC) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.bipoc_respresentation || 0;
+                let sizeB = b.bipoc_respresentation || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        }  else if (sort_param === SORTS.FEMALE) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.female_respresentation || 0;
+                let sizeB = b.female_respresentation || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        } else if (sort_param === SORTS.OVERALL) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.glassdoor_overall || 0;
+                let sizeB = b.glassdoor_overall || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        } else if (sort_param === SORTS.WORKLIFE) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.glassdoor_work_life || 0;
+                let sizeB = b.glassdoor_work_life || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        } else if (sort_param === SORTS.PAY) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.glassdoor_compensation || 0;
+                let sizeB = b.glassdoor_compensation || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        }  else {
+            sorted_companies = companies.sort((a, b) => {
+                let nameA = a.company_name || "";
+                let nameB = b.company_name || "";
+
+                return reverse ? nameB.localeCompare(nameA) : nameA.localeCompare(nameB);
+            });
+        }
+
+        return sorted_companies
+    }
+
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { MAX_RESULTS, companies, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+        let { MAX_RESULTS, sort_param, reverse, companies, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
 
-        let {filtered_companies, available} = this.filterCompanies();
+        companies = this.sortCompanies(companies, sort_param, reverse);
+
+        let {filtered_companies, available} = this.filterCompanies(companies);
 
         return (
             <div className={classes.masterContainer}>
@@ -412,36 +582,51 @@ class CompanyIndex extends React.Component {
 
                                 </div>
                             </div>
-                            <div className={mc(classes.RHSContainer)} id="scrollableDiv" style={{border: companies && companies.length ? null : "none"}}>
-                                <InfiniteScroll
-                                    dataLength={MAX_RESULTS}
-                                    next={() => {
-                                        console.log("loading more!", MAX_RESULTS);
-                                        this.setState({
-                                            MAX_RESULTS: MAX_RESULTS + 10
-                                        })
-                                    }}
-                                    hasMore={available > MAX_RESULTS}
-                                    scrollThreshold={"200px"}
-                                    scrollableTarget="scrollableDiv"
-                                    loader={<div className="loader" key={0}></div>}
-                                    endMessage={
-                                        <div style={{ textAlign: 'center' }}>
+                            <div className={mc(classes.RHSContainer)} style={{border: companies && companies.length ? null : "none"}}>
+                                <div id="sort-bar" style={{...COMMON.FONTS.H100, textTransform: "uppercase", display: "flex", padding: "12px 20px", marginBottom: "10px", border: `1px solid ${COMMON.COLORS.N400}`, borderRadius: "4px", color: COMMON.COLORS.N700, background: COMMON.COLORS.N50}}>
+                                    <div style={{flex: "0 0 230px", cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.NAME, reverse: sort_param === SORTS.NAME && !reverse})}}>Company Name<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.NAME && reverse ? 'up' : 'down'}`}/></div>
+                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.SIZE, reverse: !(sort_param === SORTS.SIZE && reverse)})}}>Employees<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.SIZE && reverse ? 'up' : 'down'}`}/></div>
+                                    <div style={{flex: 1.5, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.FEMALE, reverse: !(sort_param === SORTS.FEMALE && reverse)})}}>Gender (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.FEMALE && reverse ? 'up' : 'down'}`}/></div>
 
-                                        </div>
-                                    }
-                                >
-                                    {filtered_companies && filtered_companies.length ? filtered_companies : <div>
-                                        <div style={{textAlign: "center", background: COMMON.COLORS.N0, padding: "20px"}}>
-                                            {companies && companies.length ? <div>
-                                                We couldn't find a company that fit your exact criteria, but we are actively adding more!
-                                            </div> : <div>
-                                                We're pulling in the data--just a second!
-                                            </div>}
+                                    <div style={{flex: 1.5, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.BIPOC, reverse: !(sort_param === SORTS.BIPOC && reverse)})}}>Ethnicity (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.BIPOC && reverse ? 'up' : 'down'}`}/></div>
 
-                                        </div>
-                                    </div>}
-                                </InfiniteScroll>
+                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.OVERALL, reverse: !(sort_param === SORTS.OVERALL && reverse)})}}>Overall<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.OVERALL && reverse ? 'up' : 'down'}`}/></div>
+                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.WORKLIFE, reverse: !(sort_param === SORTS.WORKLIFE && reverse)})}}>Work-life<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.WORKLIFE && reverse ? 'up' : 'down'}`}/></div>
+                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.PAY, reverse: !(sort_param === SORTS.PAY && reverse)})}}>Pay<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.PAY && reverse ? 'up' : 'down'}`}/></div>
+                                    <div style={{flex: "0 0 30px"}}/>
+                                </div>
+                                <div className={mc(classes.RHSScrollContainer)} id="scrollableDiv">
+                                    <InfiniteScroll
+                                        dataLength={MAX_RESULTS}
+                                        next={() => {
+                                            console.log("loading more!", MAX_RESULTS);
+                                            this.setState({
+                                                MAX_RESULTS: MAX_RESULTS + 10
+                                            })
+                                        }}
+                                        hasMore={available > MAX_RESULTS}
+                                        scrollThreshold={"200px"}
+                                        scrollableTarget="scrollableDiv"
+                                        loader={<div className="loader" key={0}></div>}
+                                        endMessage={
+                                            <div style={{ textAlign: 'center' }}>
+
+                                            </div>
+                                        }
+                                    >
+                                        {filtered_companies && filtered_companies.length ? filtered_companies : <div>
+                                            <div style={{textAlign: "center", background: COMMON.COLORS.N0, padding: "20px"}}>
+                                                {companies && companies.length ? <div>
+                                                    We couldn't find a company that fit your exact criteria, but we are actively adding more!
+                                                </div> : <div>
+                                                    We're pulling in the data--just a second!
+                                                </div>}
+
+                                            </div>
+                                        </div>}
+                                    </InfiniteScroll>
+                                </div>
+
                             </div>
                         </div>
 
