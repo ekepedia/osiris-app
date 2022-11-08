@@ -209,7 +209,7 @@ class JobCards extends React.Component {
         return (<div className={classes.container}>
 
             <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
-            {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}>Mobile Coming Soon!</div>}
+            {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}></div>}
 
             {loading ? [1,2,3,4,5].map((k) => {
                 return (<div className={classes.cardPadding} key={k}>

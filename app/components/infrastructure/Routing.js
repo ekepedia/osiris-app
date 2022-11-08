@@ -11,6 +11,9 @@ import CompanyIndex from "../../scenes/CompanyIndex/index";
 import CompanyPage from "../../scenes/CompanyPage/index";
 import SavedJobs from "../../scenes/SavedJobs/index";
 import SignUp from "../../scenes/SignUp/index";
+import Settings from "../../scenes/Settings/index";
+import ResetPassword from "../../scenes/ResetPassword/index";
+import ForgotPassword from "../../scenes/ForgotPassword/index";
 
 import {withApollo} from "react-apollo";
 
@@ -27,10 +30,13 @@ class Routing extends React.Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route exact path='/login' component={Login}/>
+                    <Route exact path='/forgot-password' component={ForgotPassword}/>
                     <Route exact path='/sign-up' component={SignUp}/>
                     <Route exact path='/claim/:user_id' component={ClaimPortfolio}/>
+                    <Route exact path='/reset-password/:reset_password_code' component={ResetPassword}/>
                     <Route exact path='/jobs' component={Jobs}/>
                     <Route exact path='/edit/:user_id' component={UserPortfolio}/>
+                    <Route exact path='/settings/:user_id' component={Settings}/>
                     <Route exact path='/u/:username' component={PublicPortfolio}/>
                     <Route exact path='/ue/:username' component={PublicPortfolio}/>
 

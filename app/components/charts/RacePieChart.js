@@ -23,6 +23,7 @@ const Styles = {
         padding: "0",
         '@media (max-width: 768px)': {
             padding: "0",
+            flexDirection: "column"
         },
     },
     pieChartHolder: {
@@ -32,7 +33,18 @@ const Styles = {
     pieChartLabelContainer: {
         flex: "0 0 187px",
         marginTop: "39px",
-        color: COMMON.COLORS.N700
+        color: COMMON.COLORS.N700,
+        '@media (max-width: 768px)': {
+            flex: 1,
+            marginTop: "20px",
+        },
+    },
+    pieChartLabelContainerRight: {
+        extend: 'pieChartLabelContainer',
+        marginTop: "26px",
+        '@media (max-width: 768px)': {
+            marginTop: "0",
+        },
     },
     pieChartLabelHolder: {
         display: "flex",
@@ -127,7 +139,7 @@ class RacePieChart extends React.Component {
                 </div>
 
             </div>
-            <div className={mc(classes.pieChartLabelContainer)} style={{marginTop: "26px"}}>
+            <div className={mc(classes.pieChartLabelContainerRight)}>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_PINK}}/>
                     <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
