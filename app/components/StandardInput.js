@@ -55,7 +55,7 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, value, update, placeholder, style, type} = this.props;
+        let { classes, value, update, placeholder, style, type, subLabel} = this.props;
 
         update = update || (() => {});
 
@@ -66,6 +66,7 @@ class StandardInput extends React.Component {
                 <input type={type} style={style} placeholder={placeholder} className={classes.inputStyle} value={value} onChange={(e) => (update(e.target.value))}/>
 
             }
+            {subLabel && subLabel.length ? <div style={{marginTop: "5px", ...COMMON.FONTS.P100, color: COMMON.COLORS.N700}}>{subLabel}</div> : null}
         </div>)
     }
 

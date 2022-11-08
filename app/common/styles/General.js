@@ -54,9 +54,28 @@ const NavigationStyles = {
     }
 }
 
+const MobileScalingStyles = {
+    hide600: {
+        '@media (max-width: 600px)': {
+            display: "none"
+        },
+    },
+    hide500: {
+        '@media (max-width: 500px)': {
+            display: "none"
+        },
+    },
+    hide450: {
+        '@media (max-width: 450px)': {
+            display: "none"
+        },
+    },
+}
+
 export const GENERAL = {
     alignmentStyles,
     AlignmentStyles: alignmentStyles,
     InputStyles,
-    NavigationStyles
+    NavigationStyles,
+    MobileScalingStyles
 }

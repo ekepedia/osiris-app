@@ -17,7 +17,8 @@ import {
     N800,
     N900,
     OSIRIS_BLACK,
-    OSIRIS_GREEN
+    OSIRIS_GREEN,
+    N600, N300
 } from "../colors";
 
 const CompanyPageStyles = {
@@ -27,7 +28,11 @@ const CompanyPageStyles = {
         ...FONT_TITLE_3_BOLD
     },
     mainContainer: {
-        display: "flex"
+        display: "flex",
+        paddingTop: "35px",
+        '@media (max-width: 1000px)': {
+            paddingTop: "10px",
+        },
     },
     LHSContainer: {
         flex: "0 0 315px",
@@ -36,11 +41,14 @@ const CompanyPageStyles = {
         maxHeight: "calc(100vh - 177px)",
         overflow: "scroll",
         borderRadius: "4px",
-        border: `1px solid ${N400}`
+        border: `1px solid ${N400}`,
+        '@media (max-width: 1000px)': {
+            display: "none"
+        },
     },
     RHSContainer: {
         flex: 1,
-        maxHeight: "calc(100vh - 177px)",
+        maxHeight: "calc(100vh - 120px)",
         height: "fit-content",
         overflow: "hidden",
     },
@@ -78,7 +86,12 @@ const CompanyProfilePageStyles = {
         padding: "40px 0px",
         paddingBottom: "100px",
         maxWidth: "680px",
-        margin: "auto"
+        margin: "auto",
+        '@media (max-width: 1000px)': {
+            paddingTop: "10px",
+            paddingBottom: "50px",
+            overflow: "hidden",
+        },
     },
     headerContainer: {
         // marginBottom: "20px"
@@ -200,10 +213,78 @@ const CompanyHeaderStyles  = {
     }
 }
 
+const CompanyRowStyles = {
+    companyLogo: {
+        height: "40px",
+        flex: "0 0 40px",
+        marginRight: "10px",
+        border: `1px solid ${N300}`,
+        borderRadius: "6px",
+        overflow: "hidden"
+    },
+    companyNameContainer: {
+        flex: 2,
+        '@media (max-width: 1050px)': {
+            flex: 1.6,
+            paddingRight: "5px"
+        },
+    },
+    companyEmployeeContainer: {
+        flex: 1,
+        "& i": {
+            color: N600,
+            marginRight: "4px",
+            fontSize: "12px"
+        },
+        '@media (max-width: 1150px)': {
+            display: "none"
+        },
+    },
+    companyGenderContainer: {
+        flex: 1.5,
+        '@media (max-width: 1050px)': {
+            display: "none"
+        },
+    },
+    companyRaceContainer: {
+        flex: 1.5,
+        '@media (max-width: 1050px)': {
+            paddingRight: "5px"
+        },
+    },
+    companyRankContainer: {
+        flex: 1,
+        '@media (max-width: 500px)': {
+            display: "none"
+        },
+    },
+    companyOverallGlassdoorContainer: {
+        flex: 1,
+    },
+    companyWorkGlassdoorContainer: {
+        flex: 1,
+        '@media (max-width: 1250px)': {
+            display: "none"
+        },
+    },
+    companyPayGlassdoorContainer: {
+        flex: 1,
+        '@media (max-width: 1350px)': {
+            display: "none"
+        },
+    },
+    companyExpandContainer: {
+        flex: "0 0 30px",
+        '@media (max-width: 1150px)': {
+            display: "none"
+        },
+    },
+}
 
 
 export const COMPANY = {
     CompanyPageStyles,
     CompanyProfilePageStyles,
-    CompanyHeaderStyles
+    CompanyHeaderStyles,
+    CompanyRowStyles
 }

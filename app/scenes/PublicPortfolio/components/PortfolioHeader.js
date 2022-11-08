@@ -112,7 +112,7 @@ class PortfolioHeader extends React.Component {
                 <div className={classes.profileHeaderContainer}>
                     <div className={classes.profileImageContainer}>
                         <div className={classes.profileImage}>
-                            <CoverImageHolder url={profile_photo_url}/>
+                            <CoverImageHolder url={profile_photo_url || "/img/generic-user.jpeg"}/>
                         </div>
                     </div>
                     <div className={classes.profileHeaderName}>{first_name} {last_name}</div>

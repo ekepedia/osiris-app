@@ -24,7 +24,7 @@ const Styles = {
     container: {
         padding: "0",
         '@media (max-width: 768px)': {
-            padding: "0",
+            padding: "0 20px",
         },
     },
     ...COMMON.STYLES.COMPANY.CompanyPageStyles,

@@ -72,7 +72,8 @@ const Styles = {
         border: `2px solid ${COMMON.COLORS.N900}`,
         overflow: "hidden",
         cursor: "pointer"
-    }
+    },
+    ...COMMON.STYLES.GENERAL.MobileScalingStyles
 };
 
 class NavBar extends React.Component {
@@ -126,7 +127,7 @@ class NavBar extends React.Component {
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>
-                    <Link to={"/"}>
+                    <Link to={"/"} className={classes.hide600}>
                         <div className={classes.linkStyle} style={{color: path === "/" ? COMMON.COLORS.B400 : null}}>
                             Home
                             {path === "/" && <div className={classes.selectedLink}/>}
@@ -144,7 +145,7 @@ class NavBar extends React.Component {
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
-                    {user && user.user_id ? <Link to={"/saved-jobs/" + user.user_id }>
+                    {user && user.user_id ? <Link className={classes.hide500} to={"/saved-jobs/" + user.user_id }>
                         <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
                                 <i className="fa-solid fa-briefcase" style={{marginRight: "5px"}}/>Saved Jobs
@@ -152,24 +153,39 @@ class NavBar extends React.Component {
                             </div>
                             {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
                         </div>
-                    </Link> : <Link to={"/login"}>
+                    </Link> : <Link to={"/login"} className={classes.hide450}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/login") !== -1  ? COMMON.COLORS.B400 : null}}>
-                            Login
+                            Sign In
                             {path.indexOf("/login") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>}
-                    {user && user.user_id ? <Link to={"/login/"} onClick={() => {
-                        AuthService.logoutUser()
+                    {user && user.user_id ? <Link to={"/settings/" + user.user_id }>
+                        <div className={classes.linkStyle} style={{marginRight: "5px", color: path === ("/settings/" + user.user_id) ? COMMON.COLORS.B400 : COMMON.COLORS.N900}}>
+                            <div style={{height: "22px", width: "22px", background: "none", borderRadius: "100%"}}>
+                            </div>
+                            <div style={{height: "22px", width: "22px", background: COMMON.COLORS.N200, top: 7, paddingTop: "5px", paddingRight: "1px", position:"absolute", borderRadius: "100%"}}>
+                                <i className="fa-solid fa-gear" style={{marginRight: "4px"}}/>
+                            </div>
+                            {path === "/settings/" + user.user_id && <div style={{bottom: -20}} className={classes.selectedLink}/>}
+                        </div>
+                    </Link> : null}
+                    {user && user.user_id ? <Link to={"#"} onClick={() => {
+                        let yes = confirm("Are you sure you want to log out?");
+                        if (yes) {
+                            AuthService.logoutUser();
+                            window.location.pathname = `/login`;
+                        }
                     }}>
-                        <div className={classes.linkStyle}>
-                            <div>
-                                Logout
+                        <div className={classes.linkStyle} style={{color: path === ("/settings/" + user.user_id) ? COMMON.COLORS.B400 : COMMON.COLORS.N900}}>
+                            <div style={{height: "22px", width: "22px", background: "none", borderRadius: "100%"}}>
+                            </div>
+                            <div style={{height: "22px", width: "22px", background: COMMON.COLORS.N200, top: 7, paddingTop: "5px", paddingRight: "1px", position:"absolute", borderRadius: "100%"}}>
+                                <i className="fa-solid fa-right-from-bracket" style={{marginRight: "4px"}}/>
                             </div>
                         </div>
                     </Link> : <Link to={"/sign-up"}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/sign-up") !== -1  ? COMMON.COLORS.B400 : null}}>
-                            Sign Up
-                            {path.indexOf("/sign-up") !== -1 && <div className={classes.selectedLink}/>}
+                            <span style={{background: COMMON.COLORS.B400, color: COMMON.COLORS.N0, padding: "8px 10px", borderRadius: "4px"}}>Join Now</span>
                         </div>
                     </Link>}
                 </div>
@@ -177,7 +193,7 @@ class NavBar extends React.Component {
                     {user && user.user_id ? <Link to={"/edit/" + user.user_id}>
                         <div  className={classes.profileContainer}>
                             <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
-                                <CoverImageHolder url={user.profile_photo_url}/>
+                                <CoverImageHolder url={user.profile_photo_url || "/img/generic-user.jpeg"}/>
                             </div>
                         </div>
                     </Link> : null}

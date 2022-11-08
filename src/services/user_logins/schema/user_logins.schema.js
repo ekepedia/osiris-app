@@ -9,6 +9,8 @@ module.exports = function (connection) {
         table.string('user_email').unique();
         table.string('password_hash');
 
+        table.string('reset_password_code').unique();
+
         table.boolean('is_archived').defaultTo(false);
 
         table.string('date_archived');

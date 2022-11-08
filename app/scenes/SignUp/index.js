@@ -14,20 +14,22 @@ import {mc} from "../../common/helpers";
 import StandardInput from "../../components/StandardInput";
 import StandardButton from "../../components/StandardButton";
 import NavBar from "../../components/NavBar";
+import SignOnHero from "../../components/SignOnHero";
 
 const Styles = {
     container: {
         padding: "0",
+        background: COMMON.COLORS.N0,
         '@media (max-width: 768px)': {
             padding: "0",
         },
     },
     ...COMMON.STYLES.GENERAL.InputStyles,
     headerTitle: {
-        ...COMMON.FONTS.FONT_TITLE_2_BOLD,
+        ...COMMON.FONTS.H600,
         marginBottom: "20px",
         textAlign: "center",
-        color: COMMON.COLORS.OSIRIS_GREEN
+        color: COMMON.COLORS.N900
     },
     subContainer: {
         maxWidth: "330px",
@@ -35,6 +37,12 @@ const Styles = {
     },
     buttonContainer: {
         marginTop: "20px"
+    },
+    RHSContainer: {
+        flex: 1,
+        '@media (max-width: 750px)': {
+            display: "none"
+        },
     },
     disclaimer: {
         ...COMMON.FONTS.FONT_CAPTION_2,
@@ -105,36 +113,43 @@ class SignUp extends React.Component {
                 </div>
                 <div className={classes.masterBodyContainer}>
                     <div className={classes.container}>
-                        <div className={classes.centerAlignContainerFill}>
-                            <div className={classes.verticalAlignObjectFill}>
-                                <div className={mc(classes.subContainer)}>
-                                    <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
+                        <div style={{display: "flex", height: "100%"}}>
+                            <div style={{flex: 1, height: "100%"}}>
+                                <div className={classes.centerAlignContainerFill}>
+                                    <div className={classes.verticalAlignObjectFill}>
+                                        <div className={mc(classes.subContainer)}>
+                                            <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
 
-                                    <div style={{display: "flex"}}>
-                                        <div style={{flex: 1, paddingRight: "10px"}}>
-                                            <div className={mc(classes.inputLabel)}>First Name</div>
-                                            <StandardInput value={first_name} placeholder={"First Name"} update={(v) => (this.setState({first_name: v}))}/>
+                                            <div style={{display: "flex"}}>
+                                                <div style={{flex: 1, paddingRight: "10px"}}>
+                                                    <div className={mc(classes.inputLabel)}>First Name</div>
+                                                    <StandardInput value={first_name} placeholder={"First Name"} update={(v) => (this.setState({first_name: v}))}/>
+                                                </div>
+                                                <div style={{flex: 1}}>
+                                                    <div className={mc(classes.inputLabel)}>Last Name</div>
+                                                    <StandardInput value={last_name} placeholder={"Last Name"} update={(v) => (this.setState({last_name: v}))}/>
+                                                </div>
+                                            </div>
+
+                                            <div className={mc(classes.inputLabel)}>Email</div>
+                                            <StandardInput value={user_email} placeholder={"Input Email"} update={(v) => (this.setState({user_email: v}))}/>
+
+                                            <div className={mc(classes.inputLabel)}>Password</div>
+                                            <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
+
+                                            <div className={mc(classes.buttonContainer)}>
+                                                <StandardButton label={"Sign Up"} fullWidth={true} onClick={() => (this.signup())}/>
+                                            </div>
+
+                                            <div className={mc(classes.disclaimer)}>
+                                                By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
+                                            </div>
                                         </div>
-                                        <div style={{flex: 1}}>
-                                            <div className={mc(classes.inputLabel)}>Last Name</div>
-                                            <StandardInput value={last_name} placeholder={"Last Name"} update={(v) => (this.setState({last_name: v}))}/>
-                                        </div>
-                                    </div>
-
-                                    <div className={mc(classes.inputLabel)}>Email</div>
-                                    <StandardInput value={user_email} placeholder={"Input Email"} update={(v) => (this.setState({user_email: v}))}/>
-
-                                    <div className={mc(classes.inputLabel)}>Password</div>
-                                    <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
-
-                                    <div className={mc(classes.buttonContainer)}>
-                                        <StandardButton label={"Sign Up"} fullWidth={true} onClick={() => (this.signup())}/>
-                                    </div>
-
-                                    <div className={mc(classes.disclaimer)}>
-                                        By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div className={mc(classes.RHSContainer)}>
+                                <SignOnHero />
                             </div>
                         </div>
                     </div>

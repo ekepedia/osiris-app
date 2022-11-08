@@ -7,6 +7,8 @@ import { withRouter, Link} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
 import async from 'async';
+import Lottie from 'react-lottie';
+import loadingCircles from "../../common/lottie/loading-circles.js";
 
 import DataService from '../../services/DataService';
 import COMMON from "../../common";
@@ -28,6 +30,7 @@ const SORTS = {
     OVERALL: 5,
     WORKLIFE: 6,
     PAY: 7,
+    RANK: 8,
 }
 
 const Styles = {
@@ -38,7 +41,17 @@ const Styles = {
         },
     },
     ...COMMON.STYLES.COMPANY.CompanyPageStyles,
+    ...COMMON.STYLES.COMPANY.CompanyRowStyles,
     ...COMMON.STYLES.GENERAL.NavigationStyles,
+};
+
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingCircles,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
 };
 
 class CompanyIndex extends React.Component {
@@ -60,8 +73,8 @@ class CompanyIndex extends React.Component {
             selectedIndustries: [],
             companyNameFilter: "",
             MAX_RESULTS: 10,
-            sort_param: SORTS.BIPOC,
-            reverse: true
+            sort_param: SORTS.RANK,
+            reverse: false
         };
     }
 
@@ -143,7 +156,7 @@ class CompanyIndex extends React.Component {
                 const pay_average = pay_sum/pay_count;
 
                 this.setState({
-                    companies,
+                    unprocessed_companies: companies,
                     overall_average,
                     worklife_average,
                     pay_average
@@ -270,9 +283,9 @@ class CompanyIndex extends React.Component {
         })
     }
 
-    processCompanies({companies, company_demographics_map, company_demographics_yearly_map,}) {
+    processCompanies({companies, unprocessed_companies, company_demographics_map, company_demographics_yearly_map,}) {
 
-        companies = companies || [];
+        companies = companies || unprocessed_companies || [];
         company_demographics_map = company_demographics_map || {};
         company_demographics_yearly_map = company_demographics_yearly_map || {};
 
@@ -333,11 +346,22 @@ class CompanyIndex extends React.Component {
                 bipoc_respresentation_change,
                 female_respresentation_change,
                 currentYear,
-                previousYear
+                previousYear,
+                rank_value: 1 - (((100 - (bipoc_respresentation || 0))*2 + (100 - (female_respresentation || 0)))/300)
             }
         })
 
-        console.log(processed_companies);
+        processed_companies = processed_companies.sort((a, b) => {
+            return b.rank_value - a.rank_value
+        });
+
+        processed_companies = processed_companies.map((company, i) =>{
+            return {
+                ...company,
+                rank: i + 1
+            }
+        });
+
         return {
             processed_companies
         };
@@ -434,7 +458,7 @@ class CompanyIndex extends React.Component {
             if (!company.company_logo_url)
                 return null;
 
-            return (<CompanyIndexRow id={`company-index-row-${i}`} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+            return (<CompanyIndexRow id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
         })
 
         filtered_companies = _.without(filtered_companies, null);
@@ -467,6 +491,13 @@ class CompanyIndex extends React.Component {
             sorted_companies = companies.sort((a, b) => {
                 let sizeA = a.female_respresentation || 0;
                 let sizeB = b.female_respresentation || 0;
+
+                return reverse ? sizeB - sizeA : sizeA - sizeB
+            });
+        } else if (sort_param === SORTS.RANK) {
+            sorted_companies = companies.sort((a, b) => {
+                let sizeA = a.rank || 0;
+                let sizeB = b.rank || 0;
 
                 return reverse ? sizeB - sizeA : sizeA - sizeB
             });
@@ -518,12 +549,21 @@ class CompanyIndex extends React.Component {
                 </div>
                 <div className={classes.masterBodyContainer}>
                     <div className={classes.container}>
-                        <div className={mc(classes.pageTitle)}>Filter</div>
+                        {/*<div className={mc(classes.pageTitle)}>Filter</div>*/}
 
                         <div className={mc(classes.mainContainer)}>
                             <div className={mc(classes.LHSContainer)}>
                                 <div className={mc(classes.companyFilterContainer)}>
-                                    <div className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-magnifying-glass"/>Company Search</div>
+
+                                    <div style={{
+                                        ...COMMON.FONTS.H600,
+                                        color: COMMON.COLORS.N900,
+                                        paddingBottom: "10px",
+                                        marginBottom: "20px",
+                                        borderBottom: `1px solid ${COMMON.COLORS.N400}`
+                                    }}>
+                                        Filters
+                                    </div>
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => {
                                         this.resetMaxResults();
 
@@ -534,7 +574,7 @@ class CompanyIndex extends React.Component {
                                         TrackingService.trackSubmit({page: "company-search", sub_page: "company-name", value: v});
                                     }}/>
 
-                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-briefcase"/>Company Spotlights</div>
+                                    <div style={{marginTop: "20px"}} className={mc(classes.companyFilterLabel)}>Company Details</div>
                                     <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>Industry</div>
 
                                     <StandardMultiSelect
@@ -547,7 +587,7 @@ class CompanyIndex extends React.Component {
                                         }}
                                         hideIndicator={true}
                                     />
-                                    <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>Headquarters</div>
+                                    <div style={{marginTop: "10px"}} className={mc(classes.companySubFilterLabel)}>HQ Location</div>
 
                                     <StandardMultiSelect
                                         value={(selectedLocations || []).map((id) => ({value: id, label: this.findLabel(locationsOptions, id)}))}
@@ -568,7 +608,7 @@ class CompanyIndex extends React.Component {
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
 
-                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}><i className="fa-solid fa-chart-pie"/>Representation</div>
+                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}>Representation</div>
 
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>Female Representation</div>
@@ -590,16 +630,18 @@ class CompanyIndex extends React.Component {
                             </div>
                             <div className={mc(classes.RHSContainer)} style={{border: companies && companies.length ? null : "none"}}>
                                 <div id="sort-bar" style={{...COMMON.FONTS.H100, textTransform: "uppercase", display: "flex", padding: "12px 20px", marginBottom: "10px", border: `1px solid ${COMMON.COLORS.N400}`, borderRadius: "4px", color: COMMON.COLORS.N700, background: COMMON.COLORS.N50}}>
-                                    <div style={{flex: "0 0 230px", cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.NAME, reverse: sort_param === SORTS.NAME && !reverse})}}>Company Name<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.NAME && reverse ? 'up' : 'down'}`}/></div>
-                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.SIZE, reverse: !(sort_param === SORTS.SIZE && reverse)})}}>Employees<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.SIZE && reverse ? 'up' : 'down'}`}/></div>
-                                    <div style={{flex: 1.5, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.FEMALE, reverse: !(sort_param === SORTS.FEMALE && reverse)})}}>Gender (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.FEMALE && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyNameContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.NAME, reverse: sort_param === SORTS.NAME && !reverse})}}>Company Name<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.NAME && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyLogo)} style={{height: "0px", border: "none"}}/>
+                                    <div className={mc(classes.companyEmployeeContainer)} style={{ cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.SIZE, reverse: !(sort_param === SORTS.SIZE && reverse)})}}>Employees<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.SIZE && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyGenderContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.FEMALE, reverse: !(sort_param === SORTS.FEMALE && reverse)})}}>Gender (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.FEMALE && reverse ? 'up' : 'down'}`}/></div>
 
-                                    <div style={{flex: 1.5, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.BIPOC, reverse: !(sort_param === SORTS.BIPOC && reverse)})}}>Ethnicity (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.BIPOC && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyRaceContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.BIPOC, reverse: !(sort_param === SORTS.BIPOC && reverse)})}}>Ethnicity (%)<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.BIPOC && reverse ? 'up' : 'down'}`}/></div>
 
-                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.OVERALL, reverse: !(sort_param === SORTS.OVERALL && reverse)})}}>Overall<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.OVERALL && reverse ? 'up' : 'down'}`}/></div>
-                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.WORKLIFE, reverse: !(sort_param === SORTS.WORKLIFE && reverse)})}}>Work-life<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.WORKLIFE && reverse ? 'up' : 'down'}`}/></div>
-                                    <div style={{flex: 1, cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.PAY, reverse: !(sort_param === SORTS.PAY && reverse)})}}>Pay<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.PAY && reverse ? 'up' : 'down'}`}/></div>
-                                    <div style={{flex: "0 0 30px"}}/>
+                                    <div className={mc(classes.companyRankContainer)} style={{ cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.RANK, reverse: !(sort_param === SORTS.RANK && reverse)})}}>Rank<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.RANK && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyOverallGlassdoorContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.OVERALL, reverse: !(sort_param === SORTS.OVERALL && reverse)})}}>Overall<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.OVERALL && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyWorkGlassdoorContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.WORKLIFE, reverse: !(sort_param === SORTS.WORKLIFE && reverse)})}}>Work-life<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.WORKLIFE && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyPayGlassdoorContainer)} style={{cursor: "pointer"}} onClick={() => {this.setState({MAX_RESULTS: 10, sort_param: SORTS.PAY, reverse: !(sort_param === SORTS.PAY && reverse)})}}>Pay<i style={{marginLeft: "5.7px"}} className={`fa-solid fa-angle-${sort_param === SORTS.PAY && reverse ? 'up' : 'down'}`}/></div>
+                                    <div className={mc(classes.companyExpandContainer)}/>
                                 </div>
                                 <div className={mc(classes.RHSScrollContainer)} id="scrollableDiv">
                                     <InfiniteScroll
@@ -621,11 +663,17 @@ class CompanyIndex extends React.Component {
                                         }
                                     >
                                         {filtered_companies && filtered_companies.length ? filtered_companies : <div>
-                                            <div style={{textAlign: "center", background: COMMON.COLORS.N0, padding: "20px"}}>
+                                            <div style={{textAlign: "center", background: COMMON.COLORS.N0, padding: "15px"}}>
                                                 {companies && companies.length ? <div>
                                                     We couldn't find a company that fit your exact criteria, but we are actively adding more!
-                                                </div> : <div>
-                                                    We're pulling in the data--just a second!
+                                                </div> : <div style={{...COMMON.FONTS.H100, textTransform: "uppercase"}}>
+                                                    <div style={{textAlign: "center"}}>
+                                                        <Lottie options={defaultOptions}
+                                                                height={96}
+                                                                width={96}/>
+                                                    </div>
+                                                    <div>Loading Companies</div>
+                                                    <div>One Moment Please</div>
                                                 </div>}
 
                                             </div>
