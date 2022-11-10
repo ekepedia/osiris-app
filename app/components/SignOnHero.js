@@ -69,8 +69,8 @@ const Styles = {
 };
 
 let urls = [
-    "/img/google-hero.jpeg",
-    "/img/airbnb-hero.png",
+    "https://images.unsplash.com/photo-1588741068086-caf60b2ff8ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80",
+    // "/img/airbnb-hero.png",
 ]
 
 class SignOnHero extends React.Component {
@@ -130,11 +130,11 @@ class SignOnHero extends React.Component {
                 padding: "35px",
                 transition: "all 0.25s"
             }}>
-                <div style={{position: "absolute", bottom: "35px"}}>
+                <div style={{position: "absolute", bottom: "35px", textShadow: "black 1px 1px 3px"}}>
                     <div className={classes.companyProfileContainer}>
                         <div style={{display: "flex", height: "100%"}}>
                             <div className={classes.companyProfileImgContainer}>
-                                <CoverImageHolder url={"/img/Instagram post - 1.png"}/>
+                                <CoverImageHolder url={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"}/>
                             </div>
                             <div style={{flex: 1}}>
                                 <div className={classes.companyProfileTitle}>Google</div>
@@ -143,8 +143,7 @@ class SignOnHero extends React.Component {
                         </div>
                     </div>
                     <div style={{...COMMON.FONTS.H800, color: COMMON.COLORS.N0, paddingRight: "35px", marginBottom: "50px"}}>
-                        Et rerum numquam ex dolores ut perferendis. Atque ipsam eum rerum dolorem sapiente mollitia consequuntur.
-                    </div>
+                        Google's software engineers develop the next-generation technologies that change how billions of users connect, explore, and interact with information and one another.                    </div>
                     <div style={{paddingRight: "35px", textAlign: "right"}}>
                         <div onClick={() => {this.setBack()}} style={{cursor: "pointer", display: "inline-block", marginRight: "10px", color: COMMON.COLORS.N0, height: "46px", width: "46px", borderRadius: "100%", border: `1px solid ${COMMON.COLORS.N0}`}}>
                             <div className={classes.centerAlignContainerFill}>
