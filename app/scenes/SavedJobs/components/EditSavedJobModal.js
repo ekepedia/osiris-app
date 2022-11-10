@@ -267,6 +267,7 @@ class EditSavedJobModal extends React.Component {
                                                 <div className={mc(classes.sectionSubHeader)} style={{marginBottom: "15px"}}>Identified by OSIRIS from the original job post</div>
                                                 <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
                                             </div>
+
                                         </div>}
 
 
