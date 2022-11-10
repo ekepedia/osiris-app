@@ -25,6 +25,8 @@ import ApplyNowModal from "../../components/ApplyNowModal";
 import JobAssistantModal from "../../components/JobAssistantModal";
 import CompanyService from "../../services/CompanyService";
 import LoadingJobCard from "../../components/LoadingJobCard";
+import SavedJobService from "../../services/SavedJobService";
+import AuthService from "../../services/AuthService";
 
 const Styles = {
     container: {
@@ -196,8 +198,45 @@ class Jobs extends React.Component {
     componentDidMount() {
         this.loadCompanies().then(({companies, company_map}) => {
             this.loadJobs({companies, company_map});
+        });
+        this.loadSavedJobs();
+    }
 
+    loadSavedJobs() {
+        let { client, match: { params } } = this.props;
+
+        AuthService.getCurrentUser().then((user) => {
+            if (user && user.user_id) {
+                SavedJobService.getSavedJobs({
+                    client,
+                    user_id: user.user_id
+                }).then((saved_jobs) => {
+                    console.log("LOADED SAVED", saved_jobs);
+
+                    let saved_jobs_ids = [];
+
+                    saved_jobs = saved_jobs.sort((a, b) => {
+
+                        let nameA = a.status_id || "";
+                        let nameB = b.status_id || "";
+
+                        return nameA.localeCompare(nameB);
+                    });
+
+                    saved_jobs.forEach((saved_job) => {
+                        saved_jobs_ids.push(saved_job.job_id + "")
+                    });
+
+                    this.setState({
+                        saved_jobs,
+                        saved_jobs_ids,
+                        user
+                    })
+                })
+            }
         })
+
+
     }
 
     loadCompanies() {
@@ -313,6 +352,12 @@ class Jobs extends React.Component {
         })
     }
 
+    updateSavedJobIds(saved_jobs_ids) {
+        this.setState({
+            saved_jobs_ids
+        })
+    }
+
     getJob(job_id) {
         let foundJob = null;
 
@@ -344,7 +389,7 @@ class Jobs extends React.Component {
 
         const SCROLL_PAD = "100px";
 
-        let { loading } = this.state;
+        let { loading, saved_jobs_ids, saved_jobs, user } = this.state;
 
         return (
             <div className={classes.masterContainer}>
@@ -383,6 +428,7 @@ class Jobs extends React.Component {
                                                 selectedRoles={this.state.selectedRoles}
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
+                                                saved_jobs_ids={saved_jobs_ids}
                                                 mobile={true}
                                             />
                                         </div>
@@ -398,14 +444,19 @@ class Jobs extends React.Component {
                                                 selectedRoles={this.state.selectedRoles}
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
+                                                saved_jobs_ids={saved_jobs_ids}
                                             />
                                         </div>
                                         <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>
                                             <JobDetails
                                                 job={this.state.selectedJob}
+                                                saved_jobs_ids={saved_jobs_ids}
+                                                saved_jobs={saved_jobs}
+                                                user={user}
                                                 onApply={this.openApplyModal.bind(this)}
 
                                                 forceCompany={this.forceCompany.bind(this)}
+                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
                                             />
                                         </div>
                                     </div>

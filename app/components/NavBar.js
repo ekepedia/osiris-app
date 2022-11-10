@@ -176,7 +176,7 @@ class NavBar extends React.Component {
                             window.location.pathname = `/login`;
                         }
                     }}>
-                        <div className={classes.linkStyle} style={{color: path === ("/settings/" + user.user_id) ? COMMON.COLORS.B400 : COMMON.COLORS.N900}}>
+                        <div className={classes.linkStyle} style={{color: path === ("/logout/" + user.user_id) ? COMMON.COLORS.B400 : COMMON.COLORS.N900}}>
                             <div style={{height: "22px", width: "22px", background: "none", borderRadius: "100%"}}>
                             </div>
                             <div style={{height: "22px", width: "22px", background: COMMON.COLORS.N200, top: 7, paddingTop: "5px", paddingRight: "1px", position:"absolute", borderRadius: "100%"}}>

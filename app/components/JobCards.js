@@ -203,7 +203,7 @@ class JobCards extends React.Component {
 
         const { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
 
-        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
+        // console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 
 
         return (<div className={classes.container}>

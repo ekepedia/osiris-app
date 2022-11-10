@@ -254,6 +254,7 @@ const CompanyRowStyles = {
     },
     companyRankContainer: {
         flex: 1,
+        display: "none",
         '@media (max-width: 500px)': {
             display: "none"
         },
