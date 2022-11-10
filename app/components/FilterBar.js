@@ -127,7 +127,6 @@ class FilterBar extends React.Component {
 
 
         this.industries = Object.values(dedup_map);
-        console.log(this.industries)
 
         return this.industries
     }
@@ -164,8 +163,6 @@ class FilterBar extends React.Component {
 
             onAssistant
         } = this.props;
-
-        console.log(state)
 
         this.locations = this.constructLocationOptions(jobs);
         this.companies = this.constructCompanyOptions(jobs);

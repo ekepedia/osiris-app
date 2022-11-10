@@ -381,7 +381,7 @@ class Home extends React.Component {
                                 <div style={{paddingTop: "50px"}}>
                                     <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide, )}>
                                         <div>
-                                            <div className={mc(classes.sectionTitle)}>Connect with a diverse and inclusive community</div>
+                                            <div className={mc(classes.sectionTitle)}>Join an inclusive community</div>
                                             <div className={mc(classes.sectionBody)}>OSIRIS connects you with your peers, companies, and mentors across industries</div>
                                         </div>
                                     </div>
@@ -448,8 +448,8 @@ class Home extends React.Component {
                                             <div className={mc(classes.findAJobSection)}>
                                                 <div className={mc(classes.paddingLeftDefault)}>
                                                     <div className={mc(classes.sectionWidthWide)}>
-                                                        <div className={mc(classes.sectionTitle)}>All the information you need in one place</div>
-                                                        <div className={mc(classes.sectionBody)}>Autem quas voluptatem distinctio perferendis repellendus perspiciatis non non quaerat. Mollitia nihil in cupiditate quidem eos quae. Dolorum est ipsum minima ratione rerum est et sint.</div>
+                                                        <div className={mc(classes.sectionTitle)}>Stop guessing. Understand the job before you apply</div>
+                                                        <div className={mc(classes.sectionBody)}>OSIRIS helps you find exciting job opportunities, from fast-growing early-stage startups to nonprofits to the major corporations you know and love</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -476,8 +476,8 @@ class Home extends React.Component {
                                             <div>
                                                 <div className={mc(classes.marginRightDefault)}>
                                                     <div className={mc(classes.sectionWidthWide, classes.peerSupportSection)}>
-                                                        <div className={mc(classes.sectionTitle)}>Find companies that reflect you and your values</div>
-                                                        <div className={mc(classes.sectionBody)}>Autem quas voluptatem distinctio perferendis repellendus perspiciatis non non quaerat. Mollitia nihil in cupiditate quidem eos quae. Dolorum est ipsum minima ratione rerum est et sint.</div>
+                                                        <div className={mc(classes.sectionTitle)}>Don’t settle. Find a company that reflects you and your values</div>
+                                                        <div className={mc(classes.sectionBody)}>Don't settle for a company that doesn't reflect you and your values. OSIRIS gives you the data you need to ensure you join a company where you will feel included</div>
                                                     </div>
                                                 </div>
                                                 <div className={mc(classes.mobileImageContainer)}>
@@ -496,8 +496,8 @@ class Home extends React.Component {
                                             <div className={mc(classes.userProfileSection)}>
                                                 <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide,)}>
                                                     <div>
-                                                        <div className={mc(classes.sectionTitle)}>A profile that actually represents you</div>
-                                                        <div className={mc(classes.sectionBody)}>Autem quas voluptatem distinctio perferendis repellendus perspiciatis non non quaerat. Mollitia nihil in cupiditate quidem eos quae. Dolorum est ipsum minima ratione rerum est et sint.</div>
+                                                        <div className={mc(classes.sectionTitle)}>A professional profile that actually represents you and your work</div>
+                                                        <div className={mc(classes.sectionBody)}>Showcase your work and who you are by integrating various platforms with your OSIRIS profile. As you build your profile it will be easier to find peers and jobs</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -522,8 +522,8 @@ class Home extends React.Component {
                                             <div className={mc(classes.userProfileSection)}>
                                                 <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide,)}>
                                                     <div>
-                                                        <div className={mc(classes.sectionTitle)}>No more spreadsheets. Organize your job search</div>
-                                                        <div className={mc(classes.sectionBody)}>Autem quas voluptatem distinctio perferendis repellendus perspiciatis non non quaerat. Mollitia nihil in cupiditate quidem eos quae. Dolorum est ipsum minima ratione rerum est et sint.</div>
+                                                        <div className={mc(classes.sectionTitle)}>No more spreadsheets. Organize your search to find your dream job</div>
+                                                        <div className={mc(classes.sectionBody)}>No more messy spreadsheets to keep track of your job search. OSIRIS helps you keep track of every detail about opportunities regardless of where you found them</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -548,7 +548,7 @@ class Home extends React.Component {
                                 <div className={mc(classes.applySectionContainer)}>
                                     <div style={{textAlign: "center"}}>
                                         <div style={{maxWidth: "301px", margin: "auto"}}>
-                                            <div className={mc(classes.landingHeroTitle)}>Join the OSIRIS community today</div>
+                                            <div className={mc(classes.sectionTitle)}>Join the OSIRIS community today</div>
                                         </div>
                                         <div style={{marginTop: "50px", marginBottom: "50px"}}>
                                             <div className={classes.footerProfileContainer}>

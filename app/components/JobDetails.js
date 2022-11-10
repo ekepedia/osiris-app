@@ -34,6 +34,7 @@ import StandardBadge from "./StandardBadge";
 import StandardButton from "./StandardButton";
 import CoverImageHolder from "./CoverImageHolder";
 import {mc} from "../common/helpers";
+import SavedJobService from "../services/SavedJobService";
 
 const Styles = {
     container: {
@@ -107,9 +108,47 @@ class JobDetails extends React.Component {
 
     }
 
-    render() {
-        let { classes, onApply, job, forceCompany } = this.props;
+    updateSavedJob() {
+        let {  client, job, user, saved_jobs, saved_jobs_ids, updateSavedJobIds } = this.props;
+        const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
 
+        if (is_saved_job) {
+            let yes = confirm("Are you sure you want to unsave this job?");
+            if (yes) {
+                saved_jobs_ids = _.without(saved_jobs_ids, job.job_id + "");
+                updateSavedJobIds(saved_jobs_ids);
+
+                let saved_job_id = null;
+                saved_jobs.forEach((saved_job) => {
+                    if (saved_job.job_id + "" === job.job_id + "") {
+                        saved_job_id = saved_job.saved_job_id
+                    }
+                })
+
+                SavedJobService.deleteSavedJob({client, saved_job_id}).then(() =>{
+                    console.log("REMOVED SAVED JOB:", saved_job_id);
+                });
+
+
+            }
+        } else {
+            saved_jobs_ids.push(job.job_id + "")
+            updateSavedJobIds(saved_jobs_ids)
+            SavedJobService.addSavedJob({
+                client,
+                job_id: job.job_id + "",
+                user_id: user.user_id + "",
+                status_id: "1"
+            }).then((saved_job_id) => {
+                console.log("CREATED NEW SAVED JOB:", saved_job_id);
+            })
+        }
+    }
+
+    render() {
+        let { classes, onApply, job, forceCompany, saved_jobs_ids, user } = this.props;
+
+        console.log("saved_jobs_ids", saved_jobs_ids, job)
         job = job || {};
 
         let company = job.companies && job.companies.length ? job.companies[0] : {};
@@ -146,6 +185,8 @@ class JobDetails extends React.Component {
 
         }
 
+        const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
+
         return (<div className={classes.container}>
             <div>
                 <div style={{display: "flex", marginBottom: "20px"}}>
@@ -166,7 +207,12 @@ class JobDetails extends React.Component {
                         </div>
                     </div>
                     <div style={{flex: "0 0 157px", textAlign: "right"}}>
-                        <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                        <div style={{display: user && user.user_id ? "inline-block" : "none", marginRight: "5px"}}>
+                            <StandardButton label={""} icon={`${is_saved_job ? "fa-solid" : "fa-regular"} fa-bookmark`} secondary={!is_saved_job} onClick={() => {this.updateSavedJob()}}/>
+                        </div>
+                        <div style={{display: "inline-block"}}>
+                            <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                        </div>
                     </div>
                 </div>
 

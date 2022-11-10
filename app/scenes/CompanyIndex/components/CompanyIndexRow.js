@@ -194,7 +194,7 @@ class CompanyIndexRow extends React.Component {
 
                 <div className={mc(classes.companyRankContainer)}>
                     <div className={mc(classes.companyHeader)}>
-                        {company.rank ? <span>{company.rank}</span> : "--"}<i style={{color: COMMON.COLORS.B400, marginLeft: "2.5px"}} className="fa-sharp fa-solid fa-award"/>
+                        {company.rank && company.rank_value > 0 ? <span>{company.rank}</span> : "--"}<i style={{color: COMMON.COLORS.B400, marginLeft: "2.5px"}} className="fa-sharp fa-solid fa-award"/>
                     </div>
                     <div className={mc(classes.companySubHeader)}>
                         Rank <i className={mc(classes.toolTipIcon, "fa-solid fa-circle-info")} data-tip data-for={id_rank} style={{marginLeft: "3px", fontSize: "9.66px", color: COMMON.COLORS.N500}}/>

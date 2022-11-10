@@ -63,7 +63,6 @@ class JobAlertSignUp extends React.Component {
 
 
         this.industries = Object.values(dedup_map);
-        console.log(this.industries)
 
         return this.industries
     }
