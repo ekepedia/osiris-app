@@ -711,7 +711,7 @@ class Home extends React.Component {
                                             {/*</div>*/}
                                         </div>
                                         <div style={{flex: 1}}>
-                                            <div className={mc(classes.userProfileSection)}>
+                                            <div className={mc(classes.userProfileSection)} style={{paddingTop: 0}}>
                                                 <div className={mc(classes.marginRightDefault, classes.sectionWidthWide,)}>
                                                     <div>
                                                         <div className={mc(classes.sectionSubTitle)}>JOB SEARCH TRACKER</div>
@@ -797,18 +797,6 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/tatum-hero.png"}/>
-                                                    </div>
-                                                    <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Tatum D.</div>
-                                                        <div className={classes.footerProfileBody}>Brand Manager</div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div className={classes.footerProfileContainer}>
-                                                <div style={{display: "flex", height: "100%"}}>
-                                                    <div className={classes.footerProfileImgContainer}>
                                                         <CoverImageHolder url={"/img/will-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
@@ -818,6 +806,19 @@ class Home extends React.Component {
                                                 </div>
 
                                             </div>
+                                            <div className={classes.footerProfileContainer} style={{marginRight: 0}}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/tatum-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Tatum D.</div>
+                                                        <div className={classes.footerProfileBody}>Brand Manager</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
                                         </div>
                                         <div style={{marginBottom: "0px"}}>
                                             <div className={classes.footerProfileContainer}>
@@ -844,7 +845,7 @@ class Home extends React.Component {
                                                 </div>
 
                                             </div>
-                                            <div className={classes.footerProfileContainer}>
+                                            <div className={classes.footerProfileContainer} >
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
                                                         <CoverImageHolder url={"/img/eden-hero.png"}/>
@@ -856,7 +857,7 @@ class Home extends React.Component {
                                                 </div>
 
                                             </div>
-                                            <div className={classes.footerProfileContainer}>
+                                            <div className={classes.footerProfileContainer} style={{marginRight: 0}}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
                                                         <CoverImageHolder url={"/img/josh-hero.png"}/>
