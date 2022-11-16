@@ -467,10 +467,10 @@ function preload_and_prejoin_companies() {
                         name: job.job_board_category,
                     },
                     job_types: [{
-                        job_type_id: "Full-time",
-                        id: "Full-time",
-                        label: "Full-time",
-                        name: "Full-time",
+                        job_type_id: "Full-Time",
+                        id: "Full-Time",
+                        label: "Full-Time",
+                        name: "Full-Time",
                     }],
                     qualifications: [],
                     responsibilities: [],
@@ -483,7 +483,9 @@ function preload_and_prejoin_companies() {
                         company_industry: null
                     }],
                     affinities: [],
-                    job_html: job.job_html
+                    job_html: job.job_html,
+                    job_board_category: job.job_board_category,
+                    job_seniority: job.job_board_level,
                 };
 
 

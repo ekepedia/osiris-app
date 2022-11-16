@@ -205,7 +205,7 @@ class JobCards extends React.Component {
         let { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
         console.timeEnd("done filtering");
 
-        filteredJobs = usingFilters ? filteredJobs : filteredJobs.slice(0, MAX_RESULTS);
+        filteredJobs = filteredJobs.slice(0, MAX_RESULTS);
         unFilteredJobs = unFilteredJobs.slice(0, MAX_RESULTS);
         // console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 

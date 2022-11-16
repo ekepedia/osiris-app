@@ -187,6 +187,22 @@ class JobDetails extends React.Component {
 
         const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
 
+        let salary = "";
+        let salary_tooltip = "";
+        if (job && job.job_salary_estimate) {
+            salary = job.job_salary_estimate;
+
+            if (salary.indexOf("(Employer est.)") !== -1) {
+                salary = salary.replace("(Employer est.)", "").trim()
+                salary_tooltip = "This estimate was provided by the employer via Glassdoor";
+            }
+
+            if (salary.indexOf("(Glassdoor est.)") !== -1) {
+                salary = salary.replace("(Glassdoor est.)", "").trim()
+                salary_tooltip = "This estimate was provided by Glassdoor";
+            }
+        }
+
         return (<div className={classes.container} id={"job-description"}>
             <div >
                 <div style={{display: "flex", marginBottom: "20px"}}>
@@ -223,7 +239,8 @@ class JobDetails extends React.Component {
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600, marginBottom: "5px"}} key={location.location_id} label={location.label}/>)
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
-                        {(job.job_salary_estimate && job.job_salary_estimate.length) ? <StandardBadge label={`${job.job_salary_estimate}`} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
+                        {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
+                        {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
                         {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
                         {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
                         {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
