@@ -412,7 +412,7 @@ class Home extends React.Component {
                                                     <div className={mc(classes.landingHeroBody)}>OSIRIS provides you with the community, tools, and data to make better career decisions</div>
                                                     <div style={{marginTop: "25px"}}>
                                                         <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
-                                                            window.open("https://x89mmcfv41m.typeform.com/to/Yt33A4zK", "_blank");
+                                                            window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                                                         }}/>
                                                     </div>
                                                 </div>
@@ -475,6 +475,13 @@ class Home extends React.Component {
                                             </div>
                                             <div className={mc(classes.featureContainer)}>
                                                 <div className={mc(classes.featureImageTall)}>
+                                                    <CoverImageHolder url={"/img/josh-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Josh C.</div>
+                                                <div className={mc(classes.featureBio)}>Cinematographer & Photographer</div>
+                                            </div>
+                                            <div className={mc(classes.featureContainer)} style={{display: "none"}}>
+                                                <div className={mc(classes.featureImageTall)}>
                                                     <CoverImageHolder url={"/img/kara-hero.png"}/>
                                                 </div>
                                                 <div className={mc(classes.featureName)}>Kara S.</div>
@@ -489,13 +496,7 @@ class Home extends React.Component {
                                                 <div className={mc(classes.featureName)}>Eden B.</div>
                                                 <div className={mc(classes.featureBio)}>Digital Marketing Specialist</div>
                                             </div>
-                                            <div className={mc(classes.featureContainer)}>
-                                                <div className={mc(classes.featureImageTall)}>
-                                                    <CoverImageHolder url={"/img/josh-hero.png"}/>
-                                                </div>
-                                                <div className={mc(classes.featureName)}>Josh C.</div>
-                                                <div className={mc(classes.featureBio)}>Cinematographer & Photographer</div>
-                                            </div>
+
 
 
                                         </div>
@@ -831,7 +832,7 @@ class Home extends React.Component {
                                                 </div>
 
                                             </div>
-                                            <div className={classes.footerProfileContainer}>
+                                            <div className={classes.footerProfileContainer} style={{display: "none"}}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
                                                         <CoverImageHolder url={"/img/kara-hero.png"}/>
@@ -870,7 +871,7 @@ class Home extends React.Component {
                                         </div>
                                         <div style={{marginBottom: "100px"}}>
                                             <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
-                                                window.open("https://x89mmcfv41m.typeform.com/to/Yt33A4zK", "_blank");
+                                                window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                                             }}/>
                                         </div>
                                     </div>

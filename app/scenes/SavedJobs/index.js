@@ -161,13 +161,13 @@ class SavedJobs extends React.Component {
         }).then((saved_jobs) => {
             // console.log("LOADED SAVED", saved_jobs);
 
-            saved_jobs = saved_jobs.sort((a, b) => {
+            saved_jobs = saved_jobs ? saved_jobs.sort((a, b) => {
 
                 let nameA = a.status_id || "";
                 let nameB = b.status_id || "";
 
                 return nameA.localeCompare(nameB);
-            });
+            }) : saved_jobs;
 
             this.setState({
                 saved_jobs,
@@ -392,7 +392,7 @@ class SavedJobs extends React.Component {
                                     <div>Loading Saved Jobs</div>
                                     <div>One Moment Please</div>
                                 </div>
-                            </div>: <div>
+                            </div> : <div>
 
                                 <div style={{padding: "20px", textAlign: "center"}}>
                                     <div style={{fontSize: "14px"}}>You haven't saved any jobs yet! Click below to save your first job</div>

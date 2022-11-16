@@ -15,6 +15,7 @@ import StandardInput from "../../components/StandardInput";
 import StandardButton from "../../components/StandardButton";
 import NavBar from "../../components/NavBar";
 import SignOnHero from "../../components/SignOnHero";
+import TrackingService from "../../services/TrackingService";
 
 const Styles = {
     container: {
@@ -81,7 +82,7 @@ class SignUp extends React.Component {
     signup() {
         const { first_name, last_name, user_email, password } = this.state;
 
-        axios.post("/api/v2/sign-up", {user: {first_name, last_name},user_email, password}).then((data) => {
+        axios.post("/api/v2/sign-up", {user: {first_name, last_name}, user_email, password}).then((data) => {
 
             if (data && data.data) {
                 console.log("SIGN UP", data.data);
@@ -90,7 +91,8 @@ class SignUp extends React.Component {
                     let user_id = data.data.data.user_id;
                     // window.location.pathname = `/edit/${user_id}`;
                     window.location.pathname = `/companies`;
-                    AuthService.setCurrentUser({user_id})
+                    AuthService.setCurrentUser({user_id});
+                    TrackingService.trackSubmit({type: 4, page: "sign-up", value: user_email, user_id, custom: `${first_name} ${last_name}`});
                 } else {
                     alert("That email is already taken!");
                 }

@@ -450,6 +450,8 @@ function preload_and_prejoin_companies() {
 
                 console.log(found, missing, ++i)
 
+                if (job.job_board_category === "Consulting")
+                    job.job_board_category = "Consultant"
 
                 let job_for_board = {
                     job_id: Math.random(),
@@ -460,12 +462,12 @@ function preload_and_prejoin_companies() {
                     date_created_label: null,
                     job_title: job.job_title,
                     job_overview: "",
-                    industries: {
+                    industries: [{
                         industry_id: job.job_board_category,
                         id: job.job_board_category,
                         label:job.job_board_category,
                         name: job.job_board_category,
-                    },
+                    }],
                     job_types: [{
                         job_type_id: "Full-Time",
                         id: "Full-Time",
