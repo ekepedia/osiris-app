@@ -19,6 +19,7 @@ import {FONT_LARGE_TITLE_BOLD, FONT_TITLE_2} from "../../common/fonts";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import StandardButton from "../../components/StandardButton";
+import TrackingService from "../../services/TrackingService";
 
 
 const HERO_MAX_WIDTH = 400;
@@ -413,6 +414,7 @@ class Home extends React.Component {
                                                     <div style={{marginTop: "25px"}}>
                                                         <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
                                                             window.open("https://osiris-works.typeform.com/sign-up", "_blank");
+                                                            TrackingService.trackClick({page: "home", sub_page: "hero", value: "Request Invite"});
                                                         }}/>
                                                     </div>
                                                 </div>
@@ -872,6 +874,7 @@ class Home extends React.Component {
                                         </div>
                                         <div style={{marginBottom: "100px"}}>
                                             <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
+                                                TrackingService.trackClick({page: "home", sub_page: "footer", value: "Request Invite"});
                                                 window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                                             }}/>
                                         </div>
