@@ -134,7 +134,7 @@ export const GREY_BORDER_6 = {
 export const MOBILE_STYLES = {
     hideOnMobile: {
         '@media (max-width: 768px)': {
-            display: "none"
+            display: "none !important"
         },
     },
     showOnMobile: {

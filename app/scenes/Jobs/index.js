@@ -41,6 +41,16 @@ const Styles = {
             padding: "20px",
         },
     },
+    cardContainer: {
+        flex: "0 0 356px",
+        marginRight: "49px",
+        height: "100%",
+        overflowY: "scroll",
+        '@media (max-width: 768px)': {
+            flex: 1,
+            marginRight: "0",
+        },
+    },
     hideOnMobile: {
         '@media (max-width: 768px)': {
             display: "none"
@@ -191,7 +201,8 @@ class Jobs extends React.Component {
             selectedDegreeRequirements: [],
             selectedJobId: this.jobs[0].job_id,
             selectedJob: this.jobs[0],
-            loading: true
+            loading: true,
+            MAX_RESULTS: 10
         };
     }
 
@@ -266,7 +277,7 @@ class Jobs extends React.Component {
             let selectedJob;
 
             jobs = jobs.map((job) => {
-                job.companies = job.companies ? job.companies : [company_map[job.company_id]];
+                job.companies = job.company_id && company_map[job.company_id] ? [company_map[job.company_id]] : (job.companies || {})
                 return job;
             })
 
@@ -291,14 +302,16 @@ class Jobs extends React.Component {
         let selected = this.state[field];
         selected.push(id);
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10});
+        this.resetScrollPosition();
     }
 
     overrideField(field, ids) {
         let selected = this.state[field];
         selected = ids;
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10})
+        this.resetScrollPosition();
     }
 
     removeFromField(field, id) {
@@ -309,7 +322,12 @@ class Jobs extends React.Component {
             selected.splice(index, 1);
         }
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10})
+        this.resetScrollPosition();
+    }
+
+    resetScrollPosition() {
+        document.querySelector("#mobile-cards-container").scrollTop = 0;
     }
 
     clearField(field) {this.setState({[field]: []})}
@@ -384,12 +402,19 @@ class Jobs extends React.Component {
         })
     }
 
+    handleScroll() {
+        let { MAX_RESULTS } = this.state;
+        this.setState({
+            MAX_RESULTS: MAX_RESULTS + 10
+        })
+    }
+
     render() {
         let { classes, client, match: { params } } = this.props;
 
         const SCROLL_PAD = "100px";
 
-        let { loading, saved_jobs_ids, saved_jobs, user } = this.state;
+        let { loading, saved_jobs_ids, saved_jobs, user, MAX_RESULTS } = this.state;
 
         return (
             <div className={classes.masterContainer}>
@@ -416,7 +441,7 @@ class Jobs extends React.Component {
                             <div style={{flex: 1,  height: "100%",}}>
                                 <div style={{ height: "100%",}}>
                                     <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
-                                        <div className={classes.showOnMobile} style={{flex: 1, marginRight: "0", height: "100%", overflowY: "scroll"}}>
+                                        <div  id={"mobile-cards-container"} className={classes.cardContainer}>
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
@@ -429,22 +454,8 @@ class Jobs extends React.Component {
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
                                                 saved_jobs_ids={saved_jobs_ids}
-                                                mobile={true}
-                                            />
-                                        </div>
-                                        <div className={classes.hideOnMobile} style={{flex: "0 0 356px", marginRight: "49px", height: "100%", overflowY: "scroll"}}>
-                                            <JobCards
-                                                jobs={this.jobs}
-                                                loading={loading}
-                                                selectedJobId={this.state.selectedJobId}
-                                                selectedLocations={this.state.selectedLocations}
-                                                selectedCompanies={this.state.selectedCompanies}
-                                                selectedIndustries={this.state.selectedIndustries}
-                                                selectedAffinities={this.state.selectedAffinities}
-                                                selectedRoles={this.state.selectedRoles}
-                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                                setSelectedJob={this.setSelectedJob.bind(this)}
-                                                saved_jobs_ids={saved_jobs_ids}
+                                                MAX_RESULTS={MAX_RESULTS}
+                                                handleScroll={this.handleScroll.bind(this)}
                                             />
                                         </div>
                                         <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>

@@ -35,7 +35,7 @@ module.exports.init = function (connection) {
     // mass_delete();
     // import_airtable_jobs();
     // format_jobs_for_job_board();
-    import_webscraper_jobs();
+    // import_webscraper_jobs();
 };
 
 module.exports.get_jobs = get_jobs;
@@ -526,6 +526,13 @@ function import_webscraper_jobs() {
         .on('end', () => {
             console.log('CSV file successfully processed');
         });
+}
+
+module.exports.set_webscraped_jobs = set_webscraped_jobs;
+
+function set_webscraped_jobs (jobs) {
+    WEBSCRAPED_JOBS = jobs;
+    module.exports.WEBSCRAPED_JOBS = WEBSCRAPED_JOBS;
 }
 
 function process_locations(job) {

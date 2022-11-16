@@ -1,4 +1,3 @@
-
 const async = require("async");
 const axios = require("axios");
 const _ = require("lodash");
@@ -6,6 +5,8 @@ const moment = require("moment");
 
 
 const DatabaseService = require("../DatabaseService");
+const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
+const JobService = require("../jobs/JobService")
 
 let init = false;
 let knex = null;
@@ -22,6 +23,7 @@ let PRELOADED_DATA = [];
 module.exports.COMPANY_TABLE = COMPANY_TABLE;
 
 module.exports.init = function (connection) {
+
     init = true;
     knex = connection;
 
@@ -37,6 +39,10 @@ module.exports.init = function (connection) {
     // construct_questions();
     // import_data();
     // import_demo_data();
+
+    setTimeout(() => {
+        preload_and_prejoin_companies();
+    }, 1000);
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
@@ -87,6 +93,9 @@ module.exports.init = function (connection) {
         });
     });
 
+    return new Promise((resolve) => {
+        resolve();
+    });
 };
 
 module.exports.get_companies = get_companies;
@@ -351,6 +360,149 @@ function remove_company({company_id}) {
     });
 }
 
+function preload_and_prejoin_companies() {
+    let company_demographics_map = {};
+    let company_map = {};
+    let company_name_map = {};
+    let company_lowercase_name_map = {};
+    let companies = [];
+    let company_demographics = [];
+    let company_ids_with_company_demographics = [];
+
+    async.parallel([(cb) => {
+        CompanyDemographicService.get_company_demographics({}).then((in_company_demographics) => {
+            company_demographics = in_company_demographics
+            company_demographics.forEach((company_demographic) => {
+                company_demographics = company_demographic;
+                company_demographics_map[company_demographic.company_id] = company_demographics_map[company_demographic.company_id] || [];
+                company_demographics_map[company_demographic.company_id].push(company_demographic);
+                company_ids_with_company_demographics.push(company_demographic.company_id);
+            });
+            cb(null);
+        })
+    }, (cb) => {
+        get_companies({is_clearbit_import: false}).then((in_companies) => {
+            companies = in_companies;
+            cb();
+        })
+    },], (err) => {
+        // let list = [];
+        companies.forEach((company) => {
+            console.log(company.company_id)
+            company_map[company.company_id] = company;
+            company_name_map[company.company_name] = company;
+            company_lowercase_name_map[(company.company_name || "").toLowerCase()] = company;
+            // list.push({
+            //     company_name: company.company_name,
+            //     company_id: company.company_id,
+            //     company_size: company.company_size,
+            //     years: company_demographics_map[company.company_id + ""] ? company_demographics_map[company.company_id +""].length : 0
+            // });
+        });
+        // const fs = require('fs');
+        // fs.writeFile('./helloworld.txt', JSON.stringify(list), function (err) {
+        //     if (err) return console.log(err);
+        //     console.log('Hello World > helloworld.txt');
+        // });
+
+        const filename = "jobs_desc_working_doc_1050.csv";
+
+        let i = 0;
+        let found = 0;
+        let missing = 0;
+        let web_jobs = [];
+        fs.createReadStream(__dirname + `/../../../data/${filename}`)
+            .pipe(csv())
+            .on('data', (job) => {
+                const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
+                let company_id = null;
+                if (job_company) {
+                    found++;
+                    company_id = job_company.company_id
+                } else {
+                    console.log(job.job_company)
+                }
+
+
+                let job_city = "";
+                let job_state = "";
+                if (job.job_location && job.job_location.indexOf(", ") !== -1) {
+                    let parts = job.job_location.split(", ");
+                    job_city = parts[0];
+                    job_state = parts[1];
+                } else {
+
+                }
+
+                const job_location = [{
+                    location_id: job.job_location,
+                    id: job.job_location,
+                    city: job_city,
+                    state: job_state,
+                    label: job.job_location,
+                }];
+
+                if (job.job_html) {
+                    job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
+                } else {
+                    missing++
+                }
+
+                console.log(found, missing, ++i)
+
+
+                let job_for_board = {
+                    job_id: Math.random(),
+                    date_created: new Date().getTime(),
+                    apply_link: job.job_link,
+                    locations: job_location,
+                    job_salary_estimate: job.job_salary,
+                    date_created_label: null,
+                    job_title: job.job_title,
+                    job_overview: "",
+                    industries: {
+                        industry_id: job.job_board_category,
+                        id: job.job_board_category,
+                        label:job.job_board_category,
+                        name: job.job_board_category,
+                    },
+                    job_types: [{
+                        job_type_id: "Full-time",
+                        id: "Full-time",
+                        label: "Full-time",
+                        name: "Full-time",
+                    }],
+                    qualifications: [],
+                    responsibilities: [],
+                    degree_requirements: [],
+                    company_id,
+                    companies: [{
+                        company_name: job.job_company,
+                        company_website: job.job_company,
+                        company_logo_url: job.job_logo_url,
+                        company_industry: null
+                    }],
+                    affinities: [],
+                    job_html: job.job_html
+                };
+
+
+                if (company_id && job.job_html) {
+                    web_jobs.push(job_for_board);
+
+                }
+                console.log(job_for_board.job_title)
+
+
+            })
+            .on('end', () => {
+                console.log('CSV file successfully processed');
+                JobService.set_webscraped_jobs(web_jobs);
+            });
+    })
+
+}
+
 function test_endpoints() {
     // get_companies({}).then((d) => {
     //     console.log("COMPANIES", d);
@@ -403,8 +555,6 @@ function import_data() {
 
 
 function import_airtable_companies({location_map, industry_map, dei_data_map, offset}) {
-
-    const CompanyDemographicService = require("../company_demographics/CompanyDemographicService");
 
     let url = `https://api.airtable.com/v0/${OSIRIS_DATA_BASE}/Companies?`;
 
@@ -506,7 +656,6 @@ function import_airtable_companies({location_map, industry_map, dei_data_map, of
 
 function import_demo_data() {
     const data = require("./data/data-export-v4.json");
-    const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
 
     Object.values(data).forEach((company) => {
 
@@ -575,146 +724,6 @@ function import_demo_data() {
 
             }
         })
-    })
-}
-
-function mass_delete() {
-    knex(SERVICE_DEFAULT_TABLE).where({}).del().then(() => {
-    }).catch((err) => {
-    });
-}
-
-function construct_questions() {
-
-    let questions = [];
-
-    get_companies({}).then((companies) => {
-        companies.forEach((company) => {
-
-            let { company_name, company_id } = company;
-
-            let clean_company_name = company_name.replace("&", "and");
-            clean_company_name = clean_company_name.replace("&", "and");
-
-            if (clean_company_name.toLowerCase().indexOf("university") !== -1)
-                return;
-
-            if (clean_company_name.toLowerCase().indexOf("college") !== -1)
-                return;
-
-            if (clean_company_name.toLowerCase().indexOf("yale") !== -1)
-                return;
-
-            if (clean_company_name.toLowerCase().indexOf("institute") !== -1)
-                return;
-
-            questions.push({
-                field: "employees_female",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are female?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are female?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "employees_male",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are male?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are male?`.split(" ").join("+")
-            });
-
-            questions.push({
-                field: "employees_asian",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are asian?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are asian?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "employees_black",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are black?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are black?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "employees_latinx",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are hispanic?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are hispanic?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "employees_indigenous",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are native american?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are native american?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "employees_white",
-                company_name,
-                company_id,
-                question: `What percentage of ${company_name} employees are white?`,
-                url: `https://www.google.com/search?q=What percentage of ${clean_company_name} employees are white?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "company_website",
-                company_name,
-                company_id,
-                question: `What is the website for ${company_name}?`,
-                url: `https://www.google.com/search?q=What is the website for ${clean_company_name}?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "company_founded_year",
-                company_name,
-                company_id,
-                question: `What year was ${company_name} founded?`,
-                url: `https://www.google.com/search?q=What year was ${clean_company_name} founded?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "company_size",
-                company_name,
-                company_id,
-                question: `How many employees does ${company_name} have?`,
-                url: `https://www.google.com/search?q=How many employees does ${clean_company_name} have?`.split(" ").join("+")
-            });
-            questions.push({
-                field: "company_headquarters",
-                company_name,
-                company_id,
-                question: `Where are the headquarters for ${company_name}?`,
-                url: `https://www.google.com/search?q=Where are the headquarters for ${clean_company_name}?`.split(" ").join("+")
-            });
-
-            questions.push({
-                field: "company_glassdoor",
-                company_name,
-                company_id,
-                question: `What is the Glassdoor overall rating for ${company_name}?`,
-                url: `https://www.google.com/search?q=What is the Glassdoor overall rating for ${clean_company_name}?`.split(" ").join("+")
-            });
-
-            questions.push({
-                field: "company_work_life",
-                company_name,
-                company_id,
-                question: `What is the Glassdoor work life balance rating for ${company_name}?`,
-                url: `https://www.google.com/search?q=What is the Glassdoor work life balance rating for ${clean_company_name}?`.split(" ").join("+")
-            });
-        });
-
-        console.log(questions)
-
-        const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-        const csvWriter = createCsvWriter({
-            path: 'data-request-220811-v1.csv',
-            header: Object.keys(questions[0]).map((key) => ({id: key, title: key}))
-        });
-
-        csvWriter
-            .writeRecords(questions)
-            .then(()=> console.log('The CSV file was written successfully'));
     })
 }
 

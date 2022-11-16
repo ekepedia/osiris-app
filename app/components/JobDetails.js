@@ -187,8 +187,8 @@ class JobDetails extends React.Component {
 
         const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
 
-        return (<div className={classes.container}>
-            <div>
+        return (<div className={classes.container} id={"job-description"}>
+            <div >
                 <div style={{display: "flex", marginBottom: "20px"}}>
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div onClick={() => {
@@ -207,7 +207,7 @@ class JobDetails extends React.Component {
                         </div>
                     </div>
                     <div style={{flex: "0 0 157px", textAlign: "right"}}>
-                        <div style={{display: user && user.user_id ? "inline-block" : "none", marginRight: "5px"}}>
+                        <div style={{display: user && user.user_id  && !job.job_html ? "inline-block" : "none", marginRight: "5px"}}>
                             <StandardButton label={""} icon={`${is_saved_job ? "fa-solid" : "fa-regular"} fa-bookmark`} secondary={!is_saved_job} onClick={() => {this.updateSavedJob()}}/>
                         </div>
                         <div style={{display: "inline-block"}}>
@@ -223,13 +223,14 @@ class JobDetails extends React.Component {
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600, marginBottom: "5px"}} key={location.location_id} label={location.label}/>)
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
+                        {(job.job_salary_estimate && job.job_salary_estimate.length) ? <StandardBadge label={`${job.job_salary_estimate}`} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
                         {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
                         {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
                         {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
                         {company.glassdoor_compensation ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_compensation}/5 on<br/>Glassdoor for compensation`} label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
                     </div>
 
-                    <div>
+                    <div style={{display: "none"}}>
                         {(job.job_salary_estimate && job.job_salary_estimate.length) ? <div style={{display: "inline-block"}}>
                             <div style={{display: "flex"}} className={classes.requirementsStyle}>
                                 <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
@@ -244,9 +245,8 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                {job.job_html ? <div>
+                {job.job_html ? <div style={{marginBottom: company.company_about ? SECTION_BUFFER : null}}>
                     <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
-
                 </div> : <div>
                     <div style={{marginBottom: SECTION_BUFFER}}>
                         <div className={mc(classes.sectionHeader)}>Role Overview</div>

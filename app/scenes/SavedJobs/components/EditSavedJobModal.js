@@ -200,7 +200,7 @@ class EditSavedJobModal extends React.Component {
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
                         maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
-                        height: "fit-content"
+                        height: "600px"
                     }
                 }}
             >
