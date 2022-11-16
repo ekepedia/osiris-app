@@ -360,7 +360,6 @@ function format_jobs_for_job_board() {
                             state: "Remote",
                             label: "Remote"
                         }]
-
                 }
 
             });
