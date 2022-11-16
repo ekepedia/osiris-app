@@ -28,6 +28,7 @@ import COMMON from "../common/index";
 import {FONT_BODY_BOLD, FONT_SUBHEADER_BOLD, FONT_TITLE_2_BOLD, H300} from "../common/fonts";
 import UserService from "../services/UserService";
 import CoverImageHolder from "./CoverImageHolder";
+import TrackingService from "../services/TrackingService";
 
 const NAV_HEIGHT = 48;
 
@@ -122,30 +123,40 @@ class NavBar extends React.Component {
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: "0 0 100px"}} className={classes.logoStyle}>
-                    <Link to={"/"} style={{color: COMMON.COLORS.N900}}>
+                    <Link to={"/"} style={{color: COMMON.COLORS.N900}} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "logo"});
+                    }}>
                         <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>
-                    <Link to={"/"} className={classes.hide600}>
+                    <Link to={"/"} className={classes.hide600} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "home"});
+                    }}>
                         <div className={classes.linkStyle} style={{color: path === "/" ? COMMON.COLORS.B400 : null}}>
                             Home
                             {path === "/" && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
-                    {user && user.user_id ? <Link to={"/jobs"}>
+                    {user && user.user_id ? <Link to={"/jobs"} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "jobs"});
+                    }}>
                         <div className={classes.linkStyle} style={{color: path === "/jobs" ? COMMON.COLORS.B400 : null}}>
                             Jobs
                             {path === "/jobs" && <div className={classes.selectedLink}/>}
                         </div>
                     </Link> : null}
-                    {user && user.user_id ?<Link to={"/companies"}>
+                    {user && user.user_id ?<Link to={"/companies"} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "companies"});
+                    }}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/companies") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Companies
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link> : null}
-                    {user && user.user_id ? <Link className={classes.hide500} to={"/saved-jobs/" + user.user_id }>
+                    {user && user.user_id ? <Link onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "saved-jobs"});
+                    }} className={classes.hide500} to={"/saved-jobs/" + user.user_id }>
                         <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
                                 <i className="fa-solid fa-briefcase" style={{marginRight: "5px"}}/>Saved Jobs
@@ -153,13 +164,17 @@ class NavBar extends React.Component {
                             </div>
                             {path === "/saved-jobs/" + user.user_id && <div style={{bottom: 5}} className={classes.selectedLink}/>}
                         </div>
-                    </Link> : <Link to={"/login"} className={classes.hide450}>
+                    </Link> : <Link to={"/login"} className={classes.hide450} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "login"});
+                    }}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/login") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Sign In
                             {path.indexOf("/login") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>}
-                    {user && user.user_id ? <Link to={"/settings/" + user.user_id }>
+                    {user && user.user_id ? <Link onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "settings"});
+                    }} to={"/settings/" + user.user_id }>
                         <div className={classes.linkStyle} style={{marginRight: "5px", color: path === ("/settings/" + user.user_id) ? COMMON.COLORS.B400 : COMMON.COLORS.N900}}>
                             <div style={{height: "22px", width: "22px", background: "none", borderRadius: "100%"}}>
                             </div>
@@ -172,6 +187,8 @@ class NavBar extends React.Component {
                     {user && user.user_id ? <Link to={"#"} onClick={() => {
                         let yes = confirm("Are you sure you want to log out?");
                         if (yes) {
+                            TrackingService.trackClick({page: "navbar", value: "logout"});
+                            TrackingService.trackSubmit({page: "navbar", sub_page: "logout", value: "logout"});
                             AuthService.logoutUser();
                             window.location.pathname = `/login`;
                         }
@@ -184,7 +201,8 @@ class NavBar extends React.Component {
                             </div>
                         </div>
                     </Link> : <Link to={"#"} onClick={() =>{
-                        window.open("https://x89mmcfv41m.typeform.com/to/Yt33A4zK", "_blank");
+                        TrackingService.trackClick({page: "navbar", value: "sign-up"});
+                        window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                     }}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/sign-up") !== -1  ? COMMON.COLORS.B400 : null}}>
                             <span style={{background: COMMON.COLORS.B400, color: COMMON.COLORS.N0, padding: "8px 10px", borderRadius: "4px"}}>Join Now</span>
@@ -192,7 +210,9 @@ class NavBar extends React.Component {
                     </Link>}
                 </div>
                 <div style={{flex: user && user.user_id ? "0 0 30px" : 0}}>
-                    {user && user.user_id ? <Link to={"/edit/" + user.user_id}>
+                    {user && user.user_id ? <Link to={"/edit/" + user.user_id} onClick={() => {
+                        TrackingService.trackClick({page: "navbar", value: "profile"});
+                    }}>
                         <div  className={classes.profileContainer}>
                             <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
                                 <CoverImageHolder url={user.profile_photo_url || "/img/generic-user.jpeg"}/>

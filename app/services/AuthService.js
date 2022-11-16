@@ -31,7 +31,7 @@ AuthService.getCurrentUser = () => {
 
 AuthService.getCurrentUserId = () => {
     return new Promise((resolve, reject) => {
-        resolve(current_user);
+        resolve(current_user_id);
     })
 }
 

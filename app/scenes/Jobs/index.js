@@ -197,6 +197,7 @@ class Jobs extends React.Component {
             selectedCompanies: [],
             selectedIndustries: [],
             selectedAffinities: [],
+            selectedSeniorities: [],
             selectedRoles: [],
             selectedDegreeRequirements: [],
             selectedJobId: this.jobs[0].job_id,
@@ -450,6 +451,7 @@ class Jobs extends React.Component {
                                                 selectedCompanies={this.state.selectedCompanies}
                                                 selectedIndustries={this.state.selectedIndustries}
                                                 selectedAffinities={this.state.selectedAffinities}
+                                                selectedSeniorities={this.state.selectedSeniorities}
                                                 selectedRoles={this.state.selectedRoles}
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}

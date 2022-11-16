@@ -52,7 +52,8 @@ class JobCards extends React.Component {
             selectedIndustries,
             selectedDegreeRequirements,
             selectedRoles,
-            selectedAffinities
+            selectedAffinities,
+            selectedSeniorities
         } = this.props;
 
         let filteredJobs = [];
@@ -116,6 +117,22 @@ class JobCards extends React.Component {
                 }
             }
 
+            let validSeniority = true;
+
+            if (selectedSeniorities && selectedSeniorities.length) {
+                validSeniority = false;
+                let found = false;
+
+                if (job && job.job_seniority) {
+                    if (selectedSeniorities.indexOf(job.job_seniority) !== -1) {
+                        found = true
+                    }
+                }
+                if (found) {
+                    validSeniority = true;
+                }
+            }
+
 
             let validDegreeRequirement = true;
 
@@ -172,7 +189,7 @@ class JobCards extends React.Component {
                 }
             }
 
-            let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validRole && validAffinity;
+            let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
 
             if (job && job.companies && job.companies.length && job.companies[0] ) {
                 if (valid) {
@@ -192,6 +209,7 @@ class JobCards extends React.Component {
             usingFilters: (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
+                (selectedSeniorities && selectedSeniorities.length) ||
                 (selectedDegreeRequirements && selectedDegreeRequirements.length) ||
                 (selectedRoles && selectedRoles.length) ||
                 (selectedAffinities && selectedAffinities.length)

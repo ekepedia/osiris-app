@@ -16,6 +16,7 @@ import StandardButton from "../../components/StandardButton";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import SignOnHero from "../../components/SignOnHero";
+import TrackingService from "../../services/TrackingService";
 
 const Styles = {
     container: {
@@ -109,7 +110,8 @@ class Login extends React.Component {
                     let user_id = data.data.data.user_login.user_id;
                     // window.location.pathname = `/edit/${user_id}`;
                     window.location.pathname = `/companies`;
-                    AuthService.setCurrentUser({user_id})
+                    AuthService.setCurrentUser({user_id});
+                    TrackingService.trackSubmit({type: 3, page: "login", value: username, user_id});
                 } else {
                     alert(data.data.error);
                 }

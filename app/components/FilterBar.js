@@ -115,6 +115,7 @@ class FilterBar extends React.Component {
         return this.locations
     }
 
+    //job_board_category
     constructIndustryOptions (jobs) {
         jobs = jobs || [];
         let dedup_map = {};
@@ -130,6 +131,23 @@ class FilterBar extends React.Component {
         this.industries = Object.values(dedup_map);
 
         return this.industries
+    }
+
+     constructSeniorityOptions (jobs) {
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.job_seniority && job.job_seniority.length) {
+                dedup_map[job.job_seniority] = {
+                    id: job.job_seniority,
+                    label: job.job_seniority,
+                    // company_id: company.company_id
+                }
+            }
+        });
+        this.seniorities = Object.values(dedup_map);
+        console.log("seniortiy", dedup_map)
+        return this.seniorities
     }
 
     constructCompanyOptions (jobs) {
@@ -168,11 +186,35 @@ class FilterBar extends React.Component {
         this.locations = this.constructLocationOptions(jobs);
         this.companies = this.constructCompanyOptions(jobs);
         this.industries = this.constructIndustryOptions(jobs);
+        this.seniorities = this.constructSeniorityOptions(jobs);
 
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}}>
                     <div className={classes.filterContainer}>
+                        <FilterDropdown
+                            label="Job Title"
+                            placeholder="Select Job Title"
+                            options={this.industries}
+                            selectedOptions={state["selectedIndustries"]}
+                            onAdd={(id) => (addToField("selectedIndustries", id))}
+                            onRemove={(id) => (removeFromField("selectedIndustries", id))}
+                            onClear={() => (clearField("selectedIndustries"))}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <FilterDropdown
+                            label="Seniority"
+                            placeholder="Select Seniority"
+                            options={this.seniorities}
+                            selectedOptions={state["selectedSeniorities"]}
+                            onAdd={(id) => (addToField("selectedSeniorities", id))}
+                            onRemove={(id) => (removeFromField("selectedSeniorities", id))}
+                            onClear={() => (clearField("selectedSeniorities"))}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer} style={{display: "none"}}>
                         <FilterDropdown
                             label="Affinity Tags"
                             placeholder="Add an affinity"
@@ -218,18 +260,7 @@ class FilterBar extends React.Component {
                             disableSearch={true}
                         />
                     </div>
-                    <div className={classes.filterContainer}>
-                        <FilterDropdown
-                            label="Industry"
-                            placeholder="Select Industry"
-                            options={this.industries}
-                            selectedOptions={state["selectedIndustries"]}
-                            onAdd={(id) => (addToField("selectedIndustries", id))}
-                            onRemove={(id) => (removeFromField("selectedIndustries", id))}
-                            onClear={() => (clearField("selectedIndustries"))}
-                        />
-                    </div>
-                    <div className={classes.filterContainer}>
+                    <div className={classes.filterContainer} style={{display: "none"}}>
                         <FilterDropdown
                             label="Degree"
                             placeholder="Add a Requirement"
