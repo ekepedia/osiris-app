@@ -34,6 +34,7 @@ import StandardBadge from "./StandardBadge";
 import StandardButton from "./StandardButton";
 import CoverImageHolder from "./CoverImageHolder";
 import {mc} from "../common/helpers";
+import SavedJobService from "../services/SavedJobService";
 
 const Styles = {
     container: {
@@ -107,9 +108,47 @@ class JobDetails extends React.Component {
 
     }
 
-    render() {
-        let { classes, onApply, job, forceCompany } = this.props;
+    updateSavedJob() {
+        let {  client, job, user, saved_jobs, saved_jobs_ids, updateSavedJobIds } = this.props;
+        const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
 
+        if (is_saved_job) {
+            let yes = confirm("Are you sure you want to unsave this job?");
+            if (yes) {
+                saved_jobs_ids = _.without(saved_jobs_ids, job.job_id + "");
+                updateSavedJobIds(saved_jobs_ids);
+
+                let saved_job_id = null;
+                saved_jobs.forEach((saved_job) => {
+                    if (saved_job.job_id + "" === job.job_id + "") {
+                        saved_job_id = saved_job.saved_job_id
+                    }
+                })
+
+                SavedJobService.deleteSavedJob({client, saved_job_id}).then(() =>{
+                    console.log("REMOVED SAVED JOB:", saved_job_id);
+                });
+
+
+            }
+        } else {
+            saved_jobs_ids.push(job.job_id + "")
+            updateSavedJobIds(saved_jobs_ids)
+            SavedJobService.addSavedJob({
+                client,
+                job_id: job.job_id + "",
+                user_id: user.user_id + "",
+                status_id: "1"
+            }).then((saved_job_id) => {
+                console.log("CREATED NEW SAVED JOB:", saved_job_id);
+            })
+        }
+    }
+
+    render() {
+        let { classes, onApply, job, forceCompany, saved_jobs_ids, user } = this.props;
+
+        console.log("saved_jobs_ids", saved_jobs_ids, job)
         job = job || {};
 
         let company = job.companies && job.companies.length ? job.companies[0] : {};
@@ -146,8 +185,26 @@ class JobDetails extends React.Component {
 
         }
 
-        return (<div className={classes.container}>
-            <div>
+        const is_saved_job = saved_jobs_ids && saved_jobs_ids.length && saved_jobs_ids.indexOf(job.job_id + "") !== -1;
+
+        let salary = "";
+        let salary_tooltip = "";
+        if (job && job.job_salary_estimate) {
+            salary = job.job_salary_estimate;
+
+            if (salary.indexOf("(Employer est.)") !== -1) {
+                salary = salary.replace("(Employer est.)", "").trim()
+                salary_tooltip = "This estimate was provided by the employer via Glassdoor";
+            }
+
+            if (salary.indexOf("(Glassdoor est.)") !== -1) {
+                salary = salary.replace("(Glassdoor est.)", "").trim()
+                salary_tooltip = "This estimate was provided by Glassdoor";
+            }
+        }
+
+        return (<div className={classes.container} id={"job-description"}>
+            <div >
                 <div style={{display: "flex", marginBottom: "20px"}}>
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div onClick={() => {
@@ -166,7 +223,12 @@ class JobDetails extends React.Component {
                         </div>
                     </div>
                     <div style={{flex: "0 0 157px", textAlign: "right"}}>
-                        <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                        <div style={{display: user && user.user_id  && !job.job_html ? "inline-block" : "none", marginRight: "5px"}}>
+                            <StandardButton label={""} icon={`${is_saved_job ? "fa-solid" : "fa-regular"} fa-bookmark`} secondary={!is_saved_job} onClick={() => {this.updateSavedJob()}}/>
+                        </div>
+                        <div style={{display: "inline-block"}}>
+                            <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                        </div>
                     </div>
                 </div>
 
@@ -177,13 +239,15 @@ class JobDetails extends React.Component {
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600, marginBottom: "5px"}} key={location.location_id} label={location.label}/>)
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
+                        {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
+                        {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
                         {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
                         {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
                         {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
                         {company.glassdoor_compensation ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_compensation}/5 on<br/>Glassdoor for compensation`} label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, color: COMMON.COLORS.O600}}/> : null}
                     </div>
 
-                    <div>
+                    <div style={{display: "none"}}>
                         {(job.job_salary_estimate && job.job_salary_estimate.length) ? <div style={{display: "inline-block"}}>
                             <div style={{display: "flex"}} className={classes.requirementsStyle}>
                                 <div style={{flex: "0 0 15px", paddingRight: "5px"}}>
@@ -198,9 +262,8 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                {job.job_html ? <div>
+                {job.job_html ? <div style={{marginBottom: company.company_about ? SECTION_BUFFER : null}}>
                     <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
-
                 </div> : <div>
                     <div style={{marginBottom: SECTION_BUFFER}}>
                         <div className={mc(classes.sectionHeader)}>Role Overview</div>

@@ -34,34 +34,7 @@ const Styles = {
         },
         borderTop: `1px solid ${COMMON.COLORS.N300}`,
     },
-    companyLogo: {
-        height: "40px",
-        flex: "0 0 40px",
-        marginRight: "10px",
-        border: `1px solid ${COMMON.COLORS.N300}`,
-        borderRadius: "6px",
-        overflow: "hidden"
-    },
-    companyNameContainer: {
-        flex: "0 0 180px"
-    },
-    companyEmployeeContainer: {
-        flex: 1,
-        "& i": {
-            color: COMMON.COLORS.N600,
-            marginRight: "4px",
-            fontSize: "12px"
-        }
-    },
-    companyGenderContainer: {
-        flex: 1.5
-    },
-    companyRaceContainer: {
-        flex: 1.5
-    },
-    companyGlassdoorContainer: {
-        flex: 1,
-    },
+
     companyIndustryContainer: {
         flex: "0 0 30px",
         textAlign: "right"
@@ -92,7 +65,8 @@ const Styles = {
     },
     toolTipIcon: {
         fontSize: "9.66px"
-    }
+    },
+    ...COMMON.STYLES.COMPANY.CompanyRowStyles
 };
 
 class CompanyIndexRow extends React.Component {
@@ -128,7 +102,7 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, id, company, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
+        let { classes, id, company, index, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
 
         let { expanded } = this.state
         company_demographics = company_demographics || {};
@@ -140,6 +114,7 @@ class CompanyIndexRow extends React.Component {
 
         let id1 = Math.random() + "";
         let id2 = Math.random() + "";
+        let id_rank = Math.random() + "";
         let id_overall = Math.random() + "";
         let id_worklife = Math.random() + "";
         let id_pay = Math.random() + "";
@@ -217,7 +192,16 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyGlassdoorContainer)}>
+                <div className={mc(classes.companyRankContainer)}>
+                    <div className={mc(classes.companyHeader)}>
+                        {company.rank && company.rank_value > 0 ? <span>{company.rank}</span> : "--"}<i style={{color: COMMON.COLORS.B400, marginLeft: "2.5px"}} className="fa-sharp fa-solid fa-award"/>
+                    </div>
+                    <div className={mc(classes.companySubHeader)}>
+                        Rank <i className={mc(classes.toolTipIcon, "fa-solid fa-circle-info")} data-tip data-for={id_rank} style={{marginLeft: "3px", fontSize: "9.66px", color: COMMON.COLORS.N500}}/>
+                    </div>
+                </div>
+
+                <div className={mc(classes.companyOverallGlassdoorContainer)}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_overall ? <span>{company.glassdoor_overall}</span> : "--"}<i style={{color: COMMON.COLORS.Y400, marginLeft: "2.5px"}} className="fa-solid fa-star"/>
                     </div>
@@ -226,7 +210,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyGlassdoorContainer)}>
+                <div className={mc(classes.companyWorkGlassdoorContainer)}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_work_life ? <span>{company.glassdoor_work_life}</span> : "--"}<i style={{color: COMMON.COLORS.R400, marginLeft: "2.5px"}} className="fa-solid fa-scale-balanced"/>
                     </div>
@@ -235,7 +219,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyGlassdoorContainer)}>
+                <div className={mc(classes.companyPayGlassdoorContainer)}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_compensation ? <span>{company.glassdoor_compensation}</span> : "--"}<i style={{color: COMMON.COLORS.G600, marginLeft: "2.5px"}} className="fa-solid fa-dollar-sign"/>
                     </div>
@@ -244,7 +228,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyIndustryContainer)} onClick={() => {this.setState({expanded: !expanded})}}>
+                <div className={mc(classes.companyExpandContainer)} onClick={() => {this.setState({expanded: !expanded})}}>
                     <i style={{fontSize: "13px", marginTop: "13.5px"}} className={`fa-solid fa-angle-${expanded ? 'up' : 'down'}`}/>
                 </div>
             </div>

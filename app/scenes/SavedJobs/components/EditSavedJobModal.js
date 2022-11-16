@@ -41,6 +41,9 @@ import GenderPieChart from "../../../components/charts/GenderPieChart";
 import RacePieChart from "../../../components/charts/RacePieChart";
 import CompanySelect from "../../../components/CompanySelect";
 
+const SECTION_BUFFER = "32px";
+
+
 const Styles = {
     container: {
         padding: "0",
@@ -58,6 +61,20 @@ const Styles = {
         marginTop: "10px",
         marginBottom: "6px",
         ...COMMON.FONTS.FONT_FOOTNOTE
+    },
+    sectionHeader: {
+        ...COMMON.FONTS.H600,
+        color: COMMON.COLORS.N900
+    },
+    sectionSubHeader: {
+        ...COMMON.FONTS.H100,
+        color: COMMON.COLORS.N800,
+        textTransform: "uppercase",
+        marginBottom: "15px"
+    },
+    bodyText: {
+        ...COMMON.FONTS.P200,
+        color: COMMON.COLORS.N800
     },
     ...COMMON.STYLES.PORTFOLIO.PortfolioPageStyles,
     ...COMMON.STYLES.COMPANY.CompanyHeaderStyles,
@@ -183,7 +200,7 @@ class EditSavedJobModal extends React.Component {
                     content: {
                         ...COMMON.STYLES.EDIT_PORTFOLIO_MODAL.MODAL_CONTAINER,
                         maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,
-                        height: "fit-content"
+                        height: "600px"
                     }
                 }}
             >
@@ -223,24 +240,37 @@ class EditSavedJobModal extends React.Component {
                             <div style={{display: selectedState === 1 ? null : "none"}}>
                                 <div style={{display: "flex"}}>
                                     <div style={{flex: 1, marginRight: "50px"}}>
-                                        <div style={{display: "flex"}}>
-                                            <div style={{flex: 1, paddingRight: "25px"}}>
-                                                <div className={classes.inputLabel}>Company</div>
-                                                <CompanySelect value={option_map[job.company_id]} options={options} onChange={(company_id) => {
-                                                    updateJobField("company_id", company_id)
-                                                }}/>
-                                            </div>
-                                            <div style={{flex: 1}}>
-                                                <div className={classes.inputLabel}>Job title</div>
-                                                <StandardInput placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
-                                            </div>
-                                        </div>
 
-                                        <div className={classes.inputLabel}>Post URL</div>
-                                        <StandardInput placeholder={"+ add URL"} value={job.apply_link} update={(v) => (updateJobField("apply_link", v))}/>
+                                        {job.is_user_submitted ? <div>
+                                            <div style={{display: "flex"}}>
+                                                <div style={{flex: 1, paddingRight: "25px"}}>
+                                                    <div className={classes.inputLabel}>Company</div>
+                                                    <CompanySelect value={option_map[job.company_id]} options={options} onChange={(company_id) => {
+                                                        updateJobField("company_id", company_id)
+                                                    }}/>
+                                                </div>
+                                                <div style={{flex: 1}}>
+                                                    <div className={classes.inputLabel}>Job title</div>
+                                                    <StandardInput placeholder={"Ex: Engineer"} value={job.job_title} update={(v) => (updateJobField("job_title", v))}/>
+                                                </div>
+                                            </div>
 
-                                        <div className={classes.inputLabel}>Description</div>
-                                        <StandardInput style={{height: "184px"}} type={"textarea"} placeholder={""} value={job.job_overview} update={(v) => (updateJobField("job_overview", v))}/>
+                                            <div className={classes.inputLabel}>Post URL</div>
+                                            <StandardInput placeholder={"+ add URL"} value={job.apply_link} update={(v) => (updateJobField("apply_link", v))}/>
+
+                                            <div className={classes.inputLabel}>Description</div>
+                                            <StandardInput style={{height: "184px"}} type={"textarea"} placeholder={""} value={job.job_overview} update={(v) => (updateJobField("job_overview", v))}/>
+
+                                        </div> : <div>
+                                            <div style={{marginTop: "25px"}}>
+                                                <div className={mc(classes.sectionHeader)}>Role Overview</div>
+                                                <div className={mc(classes.sectionSubHeader)} style={{marginBottom: "15px"}}>Identified by OSIRIS from the original job post</div>
+                                                <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
+                                            </div>
+
+                                        </div>}
+
+
 
                                     </div>
                                     <div style={{flex: "0 0 185px"}}>

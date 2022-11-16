@@ -26,6 +26,8 @@ import UserLinkService from "../../services/UserLinkService";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import CompanyDemographicService from "../../services/CompanyDemographicService";
+import Lottie from "react-lottie";
+import loadingCircles from "../../common/lottie/loading-circles";
 
 const Styles = {
     container: {
@@ -37,6 +39,16 @@ const Styles = {
     ...COMMON.STYLES.SAVED_JOBS.SavedJobPageStyles,
     ...COMMON.STYLES.GENERAL.NavigationStyles,
 };
+
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingCircles,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
+
 
 class SavedJobs extends React.Component {
 
@@ -60,7 +72,7 @@ class SavedJobs extends React.Component {
     }
 
     componentDidMount() {
-        this.loadSavedJobs();
+        this.loadSavedJobs(true);
         this.loadJobs();
         this.loadCompanies();
         this.loadCompanyDemographics();
@@ -137,25 +149,29 @@ class SavedJobs extends React.Component {
         })
     }
 
-    loadSavedJobs() {
+    loadSavedJobs(first) {
         let { client, match: { params } } = this.props;
 
+        if (first) {
+            this.setState({loading: true});
+        }
         SavedJobService.getSavedJobs({
             client,
             user_id: params.user_id
         }).then((saved_jobs) => {
             // console.log("LOADED SAVED", saved_jobs);
 
-            saved_jobs = saved_jobs.sort((a, b) => {
+            saved_jobs = saved_jobs ? saved_jobs.sort((a, b) => {
 
                 let nameA = a.status_id || "";
                 let nameB = b.status_id || "";
 
                 return nameA.localeCompare(nameB);
-            });
+            }) : saved_jobs;
 
             this.setState({
-                saved_jobs
+                saved_jobs,
+                loading: false
             })
         })
     }
@@ -282,7 +298,7 @@ class SavedJobs extends React.Component {
                         <div className={mc(classes.filterBarContainer)}>
                             <div style={{display: "flex"}}>
                                 <div style={{flex: 1, ...COMMON.FONTS.FONT_SUBHEADER_BOLD,}}>
-                                    <div className={mc(classes.filterHolder)} style={{background: "none", color:"#696F8C",}}>
+                                    <div className={mc(classes.filterHolder)} style={{background: "none", display: "none", color:"#696F8C",}}>
                                         Board
                                     </div>
                                     <div className={mc(classes.filterHolder)}>
@@ -302,19 +318,19 @@ class SavedJobs extends React.Component {
                                 <div className={mc(classes.rowContainerHeader)} style={{flex: 1}}>
                                     Role
                                 </div>
-                                <div className={mc(classes.rowContainerHeader)} style={{flex: 1}}>
+                                <div className={mc(classes.rowContainerHeader, classes.companyHeader)}>
                                     Company
                                 </div>
-                                <div className={mc(classes.rowContainerHeader)} style={{flex: 0.5}}>
+                                <div className={mc(classes.rowContainerHeader, classes.roleHeader)}>
                                     Role Type
                                 </div>
-                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
+                                <div className={mc(classes.rowContainerHeader, classes.salaryHeader)} style={{color: COMMON.COLORS.N_700, }}>
                                     Salary
                                 </div>
-                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 150px", color: COMMON.COLORS.N_700, }}>
+                                <div className={mc(classes.rowContainerHeader, classes.deadlineHeader)}  style={{color: COMMON.COLORS.N_700, }}>
                                     Deadline
                                 </div>
-                                <div className={mc(classes.rowContainerHeader)} style={{flex: "0 0 200px", color: COMMON.COLORS.N_700,}}>
+                                <div className={mc(classes.rowContainerHeader, classes.statusHeader)} style={{color: COMMON.COLORS.N_700,}}>
                                     Application Status
                                 </div>
                             </div>
@@ -337,24 +353,24 @@ class SavedJobs extends React.Component {
                                             {(jobs_map[saved_job.job_id] || {}).job_title}
                                         </div>
 
-                                        <div className={mc(classes.rowContainer)} style={{flex: 1}}>
+                                        <div className={mc(classes.rowContainer, classes.companyHeader)}>
                                             <div style={{height: "100%", width: "100%", position: "relative", paddingLeft: "25px"}}>
                                                 <div className={mc(classes.companyLogoContainer)}>
                                                     <CoverImageHolder url={company_logo}/>
                                                 </div>{company_name}
                                             </div>
                                         </div>
-                                        <div className={mc(classes.rowContainer)} style={{flex: 0.5}}>
+                                        <div className={mc(classes.rowContainer, classes.roleHeader)}>
                                             <span className={mc(classes.roleTypeContainer)}><i className="fa-solid fa-briefcase"/>Full Time</span>
                                         </div>
 
-                                        <div className={mc(classes.rowContainer)} style={{flex: "0 0 150px"}}>
+                                        <div className={mc(classes.rowContainer, classes.salaryHeader)}>
                                             {saved_job.job_salary || "--"}
                                         </div>
-                                        <div className={mc(classes.rowContainer)} style={{flex: "0 0 150px"}}>
+                                        <div className={mc(classes.rowContainer, classes.deadlineHeader)}>
                                             {saved_job.job_deadline && parseFloat(saved_job.job_deadline) ? moment(parseFloat(saved_job.job_deadline)).format("MMM D YYYY") : "--"}
                                         </div>
-                                        <div className={mc(classes.rowContainer)} style={{flex: "0 0 200px", lineHeight: "initial"}}>
+                                        <div className={mc(classes.rowContainer, classes.statusHeader)} style={{lineHeight: "initial"}}>
                                             <StandardSelect style={{...COMMON.STYLES.SAVED_JOBS.SavedJobPageStyles.statusSelectStyle}} color={this.returnColor(saved_job.status_id)} value={saved_job.status_id} options={COMMON.CONSTS.STATUSES} update={(v) => {
                                                 console.log("updating status:", v);
                                                 SavedJobService.editSavedJob({client, saved_job_id: saved_job.saved_job_id, status_id: v}).then((d) => {
@@ -366,6 +382,16 @@ class SavedJobs extends React.Component {
 
                                     </div>)
                                 })}
+                            </div> : this.state.loading ? <div>
+                                <div style={{padding: "20px", textAlign: "center"}}>
+                                    <div style={{textAlign: "center"}}>
+                                        <Lottie options={defaultOptions}
+                                                height={96}
+                                                width={96}/>
+                                    </div>
+                                    <div>Loading Saved Jobs</div>
+                                    <div>One Moment Please</div>
+                                </div>
                             </div> : <div>
 
                                 <div style={{padding: "20px", textAlign: "center"}}>
@@ -375,7 +401,11 @@ class SavedJobs extends React.Component {
                                     </div>
                                 </div>
 
-                            </div>}</div>
+                            </div>
+
+
+
+                            }</div>
                         </div>
 
                         <EditSavedJobModal refetch={() => {this.loadSavedJobs();}} onSubmit={() => {this.submitEditSavedJob(); this.submitEditJob();}} company_map={company_map}  company_demographics={selectedcompany_demographics} option_map={option_map} jobs_map={jobs_map} options={options} job={selectedJob} saved_job={selectedSavedJob} updateField={this.updateSelectedSavedJob} updateJobField={this.updateSelectedJob} open={openEditSavedJobModal} onClose={() => (this.setState({openEditSavedJobModal: false}))}/>

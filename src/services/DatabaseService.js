@@ -63,8 +63,8 @@ module.exports.init = function (connection) {
     UserLinksService.init(connection);
     UserGalleryService.init(connection);
 
-    CompanyService.init(connection);
     CompanyDemographicService.init(connection);
+    CompanyService.init(connection);
     JobService.init(connection);
     SavedJobService.init(connection);
     SavedJobNoteService.init(connection);

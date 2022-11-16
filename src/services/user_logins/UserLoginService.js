@@ -28,6 +28,18 @@ module.exports.init = function (connection) {
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
+    // change_password_by_code({reset_password_code: "4503086", new_password: "pass123"}).then((d) => {
+    //     console.log(d);
+    // }).catch((error) => {
+    //     console.error(error);
+    // })
+
+    // set_reset_password_code({user_email: "eke+t367@osiris.works"}).then((data) => {
+    //     console.log("RESET", data)
+    // }).catch((error) => {
+    //     console.error("RESET", error)
+    // })
+
     // get_user_logins({}).then((logins) => {
     //     console.log("logins", logins)
     // });
@@ -59,9 +71,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_user_logins = get_user_logins;
 
-function get_user_logins({user_id, user_email, user_login_id}) {
+function get_user_logins({user_id, user_email, user_login_id, reset_password_code}) {
 
-    const query = DatabaseService.generate_query({user_login_id, user_email, user_id});
+    const query = DatabaseService.generate_query({user_login_id, user_email, user_id, reset_password_code});
 
     let knexQuery = knex(SERVICE_DEFAULT_TABLE).where(query);
 
@@ -174,6 +186,114 @@ function login_user_by_email({user_email, password}) {
     });
 }
 
+module.exports.change_password_by_email = change_password_by_email;
+
+function change_password_by_email({user_email, user_id, old_password, new_password}) {
+    return new Promise((resolve, reject) => {
+
+        if (!(user_email || user_id) || !old_password || !new_password) {
+            return reject(new Error("Missing user email or password"));
+        }
+
+        get_user_logins({user_id, user_email}).then((users) => {
+            if (users && users.length) {
+                const user = users[0];
+                login_user({
+                    user_id: user.user_id,
+                    password: old_password
+                }).then((data) => {
+
+                    console.log("FORGOT EM DATA:", data);
+
+                    bcrypt.hash(new_password, saltRounds, function(err, hash) {
+                        const password_hash = hash;
+
+                        knex(SERVICE_DEFAULT_TABLE).where({
+                            user_login_id: data.user_login.user_login_id
+                        }).update({password_hash}).then((rows) => {
+
+                            return resolve(data);
+                        }).catch((err) => {
+                            return reject(err);
+                        });
+                    });
+
+                }).catch((error) => {
+                    reject(error);
+                })
+            } else {
+                reject(new Error("User not found"));
+            }
+        })
+    });
+}
+
+module.exports.change_password_by_code = change_password_by_code;
+
+function change_password_by_code({reset_password_code, new_password}) {
+    return new Promise((resolve, reject) => {
+
+        if (!reset_password_code || !new_password) {
+            return reject(new Error("Missing reset_password_code or password"));
+        }
+
+        get_user_logins({reset_password_code}).then((users) => {
+            if (users && users.length) {
+                const user_login = users[0];
+
+                console.log("RESET DATA:", user_login);
+
+                bcrypt.hash(new_password, saltRounds, function(err, hash) {
+                    const password_hash = hash;
+
+                    knex(SERVICE_DEFAULT_TABLE).where({
+                        user_login_id: user_login.user_login_id
+                    }).update({password_hash}).then((rows) => {
+                        return resolve(user_login);
+                    }).catch((err) => {
+                        return reject(err);
+                    });
+                });
+
+            } else {
+                reject(new Error("User not found"));
+            }
+        })
+    });
+}
+
+module.exports.set_reset_password_code = set_reset_password_code;
+
+function set_reset_password_code({user_email}) {
+    return new Promise((resolve, reject) => {
+
+        if (!user_email) {
+            return reject(new Error("Missing user email"));
+        }
+
+        get_user_logins({user_email}).then((users) => {
+            if (users && users.length) {
+                const user = users[0];
+
+                const reset_password_code = Math.round(Math.random()*10000000);
+                console.log(user_email, reset_password_code)
+
+                knex(SERVICE_DEFAULT_TABLE).where({
+                    user_login_id: user.user_login_id
+                }).update({
+                    reset_password_code,
+                }).then((rows) => {
+
+                    resolve(rows);
+                });
+
+            } else {
+                reject(new Error("User not found"));
+            }
+        })
+    });
+}
+
 module.exports.login_user = login_user;
 
 function login_user({user_id, password}) {
@@ -193,6 +313,10 @@ function login_user({user_id, password}) {
 
                 if (!result)
                     return reject(new Error("Wrong Password"));
+
+                delete user_login["password_hash"];
+                delete user_login["rest_password_code"];
+                delete user_login["reset_password_code"];
 
                 // generate_token(user).then((token) => {
                     resolve({
@@ -258,6 +382,56 @@ function set_routes (app) {
             error = error && error.toString ? error.toString() : error;
             res.json(DatabaseService.return_standard_error({error}));
         });
+    });
+
+    app.post("/api/forgot-password", function (req, res) {
+        const { user_email } = req.body;
+        console.log("Logging in for user:", user_email);
+        set_reset_password_code({user_email}).then((data)=>{
+            console.log("data", data)
+            res.json(DatabaseService.return_standard_success({data}));
+        }).catch((error) => {
+            console.log("error", error, error.toString())
+            error = error && error.toString ? error.toString() : error;
+            res.json(DatabaseService.return_standard_error({error}));
+        });
+    });
+
+    app.post("/api/reset-password", function (req, res) {
+        const { user_email, user_id, old_password, new_password } = req.body;
+        console.log("Resetting password for user user:", user_email);
+
+        change_password_by_email({
+            user_id,
+            user_email,
+            old_password,
+            new_password,
+        }).then((data) => {
+            console.log(data);
+            res.json(DatabaseService.return_standard_success({data}));
+
+        }).catch((error) => {
+            console.log("error", error, error.toString())
+            error = error && error.toString ? error.toString() : error;
+            res.json(DatabaseService.return_standard_error({error}));
+        })
+    });
+
+    app.post("/api/reset-password-by-code", function (req, res) {
+        const { reset_password_code, new_password } = req.body;
+        console.log("Resetting password for code:", reset_password_code);
+
+        change_password_by_code({
+            reset_password_code,
+            new_password,
+        }).then((data) => {
+            console.log(data);
+            res.json(DatabaseService.return_standard_success({data}));
+        }).catch((error) => {
+            console.log("error", error, error.toString())
+            error = error && error.toString ? error.toString() : error;
+            res.json(DatabaseService.return_standard_error({error}));
+        })
     });
 
     app.post("/api/sign-up", function (req, res) {

@@ -719,7 +719,7 @@ DataService.getJobs = getJobs;
 
 function getJobs () {
     return new Promise((resolve, reject) => {
-        axios.get("/api/jobs").then((res) => {
+        axios.get("/api/jobs/temp").then((res) => {
             console.log(res.data)
             return resolve(res.data);
         })

@@ -9,6 +9,7 @@ const session = require('express-session');
 const axios = require("axios");
 const app     = express();
 const fileUpload = require('express-fileupload');
+const _ = require('lodash');
 
 var jsonParser = bodyParser.json()
 
@@ -69,15 +70,17 @@ app.get("/api/jobs-old", function (req, res) {
 });
 
 app.get("/api/jobs", function (req, res) {
-
-    // res.json({
-    //     jobs: JobService.WEBSCRAPED_JOBS
-    // });
-    // return;
     JobService.format_jobs_for_job_board().then((jobs) => {
         res.json({ jobs });
     }).catch((err) => {
         res.json({ jobs: [] });
+    });
+});
+
+
+app.get("/api/jobs/temp", function (req, res) {
+    res.json({
+        jobs: _.shuffle(JobService.WEBSCRAPED_JOBS)
     });
 });
 

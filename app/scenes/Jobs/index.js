@@ -25,6 +25,8 @@ import ApplyNowModal from "../../components/ApplyNowModal";
 import JobAssistantModal from "../../components/JobAssistantModal";
 import CompanyService from "../../services/CompanyService";
 import LoadingJobCard from "../../components/LoadingJobCard";
+import SavedJobService from "../../services/SavedJobService";
+import AuthService from "../../services/AuthService";
 
 const Styles = {
     container: {
@@ -37,6 +39,16 @@ const Styles = {
         padding: "20px 50px",
         '@media (max-width: 768px)': {
             padding: "20px",
+        },
+    },
+    cardContainer: {
+        flex: "0 0 356px",
+        marginRight: "49px",
+        height: "100%",
+        overflowY: "scroll",
+        '@media (max-width: 768px)': {
+            flex: 1,
+            marginRight: "0",
         },
     },
     hideOnMobile: {
@@ -185,19 +197,58 @@ class Jobs extends React.Component {
             selectedCompanies: [],
             selectedIndustries: [],
             selectedAffinities: [],
+            selectedSeniorities: [],
             selectedRoles: [],
             selectedDegreeRequirements: [],
             selectedJobId: this.jobs[0].job_id,
             selectedJob: this.jobs[0],
-            loading: true
+            loading: true,
+            MAX_RESULTS: 10
         };
     }
 
     componentDidMount() {
         this.loadCompanies().then(({companies, company_map}) => {
             this.loadJobs({companies, company_map});
+        });
+        this.loadSavedJobs();
+    }
 
+    loadSavedJobs() {
+        let { client, match: { params } } = this.props;
+
+        AuthService.getCurrentUser().then((user) => {
+            if (user && user.user_id) {
+                SavedJobService.getSavedJobs({
+                    client,
+                    user_id: user.user_id
+                }).then((saved_jobs) => {
+                    console.log("LOADED SAVED", saved_jobs);
+
+                    let saved_jobs_ids = [];
+
+                    saved_jobs = saved_jobs.sort((a, b) => {
+
+                        let nameA = a.status_id || "";
+                        let nameB = b.status_id || "";
+
+                        return nameA.localeCompare(nameB);
+                    });
+
+                    saved_jobs.forEach((saved_job) => {
+                        saved_jobs_ids.push(saved_job.job_id + "")
+                    });
+
+                    this.setState({
+                        saved_jobs,
+                        saved_jobs_ids,
+                        user
+                    })
+                })
+            }
         })
+
+
     }
 
     loadCompanies() {
@@ -227,7 +278,7 @@ class Jobs extends React.Component {
             let selectedJob;
 
             jobs = jobs.map((job) => {
-                job.companies = job.companies ? job.companies : [company_map[job.company_id]];
+                job.companies = job.company_id && company_map[job.company_id] ? [company_map[job.company_id]] : (job.companies || {})
                 return job;
             })
 
@@ -252,14 +303,16 @@ class Jobs extends React.Component {
         let selected = this.state[field];
         selected.push(id);
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10});
+        this.resetScrollPosition();
     }
 
     overrideField(field, ids) {
         let selected = this.state[field];
         selected = ids;
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10})
+        this.resetScrollPosition();
     }
 
     removeFromField(field, id) {
@@ -270,7 +323,12 @@ class Jobs extends React.Component {
             selected.splice(index, 1);
         }
         selected = _.uniq(selected);
-        this.setState({[field]: selected})
+        this.setState({[field]: selected, MAX_RESULTS: 10})
+        this.resetScrollPosition();
+    }
+
+    resetScrollPosition() {
+        document.querySelector("#mobile-cards-container").scrollTop = 0;
     }
 
     clearField(field) {this.setState({[field]: []})}
@@ -313,6 +371,12 @@ class Jobs extends React.Component {
         })
     }
 
+    updateSavedJobIds(saved_jobs_ids) {
+        this.setState({
+            saved_jobs_ids
+        })
+    }
+
     getJob(job_id) {
         let foundJob = null;
 
@@ -339,12 +403,19 @@ class Jobs extends React.Component {
         })
     }
 
+    handleScroll() {
+        let { MAX_RESULTS } = this.state;
+        this.setState({
+            MAX_RESULTS: MAX_RESULTS + 10
+        })
+    }
+
     render() {
         let { classes, client, match: { params } } = this.props;
 
         const SCROLL_PAD = "100px";
 
-        let { loading } = this.state;
+        let { loading, saved_jobs_ids, saved_jobs, user, MAX_RESULTS } = this.state;
 
         return (
             <div className={classes.masterContainer}>
@@ -371,7 +442,7 @@ class Jobs extends React.Component {
                             <div style={{flex: 1,  height: "100%",}}>
                                 <div style={{ height: "100%",}}>
                                     <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
-                                        <div className={classes.showOnMobile} style={{flex: 1, marginRight: "0", height: "100%", overflowY: "scroll"}}>
+                                        <div  id={"mobile-cards-container"} className={classes.cardContainer}>
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
@@ -380,32 +451,25 @@ class Jobs extends React.Component {
                                                 selectedCompanies={this.state.selectedCompanies}
                                                 selectedIndustries={this.state.selectedIndustries}
                                                 selectedAffinities={this.state.selectedAffinities}
+                                                selectedSeniorities={this.state.selectedSeniorities}
                                                 selectedRoles={this.state.selectedRoles}
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
-                                                mobile={true}
-                                            />
-                                        </div>
-                                        <div className={classes.hideOnMobile} style={{flex: "0 0 356px", marginRight: "49px", height: "100%", overflowY: "scroll"}}>
-                                            <JobCards
-                                                jobs={this.jobs}
-                                                loading={loading}
-                                                selectedJobId={this.state.selectedJobId}
-                                                selectedLocations={this.state.selectedLocations}
-                                                selectedCompanies={this.state.selectedCompanies}
-                                                selectedIndustries={this.state.selectedIndustries}
-                                                selectedAffinities={this.state.selectedAffinities}
-                                                selectedRoles={this.state.selectedRoles}
-                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                                setSelectedJob={this.setSelectedJob.bind(this)}
+                                                saved_jobs_ids={saved_jobs_ids}
+                                                MAX_RESULTS={MAX_RESULTS}
+                                                handleScroll={this.handleScroll.bind(this)}
                                             />
                                         </div>
                                         <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>
                                             <JobDetails
                                                 job={this.state.selectedJob}
+                                                saved_jobs_ids={saved_jobs_ids}
+                                                saved_jobs={saved_jobs}
+                                                user={user}
                                                 onApply={this.openApplyModal.bind(this)}
 
                                                 forceCompany={this.forceCompany.bind(this)}
+                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
                                             />
                                         </div>
                                     </div>

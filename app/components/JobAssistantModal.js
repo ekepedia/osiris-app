@@ -237,7 +237,7 @@ class JobAssistantModal extends React.Component {
                             {this.state.page === 2 && <div className={classes.centerAlignContainerFill}>
                                 <div className={classes.verticalAlignObjectFill}>
                                     <div className={classes.modalTitle}>
-                                        What industries are you interested in?
+                                        What roles are you interested in?
                                     </div>
 
                                     <div>

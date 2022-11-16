@@ -18,11 +18,11 @@ import OnBoardingModal from "../../components/OnBoardingModal"
 import {FONT_LARGE_TITLE_BOLD, FONT_TITLE_2} from "../../common/fonts";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
+import StandardButton from "../../components/StandardButton";
 
-const DEFAULT_MAX_WIDTH = 1150;
-const DEFAULT_MAX_WIDTH_HALF = Math.round(DEFAULT_MAX_WIDTH/2);
 
-const HERO_MAX_WIDTH = 454;
+const HERO_MAX_WIDTH = 400;
+// const HERO_MAX_WIDTH = 454;
 const LEFT_PADDING = `calc(25vw - ${HERO_MAX_WIDTH/2}px)`;
 
 const CUT_OFF_1 = 950;
@@ -66,56 +66,52 @@ const Styles = {
             padding: "180px",
         },
     },
-    sectionContainerDefault: {
-        width: "calc(100vw - 30px)",
-        maxWidth: `${DEFAULT_MAX_WIDTH}px`,
-        margin: "auto"
-    },
-    sectionLeftSectionDefault: {
-        maxWidth: "370px",
-    },
-    sectionLeftSectionNoRight: {
-        paddingLeft: `calc(50vw - ${DEFAULT_MAX_WIDTH}px/2)`,
-    },
-    sectionRightSectionDefault: {
-        maxWidth: "370px",
-        textAlign: "right",
-        marginLeft: "auto",
-    },
-    sectionLeftPadding: {
-        paddingLeft: "180px"
-    },
     sectionWidthWide: {
-        maxWidth: "415px",
-
+        maxWidth: "450px",
     },
-    sectionWidthNarrow: {
-        maxWidth: "365px"
-    },
-    sectionHeader: {
-        ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
+    sectionSubTitle: {
+        ...COMMON.FONTS.H200,
+        color: COMMON.COLORS.B400,
         textTransform: "uppercase",
-        marginBottom: "5px"
+        marginBottom: "2px",
+        '@media (max-width: 768px)': {
+            ...COMMON.FONTS.H100,
+        },
     },
     sectionTitle: {
-        ...COMMON.FONTS.FONT_TITLE_2_BOLD,
+        ...COMMON.FONTS.H800,
+        color: COMMON.COLORS.N900,
         marginBottom: "15px",
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_TITLE_3_BOLD,
+            ...COMMON.FONTS.H600,
         },
     },
     sectionBody: {
-        ...COMMON.FONTS.FONT_BODY,
-        marginBottom: "15px",
+        ...COMMON.FONTS.P300,
+        color: COMMON.COLORS.N800,
+        marginBottom: "50px",
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_FOOTNOTE,
+            ...COMMON.FONTS.P200,
             marginBottom: "0px",
 
         },
     },
-    sectionCTA: {
-        ...COMMON.FONTS.FONT_HEADLINE_BOLD,
-        marginTop: "15px"
+    sectionPointContainer: {
+        display: "flex"
+    },
+    sectionPoint: {
+        ...COMMON.FONTS.P200,
+        color: COMMON.COLORS.N800,
+        marginBottom: "0px",
+        '& span div': {
+            marginBottom: "8px",
+            fontSize: "16px"
+        },
+        '@media (max-width: 768px)': {
+            ...COMMON.FONTS.P200,
+            marginBottom: "0px",
+
+        },
     },
     featureContainer: {
         width: "200px",
@@ -139,25 +135,25 @@ const Styles = {
         height: "200px",
 
         width: "100%",
-        background: "black",
+        background: "none",
         borderRadius: "6px"
     },
     featureImageTall: {
         height: "300px",
 
         width: "100%",
-        background: "red",
+        background: "none",
         borderRadius: "6px"
     },
     featureName: {
-        ...COMMON.FONTS.FONT_BODY_BOLD,
+        ...COMMON.FONTS.H500,
         marginTop: "10px",
-        color: COMMON.COLORS.COLOR_BLACK
+        color: COMMON.COLORS.N900
     },
     featureBio: {
-        ...COMMON.FONTS.FONT_CAPTION_1,
-        marginTop: "2px",
-        color: COMMON.COLORS.COLOR_BLACK
+        ...COMMON.FONTS.P100,
+        marginTop: "0",
+        color: COMMON.COLORS.N800
     },
     footerDefault: {
         ...COMMON.FONTS.FONT_BODY,
@@ -167,68 +163,102 @@ const Styles = {
         ...COMMON.FONTS.FONT_BODY_BOLD,
         marginBottom: "5px"
     },
+    footerProfileContainer: {
+        display: "inline-block",
+        width: "160",
+        height: "50px",
+        marginRight: "25px",
+        marginBottom: "50px",
+        '@media (max-width: 768px)': {
+            marginRight: "10px",
+        },
+    },
+    footerProfileImgContainer: {
+        flex: "0 0 50px",
+        marginRight: "10px",
+        borderRadius: "4px",
+        overflow: "hidden",
+        textAlign: "left"
+    },
+    footerProfileTitle: {
+        textAlign: "left",
+        marginTop: "11px", ...COMMON.FONTS.FONT_FOOTNOTE_BOLD
+    },
+    footerProfileBody: {
+        textAlign: "left",
+        whiteSpace: "nowrap",
+        marginTop: "0",
+        ...COMMON.FONTS.FONT_CAPTION_2,
+        color: COMMON.COLORS.DARK_GREY
+    },
     landingContainer: {
         height: "100%",
+        background: "url('/img/hero-background.png')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
         '@media (max-width: 768px)': {
-            height: "fit-content",
-            marginBottom: "65px"
+            height: "516px",
+            backgroundImage: "url('/img/hero-background-mobile.png')",
+            backgroundSize: "contain",
+            margin: "25px 20px",
         },
     },
     landingHeroText: {
         maxWidth: "370px",
         margin: "auto",
-        marginTop: "calc(50vh - 99px)",
+        marginTop: "calc(50vh - 130px)",
         textAlign: "center",
         '@media (max-width: 768px)': {
-            marginTop: "65px",
+            marginTop: "161px",
+            maxWidth: "270px",
+
         },
     },
     landingHeroTitle: {
-        ...COMMON.FONTS.FONT_LARGE_TITLE_BOLD,
+        ...COMMON.FONTS.H900,
         marginBottom: "15px",
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_TITLE_2_BOLD,
-            marginBottom: "10px"
+            ...COMMON.FONTS.H800,
+            marginBottom: "15px"
         },
     },
     landingHeroBody: {
-        ...COMMON.FONTS.H500,
+        ...COMMON.FONTS.P300,
         '@media (max-width: 768px)': {
-            ...COMMON.FONTS.FONT_FOOTNOTE,
+            ...COMMON.FONTS.P200,
         },
     },
     profileHighlights: {
-        paddingTop: "50px",
-        marginBottom: "100px",
+        paddingTop: "0px",
+        marginBottom: "50px",
         '@media (max-width: 768px)': {
             marginBottom: "50px",
         },
     },
     userProfileSectionContainer: {
-        paddingTop: "50px",
-        marginBottom: "100px",
+        paddingTop: "100px",
+        marginBottom: "50px",
         '@media (max-width: 768px)': {
             marginBottom: "50px",
         },
     },
     userProfileSection: {
-        paddingTop: "70px",
+        paddingTop: "50px",
         '@media (max-width: 768px)': {
             paddingTop: "0",
         },
     },
     peerSupportSectionContainer: {
-        paddingTop: "50px",
-        paddingBottom: "100px",
-        background: COMMON.COLORS.OSIRIS_GREEN,
-        color: COMMON.COLORS.COLOR_WHITE,
+        paddingTop: "100px",
+        paddingBottom: "50px",
         '@media (max-width: 768px)': {
             paddingBottom: "50px",
         },
     },
     peerSupportSection: {
         marginLeft: "auto",
-        paddingTop: "50px",
+        // paddingTop: "50px",
         '@media (max-width: 768px)': {
             marginLeft: "0",
             paddingTop: "0",
@@ -236,22 +266,23 @@ const Styles = {
     },
     findAJobSectionContainer: {
         paddingTop: "100px",
-        marginBottom: "100px",
+        marginBottom: "50px",
         '@media (max-width: 768px)': {
             paddingTop: "50px",
             marginBottom: "50px",
         },
     },
     findAJobSection: {
-        paddingTop: "93px",
+        paddingTop: "0",
         '@media (max-width: 768px)': {
             paddingTop: "0",
         },
     },
     applySectionContainer: {
         paddingTop: "100px",
-        marginBottom: "100px",
+        marginBottom: "50px",
         '@media (max-width: 768px)': {
+            padding: "0 10px",
             paddingTop: "50px",
             marginBottom: "50px",
         },
@@ -288,7 +319,8 @@ const Styles = {
     mobileImage: {
         width: "100%"
     },
-    ...COMMON.STYLES.GENERAL.NavigationStyles
+    ...COMMON.STYLES.GENERAL.NavigationStyles,
+    ...COMMON.STYLES.GENERAL.AlignmentStyles
 };
 
 class Home extends React.Component {
@@ -321,26 +353,12 @@ class Home extends React.Component {
                     <NavBar />
                 </div>
                 <div className={classes.masterBodyContainer}>
-                    <div className={mc(classes.landingContainer)}>
-                        <div style={{display: "flex", height: "100%"}}>
-                            <div style={{flex: 1}}>
-                                <div>
-                                    <div className={mc(classes.marginLeftDefault, classes.landingHeroText)}>
-                                        <div className={mc(classes.landingHeroTitle)}>Finding your dream job doesn’t have to suck</div>
-                                        <div className={mc(classes.landingHeroBody)}>OSIRIS provides you with the community, tools, and data to make better career decisions</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div style={{display: "none", flexDirection: "column", height: "100%", overflow: "hidden"}}>
-                        <div style={{flex: "0 0 50px"}}>
-                            <NavBar/>
-                        </div>
+
+                    <div style={{flexDirection: "column", background: COMMON.COLORS.N0}}>
                         <div style={{flex: 1, overflow: "scroll"}}>
                             <div>
-                                <div className={mc(classes.landingContainer)}>
+                                <div style={{display: "none"}} className={mc(classes.landingContainer)}>
                                     <div style={{display: "flex", height: "100%"}}>
                                         <div style={{flex: 1}}>
                                             <div>
@@ -385,12 +403,30 @@ class Home extends React.Component {
 
                                 </div>
 
+                                <div className={mc(classes.landingContainer)} style={{}}>
+                                    <div style={{display: "flex", height: "100%"}}>
+                                        <div style={{flex: 1}}>
+                                            <div>
+                                                <div className={mc(classes.marginLeftDefault, classes.landingHeroText)}>
+                                                    <div className={mc(classes.landingHeroTitle)}>Finding your dream job doesn’t have to suck</div>
+                                                    <div className={mc(classes.landingHeroBody)}>OSIRIS provides you with the community, tools, and data to make better career decisions</div>
+                                                    <div style={{marginTop: "25px"}}>
+                                                        <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
+                                                            window.open("https://osiris-works.typeform.com/sign-up", "_blank");
+                                                        }}/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div style={{paddingTop: "50px"}}>
                                     <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide, )}>
                                         <div>
-                                            <div className={mc(classes.sectionHeader)}>Community</div>
-                                            <div className={mc(classes.sectionTitle)}>Connect with a diverse and inclusive community</div>
-                                            <div className={mc(classes.sectionBody)}>OSIRIS connects you with your peers, companies, and mentors across industries irrespective of your background</div>
+                                            <div className={mc(classes.sectionSubTitle)}>COMMUNITY - coming soon</div>
+                                            <div className={mc(classes.sectionTitle)}>Join an inclusive community</div>
+                                            <div className={mc(classes.sectionBody)}>OSIRIS connects you with your peers, companies, and mentors across industries</div>
                                         </div>
                                     </div>
                                 </div>
@@ -398,50 +434,70 @@ class Home extends React.Component {
                                 <div className={mc(classes.profileHighlights)}>
                                     <div style={{width: "100%", overflow: "scroll"}}>
                                         <div className={mc(classes.marginLeftDefault)} style={{width: "fit-content", whiteSpace: "nowrap"}}>
-                                            <div className={mc(classes.featureContainer)}>
-                                                <Link to={"/u/jason"}>
-                                                    <div className={mc(classes.featureImage)}>
-                                                        <CoverImageHolder url={"/img/Instagram post - 1.png"}/>
-                                                    </div>
-                                                    <div className={mc(classes.featureName)}>Jason Mayden</div>
-                                                    <div className={mc(classes.featureBio)}>President Fear of God Athletics & Founder Trillicon Vally</div>
-                                                </Link>
-                                            </div>
-                                            <div className={mc(classes.featureContainer)}>
-                                                <div className={mc(classes.featureImageTall)}>
-                                                    <CoverImageHolder url={"/img/Instagram story - 3.png"}/>
-                                                </div>
-                                                <div className={mc(classes.featureName)}>Alicia Gutierrez</div>
-                                                <div className={mc(classes.featureBio)}>Content Director Soho House</div>
-                                            </div>
-                                            <div className={mc(classes.featureContainer)}>
-                                                <div className={mc(classes.featureImage)}>
-                                                    <CoverImageHolder url={"/img/Instagram post - 2.png"}/>
-                                                </div>
-                                                <div className={mc(classes.featureName)}>Sade Ndya</div>
-                                                <div className={mc(classes.featureBio)}>Cinematographer</div>
-                                            </div>
-                                            <div className={mc(classes.featureContainer)}>
-                                                <div className={mc(classes.featureImageTall)}>
-                                                    <CoverImageHolder url={"/img/Instagram story - 4.png"}/>
-                                                </div>
-                                                <div className={mc(classes.featureName)}>Abigail Africa</div>
-                                                <div className={mc(classes.featureBio)}>Design Strategist</div>
-                                            </div>
+
+
                                             <div className={mc(classes.featureContainerWide)}>
                                                 <div className={mc(classes.featureImage)}>
-                                                    <CoverImageHolder url={"/img/Instagram story - 5.png"}/>
+                                                    <CoverImageHolder url={"/img/cami-hero.png"}/>
                                                 </div>
-                                                <div className={mc(classes.featureName)}>Amber Grimes</div>
-                                                <div className={mc(classes.featureBio)}>EVP LVRN</div>
+                                                <div className={mc(classes.featureName)}>Cami Á.</div>
+                                                <div className={mc(classes.featureBio)}>Founder & Entrepreneur</div>
                                             </div>
                                             <div className={mc(classes.featureContainer)}>
                                                 <div className={mc(classes.featureImageTall)}>
-                                                    <CoverImageHolder url={"/img/Instagram story - 6.png"}/>
+                                                    <CoverImageHolder url={"/img/alex-hero.png"}/>
                                                 </div>
-                                                <div className={mc(classes.featureName)}>Mohamed Sahid</div>
-                                                <div className={mc(classes.featureBio)}>Creative Director</div>
+                                                <div className={mc(classes.featureName)}>Alexandra K.</div>
+                                                <div className={mc(classes.featureBio)}>Associate Strategy Officer</div>
                                             </div>
+
+                                            <div className={mc(classes.featureContainerWide)}>
+                                                <div className={mc(classes.featureImage)}>
+                                                    <CoverImageHolder url={"/img/tatum-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Tatum D.</div>
+                                                <div className={mc(classes.featureBio)}>Brand Experience Manager</div>
+                                            </div>
+                                            <div className={mc(classes.featureContainer)}>
+                                                <div className={mc(classes.featureImageTall)}>
+                                                    <CoverImageHolder url={"/img/will-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Will D.</div>
+                                                <div className={mc(classes.featureBio)}>Art Director Lev Diamond Studio & Designer Media Monks</div>
+                                            </div>
+
+                                            <div className={mc(classes.featureContainerWide)}>
+                                                <div className={mc(classes.featureImage)}>
+                                                    <CoverImageHolder url={"/img/melisa-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Melisa S.</div>
+                                                <div className={mc(classes.featureBio)}>Product Marketing Manager</div>
+                                            </div>
+                                            <div className={mc(classes.featureContainer)}>
+                                                <div className={mc(classes.featureImageTall)}>
+                                                    <CoverImageHolder url={"/img/josh-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Josh C.</div>
+                                                <div className={mc(classes.featureBio)}>Cinematographer & Photographer</div>
+                                            </div>
+                                            <div className={mc(classes.featureContainer)} style={{display: "none"}}>
+                                                <div className={mc(classes.featureImageTall)}>
+                                                    <CoverImageHolder url={"/img/kara-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Kara S.</div>
+                                                <div className={mc(classes.featureBio)}>Associate Blackstone</div>
+                                            </div>
+
+
+                                            <div className={mc(classes.featureContainerWide)}>
+                                                <div className={mc(classes.featureImage)}>
+                                                    <CoverImageHolder url={"/img/eden-hero.png"}/>
+                                                </div>
+                                                <div className={mc(classes.featureName)}>Eden B.</div>
+                                                <div className={mc(classes.featureBio)}>Digital Marketing Specialist</div>
+                                            </div>
+
+
 
                                         </div>
 
@@ -456,10 +512,42 @@ class Home extends React.Component {
                                             <div className={mc(classes.findAJobSection)}>
                                                 <div className={mc(classes.paddingLeftDefault)}>
                                                     <div className={mc(classes.sectionWidthWide)}>
-                                                        <div className={mc(classes.sectionHeader)}>ACCESS TO JOBS</div>
-                                                        <div className={mc(classes.sectionTitle)}>Find a job that represents you</div>
-                                                        <div className={mc(classes.sectionBody)}>OSIRIS allows you to find opportunities with companies that represent you. Use 10+ unique filters to sort through roles and get access to DE&I stats before applying</div>
-                                                        <div className={mc(classes.sectionCTA)}>Find A Job <span><i className="fa-solid fa-arrow-right"></i></span></div>
+                                                        <div className={mc(classes.sectionSubTitle)}>Jobs</div>
+                                                        <div className={mc(classes.sectionTitle)}>Stop guessing. Understand the job before you apply</div>
+                                                        <div className={mc(classes.sectionBody)}>OSIRIS helps you find exciting job opportunities, from fast-growing early-stage startups to nonprofits to the major corporations you know and love</div>
+                                                        <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-magnifying-glass"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Recommendations based on your profile and priorities</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-briefcase"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Insights into the actual day-to-day job experience</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "0px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-dollar-sign"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Salary estimates before you even apply to a job</div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -469,7 +557,11 @@ class Home extends React.Component {
                                         </div>
                                         <div style={{flex: 1.2}} className={mc(classes.hideOnMobile)}>
                                             <div style={{width: "100%", maxWidth: "559px", marginLeft: "auto"}} className={mc(classes.marginRightDefault)}>
-                                                <img style={{width: "100%", }} src={"/img/jobs-hero-2.png"}/>
+                                                <div className={classes.centerAlignContainerFill}>
+                                                    <div className={classes.centerAlignObject} style={{width: "100%", maxWidth: "377px",}}>
+                                                        <img style={{width: "100%", maxWidth: "377px", borderRadius: "7px", margin: "auto", boxShadow: "#E5E5E5 0px 31px 60px"}} src={"/img/jobs-hero-2.png"}/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -478,22 +570,60 @@ class Home extends React.Component {
                                 <div className={mc(classes.peerSupportSectionContainer)}>
                                     <div style={{display: "flex"}}>
                                         <div style={{flex: 1}} className={mc(classes.hideOnMobile)}>
-                                            <div style={{width: "100%",}}>
-                                                <img style={{width: "100%", maxWidth: "666px"}} className={mc(classes.marginLeftDefault)} src={"/img/peer-support-hero-2.png"}/>
+                                            <div style={{width: "100%", maxWidth: "432px"}} className={mc(classes.marginLeftDefault)}>
+                                                <div className={classes.centerAlignContainerFill}>
+                                                    <div className={classes.centerAlignObject} style={{width: "100%", maxWidth: "432px",}}>
+                                                        <img style={{width: "100%", maxWidth: "432px", margin: "auto"}} src={"/img/chart-hero.png"}/>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                         </div>
                                         <div style={{flex: 1}}>
                                             <div>
                                                 <div className={mc(classes.marginRightDefault)}>
                                                     <div className={mc(classes.sectionWidthWide, classes.peerSupportSection)}>
-                                                        <div className={mc(classes.sectionHeader)}>PEER & MENTOR SUPPORT</div>
-                                                        <div className={mc(classes.sectionTitle)}>Connect with your community</div>
-                                                        <div className={mc(classes.sectionBody)}>We verify every user before allowing them to join OSIRIS. As a result, users can post questions anonymously, allowing for authentic insights, feedback, and advice from community members</div>
-                                                        <div className={mc(classes.sectionCTA)}>Ask a question <span><i className="fa-solid fa-arrow-right"></i></span></div>
+                                                        <div className={mc(classes.sectionSubTitle)}>Companies</div>
+                                                        <div className={mc(classes.sectionTitle)}>Don’t settle. Find a company that reflects you and your values</div>
+                                                        <div className={mc(classes.sectionBody)}>Osiris provides the tools and information you need to ensure that you join a company that embodies what you care about most</div>
+                                                        <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-chart-pie"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Accurate ethnic representation data for each company</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-user-group"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Understand company gender representation</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "0px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-award"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Benchmark each company against one another</div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                                 <div className={mc(classes.mobileImageContainer)}>
-                                                    <img className={mc(classes.mobileImage)} src={"/img/peer-support-hero-2.png"}/>
+                                                    <img className={mc(classes.mobileImage)} src={"/img/chart-hero.png"}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -508,12 +638,44 @@ class Home extends React.Component {
                                             <div className={mc(classes.userProfileSection)}>
                                                 <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide,)}>
                                                     <div>
-                                                        <div className={mc(classes.sectionHeader)}>User Profile</div>
-                                                        <div className={mc(classes.sectionTitle)}>Create your portfolio link in minutes</div>
-                                                        <div className={mc(classes.sectionBody)}>Your portfolio is as unique as you are. Connect your socials, website, store, videos, music, podcast, events, and more. Even share it, helping people find all your information in one place.</div>
-                                                        <div className={mc(classes.sectionCTA)}>Design Your Portfolio <span><i className="fa-solid fa-arrow-right"></i></span></div>
-                                                    </div>
+                                                        <div className={mc(classes.sectionSubTitle)}>OSIRIS profile</div>
+                                                        <div className={mc(classes.sectionTitle)}>A professional profile that actually represents you and your work</div>
+                                                        <div className={mc(classes.sectionBody)}>Showcase your work on your OSIRIS profile. As you build your profile it will be easier to find peers and jobs</div>
+                                                        <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-user"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Aggregate all your work into a single portfolio</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-link"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Share you profile across platforms with a unique link</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "0px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-brands fa-linkedin"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Import your data directly from LinkedIn</div>
+                                                                </div>
 
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className={mc(classes.mobileImageContainer)}>
@@ -531,72 +693,192 @@ class Home extends React.Component {
                                     </div>
                                 </div>
 
-
-
-
-
-
-                                <div className={mc(classes.applySectionContainer)}>
+                                <div className={mc(classes.userProfileSectionContainer)} style={{paddingTop: 0}}>
                                     <div style={{display: "flex"}}>
-                                        <div style={{flex: 1}} className={mc(classes.hideOnMobile)}>
-                                            <div style={{width: "100%", paddingRight: "25px", height: "366px", overflow: "hidden"}} className={mc(classes.paddingLeftDefault)}>
-                                                <img style={{width: "100%", height: "100%"}} src={"/img/sign-up-hero.png"}/>
+
+                                        <div style={{flex: 1.2}} className={mc(classes.hideOnMobile)}>
+                                            <div style={{width: "100%", maxWidth: "490px"}} className={mc(classes.marginLeftDefault)}>
+                                                <div className={classes.centerAlignContainerFill}>
+                                                    <div className={classes.centerAlignObject} style={{width: "100%", maxWidth: "490px",}}>
+                                                        <img style={{width: "100%", maxWidth: "490px", margin: "auto"}} src={"/img/saved-hero.png"}/>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            {/*<div className={mc(classes.marginLeftDefault)} style={{maxWidth: "637px"}}>*/}
+                                            {/*    <div style={{width: "100%", textAlign: "center"}}>*/}
+                                            {/*        <img style={{width: "100%", maxWidth: "666px", margin: "auto"}} src={"/img/saved-hero.png"}/>*/}
+                                            {/*    </div>*/}
+                                            {/*</div>*/}
                                         </div>
                                         <div style={{flex: 1}}>
-                                            <div className={mc(classes.paddingRightDefault, classes.applySection)}>
-                                                <div className={mc(classes.applyHolder)}>
-                                                    <div style={{height: "100%", width: "100%", position:"relative",}}>
-                                                        <div style={{maxWidth: "225px", margin: "auto"}}>
-                                                            <div style={{...COMMON.FONTS.FONT_TITLE_1_BOLD, color: COMMON.COLORS.COLOR_WHITE}}>Apply to join OSIRIS today.</div>
-                                                            <div style={{...COMMON.FONTS.FONT_HEADLINE_BOLD, marginTop: "10px", color: COMMON.COLORS.COLOR_WHITE}}>Get Started</div>
-                                                        </div>
-                                                        <div style={{display: "flex", position: "absolute", width: "100%", bottom: 0}}>
-                                                            <div style={{flex:1, marginRight: "10px"}}>
-                                                                <input
-
-                                                                    placeholder={"Email Address"}
-
-                                                                    style={{
-                                                                        height: "41px",
-                                                                        lineHeight: "41px",
-                                                                        background: COMMON.COLORS.COLOR_WHITE,
-                                                                        ...COMMON.FONTS.FONT_BODY,
-                                                                        paddingLeft: "10px",
-                                                                        border: "none",
-                                                                        outline: "none",
-                                                                        borderRadius: "6px",
-                                                                        width: "100%"
-                                                                    }}/>
+                                            <div className={mc(classes.userProfileSection)}>
+                                                <div className={mc(classes.marginRightDefault, classes.sectionWidthWide,)}>
+                                                    <div>
+                                                        <div className={mc(classes.sectionSubTitle)}>JOB SEARCH TRACKER</div>
+                                                        <div className={mc(classes.sectionTitle)}>No more spreadsheets. Organize your search to find your dream job</div>
+                                                        <div className={mc(classes.sectionBody)}>OSIRIS helps you organize your job search. We keep track of the details that matter most to you so that you don’t have to rely on messy spreadsheets</div>
+                                                        <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-bookmark"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Save jobs from our job board and across the web</div>
+                                                                </div>
                                                             </div>
-                                                            <div style={{flex: "0 0 117px"}}>
-                                                                <div
-                                                                    onClick={() => (this.setOnBoardingModal(true))}
+                                                            <div style={{flex: 1, paddingRight: "25px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-square-pen"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Keep track of notes and tasks for each saved opportunity</div>
+                                                                </div>
+                                                            </div>
+                                                            <div style={{flex: 1, paddingRight: "0px"}}>
+                                                                <div className={mc(classes.sectionPoint)}>
+                                                                    <span>
+                                                                        <div>
+                                                                            <i className="fa-solid fa-envelope"/>
+                                                                        </div>
+                                                                    </span>
+                                                                    <div>Receive reminders and never miss another deadline</div>
+                                                                </div>
 
-                                                                    style={{
-                                                                        height: "41px",
-                                                                        lineHeight: "41px",
-                                                                        background: COMMON.COLORS.COLOR_WHITE,
-                                                                        ...COMMON.FONTS.FONT_HEADLINE_BOLD,
-                                                                        textAlign: "center",
-                                                                        borderRadius: "6px",
-                                                                        cursor: "pointer"
-                                                                    }}>Apply to Join</div>
                                                             </div>
                                                         </div>
-
                                                     </div>
-
-
                                                 </div>
-
                                             </div>
+                                            <div className={mc(classes.mobileImageContainer)}>
+                                                <img className={mc(classes.mobileImage)} src={"/img/saved-hero.png"}/>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div style={{background: COMMON.COLORS.OSIRIS_BLACK, paddingTop: "75px", paddingBottom: "75px", color: COMMON.COLORS.COLOR_WHITE, ...COMMON.FONTS.FONT_BODY}} className={mc(classes.paddingLeftDefault, classes.paddingRightDefault, classes.hideOnMobile)}>
+
+
+                                <div className={mc(classes.applySectionContainer)}>
+                                    <div style={{textAlign: "center"}}>
+                                        <div style={{maxWidth: "301px", margin: "auto"}}>
+                                            <div className={mc(classes.sectionTitle)}>Join the OSIRIS community today</div>
+                                        </div>
+                                        <div style={{marginTop: "50px",}}>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/cami-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Cami Á.</div>
+                                                        <div className={classes.footerProfileBody}>Entrepreneur</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/alex-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Alexandra K.</div>
+                                                        <div className={classes.footerProfileBody}>Strategy Officer</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/tatum-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Tatum D.</div>
+                                                        <div className={classes.footerProfileBody}>Brand Manager</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/will-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Will D.</div>
+                                                        <div className={classes.footerProfileBody}>Art Director</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div style={{marginBottom: "0px"}}>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/melisa-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Melisa S.</div>
+                                                        <div className={classes.footerProfileBody}>Marketing Manager</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer} style={{display: "none"}}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/kara-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Kara S.</div>
+                                                        <div className={classes.footerProfileBody}>Associate Blackstone</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/eden-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Eden B.</div>
+                                                        <div className={classes.footerProfileBody}>Marketing Specialist</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className={classes.footerProfileContainer}>
+                                                <div style={{display: "flex", height: "100%"}}>
+                                                    <div className={classes.footerProfileImgContainer}>
+                                                        <CoverImageHolder url={"/img/josh-hero.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1}}>
+                                                        <div className={classes.footerProfileTitle}>Josh C.</div>
+                                                        <div className={classes.footerProfileBody}>Cinematographer</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div style={{marginBottom: "100px"}}>
+                                            <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
+                                                window.open("https://osiris-works.typeform.com/sign-up", "_blank");
+                                            }}/>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div style={{display: "none", background: COMMON.COLORS.OSIRIS_BLACK, paddingTop: "75px", paddingBottom: "75px", color: COMMON.COLORS.COLOR_WHITE, ...COMMON.FONTS.FONT_BODY}} className={mc(classes.paddingLeftDefault, classes.paddingRightDefault, classes.hideOnMobile)}>
                                     <div style={{display: "flex"}}>
                                         <div style={{flex: 1, ...COMMON.FONTS.FONT_TITLE_2_BOLD}} >
                                             OSIRIS
@@ -624,6 +906,7 @@ class Home extends React.Component {
                                             <div className={mc(classes.footerDefault)}>Cookie Policy</div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

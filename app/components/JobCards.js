@@ -17,6 +17,7 @@ import COMMON from "../common/index";
 
 import JobCard from "./JobCard";
 import LoadingJobCard from "./LoadingJobCard";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Styles = {
     container: {
@@ -28,7 +29,8 @@ const Styles = {
     },
     cardPadding: {
         marginBottom: "10px"
-    }
+    },
+    ...COMMON.STYLES.MOBILE_STYLES
 };
 
 class JobCards extends React.Component {
@@ -36,9 +38,7 @@ class JobCards extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-
-        };
+        this.state = {};
     }
 
     componentDidMount() {
@@ -52,7 +52,8 @@ class JobCards extends React.Component {
             selectedIndustries,
             selectedDegreeRequirements,
             selectedRoles,
-            selectedAffinities
+            selectedAffinities,
+            selectedSeniorities
         } = this.props;
 
         let filteredJobs = [];
@@ -116,6 +117,22 @@ class JobCards extends React.Component {
                 }
             }
 
+            let validSeniority = true;
+
+            if (selectedSeniorities && selectedSeniorities.length) {
+                validSeniority = false;
+                let found = false;
+
+                if (job && job.job_seniority) {
+                    if (selectedSeniorities.indexOf(job.job_seniority) !== -1) {
+                        found = true
+                    }
+                }
+                if (found) {
+                    validSeniority = true;
+                }
+            }
+
 
             let validDegreeRequirement = true;
 
@@ -172,7 +189,7 @@ class JobCards extends React.Component {
                 }
             }
 
-            let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validRole && validAffinity;
+            let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
 
             if (job && job.companies && job.companies.length && job.companies[0] ) {
                 if (valid) {
@@ -185,12 +202,14 @@ class JobCards extends React.Component {
             }
         });
 
+        console.log(filteredJobs);
         return {
-            filteredJobs,
-            unFilteredJobs,
+            filteredJobs: filteredJobs,
+            unFilteredJobs: unFilteredJobs,
             usingFilters: (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
+                (selectedSeniorities && selectedSeniorities.length) ||
                 (selectedDegreeRequirements && selectedDegreeRequirements.length) ||
                 (selectedRoles && selectedRoles.length) ||
                 (selectedAffinities && selectedAffinities.length)
@@ -198,50 +217,72 @@ class JobCards extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, mobile, loading} = this.props;
+        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, handleScroll, mobile, loading, MAX_RESULTS} = this.props;
 
+        console.time("done filtering");
+        let { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
+        console.timeEnd("done filtering");
 
-        const { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
-
-        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
+        filteredJobs = filteredJobs.slice(0, MAX_RESULTS);
+        unFilteredJobs = unFilteredJobs.slice(0, MAX_RESULTS);
+        // console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 
 
         return (<div className={classes.container}>
 
             <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
-            {mobile && <div style={{...FONT_TITLE_3, marginBottom: "20px", fontSize: "16px"}}>Mobile Coming Soon!</div>}
+            <div className={classes.showOnMobile} style={{...COMMON.FONTS.P200, marginBottom: "20px", fontSize: "13px"}}>We are actively developing the mobile version of the job board and can't wait to share it with you once it's complete!</div>
 
-            {loading ? [1,2,3,4,5].map((k) => {
-                return (<div className={classes.cardPadding} key={k}>
-                    <LoadingJobCard />
-                </div>);
-            }) : <div>
-                {filteredJobs.map((job) => {
-                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                        <JobCard job={job} selectedJobId={selectedJobId}/>
-                    </div>);
-                })}
+            <InfiniteScroll
+                dataLength={MAX_RESULTS}
+                next={() => {
+                    console.log("loading more!", MAX_RESULTS);
+                    handleScroll();
+                }}
+                hasMore={true}
+                scrollThreshold={"100px"}
+                scrollableTarget="mobile-cards-container"
+                loader={<div className="loader" key={0}></div>}
+                endMessage={
+                    <div style={{ textAlign: 'center' }}>
 
-                {(usingFilters && !filteredJobs.length) ? <div style={{
-                    padding: "15px",
-                    border: `1px solid ${COMMON.COLORS.N400}`,
-                    borderRadius: "4px",
-                    background: COMMON.COLORS.N0
-                }}>
-                    <div style={{...COMMON.FONTS.H400}}>No Perfect Matches</div>
-                    <div style={{...COMMON.FONTS.P100}}>
-                        We are actively adding jobs to our board, but in the meantime, check out these additional opportunities!
                     </div>
-                </div>: null}
-
-                {(usingFilters && unFilteredJobs && unFilteredJobs.length >= 1) && <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div>}
-
-                {unFilteredJobs.map((job) => {
-                    return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                        <JobCard job={job} selectedJobId={selectedJobId}/>
+                }
+            >
+                {loading ? [1,2,3,4,5].map((k) => {
+                    return (<div className={classes.cardPadding} key={k}>
+                        <LoadingJobCard />
                     </div>);
-                })}
-            </div>}
+                }) : <div>
+                    {filteredJobs.map((job) => {
+                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                            <JobCard job={job} selectedJobId={selectedJobId}/>
+                        </div>);
+                    })}
+
+                    {(usingFilters && !filteredJobs.length) ? <div style={{
+                        padding: "15px",
+                        border: `1px solid ${COMMON.COLORS.N400}`,
+                        borderRadius: "4px",
+                        background: COMMON.COLORS.N0
+                    }}>
+                        <div style={{...COMMON.FONTS.H400}}>No Perfect Matches</div>
+                        <div style={{...COMMON.FONTS.P100}}>
+                            We are actively adding jobs to our board, but in the meantime, check out these additional opportunities!
+                        </div>
+                    </div>: null}
+
+                    {(usingFilters && unFilteredJobs && unFilteredJobs.length >= 1) ? <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div> : null}
+
+                    {unFilteredJobs.map((job) => {
+                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
+                            <JobCard job={job} selectedJobId={selectedJobId}/>
+                        </div>);
+                    })}
+                </div>}
+            </InfiniteScroll>
+
+
 
         </div>);
     }

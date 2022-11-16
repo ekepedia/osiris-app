@@ -51,7 +51,7 @@ const Styles = {
             background: COMMON.COLORS.N0,
             border: `1px solid ${COMMON.COLORS.N400}`,
             borderRadius: "4px",
-            color: COMMON.COLORS.OSIRIS_GREEN,
+            color: COMMON.COLORS.N700,
             ...font,
         })
     },
@@ -81,7 +81,7 @@ class StandardButton extends React.Component {
 
             <button style={{width: fullWidth ? "100%" : null}} className={secondary ? mc(classes.secondaryButton) : classes.buttonStyle} onClick={() => {
                 onClick ? onClick() : null;
-            }}>{label}{icon && <span style={{marginLeft: "8px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span>}</button>
+            }}>{label}{icon && <span style={{marginLeft: label && label.length ? "8px" : "0px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span>}</button>
         </div>)
     }
 

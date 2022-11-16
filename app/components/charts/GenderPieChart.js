@@ -23,16 +23,24 @@ const Styles = {
         padding: "0",
         '@media (max-width: 768px)': {
             padding: "0",
+            flexDirection: "column"
         },
     },
     pieChartHolder: {
         flex: "0 0 125px",
-        marginRight: "20px"
+        marginRight: "20px",
+        '@media (max-width: 768px)': {
+            marginBottom: "20px",
+        },
     },
     pieChartLabelContainer: {
         flex: "0 0 187px",
         marginTop: "63px",
-        color: COMMON.COLORS.N700
+        color: COMMON.COLORS.N700,
+        '@media (max-width: 768px)': {
+            flex: 1,
+            marginTop: "0px",
+        },
     },
     pieChartLabelHolder: {
         display: "flex",
