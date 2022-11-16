@@ -137,7 +137,7 @@ class FilterBar extends React.Component {
         jobs.forEach((job) => {
             if (job.companies && job.companies.length) {
                 job.companies.forEach((company) => {
-                    if (!company) return;1
+                    if (!company) return;
                     dedup_map[company.company_id] = {
                         ...company,
                         id: company.company_id,

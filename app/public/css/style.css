@@ -190,3 +190,10 @@ a:hover {
     -o-animation: flickerAnimation 1s infinite;
     animation: flickerAnimation 1s infinite;
 }
+
+#job-description h1,
+#job-description h2,
+#job-description h3,
+#job-description h4 {
+    font-size: 16px !important;
+}

@@ -107,7 +107,8 @@ class Login extends React.Component {
 
                 if (data.data.success) {
                     let user_id = data.data.data.user_login.user_id;
-                    window.location.pathname = `/edit/${user_id}`;
+                    // window.location.pathname = `/edit/${user_id}`;
+                    window.location.pathname = `/companies`;
                     AuthService.setCurrentUser({user_id})
                 } else {
                     alert(data.data.error);

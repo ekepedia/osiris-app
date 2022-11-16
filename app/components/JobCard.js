@@ -87,8 +87,8 @@ class JobCard extends React.Component {
                 <div>
                     <div>
                         <div style={{marginBottom: "13px"}}>
-                            <StandardBadge label={industry}/>
-                            <StandardBadge label={company.company_industry}/>
+                            {industry ? <StandardBadge label={industry}/> : null}
+                            {company.company_industry ? <StandardBadge label={company.company_industry}/> : null}
                         </div>
 
                         <div style={{marginBottom: "0"}}>

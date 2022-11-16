@@ -133,18 +133,18 @@ class NavBar extends React.Component {
                             {path === "/" && <div className={classes.selectedLink}/>}
                         </div>
                     </Link>
-                    <Link to={"/jobs"}>
+                    {user && user.user_id ? <Link to={"/jobs"}>
                         <div className={classes.linkStyle} style={{color: path === "/jobs" ? COMMON.COLORS.B400 : null}}>
                             Jobs
                             {path === "/jobs" && <div className={classes.selectedLink}/>}
                         </div>
-                    </Link>
-                    <Link to={"/companies"}>
+                    </Link> : null}
+                    {user && user.user_id ?<Link to={"/companies"}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/companies") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Companies
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
-                    </Link>
+                    </Link> : null}
                     {user && user.user_id ? <Link className={classes.hide500} to={"/saved-jobs/" + user.user_id }>
                         <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
@@ -183,7 +183,9 @@ class NavBar extends React.Component {
                                 <i className="fa-solid fa-right-from-bracket" style={{marginRight: "4px"}}/>
                             </div>
                         </div>
-                    </Link> : <Link to={"/sign-up"}>
+                    </Link> : <Link to={"#"} onClick={() =>{
+                        window.open("https://x89mmcfv41m.typeform.com/to/Yt33A4zK", "_blank");
+                    }}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/sign-up") !== -1  ? COMMON.COLORS.B400 : null}}>
                             <span style={{background: COMMON.COLORS.B400, color: COMMON.COLORS.N0, padding: "8px 10px", borderRadius: "4px"}}>Join Now</span>
                         </div>
