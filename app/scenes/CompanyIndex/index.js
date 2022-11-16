@@ -180,7 +180,9 @@ class CompanyIndex extends React.Component {
         let locationsOptions = [];
         // {company.company_city || "San Diego"}, {company.company_state || "CA"}
         companies.forEach((company) => {
-            locations.push(`${company.company_city}, ${company.company_state}`);
+            if (company.company_city && company.company_state){
+                locations.push(`${company.company_city}, ${company.company_state}`);
+            }
         });
 
         locations = _.uniq(locations);

@@ -174,14 +174,22 @@ const Styles = {
         },
     },
     footerProfileImgContainer: {
-        flex: "0 0 50px", marginRight: "10px", borderRadius: "4px",
+        flex: "0 0 50px",
+        marginRight: "10px",
+        borderRadius: "4px",
+        overflow: "hidden",
         textAlign: "left"
     },
     footerProfileTitle: {
+        textAlign: "left",
         marginTop: "11px", ...COMMON.FONTS.FONT_FOOTNOTE_BOLD
     },
     footerProfileBody: {
-        marginTop: "0", ...COMMON.FONTS.FONT_CAPTION_2, color: COMMON.COLORS.DARK_GREY
+        textAlign: "left",
+        whiteSpace: "nowrap",
+        marginTop: "0",
+        ...COMMON.FONTS.FONT_CAPTION_2,
+        color: COMMON.COLORS.DARK_GREY
     },
     landingContainer: {
         height: "100%",
@@ -222,7 +230,7 @@ const Styles = {
         },
     },
     profileHighlights: {
-        paddingTop: "100px",
+        paddingTop: "0px",
         marginBottom: "50px",
         '@media (max-width: 768px)': {
             marginBottom: "50px",
@@ -764,11 +772,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram post - 1.png"}/>
+                                                        <CoverImageHolder url={"/img/cami-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Cami Á.</div>
+                                                        <div className={classes.footerProfileBody}>Entrepreneur</div>
                                                     </div>
                                                 </div>
 
@@ -776,11 +784,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram post - 2.png"}/>
+                                                        <CoverImageHolder url={"/img/alex-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Alexandra K.</div>
+                                                        <div className={classes.footerProfileBody}>Strategy Officer</div>
                                                     </div>
                                                 </div>
 
@@ -788,11 +796,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram story - 3.png"}/>
+                                                        <CoverImageHolder url={"/img/tatum-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Tatum D.</div>
+                                                        <div className={classes.footerProfileBody}>Brand Manager</div>
                                                     </div>
                                                 </div>
 
@@ -800,11 +808,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram story - 4.png"}/>
+                                                        <CoverImageHolder url={"/img/will-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Will D.</div>
+                                                        <div className={classes.footerProfileBody}>Art Director</div>
                                                     </div>
                                                 </div>
 
@@ -814,11 +822,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram story - 3.png"}/>
+                                                        <CoverImageHolder url={"/img/melisa-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Melisa S.</div>
+                                                        <div className={classes.footerProfileBody}>Marketing Manager</div>
                                                     </div>
                                                 </div>
 
@@ -826,11 +834,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram story - 5.png"}/>
+                                                        <CoverImageHolder url={"/img/kara-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Kara S.</div>
+                                                        <div className={classes.footerProfileBody}>Associate Blackstone</div>
                                                     </div>
                                                 </div>
 
@@ -838,11 +846,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram story - 6.png"}/>
+                                                        <CoverImageHolder url={"/img/eden-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Eden B.</div>
+                                                        <div className={classes.footerProfileBody}>Marketing Specialist</div>
                                                     </div>
                                                 </div>
 
@@ -850,11 +858,11 @@ class Home extends React.Component {
                                             <div className={classes.footerProfileContainer}>
                                                 <div style={{display: "flex", height: "100%"}}>
                                                     <div className={classes.footerProfileImgContainer}>
-                                                        <CoverImageHolder url={"/img/Instagram post - 2.png"}/>
+                                                        <CoverImageHolder url={"/img/josh-hero.png"}/>
                                                     </div>
                                                     <div style={{flex: 1}}>
-                                                        <div className={classes.footerProfileTitle}>Kara Hermiston</div>
-                                                        <div className={classes.footerProfileBody}>Bachelor’s Degree</div>
+                                                        <div className={classes.footerProfileTitle}>Josh C.</div>
+                                                        <div className={classes.footerProfileBody}>Cinematographer</div>
                                                     </div>
                                                 </div>
 

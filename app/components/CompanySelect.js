@@ -30,7 +30,8 @@ class CompanySelect extends React.Component {
         super(props);
 
         this.state = {
-
+            MAX: 100,
+            input: ""
         };
     }
 
@@ -38,8 +39,31 @@ class CompanySelect extends React.Component {
 
     }
 
+    filterOptions(options) {
+        let results = [];
+        let searchText = this.state.input
+        options.forEach((option) => {
+            if (option && option.company) {
+                let { company } = option;
+                let company_name = (company.company_name || "").toLowerCase();
+
+                if(company_name.indexOf(searchText) !== -1){
+                    results.push(option);
+                }
+            } else {
+                return false
+            }
+        });
+        return results;
+    }
+
     render() {
         let { classes, onChange, options, value, hideIndicator } = this.props;
+
+        console.time("filteroptions");
+        let results = this.filterOptions(options);
+        console.timeEnd("filteroptions");
+        console.log(results);
 
         const DropdownIndicator = () => {
             return (<div style={{width: "32px", display: hideIndicator ? "none" : null}}>
@@ -47,12 +71,13 @@ class CompanySelect extends React.Component {
             </div>);
         };
 
+        results = results.slice(0, this.state.MAX)
         return (<div className={classes.container}>
             <Select
                 height="31px"
                 isClearable={true}
                 placeholder="Choose a company ..."
-                options={options}
+                options={results}
                 maxMenuHeight={200}
                 value={value}
                 components={{DropdownIndicator}}
@@ -120,6 +145,13 @@ class CompanySelect extends React.Component {
                     if (e && e.value) {
                         if(onChange) onChange(e.value)
                     }
+                }}
+                onInputChange={(input) => {
+                    // console.log(e);
+                    this.setState({input})
+                    // if (e && e.value) {
+                    //     if(onChange) onChange(e.value)
+                    // }
                 }}
             />
         </div>)

@@ -75,6 +75,7 @@ class FilterBar extends React.Component {
 
         this.roles = [];
         DataService.getRoles().then(({roles}) => {
+            console.log("this.roles", roles);
             this.roles = roles;
             this.setState({ roles});
         })

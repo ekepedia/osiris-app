@@ -65,7 +65,8 @@ const SavedJobPageStyles = {
     rowHeaderSuperContainer: {
         padding: "0 15px",
         display: "flex",
-        background: "#FAFBFF"
+        background: "#FAFBFF",
+        whiteSpace: "nowrap"
     },
     filterHolder: {
         ...H300,
@@ -113,6 +114,37 @@ const SavedJobPageStyles = {
             fontSize: "10px",
             marginRight: "3px"
         }
+    },
+    deadlineHeader: {
+        flex: "0 0 150px",
+        '@media (max-width: 1000px)': {
+            display: "none",
+        },
+    },
+    salaryHeader: {
+        flex: "0 0 150px",
+        '@media (max-width: 850px)': {
+            display: "none",
+        },
+    },
+    roleHeader: {
+        flex: 0.5,
+        '@media (max-width: 650px)': {
+            display: "none",
+        },
+    },
+    companyHeader: {
+        flex: 1,
+        '@media (max-width: 525px)': {
+            display: "none",
+        },
+    },
+    statusHeader: {
+        flex: "0 0 200px",
+        '@media (max-width: 525px)': {
+            flex: "0 0 100px",
+            textAlign: "right"
+        },
     }
 }
 
@@ -144,8 +176,7 @@ const SavedJobModalStyles = {
         ...FONT_P_100,
         padding: "10px 0",
         borderBottom: "1px solid #D8DAE5",
-
-    }
+    },
 }
 
 
