@@ -405,7 +405,8 @@ function preload_and_prejoin_companies() {
         //     console.log('Hello World > helloworld.txt');
         // });
 
-        const filename = "jobs_desc_working_doc_1050.csv";
+        // const filename = "jobs_desc_working_doc_1050.csv";
+        const filename = "jobs_desc_working_doc_2476.csv";
 
         let i = 0;
         let found = 0;
@@ -454,7 +455,7 @@ function preload_and_prejoin_companies() {
                     job.job_board_category = "Consultant"
 
                 let job_for_board = {
-                    job_id: Math.random(),
+                    job_id: i + 99000000,
                     date_created: new Date().getTime(),
                     apply_link: job.job_link,
                     locations: job_location,
@@ -478,6 +479,7 @@ function preload_and_prejoin_companies() {
                     responsibilities: [],
                     degree_requirements: [],
                     company_id,
+                    batch_id: filename,
                     companies: [{
                         company_name: job.job_company,
                         company_website: job.job_company,
@@ -485,9 +487,11 @@ function preload_and_prejoin_companies() {
                         company_industry: null
                     }],
                     affinities: [],
+
                     job_html: job.job_html,
                     job_board_category: job.job_board_category,
                     job_seniority: job.job_board_level,
+
                 };
 
 
