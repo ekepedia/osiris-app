@@ -71,7 +71,7 @@ app.get("/api/jobs-old", function (req, res) {
 
 app.get("/api/jobs", function (req, res) {
     JobService.format_jobs_for_job_board().then((jobs) => {
-        res.json({ jobs });
+        res.json({ jobs: _.shuffle(jobs) });
     }).catch((err) => {
         res.json({ jobs: [] });
     });

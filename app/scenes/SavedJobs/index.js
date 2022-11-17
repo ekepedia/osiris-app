@@ -185,13 +185,13 @@ class SavedJobs extends React.Component {
         }).then((saved_job_notes) => {
             console.log("LOADED SAVED NOTES", saved_job_notes);
 
-            saved_job_notes = saved_job_notes.sort((a, b) => {
+            saved_job_notes = saved_job_notes ? saved_job_notes.sort((a, b) => {
 
                 let nameA = a.date_created || "";
                 let nameB = b.date_created || "";
 
                 return nameA.localeCompare(nameB);
-            });
+            }) : [];
 
             this.setState({
                 saved_job_notes
@@ -224,6 +224,7 @@ class SavedJobs extends React.Component {
         JobsService.getJobs({client}).then((jobs) => {
             // console.log("LOADED JOBS", jobs);
 
+            jobs = jobs || [];
             let jobs_map = {};
 
             jobs.forEach((job) => {
@@ -308,7 +309,7 @@ class SavedJobs extends React.Component {
                                 <div style={{flex: "0 0 12px", marginRight: "16.5px"}}>
 
                                 </div>
-                                <div style={{flex: "0 0 58x", lineHeight: "initial", marginTop: "6px"}}>
+                                <div style={{flex: "0 0 58x", lineHeight: "initial", marginTop: "6px"}} id="add-saved-job">
                                     <StandardButton label={"Add Job"} onClick={() => (this.setState({openAddSavedJobModal: true}))}/>
                                 </div>
                             </div>

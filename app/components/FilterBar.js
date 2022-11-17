@@ -188,7 +188,7 @@ class FilterBar extends React.Component {
         this.industries = this.constructIndustryOptions(jobs);
         this.seniorities = this.constructSeniorityOptions(jobs);
 
-        return (<div className={classes.container}>
+        return (<div className={classes.container} id="jobs-filter-bar">
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}}>
                     <div className={classes.filterContainer}>

@@ -65,6 +65,10 @@ function get_jobs({
                       is_active,
                       is_user_submitted,
                       diverse_candidates,
+                      job_html,
+                      job_seniority,
+                      job_board_category,
+                      job_source,
                       is_public,
                       batch_id,
                       airtable_batch_id
@@ -95,6 +99,10 @@ function get_jobs({
         is_active,
         is_user_submitted,
         diverse_candidates,
+        job_html,
+        job_seniority,
+        job_board_category,
+        job_source,
         is_public,
         batch_id,
         airtable_batch_id
@@ -137,6 +145,10 @@ function create_job({
                         is_active,
                         is_user_submitted,
                         diverse_candidates,
+                        job_html,
+                        job_seniority,
+                        job_board_category,
+                        job_source,
                         is_public,
                         batch_id,
                         airtable_batch_id
@@ -169,6 +181,10 @@ function create_job({
             is_active,
             is_user_submitted,
             diverse_candidates,
+            job_html,
+            job_seniority,
+            job_board_category,
+            job_source,
             is_public,
             batch_id,
             airtable_batch_id
@@ -211,6 +227,10 @@ function edit_job({
                       is_active,
                       is_user_submitted,
                       diverse_candidates,
+                      job_html,
+                      job_seniority,
+                      job_board_category,
+                      job_source,
                       is_public,
                       batch_id,
                       airtable_batch_id
@@ -243,6 +263,10 @@ function edit_job({
             is_active,
             is_user_submitted,
             diverse_candidates,
+            job_html,
+            job_seniority,
+            job_board_category,
+            job_source,
             is_public,
             batch_id,
             airtable_batch_id
@@ -278,7 +302,8 @@ module.exports.format_jobs_for_job_board = format_jobs_for_job_board;
 function format_jobs_for_job_board() {
     return new Promise((resolve, reject) => {
         get_jobs({
-            is_user_submitted: false
+            is_user_submitted: false,
+            job_source: "glassdoor"
         }).then((jobs) => {
             jobs = jobs.map((job) => {
 
@@ -288,7 +313,7 @@ function format_jobs_for_job_board() {
                     date_created: new Date().getTime(),
                     apply_link: job.apply_link,
 
-                    job_salary_estimate: null,
+                    job_salary_estimate: job.job_salary_estimate,
 
                     date_created_label: null,
                     job_title: job.job_title,
@@ -344,6 +369,13 @@ function format_jobs_for_job_board() {
                         label: "Diverse Candidates",
                         name: "Diverse Candidates",
                     }]: [],
+
+
+                    job_html: job.job_html,
+                    job_board_category: job.job_board_category,
+                    job_seniority: job.job_seniority,
+
+
                     locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
                             return {
                                 location_id: location,

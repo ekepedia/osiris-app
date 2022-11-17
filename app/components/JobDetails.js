@@ -222,8 +222,8 @@ class JobDetails extends React.Component {
                             }} style={{...COMMON.FONTS.P200,cursor:"pointer", color: COMMON.COLORS.N700}}>{company.company_name}</div>
                         </div>
                     </div>
-                    <div style={{flex: "0 0 157px", textAlign: "right"}}>
-                        <div style={{display: user && user.user_id  && !job.job_html ? "inline-block" : "none", marginRight: "5px"}}>
+                    <div style={{flex: "0 0 157px", textAlign: "right"}} id="job-share-section">
+                        <div style={{display: user && user.user_id ? "inline-block" : "none", marginRight: "5px"}}>
                             <StandardButton label={""} icon={`${is_saved_job ? "fa-solid" : "fa-regular"} fa-bookmark`} secondary={!is_saved_job} onClick={() => {this.updateSavedJob()}}/>
                         </div>
                         <div style={{display: "inline-block"}}>
