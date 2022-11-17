@@ -39,10 +39,10 @@ module.exports.init = function (connection) {
     // construct_questions();
     // import_data();
     // import_demo_data();
-
-    setTimeout(() => {
-        preload_and_prejoin_companies();
-    }, 1000);
+    //
+    // setTimeout(() => {
+    //     // preload_and_prejoin_companies();
+    // }, 1000);
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
@@ -388,7 +388,7 @@ function preload_and_prejoin_companies() {
     },], (err) => {
         // let list = [];
         companies.forEach((company) => {
-            console.log(company.company_id)
+            // console.log(company.company_id)
             company_map[company.company_id] = company;
             company_name_map[company.company_name] = company;
             company_lowercase_name_map[(company.company_name || "").toLowerCase()] = company;
@@ -415,13 +415,14 @@ function preload_and_prejoin_companies() {
         fs.createReadStream(__dirname + `/../../../data/${filename}`)
             .pipe(csv())
             .on('data', (job) => {
+                i++
                 const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
                 let company_id = null;
                 if (job_company) {
                     found++;
                     company_id = job_company.company_id
                 } else {
-                    console.log(job.job_company)
+                    // console.log(job.job_company)
                 }
 
 
@@ -449,7 +450,7 @@ function preload_and_prejoin_companies() {
                     missing++
                 }
 
-                console.log(found, missing, ++i)
+                // console.log(found, missing, ++i)
 
                 if (job.job_board_category === "Consulting")
                     job.job_board_category = "Consultant"
@@ -491,24 +492,68 @@ function preload_and_prejoin_companies() {
                     job_html: job.job_html,
                     job_board_category: job.job_board_category,
                     job_seniority: job.job_board_level,
-
                 };
 
 
                 if (company_id && job.job_html) {
                     web_jobs.push(job_for_board);
+                    let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", filename, "glassdoor");
+                    // delete db_job["job_html"]
+                    // console.log(db_job)
+                    JobService.create_job(db_job).then((job_id) =>{
+                        console.log("created job:", job_id);
+                    }).catch((e) => {
+                        console.log("error creating job:", e);
+                    });
 
                 }
-                console.log(job_for_board.job_title)
+
 
 
             })
             .on('end', () => {
-                console.log('CSV file successfully processed');
+                // console.log('CSV file successfully processed');
                 JobService.set_webscraped_jobs(web_jobs);
             });
     })
 
+}
+
+function format_webscraped_job_for_db(job, company_id, job_type, batch_id, job_source) {
+
+    job = job || {};
+
+    let db_job = {
+        company_id: company_id,
+        user_id: null,
+        apply_link: job.job_link,
+        job_salary_estimate: job.job_salary && job.job_salary.length ? job.job_salary : null,
+        company_name: job.job_company,
+        job_title: job.job_title,
+        job_overview: null,
+        job_qualifications: null,
+        job_responsibilities: null,
+        job_deadline: null,
+        job_type,
+        submitted_by_id: null,
+        is_user_submitted: false,
+        diverse_candidates: false,
+        is_public: true,
+        job_sectors: job.job_board_category,
+        job_locations: job.job_location,
+        job_degree_requirements: null,
+        batch_id,
+
+        job_html: job.job_html,
+        job_board_category: job.job_board_category,
+        job_seniority: job.job_board_level,
+
+        job_source,
+
+
+    }
+
+    return db_job;
 }
 
 function test_endpoints() {

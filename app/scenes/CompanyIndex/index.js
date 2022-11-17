@@ -471,6 +471,10 @@ class CompanyIndex extends React.Component {
         }
     }
 
+    resetScrollPosition() {
+        document.querySelector("#scrollableDiv").scrollTop = 0;
+    }
+
     sortCompanies(companies, sort_param, reverse) {
         let sorted_companies = [];
         companies = companies || [];
@@ -544,6 +548,8 @@ class CompanyIndex extends React.Component {
 
         let {filtered_companies, available} = this.filterCompanies(companies);
 
+        console.log("CURRENT MAX:", this.state.MAX_RESULTS);
+
         return (
             <div className={classes.masterContainer}>
                 <div className={classes.masterNavContainer}>
@@ -605,7 +611,8 @@ class CompanyIndex extends React.Component {
                                     <div>
                                         <div style={{marginTop: "10px"}}  className={mc(classes.companySubFilterLabel)}>Employee Count</div>
                                         <input type="range" min={minEmployees} max={maxEmployees} value={employeeFilter} className="slider" onChange={(e) =>{
-                                            this.setState({employeeFilter: e.target.value})
+                                            this.resetScrollPosition();
+                                            this.setState({employeeFilter: e.target.value, MAX_RESULTS: 10})
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
@@ -615,7 +622,8 @@ class CompanyIndex extends React.Component {
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>Female Representation</div>
                                         <input type="range" min={0} max={100} value={femaleEmployeeFilter} className="slider" onChange={(e) =>{
-                                            this.setState({femaleEmployeeFilter: e.target.value})
+                                            this.resetScrollPosition();
+                                            this.setState({femaleEmployeeFilter: e.target.value, MAX_RESULTS: 10})
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(femaleEmployeeFilter)}%</div>
                                     </div>
@@ -623,7 +631,8 @@ class CompanyIndex extends React.Component {
                                     <div>
                                         <div className={mc(classes.companySubFilterLabel)}>BIPOC Representation</div>
                                         <input type="range" min={0} max={100} value={bipocEmployeeFilter} className="slider" onChange={(e) =>{
-                                            this.setState({bipocEmployeeFilter: e.target.value})
+                                            this.resetScrollPosition();
+                                            this.setState({bipocEmployeeFilter: e.target.value, MAX_RESULTS: 10})
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(bipocEmployeeFilter)}%</div>
                                     </div>
