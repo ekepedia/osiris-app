@@ -19,6 +19,7 @@ import {FONT_LARGE_TITLE_BOLD, FONT_TITLE_2} from "../../common/fonts";
 import NavBar from "../../components/NavBar";
 import CoverImageHolder from "../../components/CoverImageHolder";
 import StandardButton from "../../components/StandardButton";
+import TrackingService from "../../services/TrackingService";
 
 
 const HERO_MAX_WIDTH = 400;
@@ -234,6 +235,7 @@ const Styles = {
         marginBottom: "50px",
         '@media (max-width: 768px)': {
             marginBottom: "50px",
+            paddingTop: "50px",
         },
     },
     userProfileSectionContainer: {
@@ -253,7 +255,7 @@ const Styles = {
         paddingTop: "100px",
         paddingBottom: "50px",
         '@media (max-width: 768px)': {
-            paddingBottom: "50px",
+            paddingBottom: "0",
         },
     },
     peerSupportSection: {
@@ -269,7 +271,7 @@ const Styles = {
         marginBottom: "50px",
         '@media (max-width: 768px)': {
             paddingTop: "50px",
-            marginBottom: "50px",
+            marginBottom: "0px",
         },
     },
     findAJobSection: {
@@ -413,6 +415,7 @@ class Home extends React.Component {
                                                     <div style={{marginTop: "25px"}}>
                                                         <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
                                                             window.open("https://osiris-works.typeform.com/sign-up", "_blank");
+                                                            TrackingService.trackClick({page: "home", sub_page: "hero", value: "Request Invite"});
                                                         }}/>
                                                     </div>
                                                 </div>
@@ -872,6 +875,7 @@ class Home extends React.Component {
                                         </div>
                                         <div style={{marginBottom: "100px"}}>
                                             <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
+                                                TrackingService.trackClick({page: "home", sub_page: "footer", value: "Request Invite"});
                                                 window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                                             }}/>
                                         </div>

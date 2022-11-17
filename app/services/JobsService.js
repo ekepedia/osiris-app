@@ -27,6 +27,10 @@ JobsService.getJobs = ({
                            is_verified,
                            is_active,
                            is_user_submitted,
+                           job_html,
+                           job_seniority,
+                           job_board_category,
+                           job_source,
                            is_public,
                            batch_id,
                            airtable_batch_id
@@ -95,6 +99,10 @@ JobsService.getJobs = ({
                     is_active,
                     is_user_submitted,
                     is_public,
+                    job_html,
+                    job_seniority,
+                    job_board_category,
+                    job_source,
                     batch_id,
                     airtable_batch_id
                 }

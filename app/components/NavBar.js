@@ -141,7 +141,7 @@ class NavBar extends React.Component {
                     {user && user.user_id ? <Link to={"/jobs"} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "jobs"});
                     }}>
-                        <div className={classes.linkStyle} style={{color: path === "/jobs" ? COMMON.COLORS.B400 : null}}>
+                        <div id="jobs-link" className={classes.linkStyle} style={{color: path === "/jobs" ? COMMON.COLORS.B400 : null}}>
                             Jobs
                             {path === "/jobs" && <div className={classes.selectedLink}/>}
                         </div>
@@ -149,7 +149,7 @@ class NavBar extends React.Component {
                     {user && user.user_id ?<Link to={"/companies"} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "companies"});
                     }}>
-                        <div className={classes.linkStyle} style={{color: path.indexOf("/companies") !== -1  ? COMMON.COLORS.B400 : null}}>
+                        <div id="companies-link" className={classes.linkStyle} style={{color: path.indexOf("/companies") !== -1  ? COMMON.COLORS.B400 : null}}>
                             Companies
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
@@ -157,7 +157,7 @@ class NavBar extends React.Component {
                     {user && user.user_id ? <Link onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "saved-jobs"});
                     }} className={classes.hide500} to={"/saved-jobs/" + user.user_id }>
-                        <div className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
+                        <div id="saved-jobs-link" className={classes.linkStyle} style={{color: path === ("/saved-jobs/" + user.user_id) ? COMMON.COLORS.B400 : null}}>
                             <div>
                                 <i className="fa-solid fa-briefcase" style={{marginRight: "5px"}}/>Saved Jobs
                                 <span style={{fontSize: "0px", opacity: 0}}>.</span>
@@ -213,7 +213,7 @@ class NavBar extends React.Component {
                     {user && user.user_id ? <Link to={"/edit/" + user.user_id} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "profile"});
                     }}>
-                        <div  className={classes.profileContainer}>
+                        <div id="profile-link" className={classes.profileContainer}>
                             <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
                                 <CoverImageHolder url={user.profile_photo_url || "/img/generic-user.jpeg"}/>
                             </div>
