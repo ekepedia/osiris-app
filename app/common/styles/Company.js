@@ -38,7 +38,7 @@ const CompanyPageStyles = {
         flex: "0 0 315px",
         marginRight: "50px",
         height: "fit-content",
-        maxHeight: "calc(100vh - 177px)",
+        maxHeight: "calc(100vh - 147px)",
         overflow: "scroll",
         borderRadius: "4px",
         border: `1px solid ${N400}`,

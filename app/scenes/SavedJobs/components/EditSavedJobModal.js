@@ -209,7 +209,7 @@ class EditSavedJobModal extends React.Component {
                         <div style={{flex: "0 0 51px", padding: "25px 35px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
                             <EditSavedJobModalHeader title={"Edit Link"} onClose={onClose} job={job} company_map={company_map} has_demographics={has_demographics}/>
                         </div>
-                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingLeft: "35px", paddingRight: "35px", paddingTop: "0px", overflow: "scroll"}}>
+                        <div style={{...COMMON.STYLES.STYLE_MODAL_CONTAINER, paddingLeft: "35px", paddingRight: "35px", paddingTop: "0px", overflow: "hidden"}}>
                             <div style={{
                                 height: "45px",
                                 lineHeight: "45px",
@@ -238,8 +238,8 @@ class EditSavedJobModal extends React.Component {
                                 </div>
                             </div>
                             <div style={{display: selectedState === 1 ? null : "none"}}>
-                                <div style={{display: "flex"}}>
-                                    <div style={{flex: 1, marginRight: "50px"}}>
+                                <div style={{display: "flex", height: "100%", overflow: "hidden"}}>
+                                    <div style={{flex: 1, paddingRight: "50px", overflow: "scroll"}}>
 
                                         {job.is_user_submitted ? <div>
                                             <div style={{display: "flex"}}>
@@ -261,14 +261,16 @@ class EditSavedJobModal extends React.Component {
                                             <div className={classes.inputLabel}>Description</div>
                                             <StandardInput style={{height: "184px"}} type={"textarea"} placeholder={""} value={job.job_overview} update={(v) => (updateJobField("job_overview", v))}/>
 
-                                        </div> : <div>
+                                        </div> : job.job_html ? <div id={"job-description"} style={{paddingTop: "25px", paddingBottom: "50px"}}>
+                                            <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
+                                        </div> :  (<div>
                                             <div style={{marginTop: "25px"}}>
                                                 <div className={mc(classes.sectionHeader)}>Role Overview</div>
                                                 <div className={mc(classes.sectionSubHeader)} style={{marginBottom: "15px"}}>Identified by OSIRIS from the original job post</div>
                                                 <div className={mc(classes.bodyText)} style={{marginBottom: SECTION_BUFFER}}>{job.job_overview}</div>
                                             </div>
 
-                                        </div>}
+                                        </div>)}
 
 
 

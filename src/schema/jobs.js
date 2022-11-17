@@ -47,6 +47,12 @@ const typeDef = gql`
         is_user_submitted: Boolean
         is_public: Boolean
 
+
+        job_html: String
+        job_seniority: String
+        job_board_category: String
+        job_source: String
+
         batch_id: String
         airtable_batch_id: String
     }

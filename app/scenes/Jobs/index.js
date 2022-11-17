@@ -225,6 +225,7 @@ class Jobs extends React.Component {
                 }).then((saved_jobs) => {
                     console.log("LOADED SAVED", saved_jobs);
 
+                    saved_jobs = saved_jobs || [];
                     let saved_jobs_ids = [];
 
                     saved_jobs = saved_jobs.sort((a, b) => {

@@ -235,6 +235,7 @@ const Styles = {
         marginBottom: "50px",
         '@media (max-width: 768px)': {
             marginBottom: "50px",
+            paddingTop: "50px",
         },
     },
     userProfileSectionContainer: {
@@ -254,7 +255,7 @@ const Styles = {
         paddingTop: "100px",
         paddingBottom: "50px",
         '@media (max-width: 768px)': {
-            paddingBottom: "50px",
+            paddingBottom: "0",
         },
     },
     peerSupportSection: {
@@ -270,7 +271,7 @@ const Styles = {
         marginBottom: "50px",
         '@media (max-width: 768px)': {
             paddingTop: "50px",
-            marginBottom: "50px",
+            marginBottom: "0px",
         },
     },
     findAJobSection: {
