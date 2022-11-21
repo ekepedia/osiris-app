@@ -74,7 +74,7 @@ class SavedJobs extends React.Component {
     componentDidMount() {
         this.loadSavedJobs(true);
         this.loadJobs();
-        this.loadCompanies();
+        this.loadCompanies(true);
         this.loadCompanyDemographics();
         this.loadSavedJobNotes();
     }
@@ -103,11 +103,15 @@ class SavedJobs extends React.Component {
     }
 
 
-    loadCompanies() {
+    loadCompanies(first) {
         let { client } = this.props;
 
+        if (first) {
+            this.setState({loading: true});
+        }
+
         CompanyService.getCompanies({client}).then((companies) => {
-            // console.log("LOADED COMPANIES", companies);
+            console.log("LOADED COMPANIES");
 
             companies = companies.sort((a, b) => {
 
@@ -144,7 +148,8 @@ class SavedJobs extends React.Component {
                 companies,
                 options,
                 company_map,
-                option_map
+                option_map,
+                loading: false
             })
         })
     }
@@ -155,11 +160,12 @@ class SavedJobs extends React.Component {
         if (first) {
             this.setState({loading: true});
         }
+
         SavedJobService.getSavedJobs({
             client,
             user_id: params.user_id
         }).then((saved_jobs) => {
-            // console.log("LOADED SAVED", saved_jobs);
+            console.log("LOADED SAVED");
 
             saved_jobs = saved_jobs ? saved_jobs.sort((a, b) => {
 
@@ -171,7 +177,7 @@ class SavedJobs extends React.Component {
 
             this.setState({
                 saved_jobs,
-                loading: false
+                // loading: false
             })
         })
     }
