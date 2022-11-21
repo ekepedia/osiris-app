@@ -157,9 +157,9 @@ class SavedJobs extends React.Component {
     loadSavedJobs(first) {
         let { client, match: { params } } = this.props;
 
-        if (first) {
-            this.setState({loading: true});
-        }
+        // if (first) {
+        //     this.setState({loading: true});
+        // }
 
         SavedJobService.getSavedJobs({
             client,
@@ -341,7 +341,7 @@ class SavedJobs extends React.Component {
                                     Application Status
                                 </div>
                             </div>
-                            <div>{saved_jobs && saved_jobs.length ? <div>
+                            <div>{saved_jobs && saved_jobs.length && !this.state.loading ? <div>
 
                                 {saved_jobs.map((saved_job) => {
 
