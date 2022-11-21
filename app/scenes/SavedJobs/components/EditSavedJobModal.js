@@ -290,9 +290,7 @@ class EditSavedJobModal extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{display: selectedState === 2 ? null : "none", paddingTop: "25px"}}>
-
-
+                            <div style={{display: selectedState === 2 ? null : "none", paddingTop: "25px", height: "100%", overflow: "scroll", paddingBottom: "50px"}}>
                                 <div>
                                     <div style={{marginBottom: "25px"}}>
                                         <div className={mc(classes.sectionMainTitle)}>About Company</div>
