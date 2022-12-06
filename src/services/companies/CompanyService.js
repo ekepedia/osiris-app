@@ -41,7 +41,7 @@ module.exports.init = function (connection) {
     // import_demo_data();
     //
     // setTimeout(() => {
-    //     // preload_and_prejoin_companies();
+    //     preload_and_prejoin_companies();
     // }, 1000);
 
     get_companies({is_clearbit_import: false}).then((companies) => {
@@ -406,7 +406,8 @@ function preload_and_prejoin_companies() {
         // });
 
         // const filename = "jobs_desc_working_doc_1050.csv";
-        const filename = "jobs_desc_working_doc_2476.csv";
+        // const filename = "jobs_desc_working_doc_2476.csv";
+        const filename = "jobs_desc_working_doc_1275.csv";
 
         let i = 0;
         let found = 0;
@@ -416,13 +417,22 @@ function preload_and_prejoin_companies() {
             .pipe(csv())
             .on('data', (job) => {
                 i++
+
+                if (job.job_company === "Boston Consulting Group") {
+                    job.job_company = "Boston Consulting Group (BCG)"
+                }
+
+                if (job.job_company === "JPMorgan Chase Bank, N.A.") {
+                    job.job_company = "JPMorgan Chase & Co."
+                }
+
                 const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
                 let company_id = null;
                 if (job_company) {
                     found++;
                     company_id = job_company.company_id
                 } else {
-                    // console.log(job.job_company)
+                    console.log(job.job_company)
                 }
 
 
@@ -450,13 +460,13 @@ function preload_and_prejoin_companies() {
                     missing++
                 }
 
-                // console.log(found, missing, ++i)
+                console.log(found, missing, i)
 
                 if (job.job_board_category === "Consulting")
                     job.job_board_category = "Consultant"
 
                 let job_for_board = {
-                    job_id: i + 99000000,
+                    job_id: i + 9800000,
                     date_created: new Date().getTime(),
                     apply_link: job.job_link,
                     locations: job_location,
@@ -495,18 +505,18 @@ function preload_and_prejoin_companies() {
                 };
 
 
-                if (company_id && job.job_html) {
-                    web_jobs.push(job_for_board);
-                    let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", filename, "glassdoor");
-                    // delete db_job["job_html"]
-                    // console.log(db_job)
-                    JobService.create_job(db_job).then((job_id) =>{
-                        console.log("created job:", job_id);
-                    }).catch((e) => {
-                        console.log("error creating job:", e);
-                    });
-
-                }
+                // if (company_id && job.job_html) {
+                //     web_jobs.push(job_for_board);
+                //     let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", filename, "glassdoor");
+                //     // delete db_job["job_html"]
+                //     // console.log(db_job)
+                //     JobService.create_job(db_job).then((job_id) =>{
+                //         console.log("created job:", job_id);
+                //     }).catch((e) => {
+                //         console.log("error creating job:", e);
+                //     });
+                //
+                // }
 
 
 
