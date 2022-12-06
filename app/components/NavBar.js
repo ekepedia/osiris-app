@@ -205,7 +205,7 @@ class NavBar extends React.Component {
                         window.open("https://osiris-works.typeform.com/sign-up", "_blank");
                     }}>
                         <div className={classes.linkStyle} style={{color: path.indexOf("/sign-up") !== -1  ? COMMON.COLORS.B400 : null}}>
-                            <span style={{background: COMMON.COLORS.B400, color: COMMON.COLORS.N0, padding: "8px 10px", borderRadius: "4px"}}>Join Now</span>
+                            <span style={{background: COMMON.COLORS.B400, color: COMMON.COLORS.N0, padding: "8px 10px", borderRadius: "4px"}}>Request Invite</span>
                         </div>
                     </Link>}
                 </div>
