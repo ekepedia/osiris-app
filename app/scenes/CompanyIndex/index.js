@@ -21,6 +21,7 @@ import NavBar from "../../components/NavBar";
 import StandardMultiSelect from "../../components/StandardMultiSelect";
 import TrackingService from "../../services/TrackingService";
 import InfiniteScroll from 'react-infinite-scroll-component';
+import RatingFilter from "../../components/RatingFilter";
 
 const SORTS = {
     BIPOC: 1,
@@ -74,7 +75,10 @@ class CompanyIndex extends React.Component {
             companyNameFilter: "",
             MAX_RESULTS: 10,
             sort_param: SORTS.RANK,
-            reverse: false
+            reverse: false,
+            glassdoorOverallFilter: null,
+            glassdoorWorkLifeFilter: null,
+            glassdoorPayFilter: null,
         };
     }
 
@@ -382,7 +386,10 @@ class CompanyIndex extends React.Component {
             MAX_RESULTS,
             overall_average,
             worklife_average,
-            pay_average
+            pay_average,
+            glassdoorOverallFilter,
+            glassdoorWorkLifeFilter,
+            glassdoorPayFilter,
         } = this.state;
 
         if (!companies || !companies.length)
@@ -454,6 +461,21 @@ class CompanyIndex extends React.Component {
                 });
 
                 if (!found)
+                    return null;
+            }
+
+            if (glassdoorOverallFilter) {
+                if (!company.glassdoor_overall || parseFloat(company.glassdoor_overall) < parseFloat(glassdoorOverallFilter))
+                    return null;
+            }
+
+            if (glassdoorWorkLifeFilter) {
+                if (!company.glassdoor_work_life || parseFloat(company.glassdoor_work_life) < parseFloat(glassdoorWorkLifeFilter))
+                    return null;
+            }
+
+            if (glassdoorPayFilter) {
+                if (!company.glassdoor_compensation || parseFloat(company.glassdoor_compensation) < parseFloat(glassdoorPayFilter))
                     return null;
             }
 
@@ -572,6 +594,7 @@ class CompanyIndex extends React.Component {
                                     }}>
                                         Filters
                                     </div>
+
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => {
                                         this.resetMaxResults();
 
@@ -616,6 +639,19 @@ class CompanyIndex extends React.Component {
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
+
+
+                                    <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}>Company Ratings</div>
+
+                                    <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Overall</div>
+                                    <RatingFilter value={this.state.glassdoorOverallFilter} update={(value) => {this.resetScrollPosition(); this.setState({MAX_RESULTS: 10, glassdoorOverallFilter: value})}}/>
+
+                                    <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Work-Life Balance</div>
+                                    <RatingFilter value={this.state.glassdoorWorkLifeFilter} update={(value) => {this.resetScrollPosition();this.setState({MAX_RESULTS: 10, glassdoorWorkLifeFilter: value})}}/>
+
+                                    <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Pay</div>
+                                    <RatingFilter value={this.state.glassdoorPayFilter} update={(value) => {this.resetScrollPosition();this.setState({MAX_RESULTS: 10, glassdoorPayFilter: value})}}/>
+
 
                                     <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}>Representation</div>
 
