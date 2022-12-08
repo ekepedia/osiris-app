@@ -53,7 +53,11 @@ class JobCards extends React.Component {
             selectedDegreeRequirements,
             selectedRoles,
             selectedAffinities,
-            selectedSeniorities
+            selectedSeniorities,
+            glassdoor_overall,
+            glassdoor_work_life,
+            glassdoor_culture,
+            glassdoor_compensation,
         } = this.props;
 
         let filteredJobs = [];
@@ -189,7 +193,60 @@ class JobCards extends React.Component {
                 }
             }
 
-            let valid = validLocation && validCompany && validIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
+            let validGlassdoorOverall = true;
+
+            if (glassdoor_overall) {
+
+                if (job.companies && job.companies.length) {
+                    let company = job.companies[0];
+                    if (!company.glassdoor_overall || parseFloat(company.glassdoor_overall) < parseFloat(glassdoor_overall))
+                        validGlassdoorOverall = false
+                } else {
+                    validGlassdoorOverall = false
+                }
+            }
+
+            let validGlassdoorCompensation = true;
+
+            if (glassdoor_compensation) {
+
+                if (job.companies && job.companies.length) {
+                    let company = job.companies[0];
+                    if (!company.glassdoor_compensation || parseFloat(company.glassdoor_compensation) < parseFloat(glassdoor_compensation))
+                        validGlassdoorCompensation = false
+                } else {
+                    validGlassdoorCompensation = false
+                }
+            }
+
+            let validGlassdoorCulture = true;
+
+            if (glassdoor_culture) {
+
+                if (job.companies && job.companies.length) {
+                    let company = job.companies[0];
+                    if (!company.glassdoor_culture || parseFloat(company.glassdoor_culture) < parseFloat(glassdoor_culture))
+                        validGlassdoorCulture = false
+                } else {
+                    validGlassdoorCulture = false
+                }
+            }
+
+            let validGlassdoorWorkLife = true;
+
+            if (glassdoor_work_life) {
+
+                if (job.companies && job.companies.length) {
+                    let company = job.companies[0];
+                    if (!company.glassdoor_work_life || parseFloat(company.glassdoor_work_life) < parseFloat(glassdoor_work_life))
+                        validGlassdoorWorkLife = false
+                } else {
+                    validGlassdoorWorkLife = false
+                }
+            }
+
+            let valid = validGlassdoorOverall && validGlassdoorCompensation && validGlassdoorCulture && validGlassdoorWorkLife &&
+                validLocation && validCompany && validIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
 
             if (job && job.companies && job.companies.length && job.companies[0] ) {
                 if (valid) {
@@ -202,11 +259,11 @@ class JobCards extends React.Component {
             }
         });
 
-        console.log(filteredJobs);
+        // console.log(filteredJobs);
         return {
             filteredJobs: filteredJobs,
             unFilteredJobs: unFilteredJobs,
-            usingFilters: (selectedLocations && selectedLocations.length) ||
+            usingFilters: (glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
                 (selectedSeniorities && selectedSeniorities.length) ||

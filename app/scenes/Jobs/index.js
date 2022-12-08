@@ -432,10 +432,13 @@ class Jobs extends React.Component {
                                     addToField={this.addToField.bind(this)}
                                     removeFromField={this.removeFromField.bind(this)}
                                     clearField={this.clearField.bind(this)}
-
+                                    update={(name, value) => {
+                                        this.setState({
+                                            [name]: value
+                                        })
+                                    }}
                                     state={this.state}
                                     jobs={this.state.jobs}
-
                                     onAssistant={this.openJobAssistant.bind(this)}
                                 />
                             </div>
@@ -447,6 +450,10 @@ class Jobs extends React.Component {
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
+                                                glassdoor_overall={this.state.glassdoor_overall}
+                                                glassdoor_compensation={this.state.glassdoor_compensation}
+                                                glassdoor_culture={this.state.glassdoor_culture}
+                                                glassdoor_work_life={this.state.glassdoor_work_life}
                                                 selectedJobId={this.state.selectedJobId}
                                                 selectedLocations={this.state.selectedLocations}
                                                 selectedCompanies={this.state.selectedCompanies}

@@ -17,6 +17,7 @@ import {STYLE_BUTTON_HEADLINE, STYLE_BUTTON_SUBHEADER} from "../common/styles";
 
 import FilterDropdown from "./FilterDropdown";
 import StandardButton from "./StandardButton";
+import RatingsDropdown from "./RatingsDropdown";
 
 const NAV_HEIGHT = 65;
 
@@ -176,6 +177,7 @@ class FilterBar extends React.Component {
             addToField,
             removeFromField,
             clearField,
+            update,
 
             state,
             jobs,
@@ -254,6 +256,21 @@ class FilterBar extends React.Component {
                             placeholder="Select Role"
                             options={this.roles}
                             selectedOptions={state["selectedRoles"]}
+                            onAdd={(id) => (addToField("selectedRoles", id))}
+                            onRemove={(id) => (removeFromField("selectedRoles", id))}
+                            onClear={() => (clearField("selectedRoles"))}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <RatingsDropdown
+                            label="Ratings"
+                            selectedOptions={state["selectedRoles"]}
+                            glassdoor_overall={state["glassdoor_overall"]}
+                            glassdoor_work_life={state["glassdoor_work_life"]}
+                            glassdoor_compensation={state["glassdoor_compensation"]}
+                            glassdoor_culture={state["glassdoor_culture"]}
+                            update={update}
                             onAdd={(id) => (addToField("selectedRoles", id))}
                             onRemove={(id) => (removeFromField("selectedRoles", id))}
                             onClear={() => (clearField("selectedRoles"))}
