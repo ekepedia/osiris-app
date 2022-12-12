@@ -23,6 +23,7 @@ import Role from "../../components/onboarding/Role";
 import Priorities from "../../components/onboarding/Priorities";
 import Industries from "../../components/onboarding/Industries";
 import Passions from "../../components/onboarding/Passions";
+import Welcome from "../../components/onboarding/Welcome";
 
 const Styles = {
     container: {
@@ -70,13 +71,14 @@ const Styles = {
 };
 
 const PAGES = {
-    DOB: 1,
-    GENDER: 2,
-    RACE: 3,
-    ROLE: 4,
-    PRIORITIES: 5,
-    INDUSTRIES: 6,
-    PASSIONS: 7,
+    WELCOME: 1,
+    DOB: 2,
+    GENDER: 3,
+    RACE: 4,
+    ROLE: 5,
+    PRIORITIES: 6,
+    INDUSTRIES: 7,
+    PASSIONS: 8,
 }
 
 class Onboarding extends React.Component {
@@ -85,7 +87,7 @@ class Onboarding extends React.Component {
         super(props);
 
         this.state = {
-            current_page: PAGES.DOB
+            current_page: PAGES.WELCOME
             // current_page: PAGES.INDUSTRIES
         };
 
@@ -99,7 +101,11 @@ class Onboarding extends React.Component {
 
     handleNext() {
         const { current_page } = this.state;
-        let new_page = PAGES.DOB;
+        let new_page = PAGES.WELCOME;
+
+        if (current_page === PAGES.WELCOME) {
+            new_page = PAGES.DOB;
+        }
 
         if (current_page === PAGES.DOB) {
             new_page = PAGES.GENDER;
@@ -139,10 +145,14 @@ class Onboarding extends React.Component {
 
     handleBack() {
         const { current_page } = this.state;
-        let new_page = PAGES.DOB;
+        let new_page = PAGES.WELCOME;
+
+        if (current_page === PAGES.WELCOME) {
+            new_page = PAGES.WELCOME;
+        }
 
         if (current_page === PAGES.DOB) {
-            new_page = PAGES.DOB;
+            new_page = PAGES.WELCOME;
         }
 
         if (current_page === PAGES.GENDER) {
@@ -191,6 +201,10 @@ class Onboarding extends React.Component {
                                     <div className={classes.verticalAlignObjectFill}>
                                         <div className={mc(classes.subContainer)}>
                                             <div>
+
+                                                {current_page === PAGES.WELCOME ?
+                                                    <Welcome next={this.handleNext} back={this.handleBack}/>
+                                                    : null}
 
                                                 {current_page === PAGES.DOB ?
                                                     <DateOfBirth next={this.handleNext} back={this.handleBack}/>
