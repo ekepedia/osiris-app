@@ -39,7 +39,7 @@ class StandardMultiSelect extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, value, options, onChange, hideIndicator } = this.props;
+        let { classes, client, match: { params }, value, options, onChange, hideIndicator, placeholder } = this.props;
 
         const DropdownIndicator = () => {
             return (<div style={{width: "32px", display: hideIndicator ? "none" : null}}>
@@ -51,6 +51,7 @@ class StandardMultiSelect extends React.Component {
             <Select
                 isMulti={true}
                 isClearable={false}
+                placeholder={placeholder}
                 value={value}
                 onChange={(e) => {
                     console.log("the original e", e)
