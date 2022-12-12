@@ -15,28 +15,31 @@ import COMMON from "../common/index";
 import { mc } from "../common/helpers";
 
 
-const height = "16.25px";
-const heightContainer = "21.25px";
+const height = "10.5px";
+const heightContainer = "18.75px";
 
 const Styles = {
     container: {
         padding: "0",
-        color: COMMON.COLORS.DARK_GREY,
-        ...COMMON.FONTS.FONT_SUBHEADER,
+        color: COMMON.COLORS.N800,
+        ...COMMON.FONTS.P100,
         height: height,
-        overflow: "hidden",
+        // overflow: "hidden",
         lineHeight: height,
         margin: "15px 0",
         '@media (max-width: 768px)': {
             padding: "0",
         },
     },
+    paddedContainer: {
+        padding: "8px 12px", border: `1px solid ${COMMON.COLORS.N400}`, borderRadius: "4px"
+    },
     inputStyle: {
         height: height,
         width: height,
         padding: "6px 8px",
         borderRadius: "8px",
-        border: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`,
+        border: `1px solid ${COMMON.COLORS.N600}`,
         outline: "none",
         background: "none",
         margin: "0",
@@ -61,23 +64,26 @@ class StandardCheckbox extends React.Component {
     }
 
     render() {
-        let { classes, value, update, label} = this.props;
+        let { classes, value, update, label, padded} = this.props;
 
         update = update || (() => {});
 
-        return (<div className={classes.container}>
+        return (<div className={classes.container} style={{margin: padded ? 0 : null, height: padded ? "initial" : null, }}>
 
-            <div style={{display: "flex"}}>
-                <div style={{flex: `0 0 ${heightContainer}`}}>
-                    <input style={{margin: 0}} type={"checkbox"} className={classes.inputStyle} checked={value} onChange={(e) => {
-                        console.log("CHECKED:", e.target.checked, value)
-                        update(e.target.checked)
-                    }}/>
-                </div>
-                <div style={{flex: 1}}>
-                    {label}
+            <div className={padded ? classes.paddedContainer : null}>
+                <div style={{display: "flex"}}>
+                    <div style={{flex: `0 0 ${heightContainer}`}}>
+                        <input style={{margin: 0}} type={"checkbox"} className={classes.inputStyle} checked={value} onChange={(e) => {
+                            console.log("CHECKED:", e.target.checked, value)
+                            update(e.target.checked)
+                        }}/>
+                    </div>
+                    <div style={{flex: 1}}>
+                        {label}
+                    </div>
                 </div>
             </div>
+
 
         </div>)
     }
