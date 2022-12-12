@@ -73,7 +73,7 @@ class SavedJobs extends React.Component {
 
     componentDidMount() {
         this.loadSavedJobs(true);
-        this.loadJobs();
+        this.loadJobs(true);
         this.loadCompanies(true);
         this.loadCompanyDemographics();
         this.loadSavedJobNotes();
@@ -107,7 +107,7 @@ class SavedJobs extends React.Component {
         let { client } = this.props;
 
         if (first) {
-            this.setState({loading: true});
+            this.setState({loading_companies: true});
         }
 
         CompanyService.getCompanies({client}).then((companies) => {
@@ -149,7 +149,7 @@ class SavedJobs extends React.Component {
                 options,
                 company_map,
                 option_map,
-                loading: false
+                loading_companies: false
             })
         })
     }
@@ -157,15 +157,15 @@ class SavedJobs extends React.Component {
     loadSavedJobs(first) {
         let { client, match: { params } } = this.props;
 
-        // if (first) {
-        //     this.setState({loading: true});
-        // }
+        if (first) {
+            this.setState({loading_saved_jobs: true});
+        }
 
         SavedJobService.getSavedJobs({
             client,
             user_id: params.user_id
         }).then((saved_jobs) => {
-            console.log("LOADED SAVED");
+            console.log("LOADED SAVED JOBS");
 
             saved_jobs = saved_jobs ? saved_jobs.sort((a, b) => {
 
@@ -177,7 +177,7 @@ class SavedJobs extends React.Component {
 
             this.setState({
                 saved_jobs,
-                // loading: false
+                loading_saved_jobs: false
             })
         })
     }
@@ -224,8 +224,12 @@ class SavedJobs extends React.Component {
         return COMMON.COLORS.TAG_GREY;
     }
 
-    loadJobs() {
+    loadJobs(first) {
         let { client } = this.props;
+
+        if (first) {
+            this.setState({loading_jobs: true});
+        }
 
         JobsService.getJobs({client}).then((jobs) => {
             // console.log("LOADED JOBS", jobs);
@@ -247,7 +251,8 @@ class SavedJobs extends React.Component {
 
             this.setState({
                 jobs,
-                jobs_map
+                jobs_map,
+                loading_jobs: false
             })
         })
     }
@@ -267,7 +272,6 @@ class SavedJobs extends React.Component {
             selectedJob
         })
     }
-
 
     submitEditSavedJob() {
         let { classes, client, match: { params } } = this.props;
@@ -294,7 +298,7 @@ class SavedJobs extends React.Component {
         let { classes, client, match: { params } } = this.props;
         let { saved_jobs, jobs_map, saved_job_notes, options, option_map, company_map, openAddSavedJobModal, openEditSavedJobModal, selectedSavedJob, selectedJob, company_demographics_map, selectedcompany_demographics} = this.state;
 
-
+        console.log(this.state);
         return (
             <div className={classes.masterContainer}>
                 <div className={classes.masterNavContainer}>
@@ -341,10 +345,11 @@ class SavedJobs extends React.Component {
                                     Application Status
                                 </div>
                             </div>
-                            <div>{saved_jobs && saved_jobs.length && !this.state.loading ? <div>
+                            <div>{saved_jobs && saved_jobs.length && !this.state.loading_jobs && !this.state.loading_saved_jobs && !this.state.loading_companies ? <div>
 
                                 {saved_jobs.map((saved_job) => {
 
+                                    console.log("SAVED JOB JOB", saved_job)
                                     let job = jobs_map ? ((jobs_map[saved_job.job_id] || {})) : {};
                                     let company_demographics = company_demographics_map ? ((company_demographics_map[job.company_id] || {})) : {};
                                     let company_name = job.company_id && company_map ? (company_map[job.company_id] || {}).company_name : job.company_name
@@ -352,7 +357,8 @@ class SavedJobs extends React.Component {
 
                                     if (!jobs_map)
                                         return;
-                                    return (<div className={mc(classes.savedJobRow)}>
+
+                                    return (<div className={mc(classes.savedJobRow)} key={saved_job.saved_job_id}>
                                         <div className={mc(classes.jobTitle)}
                                              style={{flex: 1}}
                                              onClick={() => {this.setState({selectedSavedJob: saved_job, selectedJob: job, selectedcompany_demographics: company_demographics, openEditSavedJobModal: true});}}
@@ -389,7 +395,7 @@ class SavedJobs extends React.Component {
 
                                     </div>)
                                 })}
-                            </div> : this.state.loading ? <div>
+                            </div> : (this.state.loading_companies || this.state.loading_saved_jobs || this.state.loading_jobs) ? <div>
                                 <div style={{padding: "20px", textAlign: "center"}}>
                                     <div style={{textAlign: "center"}}>
                                         <Lottie options={defaultOptions}

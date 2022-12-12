@@ -99,7 +99,7 @@ class PortfolioHeader extends React.Component {
     }
 
     render() {
-        let { classes, company, selectedState, setSelectedState, has_demographics} = this.props;
+        let { classes, company, selectedState, setSelectedState, has_demographics, has_jobs} = this.props;
 
         company = company || {};
 
@@ -141,6 +141,10 @@ class PortfolioHeader extends React.Component {
                         <div style={{display: has_demographics ? null : "none"}} className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
                             <span style={{color: selectedState === 3 ? COMMON.COLORS.B400 : null}}>DE&I</span>
                             {selectedState === 3 ? <div className={classes.companyMenuSelectBar}/> : null}
+                        </div>
+                        <div style={{display: has_jobs ? null : "none"}} className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(4) : null}}>
+                            <span style={{color: selectedState === 4 ? COMMON.COLORS.B400 : null}}>Jobs</span>
+                            {selectedState === 4 ? <div className={classes.companyMenuSelectBar}/> : null}
                         </div>
                     </div>
                 </div>

@@ -36,11 +36,32 @@ const YEARS = years.map((year) => {
     return {value: year, label: year + ""}
 });
 
+let days = [];
+
+for (let i = 1; i <= 31; i++) {
+    days.push(i);
+}
+
+const DAYS = days.map((day) => {
+    return {value: day, label: day + ""}
+});
+
+
+const GENDERS = [
+    {value: 1, label: "Woman"},
+    {value: 2, label: "Man"},
+    {value: 3, label: "Non-Binary"},
+    {value: 4, label: "Transgender"},
+    {value: 5, label: "Prefer Not to Say"},
+]
+
 export const CONSTS = {
     MODAL_HEIGHT: "350px",
     EDIT_PORTFOLIO_MODAL_HEIGHT: "670px",
     MODAL_TIMING: 250,
+    DAYS,
     MONTHS,
     YEARS,
+    GENDERS,
     STATUSES
 }

@@ -208,7 +208,7 @@ class JobDetails extends React.Component {
                 <div style={{display: "flex", marginBottom: "20px"}}>
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div onClick={() => {
-                            window.open(`/companies/${company.company_id}`, "_blank");
+                            window.open(`/companies/${company.company_id}`);
                         }} style={{borderRadius: "4px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
                             <CoverImageHolder url={company.company_logo_url}/>
                         </div>
@@ -216,9 +216,9 @@ class JobDetails extends React.Component {
 
                     <div style={{flex: 1, overflow: "hidden"}}>
                         <div style={{marginBottom: "0"}}>
-                            <div style={{marginBottom: "0px", ...COMMON.FONTS.H700, color: COMMON.COLORS.N900, textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{job.job_title}</div>
+                            <div style={{marginBottom: "0px", ...COMMON.FONTS.H700, color: COMMON.COLORS.N900, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{job.job_title}</div>
                             <div onClick={() => {
-                                window.open(`/companies/${company.company_id}`, "_blank");
+                                window.open(`/companies/${company.company_id}`);
                             }} style={{...COMMON.FONTS.P200,cursor:"pointer", color: COMMON.COLORS.N700}}>{company.company_name}</div>
                         </div>
                     </div>
@@ -240,7 +240,7 @@ class JobDetails extends React.Component {
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
                         {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
-                        {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
+                        {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
                         {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
                         {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, color: COMMON.COLORS.V600}}/> : null}
                         {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}
@@ -308,7 +308,7 @@ class JobDetails extends React.Component {
                                 </div>
                                 <div style={{flex: "0 0 140px"}}>
                                     <StandardButton onClick={() => {
-                                        window.open(`/companies/${company.company_id}`, "_blank");
+                                        window.open(`/companies/${company.company_id}`);
                                     }} secondary={true} label={"More Company Info"}/>
                                 </div>
 

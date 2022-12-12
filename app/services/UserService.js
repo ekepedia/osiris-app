@@ -64,6 +64,13 @@ UserService.getUser = ({client, username, user_id}) => {
                     user_vimeo_link
                     user_main_contact_email
                     user_main_contact_phone
+
+                    dob
+                    dob_day
+                    dob_month
+                    dob_year
+                    gender
+                    gender_id
                 }
             }
         `;
@@ -85,7 +92,11 @@ UserService.getUser = ({client, username, user_id}) => {
     });
 }
 
-UserService.editUser = ({client, user_id, bio, first_name, last_name, cover_photo_url, profile_photo_url, username, user_twitter_link, user_clubhouse_link, user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link, user_vimeo_link, user_main_contact_email, user_main_contact_phone}) => {
+UserService.editUser = ({client, user_id, bio, first_name, last_name,
+                            cover_photo_url, profile_photo_url, username, user_twitter_link, user_clubhouse_link,
+                            user_instagram_link, user_website_link, user_tiktok_link, user_youtube_link,
+                            user_vimeo_link, user_main_contact_email, user_main_contact_phone,
+                            dob, dob_day, dob_month, dob_year, gender, gender_id}) => {
     return new Promise((resolve, reject) => {
         const EditUserMutation = gql`
             mutation EditUserMutation(
@@ -106,6 +117,13 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, cover_phot
                 $user_vimeo_link: String,
                 $user_main_contact_email: String,
                 $user_main_contact_phone: String,
+                
+                $dob: String,
+                $dob_day: Int,
+                $dob_month: Int,
+                $dob_year: Int,
+                $gender: String,
+                $gender_id: Int,
             ){
                 edit_user(input:{
                     user_id: $user_id,
@@ -124,6 +142,13 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, cover_phot
                     user_vimeo_link: $user_vimeo_link,
                     user_main_contact_email: $user_main_contact_email,
                     user_main_contact_phone: $user_main_contact_phone,
+                    
+                    dob: $dob,
+                    dob_day: $dob_day,
+                    dob_month: $dob_month,
+                    dob_year: $dob_year,
+                    gender: $gender,
+                    gender_id: $gender_id,
                 })
             }
         `;
@@ -144,7 +169,14 @@ UserService.editUser = ({client, user_id, bio, first_name, last_name, cover_phot
             user_youtube_link,
             user_vimeo_link,
             user_main_contact_email,
-            user_main_contact_phone
+            user_main_contact_phone,
+
+            dob,
+            dob_day,
+            dob_month,
+            dob_year,
+            gender,
+            gender_id,
         };
 
         client.mutate({mutation: EditUserMutation, variables}).then((response) => {

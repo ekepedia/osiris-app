@@ -47,7 +47,7 @@ const Styles = {
     }
 };
 
-class StandardInput extends React.Component {
+class StandardSelect extends React.Component {
 
     constructor(props) {
         super(props);
@@ -62,16 +62,17 @@ class StandardInput extends React.Component {
     }
 
     render() {
-        let { classes, style, value, options, update, color, background, disableCustom} = this.props;
+        let { classes, style, value, options, update, color, background, disableCustom, placeholder} = this.props;
 
         style = style || {};
+        options = options || [];
         update = update || (() => {});
 
         let width = null;
 
         if (options && options.length && value) {
             options.forEach((option) => {
-                console.log(option.value, value, option.width)
+                // console.log(option.value, value, option.width)
                 if (!disableCustom && option && option.value && (option.value + "" === value + "")) {
 
                     if (option.width)
@@ -98,9 +99,10 @@ class StandardInput extends React.Component {
         }
 
         return (<div className={classes.container}>
-            <select className={classes.inputStyle} style={selectStyle} value={value} onChange={(e) => (update(e.target.value))}>
+            <select placeholder={placeholder} className={classes.inputStyle} style={selectStyle} value={value} onChange={(e) => (update(e.target.value))}>
+                {placeholder ? <option selected="true" disabled="disabled">{placeholder}</option> : null}
                 {options.map((option) => {
-                    return (<option value={option.value}>{option.label}</option>)
+                    return (<option key={option.label} value={option.value}>{option.label}</option>)
                 })}
             </select>
         </div>)
@@ -108,5 +110,5 @@ class StandardInput extends React.Component {
 
 }
 
-export default withApollo(withRouter(injectSheet(Styles)(StandardInput)));
+export default withApollo(withRouter(injectSheet(Styles)(StandardSelect)));
 
