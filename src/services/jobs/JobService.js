@@ -19,9 +19,11 @@ const SERVICE_NAME = "Jobs Service";
 const SERVICE_DEFAULT_TABLE = JOBS_TABLE;
 
 let WEBSCRAPED_JOBS = [];
+let JOB_COUNTS = {};
 
 module.exports.JOBS_TABLE = JOBS_TABLE;
 module.exports.WEBSCRAPED_JOBS = WEBSCRAPED_JOBS;
+module.exports.JOB_COUNTS = JOB_COUNTS;
 
 const join_character = ";@;";
 
@@ -36,6 +38,7 @@ module.exports.init = function (connection) {
     // import_airtable_jobs();
     // format_jobs_for_job_board();
     // import_webscraper_jobs();
+    load_job_counts();
 };
 
 module.exports.get_jobs = get_jobs;
@@ -492,6 +495,19 @@ function import_airtable_jobs() {
         });
 
     });
+}
+
+function load_job_counts() {
+    get_jobs({
+        is_user_submitted: false,
+        job_source: "glassdoor"
+    }).then((jobs) => {
+        console.log("jobs, lenths", jobs.length);
+        jobs.forEach((job) => {
+            JOB_COUNTS[job.company_id] = JOB_COUNTS[job.company_id] || 0;
+            JOB_COUNTS[job.company_id]++
+        })
+    })
 }
 
 function import_webscraper_jobs() {

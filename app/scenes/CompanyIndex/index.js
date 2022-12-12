@@ -23,6 +23,7 @@ import TrackingService from "../../services/TrackingService";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RatingFilter from "../../components/RatingFilter";
 import DoubleSlider from "../../components/DoubleSlider";
+import StandardCheckbox from "../../components/StandardCheckbox";
 
 const SORTS = {
     BIPOC: 1,
@@ -80,10 +81,12 @@ class CompanyIndex extends React.Component {
             glassdoorOverallFilter: null,
             glassdoorWorkLifeFilter: null,
             glassdoorPayFilter: null,
+            only_jobs: false
         };
     }
 
     componentDidMount() {
+        let counts = {};
         async.parallel([
             (cb) =>  {
                 this.loadCompanies().then(() => {
@@ -95,6 +98,12 @@ class CompanyIndex extends React.Component {
                     cb();
                 });
             },
+            (cb) => {
+                CompanyService.getJobCounts({}).then((job_counts) => {
+                    counts = job_counts;
+                    cb();
+                });
+            },
         ], (err) => {
             console.log("BOTH DONE!!!", err);
             console.time("PROCESS COMPANIES");
@@ -103,7 +112,8 @@ class CompanyIndex extends React.Component {
             console.timeEnd("PROCESS COMPANIES");
 
             this.setState({
-                companies: processed_companies
+                companies: processed_companies,
+                job_counts: counts
             })
 
         })
@@ -391,7 +401,8 @@ class CompanyIndex extends React.Component {
             glassdoorOverallFilter,
             glassdoorWorkLifeFilter,
             glassdoorPayFilter,
-
+            job_counts,
+            only_jobs,
         } = this.state;
 
         const { history } = this.props;
@@ -412,6 +423,12 @@ class CompanyIndex extends React.Component {
                 currentYear,
                 previousYear
             } = company;
+
+
+            if (only_jobs) {
+                if (!job_counts[company.company_id])
+                    return null;
+            }
 
             if (companyNameFilter && companyNameFilter.length) {
                 const filter = companyNameFilter.toLowerCase();
@@ -486,7 +503,7 @@ class CompanyIndex extends React.Component {
             if (!company.company_logo_url)
                 return null;
 
-            return (<CompanyIndexRow history={history} id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+            return (<CompanyIndexRow job_counts={job_counts} history={history} id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
         })
 
         filtered_companies = _.without(filtered_companies, null);
@@ -568,7 +585,7 @@ class CompanyIndex extends React.Component {
 
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { MAX_RESULTS, sort_param, reverse, companies, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
+        let { MAX_RESULTS, only_jobs, sort_param, reverse, companies, selectedLocations, locationsOptions, selectedIndustries, industriesOptions,  minEmployees, maxEmployees, employeeFilter, femaleEmployeeFilter, bipocEmployeeFilter} = this.state;
 
         companies = this.sortCompanies(companies, sort_param, reverse);
 
@@ -646,6 +663,12 @@ class CompanyIndex extends React.Component {
                                             this.setState({employeeFilter: e.target.value, MAX_RESULTS: 10})
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
+                                    </div>
+
+                                    <div style={{marginTop: "15px"}}>
+                                        <StandardCheckbox label={"Toggle Companies Actively Hiring"} value={only_jobs} padded={true} update={(checked) => {
+                                            this.setState({only_jobs: checked })
+                                        }}/>
                                     </div>
 
 

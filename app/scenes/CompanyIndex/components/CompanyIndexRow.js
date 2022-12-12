@@ -103,12 +103,13 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, id, company, index, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear, history} = this.props;
+        let { classes, id, company, index, job_counts, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear, history} = this.props;
 
         let { expanded } = this.state
         company_demographics = company_demographics || {};
         company = company || {};
         bipoc_respresentation = bipoc_respresentation || 0;
+        job_counts = job_counts || {};
 
         let bipoc_respresentation_change_label = "";
         let female_respresentation_change_label = "";
@@ -230,7 +231,7 @@ class CompanyIndexRow extends React.Component {
                 </div>
 
                 <div style={{flex: 1, textAlign: "right", display: expanded ? null : "none"}}>
-                    <div style={{display: "inline-block", marginRight: "5px"}}>
+                    <div style={{display: job_counts && job_counts[company.company_id] ? "inline-block" : "none", marginRight: "5px"}}>
                         <StandardButton secondary={true} label={"See Jobs"} onClick={() => {
                             history.push(`/jobs?c=${company.company_id}`);
                         }}/>
