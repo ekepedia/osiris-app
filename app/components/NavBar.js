@@ -123,14 +123,14 @@ class NavBar extends React.Component {
         return (<div className={classes.container}>
             <div style={{display: "flex"}}>
                 <div style={{flex: "0 0 100px"}} className={classes.logoStyle}>
-                    <Link to={"/"} style={{color: COMMON.COLORS.N900}} onClick={() => {
+                    <Link to={user && user.user_id ? "/companies" : "/"} style={{color: COMMON.COLORS.N900}} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "logo"});
                     }}>
                         <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>
-                    <Link to={"/"} className={classes.hide600} onClick={() => {
+                    <Link style={{display: "none"}} to={"/"} className={classes.hide600} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "home"});
                     }}>
                         <div className={classes.linkStyle} style={{color: path === "/" ? COMMON.COLORS.B400 : null}}>
