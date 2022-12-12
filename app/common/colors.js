@@ -121,3 +121,5 @@ export const G600 = "#317159"; COLORS.G600 = G600;
 export const R100 = "#F9DADA"; COLORS.R100 = R100;
 export const R400 = "#D14343"; COLORS.R400 = R400;
 export const R600 = "#7D2828"; COLORS.R600 = R600;
+
+export const P400 = "#ED55C2"; COLORS.P400 = P400;

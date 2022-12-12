@@ -20,9 +20,9 @@ module.exports.init = function (connection) {
 
 module.exports.get_demo_trackings = get_demo_trackings;
 
-function get_demo_trackings({user_id, tracking_id}) {
+function get_demo_trackings({user_id, tracking_id, version}) {
 
-    const query = DatabaseService.generate_query({user_id, tracking_id});
+    const query = DatabaseService.generate_query({user_id, tracking_id, version});
 
     let knexQuery = knex(DEMO_TRACKING_TABLE).where(query);
 

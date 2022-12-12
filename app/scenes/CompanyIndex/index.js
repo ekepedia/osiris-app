@@ -22,6 +22,7 @@ import StandardMultiSelect from "../../components/StandardMultiSelect";
 import TrackingService from "../../services/TrackingService";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import RatingFilter from "../../components/RatingFilter";
+import DoubleSlider from "../../components/DoubleSlider";
 
 const SORTS = {
     BIPOC: 1,
@@ -390,7 +391,10 @@ class CompanyIndex extends React.Component {
             glassdoorOverallFilter,
             glassdoorWorkLifeFilter,
             glassdoorPayFilter,
+
         } = this.state;
+
+        const { history } = this.props;
 
         if (!companies || !companies.length)
             return {
@@ -482,7 +486,7 @@ class CompanyIndex extends React.Component {
             if (!company.company_logo_url)
                 return null;
 
-            return (<CompanyIndexRow id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+            return (<CompanyIndexRow history={history} id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
         })
 
         filtered_companies = _.without(filtered_companies, null);
@@ -593,6 +597,10 @@ class CompanyIndex extends React.Component {
                                         borderBottom: `1px solid ${COMMON.COLORS.N400}`
                                     }}>
                                         Filters
+                                    </div>
+
+                                    <div style={{display: "none"}}>
+                                        <DoubleSlider />
                                     </div>
 
                                     <StandardInput placeholder={"Search..."} value={this.state.companyNameFilter} update={(v) => {

@@ -90,7 +90,7 @@ class SignUp extends React.Component {
                 if (data.data.success) {
                     let user_id = data.data.data.user_id;
                     // window.location.pathname = `/edit/${user_id}`;
-                    window.location.pathname = `/companies`;
+                    window.location.pathname = `/onboard`;
                     AuthService.setCurrentUser({user_id});
                     TrackingService.trackSubmit({type: 4, page: "sign-up", value: user_email, user_id, custom: `${first_name} ${last_name}`});
                 } else {

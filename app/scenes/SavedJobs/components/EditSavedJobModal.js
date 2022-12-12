@@ -239,7 +239,7 @@ class EditSavedJobModal extends React.Component {
                             </div>
                             <div style={{display: selectedState === 1 ? null : "none"}}>
                                 <div style={{display: "flex", height: "100%", overflow: "hidden"}}>
-                                    <div style={{flex: 1, paddingRight: "50px", overflow: "scroll"}}>
+                                    <div style={{flex: 1, paddingRight: "50px", overflow: "scroll", paddingBottom: job.is_user_submitted ? null : "50px"}}>
 
                                         {job.is_user_submitted ? <div>
                                             <div style={{display: "flex"}}>

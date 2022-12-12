@@ -113,6 +113,13 @@ class FilterBar extends React.Component {
         });
 
         this.locations = Object.values(dedup_map);
+
+        if (this.locations && this.locations.length) {
+            this.locations = this.locations.sort((a, b) => {
+                return (a.label || "").localeCompare(b.label || "");
+            });
+        }
+
         return this.locations
     }
 
@@ -131,6 +138,11 @@ class FilterBar extends React.Component {
 
         this.industries = Object.values(dedup_map);
 
+        if (this.industries && this.industries.length) {
+            this.industries = this.industries.sort((a, b) => {
+                return (a.label || "").localeCompare(b.label || "");
+            });
+        }
         return this.industries
     }
 
@@ -147,7 +159,12 @@ class FilterBar extends React.Component {
             }
         });
         this.seniorities = Object.values(dedup_map);
-        console.log("seniortiy", dedup_map)
+
+         if (this.seniorities && this.seniorities.length) {
+             this.seniorities = this.seniorities.sort((a, b) => {
+                 return (a.label || "").localeCompare(b.label || "");
+             });
+         }
         return this.seniorities
     }
 
@@ -169,6 +186,12 @@ class FilterBar extends React.Component {
         });
 
         this.companies = Object.values(dedup_map);
+
+        if (this.companies && this.companies.length) {
+            this.companies = this.companies.sort((a, b) => {
+                return (a.label || "").localeCompare(b.label || "");
+            });
+        }
         return this.companies
     }
 

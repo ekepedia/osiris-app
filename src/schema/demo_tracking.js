@@ -75,6 +75,7 @@ const typeDef = gql`
     input QueryDemoTracking {
         user_id: String,
         tracking_id: String
+        version: String
     }
 `;
 
