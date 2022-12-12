@@ -77,6 +77,10 @@ app.get("/api/jobs", function (req, res) {
     });
 });
 
+app.get("/api/job-counts", function (req, res) {
+    res.json({ counts: JobService.JOB_COUNTS });
+});
+
 
 app.get("/api/jobs/temp", function (req, res) {
     res.json({

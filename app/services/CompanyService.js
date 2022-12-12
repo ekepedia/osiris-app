@@ -130,4 +130,16 @@ CompanyService.getCompanies = ({
     });
 }
 
+CompanyService.getJobCounts = ({}) => {
+    return new Promise((resolve, reject) => {
+        axios.get("/api/job-counts").then((response) => {
+            if (response && response.data && response.data.counts) {
+                resolve(response.data.counts)
+            } else {
+                resolve(null)
+            }
+        })
+    });
+}
+
 export default CompanyService
