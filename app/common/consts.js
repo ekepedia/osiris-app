@@ -55,6 +55,89 @@ const GENDERS = [
     {value: 5, label: "Prefer Not to Say"},
 ]
 
+const RACES = [
+    {value: 1, label: "American Indian"},
+    {value: 2, label: "Black/African Descent"},
+    {value: 3, label: "East Asian"},
+    {value: 4, label: "Hispanic/Latino"},
+    {value: 5, label: "Middle Eastern"},
+    {value: 6, label: "Pacific Islander"},
+    {value: 7, label: "South Asian"},
+    {value: 8, label: "White"},
+    {value: 9, label: "Prefer Not to Say"},
+];
+
+let RACES_MAP = {};
+RACES.forEach((race) => {
+    RACES_MAP[race.value] = race;
+})
+
+const PREFERENCE_TYPES = {
+    ROLE_EXPECTATION: "1",
+    JOB_PRIORITIES: "2",
+    INDUSTRIES: "3",
+    PASSIONS: "4",
+}
+
+const ROLE_EXPECTATIONS = [
+    {value: 1101, label: "Full-Time"},
+    {value: 1102, label: "Part-Time"},
+    {value: 1103, label: "Internship"},
+    {value: 1104, label: "I am not currently looking for a job"},
+];
+
+let ROLE_EXPECTATIONS_MAP = {};
+ROLE_EXPECTATIONS.forEach((d) => {
+    ROLE_EXPECTATIONS_MAP[d.value] = d;
+});
+
+const JOB_PRIORITIES = [
+    {value: 1201, label: "Salary"},
+    {value: 1202, label: "Location"},
+    {value: 1203, label: "Diversity"},
+    {value: 1204, label: "Work-Life Balance"},
+    {value: 1205, label: "Culture"},
+];
+
+let JOB_PRIORITIES_MAP = {};
+JOB_PRIORITIES.forEach((d) => {
+    JOB_PRIORITIES_MAP[d.value] = d;
+});
+
+const INDUSTRIES = [
+    {value: 1301, label: "Environment"},
+    {value: 1302, label: "Sports"},
+    {value: 1303, label: "Financial Services"},
+    {value: 1304, label: "Design"},
+    {value: 1305, label: "Tech"},
+    {value: 1306, label: "Consulting"},
+    {value: 1307, label: "Marketing"},
+    {value: 1308, label: "Healthcare"},
+    {value: 1309, label: "Education"},
+    {value: 1310, label: "News"},
+    {value: 1311, label: "Music"},
+];
+
+let INDUSTRIES_MAP = {};
+INDUSTRIES.forEach((d) => {
+    INDUSTRIES_MAP[d.value] = d;
+});
+
+const PASSIONS = [
+    {value: 1401, label: "Environment"},
+    {value: 1402, label: "Design"},
+    {value: 1403, label: "DE&I"},
+    {value: 1404, label: "Finance"},
+    {value: 1405, label: "Politics"},
+    {value: 1406, label: "Sports"},
+    {value: 1407, label: "Music"},
+];
+
+let PASSIONS_MAP = {};
+PASSIONS.forEach((d) => {
+    PASSIONS_MAP[d.value] = d;
+});
+
 export const CONSTS = {
     MODAL_HEIGHT: "350px",
     EDIT_PORTFOLIO_MODAL_HEIGHT: "670px",
@@ -63,5 +146,16 @@ export const CONSTS = {
     MONTHS,
     YEARS,
     GENDERS,
-    STATUSES
+    STATUSES,
+    RACES,
+    RACES_MAP,
+    PREFERENCE_TYPES,
+    ROLE_EXPECTATIONS,
+    ROLE_EXPECTATIONS_MAP,
+    JOB_PRIORITIES,
+    JOB_PRIORITIES_MAP,
+    INDUSTRIES,
+    INDUSTRIES_MAP,
+    PASSIONS,
+    PASSIONS_MAP
 }
