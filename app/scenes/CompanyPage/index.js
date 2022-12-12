@@ -3,7 +3,7 @@ import _ from "lodash";
 import moment from "moment";
 
 import { withApollo } from 'react-apollo';
-import { withRouter, Link} from 'react-router-dom';
+import { withRouter, Link, useHistory} from 'react-router-dom';
 
 import injectSheet from 'react-jss';
 
@@ -19,6 +19,8 @@ import NavBar from "../../components/NavBar";
 import RacePieChart from "../../components/charts/RacePieChart";
 import GenderPieChart from "../../components/charts/GenderPieChart";
 import StandardBadge from "../../components/StandardBadge";
+import JobsService from "../../services/JobsService";
+import CoverImageHolder from "../../components/CoverImageHolder";
 
 const Styles = {
     container: {
@@ -26,6 +28,22 @@ const Styles = {
         '@media (max-width: 768px)': {
             padding: "0 20px",
         },
+    },
+    jobCardContainer: {height: "68px", cursor: "pointer", borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N400}`, padding: "15px"},
+    jobCardImgContainer: {
+        flex: "0 0 38px", overflow: "hidden", height: "38px", marginRight: "8px", borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N400}`
+    },
+    jobCardTitle: {
+        ...COMMON.FONTS.H400,
+        color: COMMON.COLORS.N900,
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+    },
+    jobCardCompany: {
+        ...COMMON.FONTS.P100,
+        color: COMMON.COLORS.N700,
+        marginTop: "-2px"
     },
     ...COMMON.STYLES.COMPANY.CompanyPageStyles,
     ...COMMON.STYLES.COMPANY.CompanyProfilePageStyles,
@@ -35,7 +53,9 @@ const Styles = {
     }
 };
 
+
 class CompanyPage extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -48,6 +68,7 @@ class CompanyPage extends React.Component {
     componentDidMount() {
         this.loadCompanies();
         this.loadCompanyDemographics();
+        this.loadCompanyJobs();
     }
 
     loadCompanyDemographics() {
@@ -94,10 +115,25 @@ class CompanyPage extends React.Component {
         })
     }
 
-    render() {
-        let { classes, client, match: { params } } = this.props;
+    loadCompanyJobs() {
+        let { client, match: { params } } = this.props;
 
-        let { company, company_demographics_map, selectedState } = this.state;
+        JobsService.getJobs({
+            client,
+            company_id: params.company_id
+        }).then((jobs) => {
+            console.log("LOADED JOBS", jobs);
+
+            this.setState({
+                jobs: jobs || []
+            })
+        })
+    }
+
+    render() {
+        let { classes, client, match: { params }, history } = this.props;
+
+        let { company, company_demographics_map, selectedState, jobs } = this.state;
 
         company_demographics_map = company_demographics_map || {};
         company = company || {};
@@ -109,6 +145,18 @@ class CompanyPage extends React.Component {
 
         const company_demographics = company_demographics_map[company_id] || {};
         const has_demographics = company_demographics && company_demographics.employees_male;
+        const has_jobs = jobs && jobs.length;
+
+        let job_1 = {};
+        let job_2 = {};
+        if (has_jobs) {
+            if (jobs[0]) {
+                job_1 = jobs[0];
+            }
+            if (jobs[1]) {
+                job_2 = jobs[1];
+            }
+        }
 
         return (
 
@@ -122,7 +170,7 @@ class CompanyPage extends React.Component {
                         <div className={classes.mainContainer}>
 
                             <div className={mc(classes.headerContainer)}>
-                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} has_demographics={has_demographics} setSelectedState={(selectedState) => {
+                                <CompanyHeader {...{company, selectedState: this.state.selectedState}} has_demographics={has_demographics} has_jobs={has_jobs} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
                                 }}/>
                             </div>
@@ -133,7 +181,7 @@ class CompanyPage extends React.Component {
                                 <div className={mc(classes.aboutBody)}>{company.company_about}</div>
                             </div>
 
-                            <div style={{display: selectedState === 2 || !has_demographics ? "none" : null, paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
+                            <div style={{display: (selectedState === 3 || selectedState === 1) && has_demographics ? null : "none", paddingBottom: selectedState === 1 ? "12px" : null}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Representation by race / ethnicity</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {company.company_name}</div>
 
@@ -176,6 +224,56 @@ class CompanyPage extends React.Component {
                                 <div className={mc(classes.sectionSubtitle)}>Specialties</div>
                                 <div className={mc(classes.overviewSection)}>
                                     <StandardBadge style={{marginTop: "15px"}} label={company.company_industry}/>
+                                </div>
+                            </div>
+
+                            <div style={{display: selectedState === 4 ? null : "none", paddingBottom: "12px"}} className={mc(classes.sectionContainer)}>
+                                <div className={mc(classes.sectionMainTitle)}>Recent Job Postings</div>
+                                <div style={{marginTop: "15px"}}>
+                                    <div style={{display: "flex"}}>
+                                        <div style={{flex: 1, paddingRight: "10px", overflow: "hidden"}}>
+                                            <div className={classes.jobCardContainer} onClick={() => {history.push(`/jobs?j=${job_1.job_id}&c=${company_id}`);}}>
+                                                <div style={{display: "flex", overflow: "hidden"}}>
+                                                    <div className={classes.jobCardImgContainer}>
+                                                        <CoverImageHolder url={company.company_logo_url || "https://i.imgur.com/tM97NWQ.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1, overflow: "hidden"}}>
+                                                        <div className={classes.jobCardTitle}>
+                                                            {job_1.job_title}
+                                                        </div>
+                                                        <div className={classes.jobCardCompany}>
+                                                            {company.company_name}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={{flex: 1, overflow: "hidden"}}>
+                                            <div className={classes.jobCardContainer} onClick={() => {history.push(`/jobs?j=${job_2.job_id}&c=${company_id}`);}}>
+                                                <div style={{display: "flex", overflow: "hidden"}}>
+                                                    <div className={classes.jobCardImgContainer}>
+                                                        <CoverImageHolder url={company.company_logo_url || "https://i.imgur.com/tM97NWQ.png"}/>
+                                                    </div>
+                                                    <div style={{flex: 1, overflow: "hidden"}}>
+                                                        <div className={classes.jobCardTitle}>
+                                                            {job_2.job_title}
+                                                        </div>
+                                                        <div className={classes.jobCardCompany}>
+                                                            {company.company_name}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div className={mc(classes.seeMoreDetails)} onClick={() => {
+                                    history.push(`/jobs?c=${company_id}`);
+                                }}>
+                                    <div>See all jobs</div>
                                 </div>
                             </div>
                         </div>

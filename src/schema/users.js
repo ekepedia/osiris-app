@@ -36,6 +36,14 @@ const typeDef = gql`
 
         last_name: String
         archived: Boolean
+
+        dob: String
+        dob_month: Int,
+        dob_day: Int,
+        dob_year: Int,
+
+        gender: String
+        gender_id: Int,
     }
     
     input CreateUserInput {
@@ -57,6 +65,14 @@ const typeDef = gql`
         user_vimeo_link: String,
         user_main_contact_email: String,
         user_main_contact_phone: String,
+
+        dob: String
+        dob_month: Int,
+        dob_day: Int,
+        dob_year: Int,
+
+        gender: String
+        gender_id: Int,
     }
 
     input EditUserInput {
@@ -78,6 +94,13 @@ const typeDef = gql`
         user_vimeo_link: String,
         user_main_contact_email: String,
         user_main_contact_phone: String,
+        dob: String
+        dob_month: Int,
+        dob_day: Int,
+        dob_year: Int,
+
+        gender: String
+        gender_id: Int,
     }
     
     input QueryUser {

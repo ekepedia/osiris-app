@@ -24,6 +24,13 @@ module.exports = function (connection) {
         table.string('user_main_contact_email');
         table.string('user_main_contact_phone');
 
+        table.string('dob');
+        table.integer('dob_month');
+        table.integer('dob_day');
+        table.integer('dob_year');
+        table.string('gender');
+        table.integer('gender_id');
+
         table.boolean('disabled').defaultTo(false);
         table.boolean('archived').defaultTo(false);
         table.timestamps(true, true);

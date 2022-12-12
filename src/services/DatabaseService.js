@@ -17,6 +17,9 @@ const UserEducationService = require("./user_educations/UserEducationService");
 const UserExperienceService = require("./user_experiences/UserExperienceService");
 const UserLinksService = require("./user_links/UserLinksService");
 const UserGalleryService = require("./user_galleries/UserGalleryService");
+const UserRaceService = require("./user_races/UserRaceService");
+const UserUniversityService = require("./user_universities/UserUniversityService");
+const UserPreferenceService = require("./user_preferences/UserPreferenceService");
 
 const CompanyService = require("./companies/CompanyService");
 const CompanyDemographicService = require("./company_demographics/CompanyDemographicService");
@@ -37,6 +40,9 @@ const UserEducationSchema = require("./user_educations/schema/user_educations.sc
 const UserExperienceSchema = require("./user_experiences/schema/user_experiences.schema");
 const UserLinkSchema = require("./user_links/schema/user_links.schema");
 const UserGallerySchema = require("./user_galleries/schema/user_galleries.schema");
+const UserRaceSchema = require("./user_races/schema/user_races.schema");
+const UserUniversitySchema = require("./user_universities/schema/user_races.schema");
+const UserPreferencesSchema = require("./user_preferences/schema/user_preferences.schema");
 
 const CompaniesSchema = require("./companies/schema/companies.schema");
 const CompanyDemographicsSchema = require("./company_demographics/schema/company_demographics.schema");
@@ -62,6 +68,9 @@ module.exports.init = function (connection) {
     UserExperienceService.init(connection);
     UserLinksService.init(connection);
     UserGalleryService.init(connection);
+    UserRaceService.init(connection);
+    UserUniversityService.init(connection);
+    UserPreferenceService.init(connection);
 
     CompanyDemographicService.init(connection);
     CompanyService.init(connection);
@@ -86,6 +95,9 @@ function init_schema() {
     UserExperienceSchema(knex);
     UserLinkSchema(knex);
     UserGallerySchema(knex);
+    UserRaceSchema(knex);
+    UserUniversitySchema(knex);
+    UserPreferencesSchema(knex);
 
     CompaniesSchema(knex);
     CompanyDemographicsSchema(knex);
