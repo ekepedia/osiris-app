@@ -120,7 +120,8 @@ class CompanyPage extends React.Component {
 
         JobsService.getJobs({
             client,
-            company_id: params.company_id
+            company_id: params.company_id,
+            is_user_submitted: false
         }).then((jobs) => {
             console.log("LOADED JOBS", jobs);
 
