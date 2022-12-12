@@ -249,7 +249,7 @@ class CompanyPage extends React.Component {
                                             </div>
                                         </div>
                                         <div style={{flex: 1, overflow: "hidden"}}>
-                                            <div className={classes.jobCardContainer} onClick={() => {history.push(`/jobs?j=${job_2.job_id}&c=${company_id}`);}}>
+                                            <div style={{display: job_2 && job_2.job_title ? null : "none"}} className={classes.jobCardContainer} onClick={() => {history.push(`/jobs?j=${job_2.job_id}&c=${company_id}`);}}>
                                                 <div style={{display: "flex", overflow: "hidden"}}>
                                                     <div className={classes.jobCardImgContainer}>
                                                         <CoverImageHolder url={company.company_logo_url || "https://i.imgur.com/tM97NWQ.png"}/>
