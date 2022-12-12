@@ -9,6 +9,7 @@ import { mc, formatLargeNumber } from "../../../common/helpers";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import StandardBadge from "../../../components/StandardBadge";
 import ReactTooltip from "react-tooltip";
+import StandardButton from "../../../components/StandardButton";
 
 const Styles = {
     container: {
@@ -102,7 +103,7 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, id, company, index, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear} = this.props;
+        let { classes, id, company, index, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear, history} = this.props;
 
         let { expanded } = this.state
         company_demographics = company_demographics || {};
@@ -152,7 +153,7 @@ class CompanyIndexRow extends React.Component {
                         </div>
                     </Link>
                 </div>
-                <div className={mc(classes.companyEmployeeContainer)}>
+                <div className={mc(classes.companyEmployeeContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         <i className="fa-solid fa-user-group"/>{company.company_size ? formatLargeNumber(company.company_size) : "--"}
                     </div>
@@ -161,7 +162,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyGenderContainer)}>
+                <div className={mc(classes.companyGenderContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {company_demographics.employees_female ||company_demographics.employees_male ? <div>
                             {company_demographics.employees_female || "--"}% Female
@@ -176,7 +177,7 @@ class CompanyIndexRow extends React.Component {
                         }}>{female_respresentation_change_label}</span> : <span>No Data</span>}<i className={mc(classes.toolTipIcon, "fa-solid fa-circle-info")} data-tip data-for={id2} style={{marginLeft: "3px", color: COMMON.COLORS.N500}}/>
                     </div>
                 </div>
-                <div className={mc(classes.companyRaceContainer)}>
+                <div className={mc(classes.companyRaceContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {bipoc_respresentation ? <div>
                             {bipoc_respresentation}% BIPOC
@@ -192,7 +193,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyRankContainer)}>
+                <div className={mc(classes.companyRankContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {company.rank && company.rank_value > 0 ? <span>{company.rank}</span> : "--"}<i style={{color: COMMON.COLORS.B400, marginLeft: "2.5px"}} className="fa-sharp fa-solid fa-award"/>
                     </div>
@@ -201,7 +202,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyOverallGlassdoorContainer)}>
+                <div className={mc(classes.companyOverallGlassdoorContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_overall ? <span>{company.glassdoor_overall}</span> : "--"}<i style={{color: COMMON.COLORS.Y400, marginLeft: "2.5px"}} className="fa-solid fa-star"/>
                     </div>
@@ -210,7 +211,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyWorkGlassdoorContainer)}>
+                <div className={mc(classes.companyWorkGlassdoorContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_work_life ? <span>{company.glassdoor_work_life}</span> : "--"}<i style={{color: COMMON.COLORS.R400, marginLeft: "2.5px"}} className="fa-solid fa-scale-balanced"/>
                     </div>
@@ -219,7 +220,7 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
-                <div className={mc(classes.companyPayGlassdoorContainer)}>
+                <div className={mc(classes.companyPayGlassdoorContainer)} style={{display: expanded ? "none" : null}}>
                     <div className={mc(classes.companyHeader)}>
                         {company.glassdoor_compensation ? <span>{company.glassdoor_compensation}</span> : "--"}<i style={{color: COMMON.COLORS.G600, marginLeft: "2.5px"}} className="fa-solid fa-dollar-sign"/>
                     </div>
@@ -228,37 +229,57 @@ class CompanyIndexRow extends React.Component {
                     </div>
                 </div>
 
+                <div style={{flex: 1, textAlign: "right", display: expanded ? null : "none"}}>
+                    <div style={{display: "inline-block", marginRight: "5px"}}>
+                        <StandardButton secondary={true} label={"See Jobs"} onClick={() => {
+                            history.push(`/jobs?c=${company.company_id}`);
+                        }}/>
+                    </div>
+                    <div style={{display: "inline-block", marginRight: "50px"}}>
+                        <StandardButton label={"More Info"} onClick={() => {
+                            history.push(`/companies/${company.company_id}`);
+                        }}/>
+                    </div>
+                </div>
+
                 <div className={mc(classes.companyExpandContainer)} onClick={() => {this.setState({expanded: !expanded})}}>
                     <i style={{fontSize: "13px", marginTop: "13.5px"}} className={`fa-solid fa-angle-${expanded ? 'up' : 'down'}`}/>
                 </div>
+
+
             </div>
 
             <div style={{display: expanded ? "block" : "none"}}>
                 <div className={classes.expandedContainer}>
                     <div style={{flex: 3, paddingRight: "35px"}}>
-                        <div style={{...COMMON.FONTS.H200, marginBottom: "5px",}}>ABOUT COMPANY</div>
+                        <div style={{...COMMON.FONTS.H200, color: COMMON.COLORS.N900, marginBottom: "5px",}}>ABOUT COMPANY</div>
                         <div style={{
                             display: "-webkit-box",
                             WebkitLineClamp: 3,
                             overflow: "hidden",
                             textOverflow: "ellipsis",
-                            WebkitBoxOrient: "vertical"
+                            WebkitBoxOrient: "vertical",
+                            ...COMMON.FONTS.P100,
+                            color: COMMON.COLORS.N800,
                         }}>{company.company_about}</div>
                     </div>
                     <div style={{flex: 1, paddingRight: "20px"}}>
-                        <div style={{color: COMMON.COLORS.N800, display: "-webkit-box",
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, display: "-webkit-box",
                             WebkitLineClamp: 1,
+                            marginBottom: "5px",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
-                            WebkitBoxOrient: "vertical"}}><span style={{color: COMMON.COLORS.N900}}>Industry</span>: {company.company_industry}</div>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}>HQ</span>: {company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}>Company Size</span>: {company.company_size ? formatLargeNumber(company.company_size) : "--"}</div>
+                            WebkitBoxOrient: "vertical"}}>
+                            <span style={{color: COMMON.COLORS.N900, ...COMMON.FONTS.H300}}>Industry</span>: {company.company_industry}
+                        </div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, marginBottom: "5px"}}><span style={{color: COMMON.COLORS.N900, ...COMMON.FONTS.H300}}>HQ</span>: {company.company_city || ""}{company.company_city && company.company_state ? "," : ""} {company.company_state || ""}</div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, marginBottom: "5px",}}><span style={{color: COMMON.COLORS.N900, ...COMMON.FONTS.H300}}>Company Size</span>: {company.company_size ? formatLargeNumber(company.company_size) : "--"}</div>
                     </div>
                     <div style={{flex: 1}}>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}><i style={{width: "23px"}} className="fa-solid fa-star"/>Overall</span>: {company.glassdoor_overall ?  company.glassdoor_overall : "--"}</div>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}><i style={{width: "23px"}} className="fa-solid fa-scale-balanced"/>Work-Life</span>: {company.glassdoor_work_life ?  company.glassdoor_work_life : "--"}</div>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}><i style={{width: "23px"}} className="fa-solid fa-dollar-sign"/>Compensation</span>: {company.glassdoor_compensation ?  company.glassdoor_compensation : "--"}</div>
-                        <div style={{color: COMMON.COLORS.N800}}><span style={{color: COMMON.COLORS.N900}}><i style={{width: "23px"}} className="fa-solid fa-heart"/>Culture & Values</span>: {company.glassdoor_culture ?  company.glassdoor_culture : "--"}</div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, marginBottom: "5px",}}><span style={{color: COMMON.COLORS.N900}}>{company.glassdoor_overall ?  company.glassdoor_overall : "--"} <i style={{color: COMMON.COLORS.Y400}} className="fa-solid fa-star"/> Overall</span></div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, marginBottom: "5px",}}><span style={{color: COMMON.COLORS.N900}}>{company.glassdoor_work_life ?  company.glassdoor_work_life : "--"} <i style={{color: COMMON.COLORS.R400}} className="fa-solid fa-scale-balanced"/> Work-Life</span></div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100, marginBottom: "5px",}}><span style={{color: COMMON.COLORS.N900}}>{company.glassdoor_compensation ?  company.glassdoor_compensation : "--"} <i style={{color: COMMON.COLORS.G600}} className="fa-solid fa-dollar-sign"/> Pay</span></div>
+                        <div style={{color: COMMON.COLORS.N800, ...COMMON.FONTS.P100,}}><span style={{color: COMMON.COLORS.N900}}>{company.glassdoor_culture ?  company.glassdoor_culture : "--"} <i style={{color: COMMON.COLORS.P400}} className="fa-sharp fa-solid fa-basketball"/> Culture</span></div>
 
                     </div>
                 </div>

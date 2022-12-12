@@ -67,6 +67,22 @@ class JobCard extends React.Component {
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
 
+        let salary = "";
+        let salary_tooltip = "";
+        if (job && job.job_salary_estimate) {
+            salary = job.job_salary_estimate;
+
+            if (salary.indexOf("(Employer est.)") !== -1) {
+                salary = salary.replace("(Employer est.)", "").trim()
+                salary_tooltip = "This estimate was provided by the employer via Glassdoor";
+            }
+
+            if (salary.indexOf("(Glassdoor est.)") !== -1) {
+                salary = salary.replace("(Glassdoor est.)", "").trim()
+                salary_tooltip = "This estimate was provided by Glassdoor";
+            }
+        }
+
         return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
             <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "4px", overflow: "hidden"}}>
                 <div style={{display: "flex", marginBottom: "7px"}}>
@@ -86,12 +102,12 @@ class JobCard extends React.Component {
                 </div>
                 <div>
                     <div>
-                        <div style={{marginBottom: "13px"}}>
+                        <div style={{marginBottom: "13px", maxHeight: "20px", overflow: "hidden"}}>
                             {industry ? <StandardBadge label={industry}/> : null}
                             {company.company_industry ? <StandardBadge label={company.company_industry}/> : null}
                         </div>
 
-                        <div style={{marginBottom: "0"}}>
+                        <div style={{marginBottom: "0", maxHeight: "20px", overflow: "hidden"}}>
 
                             {(job.locations && job.locations.length) && (job.locations.slice(0,1)).map((location) =>{
                                 return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600}} key={location.location_id} label={location.label}/>)
@@ -99,10 +115,13 @@ class JobCard extends React.Component {
 
                             {(job.locations && job.locations.length > 1) && <div style={{display: "inline-block", ...COMMON.FONTS.H100, color: COMMON.COLORS.Y600 ,marginRight: "5px"}}>{`+${job.locations.length - 1}`}</div>}
 
-                            {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
+                            {/*{job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }*/}
+                            {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
 
                             {/*<StandardBadge label={job_type.name} iconLeft={true} icon={"fa-sharp fa-solid fa-briefcase"}/>*/}
-                            {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, color: COMMON.COLORS.G600}}/> : null}
+                            {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall}`} icon={"fa-solid fa-star"} iconLeft={false} iconStyle={{color: COMMON.COLORS.Y400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
+                            {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture}`} icon={"fa-sharp fa-solid fa-basketball"} iconLeft={false} iconStyle={{color: COMMON.COLORS.P400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
+                            {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work-life balance`} label={`${company.glassdoor_work_life}`} icon={"fa-solid fa-scale-balanced"} iconLeft={false} iconStyle={{color: COMMON.COLORS.R400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
                             {/*{company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}*/}
 
                         </div>

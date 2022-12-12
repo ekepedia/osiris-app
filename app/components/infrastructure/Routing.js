@@ -14,6 +14,7 @@ import SignUp from "../../scenes/SignUp/index";
 import Settings from "../../scenes/Settings/index";
 import ResetPassword from "../../scenes/ResetPassword/index";
 import ForgotPassword from "../../scenes/ForgotPassword/index";
+import Onboarding from "../../scenes/Onboarding/index";
 
 import {withApollo} from "react-apollo";
 
@@ -32,6 +33,7 @@ class Routing extends React.Component {
                     <Route exact path='/login' component={Login}/>
                     <Route exact path='/forgot-password' component={ForgotPassword}/>
                     <Route exact path='/osiris-onboarding' component={SignUp}/>
+                    <Route exact path='/onboard' component={Onboarding}/>
                     <Route exact path='/claim/:user_id' component={ClaimPortfolio}/>
                     <Route exact path='/reset-password/:reset_password_code' component={ResetPassword}/>
                     <Route exact path='/jobs' component={Jobs}/>

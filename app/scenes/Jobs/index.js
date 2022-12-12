@@ -208,6 +208,15 @@ class Jobs extends React.Component {
     }
 
     componentDidMount() {
+        if (document.location) {
+            let params = (new URL(document.location)).searchParams;
+            let company_id = params.get("c");
+
+            if (company_id) {
+                this.addToField("selectedCompanies", company_id)
+            }
+        }
+
         this.loadCompanies().then(({companies, company_map}) => {
             this.loadJobs({companies, company_map});
         });
@@ -282,6 +291,36 @@ class Jobs extends React.Component {
                 job.companies = job.company_id && company_map[job.company_id] ? [company_map[job.company_id]] : (job.companies || {})
                 return job;
             })
+
+            if (document.location) {
+                let params = (new URL(document.location)).searchParams;
+                let job_id = params.get("j");
+                let company_id = params.get("c");
+
+                if (job_id) {
+                    jobs.forEach((job) => {
+                        if (job && ((job.job_id + "") === (job_id + ""))) {
+                            selectedJob = job
+                        }
+                    });
+
+                    if (selectedJob) {
+                        jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
+                    }
+                }
+
+                if (company_id && !selectedJob) {
+                    jobs.forEach((job) => {
+                        if (job && ((job.company_id + "") === (company_id + ""))) {
+                            selectedJob = job
+                        }
+                    });
+
+                    if (selectedJob) {
+                        jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
+                    }
+                }
+            }
 
             jobs.forEach((job) => {
                 if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {

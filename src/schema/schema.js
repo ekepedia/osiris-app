@@ -9,6 +9,9 @@ const DemoTrackings = require("./demo_tracking");
 const DemoSohoApplications = require("./demo_soho_application");
 const UserEducations = require("./user_educations");
 const UserExperiences = require("./user_experiences");
+const UserRaces = require("./user_races");
+const UserUniversities = require("./user_universities");
+const UserPreferences = require("./user_preferences");
 const UserLinks = require("./user_links");
 const UserGalleries = require("./user_galleries");
 const Companies = require("./companies");
@@ -57,6 +60,9 @@ const jsSchema = makeExecutableSchema({
         DemoSohoApplications.typeDef,
         UserEducations.typeDef,
         UserExperiences.typeDef,
+        UserRaces.typeDef,
+        UserUniversities.typeDef,
+        UserPreferences.typeDef,
         UserLinks.typeDef,
         UserGalleries.typeDef,
         Companies.typeDef,
@@ -75,6 +81,9 @@ const jsSchema = makeExecutableSchema({
         DemoSohoApplications.resolver,
         UserEducations.resolver,
         UserExperiences.resolver,
+        UserRaces.resolver,
+        UserUniversities.resolver,
+        UserPreferences.resolver,
         UserLinks.resolver,
         UserGalleries.resolver,
         Companies.resolver,
