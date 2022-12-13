@@ -24,6 +24,8 @@ import Priorities from "../../components/onboarding/Priorities";
 import Industries from "../../components/onboarding/Industries";
 import Passions from "../../components/onboarding/Passions";
 import Welcome from "../../components/onboarding/Welcome";
+import Education from "../../components/onboarding/Education";
+import Locations from "../../components/onboarding/Locations";
 
 const Styles = {
     container: {
@@ -75,10 +77,13 @@ const PAGES = {
     DOB: 2,
     GENDER: 3,
     RACE: 4,
-    ROLE: 5,
-    PRIORITIES: 6,
-    INDUSTRIES: 7,
-    PASSIONS: 8,
+    EDUCATION: 5,
+    ROLE: 6,
+    PRIORITIES: 7,
+    SALARY: 8,
+    LOCATION: 9,
+    INDUSTRIES: 10,
+    PASSIONS: 11,
 }
 
 class Onboarding extends React.Component {
@@ -119,11 +124,19 @@ class Onboarding extends React.Component {
             new_page = PAGES.ROLE;
         }
 
-        if (current_page === PAGES.ROLE) {
+        if (current_page === PAGES.RACE) {
+            new_page = PAGES.EDUCATION;
+        }
+
+        if (current_page === PAGES.EDUCATION) {
             new_page = PAGES.PRIORITIES;
         }
 
         if (current_page === PAGES.PRIORITIES) {
+            new_page = PAGES.LOCATION;
+        }
+
+        if (current_page === PAGES.LOCATION) {
             new_page = PAGES.INDUSTRIES;
         }
 
@@ -163,16 +176,24 @@ class Onboarding extends React.Component {
             new_page = PAGES.GENDER;
         }
 
-        if (current_page === PAGES.ROLE) {
+        if (current_page === PAGES.EDUCATION) {
             new_page = PAGES.RACE;
+        }
+
+        if (current_page === PAGES.ROLE) {
+            new_page = PAGES.EDUCATION;
         }
 
         if (current_page === PAGES.PRIORITIES) {
             new_page = PAGES.ROLE;
         }
 
-        if (current_page === PAGES.INDUSTRIES) {
+        if (current_page === PAGES.LOCATION) {
             new_page = PAGES.PRIORITIES;
+        }
+
+        if (current_page === PAGES.INDUSTRIES) {
+            new_page = PAGES.LOCATION;
         }
 
         if (current_page === PAGES.PASSIONS) {
@@ -218,12 +239,20 @@ class Onboarding extends React.Component {
                                                     <Race next={this.handleNext} back={this.handleBack}/>
                                                     : null}
 
+                                                {current_page === PAGES.EDUCATION ?
+                                                    <Education next={this.handleNext} back={this.handleBack}/>
+                                                    : null}
+
                                                 {current_page === PAGES.ROLE ?
                                                     <Role next={this.handleNext} back={this.handleBack}/>
                                                     : null}
 
                                                 {current_page === PAGES.PRIORITIES ?
                                                     <Priorities next={this.handleNext} back={this.handleBack}/>
+                                                    : null}
+
+                                                {current_page === PAGES.LOCATION ?
+                                                    <Locations next={this.handleNext} back={this.handleBack}/>
                                                     : null}
 
                                                 {current_page === PAGES.INDUSTRIES ?

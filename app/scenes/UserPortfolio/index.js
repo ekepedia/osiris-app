@@ -39,6 +39,7 @@ import EditPortfolioCarousel from "./components/EditPortfolioCarousel";
 import EditGalleryModal from "./components/EditGalleryModal";
 import AddGeneralLinkModal from "./components/AddGeneralLinkModal";
 import NavBar from "../../components/NavBar";
+import AuthService from "../../services/AuthService";
 
 
 const Styles = {
@@ -101,6 +102,7 @@ class UserPortfolio extends React.Component {
     }
 
     componentDidMount() {
+
         this.loadUser();
         this.loadEducation();
         this.loadExperience();
@@ -354,7 +356,8 @@ class UserPortfolio extends React.Component {
     loadUser() {
         let { client, match: { params } } = this.props;
 
-        UserService.getUser({client, user_id: params.user_id}).then((user) => {
+        const user_id = AuthService.getCurrentUserIdSync();
+        UserService.getUser({client, user_id}).then((user) => {
             console.log("loaded user,", user);
             user = user || {};
             this.setState({
@@ -381,7 +384,9 @@ class UserPortfolio extends React.Component {
     loadEducation() {
         let { client, match: { params } } = this.props;
 
-        UserEducationService.getUserEducation({client, user_id: params.user_id}).then((user_educations) => {
+        const user_id = AuthService.getCurrentUserIdSync();
+
+        UserEducationService.getUserEducation({client, user_id}).then((user_educations) => {
             console.log("loeaded user_educations", user_educations)
             user_educations = user_educations || [];
             user_educations = user_educations.map((user_education) => {
@@ -396,7 +401,10 @@ class UserPortfolio extends React.Component {
 
     loadGalleries() {
         let { client, match: { params } } = this.props;
-        UserGalleryService.getUserGallery({client, user_id: params.user_id}).then((user_galleries) => {
+
+        const user_id = AuthService.getCurrentUserIdSync();
+
+        UserGalleryService.getUserGallery({client, user_id}).then((user_galleries) => {
             user_galleries = user_galleries || [];
             user_galleries = user_galleries.sort((a, b) => { return (a.gallery_order - b.gallery_order)});
             console.log("user_galleries", user_galleries)
@@ -408,7 +416,9 @@ class UserPortfolio extends React.Component {
     loadExperience() {
         let { client, match: { params } } = this.props;
 
-        UserExperienceService.getUserExperiences({client, user_id: params.user_id}).then((user_experiences) => {
+        const user_id = AuthService.getCurrentUserIdSync();
+
+        UserExperienceService.getUserExperiences({client, user_id}).then((user_experiences) => {
             user_experiences = user_experiences || [];
             let company_map = {};
 
@@ -496,7 +506,9 @@ class UserPortfolio extends React.Component {
     loadLinks() {
         let { client, match: { params } } = this.props;
 
-        UserLinkService.getUserLink({client, user_id: params.user_id}).then((user_links) => {
+        const user_id = AuthService.getCurrentUserIdSync();
+
+        UserLinkService.getUserLink({client, user_id}).then((user_links) => {
             console.log("loeaded user_links", user_links)
             user_links = user_links || [];
             user_links = user_links.sort((a, b) => {
