@@ -274,9 +274,11 @@ function set_reset_password_code({user_email}) {
         get_user_logins({user_email}).then((users) => {
             if (users && users.length) {
                 const user = users[0];
+                const { user_id } = user;
 
                 const reset_password_code = Math.round(Math.random()*10000000);
-                console.log(user_email, reset_password_code)
+                console.log(user_email, reset_password_code);
+                send_forgot_email({user_id, user_email, user, reset_password_code})
 
                 knex(SERVICE_DEFAULT_TABLE).where({
                     user_login_id: user.user_login_id
@@ -362,6 +364,30 @@ function send_welcome_email({user_id, user_email, user}) {
         .send(msg)
         .then(() => {
             console.log(`Sent welcome email to ${user_email}, user_id = ${user_id}`);
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
+
+function send_forgot_email({user_id, user, user_email, reset_password_code}) {
+    const msg = {
+        to: [user_email],
+        from: 'eke@osiris.works',
+        templateId: "d-86cec054f1114cdeb9e9150655a3b56f",
+        dynamic_template_data: {
+            code: reset_password_code,
+            user: {
+                ...user,
+                user_id
+            }
+        }
+    };
+
+    sgMail
+        .send(msg)
+        .then(() => {
+            console.log(`Sent forgot email to ${user_email}, user_id = ${user_id}`);
         })
         .catch((error) => {
             console.error(error)

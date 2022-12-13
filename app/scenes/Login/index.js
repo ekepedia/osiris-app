@@ -30,7 +30,7 @@ const Styles = {
     headerTitle: {
         ...COMMON.FONTS.H600,
         marginBottom: "20px",
-        textAlign: "center",
+        textAlign: "left",
         color: COMMON.COLORS.N900
     },
     subContainer: {
@@ -38,7 +38,7 @@ const Styles = {
         margin: "auto",
     },
     buttonContainer: {
-        marginTop: "20px"
+        marginTop: "30px"
     },
     RHSContainer: {
         flex: 1,
@@ -139,21 +139,25 @@ class Login extends React.Component {
                                 <div className={classes.centerAlignContainerFill}>
                                     <div className={classes.verticalAlignObjectFill}>
                                         <div className={mc(classes.subContainer)}>
-                                            <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
+                                            <div className={mc(classes.headerTitle)}>Sign In</div>
 
-                                            <div className={mc(classes.inputLabel)}>Email</div>
+                                            <div className={mc(classes.inputLabel)}>Email Address</div>
                                             <StandardInput value={username} placeholder={"Input Email"} update={(v) => (this.setState({username: v}))}/>
 
                                             <div className={mc(classes.inputLabel)}>Password</div>
                                             <StandardInput type="password" value={password} placeholder={"Input Password"} update={(v) => (this.setState({password: v}))}/>
 
+                                            <div style={{...COMMON.FONTS.P100, marginTop: "10px", marginBottom: "30px"}}>
+                                                <Link to={"/forgot-password"}>
+                                                    Forgot password?
+                                                </Link>
+                                            </div>
+
                                             <div className={mc(classes.buttonContainer)}>
                                                 <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>
                                             </div>
+                                            <div style={{...COMMON.FONTS.P100, textAlign: "center", marginTop: "10px", color: COMMON.COLORS.N700}}>Don't have an account? <Link to={"/osiris-onboarding"}><span>Sign up for free</span></Link></div>
 
-                                            <div className={mc(classes.disclaimer)}>
-                                                By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

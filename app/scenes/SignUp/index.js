@@ -29,7 +29,7 @@ const Styles = {
     headerTitle: {
         ...COMMON.FONTS.H600,
         marginBottom: "20px",
-        textAlign: "center",
+        textAlign: "left",
         color: COMMON.COLORS.N900
     },
     subContainer: {
@@ -37,7 +37,7 @@ const Styles = {
         margin: "auto",
     },
     buttonContainer: {
-        marginTop: "20px"
+        marginTop: "30px"
     },
     RHSContainer: {
         flex: 1,
@@ -46,16 +46,16 @@ const Styles = {
         },
     },
     disclaimer: {
-        ...COMMON.FONTS.FONT_CAPTION_2,
-        color: COMMON.COLORS.DARK_GREY,
-        maxWidth: "241px",
+        ...COMMON.FONTS.P100,
+        color: COMMON.COLORS.N700,
+        width: "100%",
         margin: "auto",
         marginTop: "20px",
         textAlign: "center"
     },
     disclaimerBold: {
         extend: "disclaimer",
-        ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
+        // ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
     },
     ...COMMON.STYLES.GENERAL.NavigationStyles,
     ...COMMON.STYLES.GENERAL.AlignmentStyles,
@@ -120,7 +120,7 @@ class SignUp extends React.Component {
                                 <div className={classes.centerAlignContainerFill}>
                                     <div className={classes.verticalAlignObjectFill}>
                                         <div className={mc(classes.subContainer)}>
-                                            <div className={mc(classes.headerTitle)}>Welcome to OSIRIS</div>
+                                            <div className={mc(classes.headerTitle)}>Create Account</div>
 
                                             <div style={{display: "flex"}}>
                                                 <div style={{flex: 1, paddingRight: "10px"}}>

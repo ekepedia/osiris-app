@@ -35,6 +35,10 @@ AuthService.getCurrentUserId = () => {
     })
 }
 
+AuthService.getCurrentUserIdSync = () => {
+    return current_user_id;
+}
+
 AuthService.setCurrentUser = ({user, user_id}) => {
     if (user) {
         current_user = user;
