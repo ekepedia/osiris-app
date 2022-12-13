@@ -641,7 +641,10 @@ class CompanyIndex extends React.Component {
                                         onChange={(ids) => {
                                             this.setState({
                                                 selectedIndustries: ids
-                                            })
+                                            });
+                                            if (ids && ids.length) {
+                                                TrackingService.trackSubmit({page: "company-search", sub_page: "company-industries", value: JSON.stringify(ids)});
+                                            }
                                         }}
                                         hideIndicator={true}
                                     />
@@ -653,7 +656,10 @@ class CompanyIndex extends React.Component {
                                         onChange={(ids) => {
                                             this.setState({
                                                 selectedLocations: ids
-                                            })
+                                            });
+                                            if (ids && ids.length) {
+                                                TrackingService.trackSubmit({page: "company-search", sub_page: "company-locations", value: JSON.stringify(ids)});
+                                            }
                                         }}
                                         hideIndicator={true}
                                     />
@@ -662,14 +668,16 @@ class CompanyIndex extends React.Component {
                                         <div style={{marginTop: "10px"}}  className={mc(classes.companySubFilterLabel)}>Employee Count</div>
                                         <input type="range" min={minEmployees} max={maxEmployees} value={employeeFilter} className="slider" onChange={(e) =>{
                                             this.resetScrollPosition();
-                                            this.setState({employeeFilter: e.target.value, MAX_RESULTS: 10})
+                                            this.setState({employeeFilter: e.target.value, MAX_RESULTS: 10});
+                                            TrackingService.trackSubmit({page: "company-search", sub_page: "company-employees", value: e.target.value});
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(employeeFilter)} - {formatLargeNumber(maxEmployees)}+</div>
                                     </div>
 
                                     <div style={{marginTop: "15px"}}>
                                         <StandardCheckbox label={"Toggle Companies Actively Hiring"} value={only_jobs} padded={true} update={(checked) => {
-                                            this.setState({only_jobs: checked })
+                                            this.setState({only_jobs: checked });
+                                            TrackingService.trackSubmit({page: "company-search", sub_page: "company-active-hire", value: checked});
                                         }}/>
                                     </div>
 
@@ -677,13 +685,25 @@ class CompanyIndex extends React.Component {
                                     <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}>Company Ratings</div>
 
                                     <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Overall</div>
-                                    <RatingFilter value={this.state.glassdoorOverallFilter} update={(value) => {this.resetScrollPosition(); this.setState({MAX_RESULTS: 10, glassdoorOverallFilter: value})}}/>
+                                    <RatingFilter value={this.state.glassdoorOverallFilter} update={(value) => {
+                                        this.resetScrollPosition();
+                                        this.setState({MAX_RESULTS: 10, glassdoorOverallFilter: value});
+                                        TrackingService.trackSubmit({page: "company-search", sub_page: "company-glassdoor-overall", value: value});
+                                    }}/>
 
                                     <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Work-Life Balance</div>
-                                    <RatingFilter value={this.state.glassdoorWorkLifeFilter} update={(value) => {this.resetScrollPosition();this.setState({MAX_RESULTS: 10, glassdoorWorkLifeFilter: value})}}/>
+                                    <RatingFilter value={this.state.glassdoorWorkLifeFilter} update={(value) => {this.resetScrollPosition();
+                                        this.setState({MAX_RESULTS: 10, glassdoorWorkLifeFilter: value});
+                                        TrackingService.trackSubmit({page: "company-search", sub_page: "company-glassdoor-work-life", value: value});
+
+                                    }}/>
 
                                     <div style={{marginTop: "15px"}}  className={mc(classes.companySubFilterLabel)}>Pay</div>
-                                    <RatingFilter value={this.state.glassdoorPayFilter} update={(value) => {this.resetScrollPosition();this.setState({MAX_RESULTS: 10, glassdoorPayFilter: value})}}/>
+                                    <RatingFilter value={this.state.glassdoorPayFilter} update={(value) => {this.resetScrollPosition();
+                                        this.setState({MAX_RESULTS: 10, glassdoorPayFilter: value});
+                                        TrackingService.trackSubmit({page: "company-search", sub_page: "company-glassdoor-pay", value: value});
+
+                                    }}/>
 
 
                                     <div style={{marginTop: "20px"}}  className={mc(classes.companyFilterLabel)}>Representation</div>
@@ -692,7 +712,9 @@ class CompanyIndex extends React.Component {
                                         <div className={mc(classes.companySubFilterLabel)}>Female Representation</div>
                                         <input type="range" min={0} max={100} value={femaleEmployeeFilter} className="slider" onChange={(e) =>{
                                             this.resetScrollPosition();
-                                            this.setState({femaleEmployeeFilter: e.target.value, MAX_RESULTS: 10})
+                                            this.setState({femaleEmployeeFilter: e.target.value, MAX_RESULTS: 10});
+                                            TrackingService.trackSubmit({page: "company-search", sub_page: "company-employee-female", value: e.target.value});
+
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(femaleEmployeeFilter)}%</div>
                                     </div>
@@ -701,7 +723,9 @@ class CompanyIndex extends React.Component {
                                         <div className={mc(classes.companySubFilterLabel)}>BIPOC Representation</div>
                                         <input type="range" min={0} max={100} value={bipocEmployeeFilter} className="slider" onChange={(e) =>{
                                             this.resetScrollPosition();
-                                            this.setState({bipocEmployeeFilter: e.target.value, MAX_RESULTS: 10})
+                                            this.setState({bipocEmployeeFilter: e.target.value, MAX_RESULTS: 10});
+                                            TrackingService.trackSubmit({page: "company-search", sub_page: "company-employee-bipoc", value: e.target.value});
+
                                         }}/>
                                         <div style={{marginTop: "-6px"}} className={mc(classes.companySubFilterLabel)}>{formatLargeNumber(bipocEmployeeFilter)}%</div>
                                     </div>
