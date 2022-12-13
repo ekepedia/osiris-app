@@ -4,6 +4,10 @@ body {
     background: #F6F6F6;
 }
 
+a {
+    color: #3366FF;
+}
+
 /*input {*/
 /*    appearance: none !important;*/
 /*    -moz-appearance: none !important;*/

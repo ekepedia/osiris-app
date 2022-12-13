@@ -14,28 +14,48 @@ import {mc} from "../../common/helpers";
 import StandardInput from "../../components/StandardInput";
 import StandardButton from "../../components/StandardButton";
 import NavBar from "../../components/NavBar";
+import SignOnHero from "../../components/SignOnHero";
 
 const Styles = {
     container: {
         padding: "0",
+        background: COMMON.COLORS.N0,
         '@media (max-width: 768px)': {
             padding: "0",
         },
     },
     ...COMMON.STYLES.GENERAL.InputStyles,
+    headerIcon: {
+        height: "60px",
+        width: "60px",
+        marginBottom: "15px",
+    },
+    headerIconImg: {
+        width: "100%",
+    },
     headerTitle: {
-        ...COMMON.FONTS.FONT_TITLE_2_BOLD,
-        marginBottom: "20px",
-        textAlign: "center",
-        color: COMMON.COLORS.OSIRIS_GREEN
+        ...COMMON.FONTS.H600,
+        marginBottom: "30px",
+        textAlign: "left",
+        color: COMMON.COLORS.N900
+    },
+    headerSubTitle: {
+        ...COMMON.FONTS.H300,
+        color: COMMON.COLORS.N700,
+        marginBottom: "20px"
     },
     subContainer: {
         maxWidth: "330px",
         margin: "auto",
-        marginTop: "calc(50vh - 182px)"
     },
     buttonContainer: {
-        marginTop: "20px"
+        marginTop: "30px"
+    },
+    RHSContainer: {
+        flex: 1,
+        '@media (max-width: 750px)': {
+            display: "none"
+        },
     },
     disclaimer: {
         ...COMMON.FONTS.FONT_CAPTION_2,
@@ -50,7 +70,7 @@ const Styles = {
         ...COMMON.FONTS.FONT_CAPTION_2_BOLD,
     },
     ...COMMON.STYLES.GENERAL.NavigationStyles,
-
+    ...COMMON.STYLES.GENERAL.AlignmentStyles,
 };
 
 class ResetPassword extends React.Component {
@@ -60,7 +80,8 @@ class ResetPassword extends React.Component {
 
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            reset: false
         };
     }
 
@@ -86,8 +107,11 @@ class ResetPassword extends React.Component {
 
                 if (data.data.success) {
                     // let user_id = data.data.data.user_login.user_id;
-                    alert("Successfully updated password! Please login with the same password");
-                    window.location.pathname = `/login`;
+                    // alert("Successfully updated password! Please login with the same password");
+                    this.setState({
+                        reset: true
+                    })
+                    // window.location.pathname = `/login`;
                     // AuthService.setCurrentUser({user_id})
                 } else {
                     alert(data.data.error);
@@ -112,24 +136,49 @@ class ResetPassword extends React.Component {
                 <div className={classes.masterBodyContainer}>
                     <div className={classes.container}>
 
-                        <div className={mc(classes.subContainer)}>
-                            <div className={mc(classes.headerTitle)}>Reset Password</div>
+                        <div style={{display: "flex", height: "100%"}}>
+                            <div style={{flex: 1, height: "100%"}}>
 
-                            <div className={mc(classes.inputLabel)}>Password</div>
-                            <StandardInput type="password" value={new_password} placeholder={"Input Password"} update={(v) => (this.setState({new_password: v}))}/>
+                                <div className={classes.centerAlignContainerFill}>
+                                    <div className={classes.verticalAlignObjectFill}>
+                                        <div className={mc(classes.subContainer)}>
 
-                            <div className={mc(classes.inputLabel)}>Confirm Password</div>
-                            <StandardInput type="password" value={new_password_confirm} placeholder={"Confirm Password"} update={(v) => (this.setState({new_password_confirm: v}))}/>
+                                            {this.state.reset ? <div>
+                                                <div className={mc(classes.headerIcon)}>
+                                                    <img className={mc(classes.headerIconImg)} src={"/img/success-icon.png"}/>
+                                                </div>
 
-                            <div className={mc(classes.buttonContainer)}>
-                                <StandardButton label={"Reset Password"} fullWidth={true} onClick={() => (this.reset())}/>
+                                                <div className={mc(classes.headerTitle)} style={{marginBottom: "0px"}}>Password Reset</div>
+                                                <div className={mc(classes.headerSubTitle)}>
+                                                    <Link to={"/login"}>Login now →</Link>
+                                                </div>
+                                            </div> : <div>
+                                                <div className={mc(classes.headerIcon)}>
+                                                    <img className={mc(classes.headerIconImg)} src={"/img/reset-icon.png"}/>
+                                                </div>
+
+                                                <div className={mc(classes.headerTitle)}>Reset Password</div>
+
+                                                <div className={mc(classes.inputLabel)}>Password</div>
+                                                <StandardInput type="password" value={new_password} placeholder={"Input Password"} update={(v) => (this.setState({new_password: v}))}/>
+
+                                                <div className={mc(classes.inputLabel)}>Confirm Password</div>
+                                                <StandardInput type="password" value={new_password_confirm} placeholder={"Confirm Password"} update={(v) => (this.setState({new_password_confirm: v}))}/>
+
+                                                <div className={mc(classes.buttonContainer)}>
+                                                    <StandardButton label={"Reset Password"} fullWidth={true} onClick={() => (this.reset())}/>
+                                                </div>
+                                            </div>}
+
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-
-                            <div className={mc(classes.disclaimer)}>
-                                By continuing, you agree to OSIRIS’ <span className={classes.disclaimerBold}>Terms of Service, User Agreement, and Privacy Policy</span>
+                            <div className={mc(classes.RHSContainer)}>
+                                <SignOnHero />
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

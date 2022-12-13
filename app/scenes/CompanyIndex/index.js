@@ -201,6 +201,7 @@ class CompanyIndex extends React.Component {
         });
 
         locations = _.uniq(locations);
+        locations = locations.sort();
         locationsOptions = locations.map((location) => {
             return {
                 value: location,
@@ -225,6 +226,7 @@ class CompanyIndex extends React.Component {
         });
 
         industries = _.uniq(industries);
+        industries = industries.sort();
         industriesOptions = industries.map((industry) => {
             return {
                 value: industry,
