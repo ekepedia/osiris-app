@@ -41,7 +41,7 @@ class CompanySelect extends React.Component {
 
     filterOptions(options) {
         let results = [];
-        let searchText = this.state.input
+        let searchText = (this.state.input || "").toLowerCase();
         options.forEach((option) => {
             if (option && option.company) {
                 let { company } = option;

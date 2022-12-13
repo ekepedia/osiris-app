@@ -1,5 +1,5 @@
 import {G200, G600, N100, N600, N700, O100, O600, R100, R600, Y100, Y600} from "./colors";
-
+import { UNIVERSITIES } from "./data/universities"
 export const NAV_HEIGHT = 48;
 
 const MONTHS = [
@@ -77,6 +77,7 @@ const PREFERENCE_TYPES = {
     JOB_PRIORITIES: "2",
     INDUSTRIES: "3",
     PASSIONS: "4",
+    LOCATIONS: "5",
 }
 
 const ROLE_EXPECTATIONS = [
@@ -138,6 +139,19 @@ PASSIONS.forEach((d) => {
     PASSIONS_MAP[d.value] = d;
 });
 
+let UNIVERSITIES_FORMATTED = UNIVERSITIES.map((u) => {
+    return {
+        ...u,
+        value: u.id,
+        label: u.name
+    }
+})
+
+let UNIVERSITIES_MAP = {};
+UNIVERSITIES_FORMATTED.forEach((d) => {
+    UNIVERSITIES_MAP[d.value] = d;
+});
+
 export const CONSTS = {
     MODAL_HEIGHT: "350px",
     EDIT_PORTFOLIO_MODAL_HEIGHT: "670px",
@@ -157,5 +171,7 @@ export const CONSTS = {
     INDUSTRIES,
     INDUSTRIES_MAP,
     PASSIONS,
-    PASSIONS_MAP
+    PASSIONS_MAP,
+    UNIVERSITIES: UNIVERSITIES_FORMATTED,
+    UNIVERSITIES_MAP
 }

@@ -30,7 +30,7 @@ class StandardMultiSelect extends React.Component {
         super(props);
 
         this.state = {
-
+            input: ""
         };
     }
 
@@ -38,14 +38,39 @@ class StandardMultiSelect extends React.Component {
 
     }
 
+    filterOptions(options) {
+        let results = [];
+        let searchText = (this.state.input || "").toLowerCase();
+        options.forEach((option) => {
+            if (option && option.label) {
+                let { label } = option;
+                label = (label || "").toLowerCase();
+
+                if(label.indexOf(searchText) !== -1){
+                    results.push(option);
+                }
+            } else {
+                return false
+            }
+        });
+        return results;
+    }
+
+
     render() {
-        let { classes, client, match: { params }, value, options, onChange, hideIndicator, placeholder } = this.props;
+        let { classes, client, match: { params }, value, options, onChange, max, hideIndicator, placeholder } = this.props;
 
         const DropdownIndicator = () => {
             return (<div style={{width: "32px", display: hideIndicator ? "none" : null}}>
                 <img src={"/img/custom-select-caret.png"} style={{height: "20px", width: "20px"}}/>
             </div>);
         };
+
+        let results = this.filterOptions(options);
+
+        if (max) {
+            results = results.slice(0, max)
+        }
 
         return (<div className={classes.container}>
             <Select
@@ -114,7 +139,10 @@ class StandardMultiSelect extends React.Component {
 
                 components={{DropdownIndicator}}
 
-                options={options}
+                options={results}
+                onInputChange={(input) => {
+                    this.setState({input})
+                }}
             />
         </div>)
     }
