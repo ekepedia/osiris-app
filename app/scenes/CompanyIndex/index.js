@@ -147,6 +147,7 @@ class CompanyIndex extends React.Component {
 
                             let selectedIndustries = [];
                             let selectedLocations = [];
+                            user_preferences = user_preferences || [];
                             user_preferences.forEach((user_preference) => {
                                 if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.INDUSTRIES) {
                                     let industry = COMMON.CONSTS.INDUSTRIES_MAP[user_preference.preference_id];
