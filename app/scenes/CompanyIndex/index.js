@@ -591,7 +591,7 @@ class CompanyIndex extends React.Component {
             if (!company.company_logo_url)
                 return null;
 
-            return (<CompanyIndexRow job_counts={job_counts} history={history} id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
+            return (<CompanyIndexRow only_jobs={only_jobs} job_counts={job_counts} history={history} id={`company-index-row-${i}`} index={i + 1} key={company_id} {...{company, overall_average, worklife_average, pay_average, company_demographics, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear}}/>);
         })
 
         filtered_companies = _.without(filtered_companies, null);

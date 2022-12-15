@@ -103,9 +103,13 @@ class CompanyIndexRow extends React.Component {
     }
 
     render() {
-        let { classes, id, company, index, job_counts, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear, history} = this.props;
+        let { classes, id, company, only_jobs, index, job_counts, company_demographics, overall_average, worklife_average, pay_average, bipoc_respresentation, bipoc_respresentation_change, female_respresentation_change, currentYear, previousYear, history} = this.props;
 
         let { expanded } = this.state
+
+
+        expanded = only_jobs ? true : expanded;
+
         company_demographics = company_demographics || {};
         company = company || {};
         bipoc_respresentation = bipoc_respresentation || 0;
