@@ -122,6 +122,23 @@ function get_jobs({
     });
 }
 
+module.exports.get_jobs_by_ids = get_jobs_by_ids;
+
+function get_jobs_by_ids({jobs_ids}) {
+    return new Promise((resolve, reject) => {
+        if (!jobs_ids && !jobs_ids)
+            return reject(new Error("Missing jobs_ids"));
+
+        let knexQuery = knex(SERVICE_DEFAULT_TABLE).whereIn("job_id", jobs_ids);
+
+        knexQuery.then((rows) => {
+            return resolve(rows);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
 module.exports.create_job = create_job;
 
 function create_job({

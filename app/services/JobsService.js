@@ -144,6 +144,60 @@ JobsService.getJobs = ({
     });
 }
 
+JobsService.getJobsByIds = ({
+                           client,
+                            job_ids,
+                       }) => {
+    return new Promise((resolve, reject) => {
+        const JobsQuery = gql`
+            query JobsQuery(
+                $job_ids: [String],
+            ){
+                jobs_by_ids(input: $job_ids) {
+                    job_id,
+                    airtable_job_id,
+                    company_id,
+                    company_name,
+                    user_id,
+                    date_created,
+                    date_created_label,
+                    apply_link,
+                    job_salary_estimate,
+                    job_title,
+                    job_overview,
+                    job_qualifications,
+                    job_responsibilities,
+                    submitted_by_id,
+                    is_verified,
+                    is_active,
+                    is_user_submitted,
+                    is_public,
+                    job_html,
+                    job_seniority,
+                    job_board_category,
+                    job_source,
+                    batch_id,
+                    airtable_batch_id
+                }
+            }
+        `;
+
+        const variables = {
+            job_ids,
+        };
+
+        client.query({query: JobsQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
+            if (response && response.data && response.data.jobs_by_ids && response.data.jobs_by_ids.length) {
+                resolve(response.data.jobs_by_ids)
+            } else {
+                resolve(null)
+            }
+        }).catch((err) => {
+            resolve();
+        })
+    });
+}
+
 JobsService.addJob = ({
                           client,
                           job_id,

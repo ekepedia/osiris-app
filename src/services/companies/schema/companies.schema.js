@@ -39,6 +39,9 @@ module.exports = function (connection) {
         table.string('company_industry');
         table.string('company_industry_group');
 
+        table.string('glassdoor_industry');
+        table.string('clearbit_industry');
+
         table.boolean('is_hidden').defaultTo(false);
         table.boolean('is_verified').defaultTo(false);
         table.boolean('is_clearbit_import').defaultTo(false);
