@@ -73,7 +73,7 @@ class SavedJobs extends React.Component {
 
     componentDidMount() {
         this.loadSavedJobs(true);
-        this.loadJobs(true);
+        // this.loadJobs(true);
         this.loadCompanies(true);
         this.loadCompanyDemographics();
         this.loadSavedJobNotes();
@@ -175,6 +175,12 @@ class SavedJobs extends React.Component {
                 return nameA.localeCompare(nameB);
             }) : saved_jobs;
 
+            if (saved_jobs && saved_jobs.length) {
+                let job_ids = saved_jobs.map((sj) => (sj.job_id));
+                console.log("job_ids", job_ids);
+                this.loadJobs(true, job_ids);
+            }
+
             this.setState({
                 saved_jobs,
                 loading_saved_jobs: false
@@ -224,37 +230,66 @@ class SavedJobs extends React.Component {
         return COMMON.COLORS.TAG_GREY;
     }
 
-    loadJobs(first) {
+    loadJobs(first, job_ids) {
         let { client } = this.props;
 
         if (first) {
             this.setState({loading_jobs: true});
         }
 
-        JobsService.getJobs({client}).then((jobs) => {
-            // console.log("LOADED JOBS", jobs);
+        if (job_ids) {
+            JobsService.getJobsByIds({client, job_ids}).then((jobs) => {
+                console.log("LOADED JOBS", jobs);
 
-            jobs = jobs || [];
-            let jobs_map = {};
+                jobs = jobs || [];
+                let jobs_map = {};
 
-            jobs.forEach((job) => {
-                jobs_map[job.job_id] = job;
+                jobs.forEach((job) => {
+                    jobs_map[job.job_id] = job;
+                })
+
+                jobs = jobs.sort((a, b) => {
+
+                    let nameA = a.job_title || "";
+                    let nameB = b.job_title || "";
+
+                    return nameA.localeCompare(nameB);
+                });
+
+                this.setState({
+                    jobs,
+                    jobs_map,
+                    loading_jobs: false
+                })
             })
+        } else {
+            JobsService.getJobs({client}).then((jobs) => {
+                // console.log("LOADED JOBS", jobs);
 
-            jobs = jobs.sort((a, b) => {
+                jobs = jobs || [];
+                let jobs_map = {};
 
-                let nameA = a.job_title || "";
-                let nameB = b.job_title || "";
+                jobs.forEach((job) => {
+                    jobs_map[job.job_id] = job;
+                })
 
-                return nameA.localeCompare(nameB);
-            });
+                jobs = jobs.sort((a, b) => {
 
-            this.setState({
-                jobs,
-                jobs_map,
-                loading_jobs: false
+                    let nameA = a.job_title || "";
+                    let nameB = b.job_title || "";
+
+                    return nameA.localeCompare(nameB);
+                });
+
+                this.setState({
+                    jobs,
+                    jobs_map,
+                    loading_jobs: false
+                })
             })
-        })
+        }
+
+
     }
 
     updateSelectedSavedJob(field, value) {
@@ -289,7 +324,7 @@ class SavedJobs extends React.Component {
 
         JobsService.editJob({client, ...selectedJob}).then((success) => {
             console.log("successfully edited job", success);
-            this.loadJobs();
+            // this.loadJobs();
         })
     }
 
@@ -440,7 +475,7 @@ class SavedJobs extends React.Component {
                                 console.log("params", params)
                                 console.log("params.user)id", params.user_id)
 
-                                this.loadJobs();
+                                // this.loadJobs();
                                 console.log("USER ID:", params.user_id);
                                 SavedJobService.addSavedJob({client,
                                     job_id,

@@ -24,6 +24,10 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import RatingFilter from "../../components/RatingFilter";
 import DoubleSlider from "../../components/DoubleSlider";
 import StandardCheckbox from "../../components/StandardCheckbox";
+import UserUniversityService from "../../services/UserUniversityService";
+import UserPreferenceService from "../../services/UserPreferenceService";
+import AuthService from "../../services/AuthService";
+import axios from "axios";
 
 const SORTS = {
     BIPOC: 1,
@@ -94,6 +98,11 @@ class CompanyIndex extends React.Component {
                 });
             },
             (cb) => {
+                this.loadUserPreferences().then(() => {
+                    cb();
+                });
+            },
+            (cb) => {
                 this.loadCompanyDemographics().then(() => {
                     cb();
                 });
@@ -117,6 +126,60 @@ class CompanyIndex extends React.Component {
             })
 
         })
+    }
+
+    loadUserPreferences() {
+        let { client } = this.props;
+
+        return new Promise((resolve) => {
+            const user_id = AuthService.getCurrentUserIdSync();
+            if (user_id) {
+                axios.get("/api/cities").then((response) => {
+                    if (response && response.data && response.data.cities) {
+                        let CITIES = response.data.cities;
+                        let CITIES_MAP = {};
+                        CITIES.forEach((c) => {
+                            CITIES_MAP[c.value] = c;
+                        });
+
+                        UserPreferenceService.getUserPreference({client, user_id}).then((user_preferences) => {
+                            console.log("user_preferences", user_preferences);
+
+                            let selectedIndustries = [];
+                            let selectedLocations = [];
+                            user_preferences.forEach((user_preference) => {
+                                if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.INDUSTRIES) {
+                                    let industry = COMMON.CONSTS.INDUSTRIES_MAP[user_preference.preference_id];
+                                    console.log("user_preference industry", industry );
+
+                                    if (industry && industry.label) {
+                                        selectedIndustries.push(industry.label)
+                                    }
+                                }
+
+                                if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.LOCATIONS) {
+                                    let location = CITIES_MAP[user_preference.preference_id];
+                                    console.log("user_preference location", location );
+
+                                    if (location && location.label) {
+                                        selectedLocations.push(location.label)
+                                    }
+                                }
+                            })
+
+                            this.setState({
+                                selectedIndustries,
+                                selectedLocations
+                            })
+                            resolve();
+                        });
+                    }
+                })
+
+            } else {
+                return resolve();
+            }
+        });
     }
 
     loadCompanies() {
@@ -210,10 +273,33 @@ class CompanyIndex extends React.Component {
         })
         // console.log("new locations,", locations);
         // console.log("new locationsOptions,", locationsOptions);
+        // console.log("new locationsOptions,", locationsOptions);
+
+        setTimeout(() => {
+            console.log("this.state.selectedLocations", this.state.selectedLocations)
+
+            if (this.state.selectedLocations && this.state.selectedLocations.length) {
+                let selectedLocations = this.state.selectedLocations;
+                console.log("this.state.selectedLocations", this.state.selectedLocations)
+                this.state.selectedLocations.forEach((location) => {
+                    if (locations.indexOf(location) === -1) {
+                        selectedLocations = _.filter(selectedLocations, (l) => (l !== location))
+                    }
+                })
+                this.setState({selectedLocations})
+            }
+        }, 2000);
+
+
         this.setState({
             locations,
             locationsOptions
         })
+
+        return {
+            locations,
+            locationsOptions
+        }
 
     }
 

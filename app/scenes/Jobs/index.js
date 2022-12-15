@@ -27,6 +27,8 @@ import CompanyService from "../../services/CompanyService";
 import LoadingJobCard from "../../components/LoadingJobCard";
 import SavedJobService from "../../services/SavedJobService";
 import AuthService from "../../services/AuthService";
+import axios from "axios";
+import UserPreferenceService from "../../services/UserPreferenceService";
 
 const Styles = {
     container: {
@@ -196,6 +198,7 @@ class Jobs extends React.Component {
             selectedLocations: [],
             selectedCompanies: [],
             selectedIndustries: [],
+            selectedCompanyIndustries: [],
             selectedAffinities: [],
             selectedSeniorities: [],
             selectedRoles: [],
@@ -211,9 +214,14 @@ class Jobs extends React.Component {
         if (document.location) {
             let params = (new URL(document.location)).searchParams;
             let company_id = params.get("c");
+            let job_id = params.get("j");
 
             if (company_id) {
                 this.addToField("selectedCompanies", company_id)
+            }
+
+            if (!company_id && !job_id) {
+                this.loadUserPreferences();
             }
         }
 
@@ -339,6 +347,64 @@ class Jobs extends React.Component {
         })
     }
 
+    loadUserPreferences() {
+        let { client } = this.props;
+
+        return new Promise((resolve) => {
+            const user_id = AuthService.getCurrentUserIdSync();
+            if (user_id) {
+                axios.get("/api/cities").then((response) => {
+                    if (response && response.data && response.data.cities) {
+                        let CITIES = response.data.cities;
+                        let CITIES_MAP = {};
+                        CITIES.forEach((c) => {
+                            CITIES_MAP[c.value] = c;
+                        });
+
+                        UserPreferenceService.getUserPreference({client, user_id}).then((user_preferences) => {
+                            console.log("user_preferences", user_preferences);
+
+                            let selectedIndustries = [];
+                            let selectedLocations = [];
+                            user_preferences.forEach((user_preference) => {
+                                if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.INDUSTRIES) {
+                                    let industry = COMMON.CONSTS.INDUSTRIES_MAP[user_preference.preference_id];
+                                    console.log("user_preference industry", industry );
+
+                                    if (industry && industry.label) {
+                                        selectedIndustries.push(industry.label);
+                                        // this.addToField("selectedCompanyIndustries", industry.id);
+                                    }
+                                }
+
+                                if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.LOCATIONS) {
+                                    let location = CITIES_MAP[user_preference.preference_id];
+                                    console.log("user_preference location", location );
+
+                                    if (location && location.label) {
+                                        selectedLocations.push(location.label)
+                                        // this.addToField("selectedLocations", location.id);
+
+                                    }
+                                }
+                            })
+
+                            this.setState({
+                                selectedCompanyIndustries: selectedIndustries, selectedLocations
+                            })
+
+                            console.log({selectedIndustries, selectedLocations})
+                            resolve();
+                        });
+                    }
+                })
+
+            } else {
+                return resolve();
+            }
+        });
+    }
+
     addToField(field, id) {
         let selected = this.state[field];
         selected.push(id);
@@ -437,6 +503,7 @@ class Jobs extends React.Component {
             selectedLocations: [],
             selectedCompanies: [company_id],
             selectedIndustries: [],
+            selectedCompanyIndustries: [],
             selectedAffinities: [],
             selectedRoles: [],
             selectedDegreeRequirements: [],
@@ -497,6 +564,7 @@ class Jobs extends React.Component {
                                                 selectedLocations={this.state.selectedLocations}
                                                 selectedCompanies={this.state.selectedCompanies}
                                                 selectedIndustries={this.state.selectedIndustries}
+                                                selectedCompanyIndustries={this.state.selectedCompanyIndustries}
                                                 selectedAffinities={this.state.selectedAffinities}
                                                 selectedSeniorities={this.state.selectedSeniorities}
                                                 selectedRoles={this.state.selectedRoles}
