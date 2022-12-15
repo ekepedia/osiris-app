@@ -6,6 +6,7 @@ const JobService = require("../services/jobs/JobService");
 const typeDef = gql`
     extend type Query {
         jobs(input: QueryJob): [Job]
+        jobs_by_ids(input: [String]): [Job]
     }
 
     extend type Mutation {
@@ -149,6 +150,11 @@ const resolver = {
     Query: {
         jobs: (_, { input }) => new Promise((res, rej) => {
             JobService.get_jobs(input).then((jobs) => {
+                return res(jobs);
+            });
+        }),
+        jobs_by_ids: (_, { input }) => new Promise((res, rej) => {
+            JobService.get_jobs_by_ids({jobs_ids: input}).then((jobs) => {
                 return res(jobs);
             });
         }),
