@@ -50,6 +50,7 @@ class JobCards extends React.Component {
             selectedLocations,
             selectedCompanies,
             selectedIndustries,
+            selectedCompanyIndustries,
             selectedDegreeRequirements,
             selectedRoles,
             selectedAffinities,
@@ -118,6 +119,27 @@ class JobCards extends React.Component {
                 }
                 if (found) {
                     validIndustry = true;
+                }
+            }
+
+            let validCompanyIndustry = true;
+
+            if (selectedCompanyIndustries && selectedCompanyIndustries.length) {
+                validCompanyIndustry = false;
+                let found = false;
+
+                if (job && job.companies) {
+                    job.companies.forEach((company) => {
+                        if (company.company_industry && company.company_industry.length) {
+                            if (selectedCompanyIndustries.indexOf(company.company_industry) !== -1) {
+                                found = true;
+                            }
+                        }
+                    })
+                }
+
+                if (found) {
+                    validCompanyIndustry = true;
                 }
             }
 
@@ -246,7 +268,7 @@ class JobCards extends React.Component {
             }
 
             let valid = validGlassdoorOverall && validGlassdoorCompensation && validGlassdoorCulture && validGlassdoorWorkLife &&
-                validLocation && validCompany && validIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
+                validLocation && validCompany && validIndustry && validCompanyIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
 
             if (job && job.companies && job.companies.length && job.companies[0] ) {
                 if (valid) {
@@ -266,6 +288,7 @@ class JobCards extends React.Component {
             usingFilters: (glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
+                (selectedCompanyIndustries && selectedCompanyIndustries.length) ||
                 (selectedSeniorities && selectedSeniorities.length) ||
                 (selectedDegreeRequirements && selectedDegreeRequirements.length) ||
                 (selectedRoles && selectedRoles.length) ||

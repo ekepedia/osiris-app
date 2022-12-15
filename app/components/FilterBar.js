@@ -102,6 +102,8 @@ class FilterBar extends React.Component {
     }
 
     constructLocationOptions (jobs) {
+        const { state } = this.props;
+
         jobs = jobs || [];
         let dedup_map = {};
         jobs.forEach((job) => {
@@ -116,7 +118,22 @@ class FilterBar extends React.Component {
 
         if (this.locations && this.locations.length) {
             this.locations = this.locations.sort((a, b) => {
-                return (a.label || "").localeCompare(b.label || "");
+                let a_label = (a.label || "");
+                let b_label = (b.label || "");
+
+                if (state["selectedLocations"] &&
+                    state["selectedLocations"].length &&
+                    state["selectedLocations"].indexOf(a_label) !== -1) {
+                    a_label = "0000" + a_label;
+                }
+
+                if (state["selectedLocations"] &&
+                    state["selectedLocations"].length &&
+                    state["selectedLocations"].indexOf(b_label) !== -1) {
+                    b_label = "0000" + b_label;
+                }
+
+                return a_label.localeCompare(b_label);
             });
         }
 
@@ -125,6 +142,8 @@ class FilterBar extends React.Component {
 
     //job_board_category
     constructIndustryOptions (jobs) {
+        const { state } = this.props;
+
         jobs = jobs || [];
         let dedup_map = {};
         jobs.forEach((job) => {
@@ -135,18 +154,75 @@ class FilterBar extends React.Component {
             }
         });
 
-
         this.industries = Object.values(dedup_map);
 
         if (this.industries && this.industries.length) {
             this.industries = this.industries.sort((a, b) => {
-                return (a.label || "").localeCompare(b.label || "");
+                let a_label = (a.label || "");
+                let b_label = (b.label || "");
+
+                if (state["selectedIndustries"] &&
+                    state["selectedIndustries"].length &&
+                    state["selectedIndustries"].indexOf(a_label) !== -1) {
+                    a_label = "0000" + a_label;
+                }
+
+                if (state["selectedIndustries"] &&
+                    state["selectedIndustries"].length &&
+                    state["selectedIndustries"].indexOf(b_label) !== -1) {
+                    b_label = "0000" + b_label;
+                }
+
+                return a_label.localeCompare(b_label);
             });
         }
         return this.industries
     }
 
-     constructSeniorityOptions (jobs) {
+    constructCompanyIndustryOptions(jobs) {
+        const { state } = this.props;
+        jobs = jobs || [];
+        let dedup_map = {};
+        jobs.forEach((job) => {
+            if (job.companies && job.companies.length) {
+                job.companies.forEach((company) => {
+                    if (company.company_industry && company.company_industry.length) {
+                        dedup_map[company.company_industry] = {
+                            id: company.company_industry,
+                            label: company.company_industry,
+                        }
+                    }
+                })
+            }
+        });
+
+        this.company_industries = Object.values(dedup_map);
+
+        if (this.company_industries && this.company_industries.length) {
+            this.company_industries = this.company_industries.sort((a, b) => {
+                let a_label = (a.label || "");
+                let b_label = (b.label || "");
+
+                if (state["selectedCompanyIndustries"] &&
+                    state["selectedCompanyIndustries"].length &&
+                    state["selectedCompanyIndustries"].indexOf(a_label) !== -1) {
+                    a_label = "0000" + a_label;
+                }
+
+                if (state["selectedCompanyIndustries"] &&
+                    state["selectedCompanyIndustries"].length &&
+                    state["selectedCompanyIndustries"].indexOf(b_label) !== -1) {
+                    b_label = "0000" + b_label;
+                }
+
+                return a_label.localeCompare(b_label);
+            });
+        }
+
+        return this.company_industries
+    }
+
+    constructSeniorityOptions (jobs) {
         jobs = jobs || [];
         let dedup_map = {};
         jobs.forEach((job) => {
@@ -169,6 +245,8 @@ class FilterBar extends React.Component {
     }
 
     constructCompanyOptions (jobs) {
+        const { state } = this.props;
+
         jobs = jobs || [];
         let dedup_map = {};
         jobs.forEach((job) => {
@@ -189,7 +267,22 @@ class FilterBar extends React.Component {
 
         if (this.companies && this.companies.length) {
             this.companies = this.companies.sort((a, b) => {
-                return (a.label || "").localeCompare(b.label || "");
+                let a_label = (a.label || "");
+                let b_label = (b.label || "");
+
+                if (state["selectedCompanies"] &&
+                    state["selectedCompanies"].length &&
+                    state["selectedCompanies"].indexOf(a.company_id) !== -1) {
+                    a_label = "0000" + a_label;
+                }
+
+                if (state["selectedCompanies"] &&
+                    state["selectedCompanies"].length &&
+                    state["selectedCompanies"].indexOf(b.company_id) !== -1) {
+                    b_label = "0000" + b_label;
+                }
+
+                return a_label.localeCompare(b_label);
             });
         }
         return this.companies
@@ -211,6 +304,7 @@ class FilterBar extends React.Component {
         this.locations = this.constructLocationOptions(jobs);
         this.companies = this.constructCompanyOptions(jobs);
         this.industries = this.constructIndustryOptions(jobs);
+        this.company_industries = this.constructCompanyIndustryOptions(jobs);
         this.seniorities = this.constructSeniorityOptions(jobs);
 
         return (<div className={classes.container} id="jobs-filter-bar">
@@ -225,6 +319,17 @@ class FilterBar extends React.Component {
                             onAdd={(id) => (addToField("selectedIndustries", id))}
                             onRemove={(id) => (removeFromField("selectedIndustries", id))}
                             onClear={() => (clearField("selectedIndustries"))}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <FilterDropdown
+                            label="Industry"
+                            placeholder="Select Industry"
+                            options={this.company_industries}
+                            selectedOptions={state["selectedCompanyIndustries"]}
+                            onAdd={(id) => (addToField("selectedCompanyIndustries", id))}
+                            onRemove={(id) => (removeFromField("selectedCompanyIndustries", id))}
+                            onClear={() => (clearField("selectedCompanyIndustries"))}
                         />
                     </div>
                     <div className={classes.filterContainer}>

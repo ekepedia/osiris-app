@@ -117,6 +117,14 @@ const INDUSTRIES = [
     {value: 1309, label: "Education"},
     {value: 1310, label: "News"},
     {value: 1311, label: "Music"},
+    {value: 1313, label: "Engineering"},
+    {value: 1314, label: "Beauty"},
+    {value: 1315, label: "Media"},
+    {value: 1316, label: "Life Sciences"},
+    {value: 1317, label: "Consumer Products"},
+    {value: 1318, label: "Entertainment"},
+    {value: 1319, label: "Legal"},
+    {value: 1320, label: "Real Estate"},
 ];
 
 let INDUSTRIES_MAP = {};

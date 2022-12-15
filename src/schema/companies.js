@@ -39,6 +39,7 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+        glassdoor_industry: String
         
         glassdoor_career: String
         glassdoor_compensation: String
@@ -80,6 +81,8 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+        glassdoor_industry: String
+
 
         glassdoor_career: String
         glassdoor_compensation: String
@@ -123,6 +126,8 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+        glassdoor_industry: String
+
 
         glassdoor_career: String
         glassdoor_compensation: String
@@ -166,6 +171,8 @@ const typeDef = gql`
 
         company_industry: String
         company_industry_group: String
+        glassdoor_industry: String
+
 
         glassdoor_career: String
         glassdoor_compensation: String
