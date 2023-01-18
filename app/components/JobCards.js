@@ -70,94 +70,94 @@ class JobCards extends React.Component {
 
             let validLocation = true;
 
-            if (selectedLocations && selectedLocations.length) {
-                validLocation = false;
-                let found = false;
-
-                if (job && job.locations) {
-                    job.locations.forEach((location) => {
-                        if (selectedLocations.indexOf(location.location_id) !== -1) {
-                            found = true
-                        }
-                    })
-                }
-                if (found) {
-                    validLocation = true;
-                }
-            }
+            // if (selectedLocations && selectedLocations.length) {
+            //     validLocation = false;
+            //     let found = false;
+            //
+            //     if (job && job.locations) {
+            //         job.locations.forEach((location) => {
+            //             if (selectedLocations.indexOf(location.location_id) !== -1) {
+            //                 found = true
+            //             }
+            //         })
+            //     }
+            //     if (found) {
+            //         validLocation = true;
+            //     }
+            // }
 
             let validCompany = true;
 
-            if (selectedCompanies && selectedCompanies.length) {
-                validCompany = false;
-                let found = false;
-
-                if (job && job.companies) {
-                    job.companies.forEach((company) => {
-                        if (company && company.company_id && selectedCompanies.indexOf(company.company_id) !== -1) {
-                            found = true
-                        }
-                    })
-                }
-                if (found) {
-                    validCompany = true;
-                }
-            }
+            // if (selectedCompanies && selectedCompanies.length) {
+            //     validCompany = false;
+            //     let found = false;
+            //
+            //     if (job && job.companies) {
+            //         job.companies.forEach((company) => {
+            //             if (company && company.company_id && selectedCompanies.indexOf(company.company_id + "") !== -1) {
+            //                 found = true
+            //             }
+            //         })
+            //     }
+            //     if (found) {
+            //         validCompany = true;
+            //     }
+            // }
 
             let validIndustry = true;
 
-            if (selectedIndustries && selectedIndustries.length) {
-                validIndustry = false;
-                let found = false;
-
-                if (job && job.industries) {
-                    job.industries.forEach((industry) => {
-                        if (selectedIndustries.indexOf(industry.industry_id) !== -1) {
-                            found = true
-                        }
-                    })
-                }
-                if (found) {
-                    validIndustry = true;
-                }
-            }
+            // if (selectedIndustries && selectedIndustries.length) {
+            //     validIndustry = false;
+            //     let found = false;
+            //
+            //     if (job && job.industries) {
+            //         job.industries.forEach((industry) => {
+            //             if (selectedIndustries.indexOf(industry.industry_id) !== -1) {
+            //                 found = true
+            //             }
+            //         })
+            //     }
+            //     if (found) {
+            //         validIndustry = true;
+            //     }
+            // }
 
             let validCompanyIndustry = true;
 
-            if (selectedCompanyIndustries && selectedCompanyIndustries.length) {
-                validCompanyIndustry = false;
-                let found = false;
-
-                if (job && job.companies) {
-                    job.companies.forEach((company) => {
-                        if (company.company_industry && company.company_industry.length) {
-                            if (selectedCompanyIndustries.indexOf(company.company_industry) !== -1) {
-                                found = true;
-                            }
-                        }
-                    })
-                }
-
-                if (found) {
-                    validCompanyIndustry = true;
-                }
-            }
+            // if (selectedCompanyIndustries && selectedCompanyIndustries.length) {
+            //     validCompanyIndustry = false;
+            //     let found = false;
+            //
+            //     if (job && job.companies) {
+            //         job.companies.forEach((company) => {
+            //             if (company.company_industry && company.company_industry.length) {
+            //                 if (selectedCompanyIndustries.indexOf(company.company_industry) !== -1) {
+            //                     found = true;
+            //                 }
+            //             }
+            //         })
+            //     }
+            //
+            //     if (found) {
+            //         validCompanyIndustry = true;
+            //     }
+            // }
 
             let validSeniority = true;
 
-            if (selectedSeniorities && selectedSeniorities.length) {
-                validSeniority = false;
-                let found = false;
-
-                if (job && job.job_seniority) {
-                    if (selectedSeniorities.indexOf(job.job_seniority) !== -1) {
-                        found = true
-                    }
-                }
-                if (found) {
-                    validSeniority = true;
-                }
-            }
+            // if (selectedSeniorities && selectedSeniorities.length) {
+            //     validSeniority = false;
+            //     let found = false;
+            //
+            //     if (job && job.job_seniority) {
+            //         if (selectedSeniorities.indexOf(job.job_seniority) !== -1) {
+            //             found = true
+            //         }
+            //     }
+            //     if (found) {
+            //         validSeniority = true;
+            //     }
+            // }
 
 
             let validDegreeRequirement = true;
@@ -181,21 +181,21 @@ class JobCards extends React.Component {
 
             let validRole = true;
 
-            if (selectedRoles && selectedRoles.length) {
-                validRole = false;
-                let found = false;
-
-                if (job && job.job_types) {
-                    job.job_types.forEach((job_type) => {
-                        if (selectedRoles.indexOf(job_type.job_type_id) !== -1) {
-                            found = true
-                        }
-                    })
-                }
-                if (found) {
-                    validRole = true;
-                }
-            }
+            // if (selectedRoles && selectedRoles.length) {
+            //     validRole = false;
+            //     let found = false;
+            //
+            //     if (job && job.job_types) {
+            //         job.job_types.forEach((job_type) => {
+            //             if (selectedRoles.indexOf(job_type.job_type_id) !== -1) {
+            //                 found = true
+            //             }
+            //         })
+            //     }
+            //     if (found) {
+            //         validRole = true;
+            //     }
+            // }
 
             let validAffinity = true;
 
@@ -271,7 +271,7 @@ class JobCards extends React.Component {
                 validLocation && validCompany && validIndustry && validCompanyIndustry && validDegreeRequirement && validSeniority && validRole && validAffinity;
 
             if (job && job.companies && job.companies.length && job.companies[0] ) {
-                if (valid) {
+                if (valid && !job.is_fill) {
                     filteredJobs.push(job);
                 } else {
                     unFilteredJobs.push(job);

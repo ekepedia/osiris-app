@@ -1,4 +1,5 @@
 import moment from "moment";
+import {roRO} from "@mui/material/locale";
 
 export function mc (){
     const args = Array.prototype.slice.call(arguments);
@@ -66,4 +67,8 @@ export function httpSafeLink(link) {
     }
 
     return link;
+}
+
+export function str(v) {
+    return v + ""
 }

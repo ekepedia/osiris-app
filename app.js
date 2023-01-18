@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 require("./logger");
 require("./database");
@@ -58,6 +59,7 @@ const DatabaseService = require("./src/services/DatabaseService");
 const DemoUserService = require("./src/services/demo_users/DemoUserService");
 const UserLoginService = require("./src/services/user_logins/UserLoginService");
 const JobService = require("./src/services/jobs/JobService");
+const CompanyService = require("./src/services/companies/CompanyService");
 
 UserLoginService.set_routes(app);
 
@@ -77,10 +79,47 @@ app.get("/api/jobs", function (req, res) {
     });
 });
 
+
+app.post("/api/jobs-buffer", function (req, res) {
+    let data = req.body.rows
+    let { batch_id, job_source } = req.body;
+
+    console.log("/api/jobs-buffer", new Date());
+
+    data.forEach((job) => {
+        let buffer_unique_code = `${(job.job_company || "").toUpperCase()}-${(job.job_location || "").toUpperCase()}-${(job.job_title || "").toUpperCase()}`;
+
+        let payload = {
+            ...job,
+            batch_id,
+            buffer_unique_code,
+            job_source
+        };
+
+        JobService.create_job_buffer(payload).then((job_buffer_id) => {
+            console.log(job_buffer_id, buffer_unique_code);
+        }).catch((e) => {
+            e
+        });
+    });
+
+    res.json({
+        success: true
+    });
+})
+
+app.post("/api/jobs/v2", function (req, res) {
+    console.log("/api/jobs/v2", "payload:", req.body);
+    JobService.get_jobs_for_job_board(req.body).then((jobs) => {
+        res.json({ jobs: _.shuffle(jobs) });
+    }).catch((err) => {
+        res.json({ jobs: [] });
+    });
+});
+
 app.get("/api/job-counts", function (req, res) {
     res.json({ counts: JobService.JOB_COUNTS });
 });
-
 
 app.get("/api/jobs/temp", function (req, res) {
     res.json({
@@ -104,6 +143,10 @@ app.get("/api/companies", function (req, res) {
     });
 });
 
+app.get("/api/companies/v2", function (req, res) {
+    res.json({ companies: Object.values(JobService.get_all_companies()) });
+});
+
 app.get("/api/industries", function (req, res) {
     DemoUserService.get_industries().then(({industries}) => {
         res.json({ industries });
@@ -111,6 +154,24 @@ app.get("/api/industries", function (req, res) {
         res.json({ industries: [] });
     });
 });
+
+app.get("/api/job-titles/v2", function (req, res) {
+    res.json({ job_titles: Object.values(JobService.get_all_job_titles()) });
+});
+
+
+app.get("/api/senorities/v2", function (req, res) {
+    res.json({ senorities: Object.values(JobService.get_all_senorities()) });
+});
+
+app.get("/api/industries/v2", function (req, res) {
+    res.json({ industries: Object.values(JobService.get_all_industries()) });
+});
+
+app.get("/api/locations/v2", function (req, res) {
+    res.json({ locations: Object.values(JobService.get_all_locations()) });
+});
+
 
 app.get("/api/degree-requirements", function (req, res) {
     DemoUserService.get_degree_requirements().then(({degree_requirements}) => {
