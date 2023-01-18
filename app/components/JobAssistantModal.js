@@ -72,13 +72,13 @@ class JobAssistantModal extends React.Component {
         })
 
         this.industries = [];
-        DataService.getIndustries().then(({industries}) => {
-            this.industries = industries;
-            this.setState({ industries});
+        DataService.getJobTitles().then((job_titles) => {
+            this.industries = job_titles;
+            this.setState({ industries: job_titles });
         })
 
         this.locations = [];
-        DataService.getLocations().then(({locations}) => {
+        DataService.getLocations().then((locations) => {
             this.locations = locations;
             this.setState({ locations});
         })
@@ -139,33 +139,11 @@ class JobAssistantModal extends React.Component {
         </div>)
     }
 
-    constructIndustryOptions (jobs) {
-        jobs = jobs || [];
-        let dedup_map = {};
-        jobs.forEach((job) => {
-            if (job.industries && job.industries.length) {
-                job.industries.forEach((industry) => {
-                    dedup_map[industry.id] = industry
-                })
-            }
-        });
-
-        this.industries = Object.values(dedup_map);
+    constructIndustryOptions () {
         return this.industries
     }
 
-    constructLocationOptions (jobs) {
-        jobs = jobs || [];
-        let dedup_map = {};
-        jobs.forEach((job) => {
-            if (job.locations && job.locations.length) {
-                job.locations.forEach((location) => {
-                    dedup_map[location.location_id] = location
-                })
-            }
-        });
-
-        this.locations = Object.values(dedup_map);
+    constructLocationOptions () {
         return this.locations
     }
 

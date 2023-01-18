@@ -221,13 +221,13 @@ class Jobs extends React.Component {
             }
 
             if (!company_id && !job_id) {
-                this.loadUserPreferences();
+                this.loadUserPreferences().then(() => {
+                    this.loadJobs();
+                });
             }
         }
 
-        this.loadCompanies().then(({companies, company_map}) => {
-            this.loadJobs({companies, company_map});
-        });
+        this.loadJobs();
         this.loadSavedJobs();
     }
 
@@ -290,61 +290,86 @@ class Jobs extends React.Component {
 
     }
 
+    processJobs({jobs}) {
+        let selectedJob;
 
-    loadJobs({companies, company_map}) {
-        DataService.getJobs().then(({jobs}) => {
-            let selectedJob;
+        if (document.location) {
+            let params = (new URL(document.location)).searchParams;
+            let job_id = params.get("j");
+            let company_id = params.get("c");
 
-            jobs = jobs.map((job) => {
-                job.companies = job.company_id && company_map[job.company_id] ? [company_map[job.company_id]] : (job.companies || {})
-                return job;
-            })
-
-            if (document.location) {
-                let params = (new URL(document.location)).searchParams;
-                let job_id = params.get("j");
-                let company_id = params.get("c");
-
-                if (job_id) {
-                    jobs.forEach((job) => {
-                        if (job && ((job.job_id + "") === (job_id + ""))) {
-                            selectedJob = job
-                        }
-                    });
-
-                    if (selectedJob) {
-                        jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
+            if (job_id) {
+                jobs.forEach((job) => {
+                    if (job && ((job.job_id + "") === (job_id + ""))) {
+                        selectedJob = job
                     }
-                }
+                });
 
-                if (company_id && !selectedJob) {
-                    jobs.forEach((job) => {
-                        if (job && ((job.company_id + "") === (company_id + ""))) {
-                            selectedJob = job
-                        }
-                    });
-
-                    if (selectedJob) {
-                        jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
-                    }
+                if (selectedJob) {
+                    jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
                 }
             }
 
-            jobs.forEach((job) => {
-                if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {
-                    selectedJob = job
+            if (company_id && !selectedJob) {
+                jobs.forEach((job) => {
+                    if (job && ((job.company_id + "") === (company_id + ""))) {
+                        selectedJob = job
+                    }
+                });
+
+                if (selectedJob) {
+                    jobs = [selectedJob, ...(_.filter(jobs, (job) => (job.job_id !== selectedJob.job_id )))]
                 }
-            });
+            }
+        }
 
-            this.jobs = jobs;
+        jobs.forEach((job) => {
+            if (job && job.companies && job.companies.length && job.companies[0] && !selectedJob) {
+                selectedJob = job
+            }
+        });
 
-            this.setState({
-                jobs,
-                selectedJobId: selectedJob.job_id,
-                selectedJob,
-                loading: false
-            });
+        this.jobs = jobs;
+
+        this.setState({
+            jobs,
+            selectedJobId: selectedJob.job_id,
+            selectedJob,
+            loading: false
+        });
+    }
+
+    loadJobs() {
+        const {
+            selectedCompanies,
+            selectedLocations,
+            selectedCompanyIndustries,
+            selectedIndustries,
+            selectedSeniorities,
+            glassdoor_overall,
+            glassdoor_culture,
+            glassdoor_work_life,
+            glassdoor_compensation,
+            MAX_RESULTS
+        } = this.state;
+        DataService.getJobs({
+            companies: selectedCompanies,
+            locations: selectedLocations,
+            industries: selectedCompanyIndustries,
+            job_titles: selectedIndustries,
+            seniorities: selectedSeniorities,
+            glassdoor_overall,
+            glassdoor_culture,
+            glassdoor_work_life,
+            glassdoor_compensation,
+            max: 100//MAX_RESULTS
+        }).then(({jobs}) => {
+            this.processJobs({jobs});
         })
+    }
+
+    reloadJobs() {
+        this.loadJobs();
     }
 
     loadUserPreferences() {
@@ -413,6 +438,10 @@ class Jobs extends React.Component {
         selected = _.uniq(selected);
         this.setState({[field]: selected, MAX_RESULTS: 10});
         this.resetScrollPosition();
+
+        setTimeout(() => {
+            this.reloadJobs();
+        }, 100);
     }
 
     overrideField(field, ids) {
@@ -421,6 +450,10 @@ class Jobs extends React.Component {
         selected = _.uniq(selected);
         this.setState({[field]: selected, MAX_RESULTS: 10})
         this.resetScrollPosition();
+
+        setTimeout(() => {
+            this.reloadJobs();
+        }, 100);
     }
 
     removeFromField(field, id) {
@@ -433,6 +466,10 @@ class Jobs extends React.Component {
         selected = _.uniq(selected);
         this.setState({[field]: selected, MAX_RESULTS: 10})
         this.resetScrollPosition();
+
+        setTimeout(() => {
+            this.reloadJobs();
+        }, 100);
     }
 
     resetScrollPosition() {
@@ -543,7 +580,10 @@ class Jobs extends React.Component {
                                     update={(name, value) => {
                                         this.setState({
                                             [name]: value
-                                        })
+                                        });
+                                        setTimeout(() => {
+                                            this.reloadJobs();
+                                        }, 100)
                                     }}
                                     state={this.state}
                                     jobs={this.state.jobs}
