@@ -1,3 +1,4 @@
+
 const async = require("async");
 const axios = require("axios");
 const _ = require("lodash");
@@ -10,20 +11,52 @@ const AIR_TABLE_KEY = "key967P3bJaUjmwX2";
 const JOBS_BASE = "appZJyAhamGamN0SI";
 
 const DatabaseService = require("../DatabaseService");
+const CompanyService = require("../companies/CompanyService");
 
 let init = false;
 let knex = null;
 
 const JOBS_TABLE = "jobs";
+const JOBS_BUFFER_TABLE = "jobs_buffer";
 const SERVICE_NAME = "Jobs Service";
 const SERVICE_DEFAULT_TABLE = JOBS_TABLE;
 
 let WEBSCRAPED_JOBS = [];
+let ALL_JOBS = [];
 let JOB_COUNTS = {};
 
+
+let COMPANY_MAP = {};
+let JOB_TITLE_MAP = {};
+let INDUSTRY_MAP = {};
+let SENORITY_MAP = {};
+let LOCATION_MAP = {};
+
 module.exports.JOBS_TABLE = JOBS_TABLE;
+module.exports.JOBS_BUFFER_TABLE = JOBS_BUFFER_TABLE;
 module.exports.WEBSCRAPED_JOBS = WEBSCRAPED_JOBS;
 module.exports.JOB_COUNTS = JOB_COUNTS;
+module.exports.ALL_JOBS = ALL_JOBS;
+
+module.exports.get_all_companies = () => {
+    return COMPANY_MAP;
+};
+
+module.exports.get_all_job_titles = () => {
+    return JOB_TITLE_MAP;
+};
+
+module.exports.get_all_industries = () => {
+    return INDUSTRY_MAP;
+};
+
+module.exports.get_all_senorities = () => {
+    return SENORITY_MAP;
+};
+
+module.exports.get_all_locations = () => {
+    return LOCATION_MAP;
+};
 
 const join_character = ";@;";
 
@@ -39,7 +72,106 @@ module.exports.init = function (connection) {
     // format_jobs_for_job_board();
     // import_webscraper_jobs();
     load_job_counts();
+    get_jobs_for_job_board({}).then(() => {});
+
+
+    // populate_job_board_links();
+    // call_lambda({
+    //     job_board_link:"https://www.glassdoor.com/Job/new-york-financial-analyst-jobs-SRCH_IL.0,8_IC1132348_KO9,26.htm",
+    //     attempts: 1
+    // }).then((data) => {
+    //     console.log(data);
+    // })
 };
+
+function populate_job_board_links() {
+    let links = require("../../../data/data-board-links.json");
+    console.log(links.length);
+
+    let batch_id = `glassdoor-batch-${moment().format("MM-DD-YYYY-hh-mm-ss")}`;
+    console.log("batch_id", batch_id)
+
+    async.forEachLimit(links, 5, (link, cb) => {
+        const { job_board_link } = link;
+
+        setTimeout(() => {
+            console.log(job_board_link);
+
+            call_lambda({
+                job_board_link,
+                attempts: 1
+            }).then((data) => {
+                // console.log(data);
+
+                if (!data || !data.length)
+                    return cb();
+
+
+                data.forEach((job) => {
+                    let buffer_unique_code = `${(job.job_company || "").toUpperCase()}-${(job.job_location || "").toUpperCase()}-${(job.job_title || "").toUpperCase()}`;
+
+                    let payload = {
+                        ...job,
+                        batch_id,
+                        buffer_unique_code,
+                        job_board_link,
+                        job_board_city: link.job_city,
+                        job_board_state: link.job_state,
+                        job_board_location:  link.job_location,
+                        job_board_category: link.job_category,
+                        job_board_level: link.job_level,
+                        job_source: "glassdoor"
+                    };
+
+                    create_job_buffer(payload).then((job_buffer_id) => {
+                        console.log(job_buffer_id, buffer_unique_code);
+                    }).catch((e) => {
+
+                    });
+                });
+
+                cb();
+
+            })
+
+
+        }, Math.random()*30000);
+    })
+}
+
+function call_lambda({job_board_link, attempts}) {
+    return new Promise((resolve) => {
+        axios.post("https://fghccj98xj.execute-api.us-east-1.amazonaws.com/default/second-lambda-test", {
+            "url": job_board_link
+        }).then((response) => {
+            // console.log(response.data);
+            if (response && response.data && response.data.length) {
+                console.log(`${job_board_link} - Success (${response.data.length})`);
+                resolve(response.data);
+            } else {
+                if (attempts < 5) {
+                    console.log(`${job_board_link} - Failed (${attempts})`);
+                    call_lambda({job_board_link, attempts: attempts + 1}).then((data) => {
+                        resolve(data);
+                    });
+                } else {
+                    resolve(null);
+                }
+            }
+        }).catch((e) => {
+            if (attempts < 5) {
+                console.log(`${job_board_link} - Failed (${attempts})`);
+                call_lambda({job_board_link, attempts: attempts + 1}).then((data) => {
+                    resolve(data);
+                });
+            } else {
+                resolve(null);
+            }
+        })
+    })
+
+}
+
 
 module.exports.get_jobs = get_jobs;
 
@@ -220,6 +352,71 @@ function create_job({
     });
 }
 
+module.exports.create_job_buffer = create_job_buffer;
+
+function create_job_buffer({
+                               buffer_unique_code,
+                               batch_id,
+                               company_id,
+                               job_board_link,
+                               job_board_city,
+                               job_board_state,
+                               job_board_location,
+                               job_board_category,
+                               job_board_level,
+                               job_title,
+                               job_company,
+                               job_location,
+                               job_salary,
+                               job_link,
+                               job_direct_link,
+                               job_logo_url,
+                               job_html,
+                               apply_link,
+                               job_overview,
+                               job_qualifications,
+                               job_responsibilities,
+                               job_source,
+                    }) {
+    return new Promise((resolve, reject) => {
+        if (!buffer_unique_code || !job_link)
+            return reject(new Error("Missing buffer_unique_code"));
+
+        const query = DatabaseService.generate_query({
+            buffer_unique_code,
+            batch_id,
+            company_id,
+            job_board_link,
+            job_board_city,
+            job_board_state,
+            job_board_location,
+            job_board_category,
+            job_board_level,
+            job_title,
+            job_company,
+            job_location,
+            job_salary,
+            job_link,
+            job_direct_link,
+            job_logo_url,
+            job_html,
+            apply_link,
+            job_overview,
+            job_qualifications,
+            job_responsibilities,
+            job_source,
+        });
+
+        knex(JOBS_BUFFER_TABLE).insert(query).returning("job_buffer_id").then((rows) => {
+            const job_buffer_id = rows[0];
+
+            return resolve(job_buffer_id);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
 module.exports.edit_job = edit_job;
 
 function edit_job({
@@ -317,110 +514,304 @@ function remove_job({job_id}) {
     });
 }
 
+
+function reformat_job_for_job_board(job) {
+
+    if (!job)
+        return job;
+
+    return {
+
+        job_id: job.job_id,
+        date_created: new Date().getTime(),
+        apply_link: job.apply_link,
+
+        job_salary_estimate: job.job_salary_estimate,
+
+        date_created_label: null,
+        job_title: job.job_title,
+        job_overview: job.job_overview,
+
+        industries: job.job_sectors && job.job_sectors.length ?
+            job.job_sectors.split(join_character).map((job_sector) => {
+                return {
+                    industry_id: job_sector,
+                    id: job_sector,
+                    label: job_sector,
+                    name: job_sector,
+                }
+            })
+            : [],
+
+        job_types:  [{
+            job_type_id: job.job_type,
+            id: job.job_type,
+            label: job.job_type,
+            name: job.job_type,
+        }],
+
+        qualifications: [
+            {
+                qualification_id: Math.round(Math.random()*100000),
+                name: job.job_qualifications
+            }
+        ],
+
+        responsibilities: [
+            {
+                responsibility_id: Math.round(Math.random()*100000),
+                name: job.job_responsibilities
+            }
+        ],
+
+        degree_requirements: job.job_degree_requirements && job.job_degree_requirements.length ? job.job_degree_requirements.split(join_character).map((requirement) => {
+            return {
+                degree_requirement_id: requirement,
+                id: requirement,
+                name: requirement,
+                label: requirement,
+            }
+        }) : [],
+        company_id: job.company_id,
+
+        affinities: job.diverse_candidates ? [{
+            affinity_id: "Diverse Candidates",
+            id: "Diverse Candidates",
+            label: "Diverse Candidates",
+            name: "Diverse Candidates",
+        }]: [],
+
+        job_html: job.job_html,
+        job_board_category: job.job_board_category,
+        job_seniority: job.job_seniority,
+
+        locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
+                return {
+                    location_id: location,
+                    id: location,
+                    city: location,
+                    state: location,
+                    label: location
+                }
+            })
+            : [{
+                location_id: "remote",
+                id: "remote",
+                city: "Remote",
+                state: "Remote",
+                label: "Remote"
+            }]
+    }
+}
+
 module.exports.format_jobs_for_job_board = format_jobs_for_job_board;
 
 function format_jobs_for_job_board() {
     return new Promise((resolve, reject) => {
-        get_jobs({
+        load_all_jobs().then((jobs) => {
+            jobs = jobs.map((job) => {
+                return reformat_job_for_job_board(job);
+            });
+            resolve(jobs);
+        });
+    })
+}
+
+module.exports.get_jobs_for_job_board = get_jobs_for_job_board;
+
+function get_jobs_for_job_board({
+    max,
+    offset,
+    companies,
+    industries,
+    job_titles,
+    job_types,
+    seniorities,
+    locations,
+    glassdoor_overall,
+    glassdoor_culture,
+    glassdoor_work_life,
+    glassdoor_compensation,
+                                }) {
+    return new Promise((resolve, reject) => {
+        console.time("total job processing time:");
+        load_all_jobs().then((jobs) => {
+            let all_jobs = [];
+            let semi_filtered_jobs = [];
+
+            let filtered_jobs = jobs.map((job) => {
+
+                //
+                // FORMATTING
+                //
+                job = reformat_job_for_job_board(job);
+
+                // console.log(job);
+
+                let company = CompanyService.COMPANY_MAP[job.company_id] || {};
+
+                if (company.company_id) {
+                    COMPANY_MAP[company.company_id] = company;
+                    job.companies = [company];
+                }
+
+                //
+                // FILTERING
+                //
+
+                let industry = company.company_industry || null;
+
+                let company_found = valid_single_field(companies, job.company_id);
+                let industry_found = valid_single_field(industries, industry);
+                let job_title_found = valid_single_field(job_titles, job.industries, true);
+                let job_type_found = valid_single_field(job_types, job.job_types, true);
+                let location_found = valid_single_field(locations, job.locations, true);
+                let seniority_found = valid_single_field(seniorities, job.job_seniority);
+
+                let glassdoor_overall_found = glassdoor_overall && glassdoor_overall > 0 ? company.glassdoor_overall >= glassdoor_overall : true;
+                let glassdoor_culture_found = glassdoor_culture && glassdoor_culture > 0 ? company.glassdoor_culture >= glassdoor_culture : true;
+                let glassdoor_work_life_found = glassdoor_work_life && glassdoor_work_life > 0 ? company.glassdoor_work_life >= glassdoor_work_life : true;
+                let glassdoor_compensation_found = glassdoor_compensation && glassdoor_compensation > 0 ? company.glassdoor_compensation >= glassdoor_compensation : true;
+
+                if (job.industries) {
+                    job.industries.forEach((job_title) => {
+                        JOB_TITLE_MAP[job_title.id] = job_title;
+                    })
+                }
+
+                if (job.locations) {
+                    job.locations.forEach((location) => {
+                        LOCATION_MAP[location.id] = location;
+                    })
+                }
+
+                if (industry) {
+                    INDUSTRY_MAP[industry] = {
+                        id: industry,
+                        label: industry
+                    };
+                }
+
+                if (job.job_seniority) {
+                    SENORITY_MAP[job.job_seniority] = {
+                        id: job.job_seniority,
+                        label: job.job_seniority
+                    };
+                }
+
+                if (
+                    company_found &&
+                    industry_found &&
+                    job_title_found &&
+                    job_type_found &&
+                    location_found &&
+                    seniority_found &&
+                    glassdoor_overall_found &&
+                    glassdoor_culture_found &&
+                    glassdoor_work_life_found &&
+                    glassdoor_compensation_found
+                ) {
+                    return job
+                } else {
+                    job.is_fill = true;
+
+                    if (
+                        company_found ||
+                        industry_found ||
+                        job_title_found ||
+                        job_type_found ||
+                        location_found ||
+                        seniority_found ||
+                        glassdoor_overall_found ||
+                        glassdoor_culture_found ||
+                        glassdoor_work_life_found ||
+                        glassdoor_compensation_found
+                    ) {
+                        semi_filtered_jobs.push(job);
+                    }
+
+                    all_jobs.push(job)
+                    return null;
+                }
+            });
+
+            filtered_jobs = _.without(filtered_jobs, null);
+
+            if (max) {
+                filtered_jobs = filtered_jobs.slice(offset ? offset : 0, max)
+            }
+
+            if (filtered_jobs.length < max) {
+                let fill_lenth = Math.round(max - filtered_jobs.length);
+                console.warn(`not enough filtered jobs! ${semi_filtered_jobs.length} semi-filtered jobs available; filling in ${fill_lenth} extra jobs!`);
+                filtered_jobs = _.concat(filtered_jobs, (_.shuffle(all_jobs)).slice(0, fill_lenth))
+            }
+
+            resolve(filtered_jobs);
+            console.timeEnd("total job processing time:");
+
+        });
+    })
+}
+
+function valid_single_field(options, value, multi) {
+    let found = false;
+
+    if (options && options.length) {
+        found = false;
+        options.forEach((option) => {
+            option = option + "";
+
+            if (multi) {
+                value.forEach((v) => {
+                    // console.log(v)
+                    if (v && v.id) {
+                        // console.log(v.id, option)
+                        if (option === (v.id + "")) {
+                            found = true;
+                        }
+                    }
+
+                })
+            } else {
+                if (option === (value + "")) {
+                    found = true;
+                }
+            }
+        });
+    } else {
+        found = true
+    }
+
+    return found
+}
+
+
+function load_all_jobs() {
+    return new Promise((resolve, reject) => {
+        if (ALL_JOBS && ALL_JOBS.length) {
+            // resolve(ALL_JOBS.slice(0,30));
+
+            // let temp = _.shuffle(_.concat(ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS,
+            //     ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS, ALL_JOBS));
+            //
+            // console.log("resolving jobs", temp.length)
+
+            resolve(ALL_JOBS);
+        } get_jobs({
             is_user_submitted: false,
             job_source: "glassdoor"
         }).then((jobs) => {
-            jobs = jobs.map((job) => {
-
-                return {
-
-                    job_id: job.job_id,
-                    date_created: new Date().getTime(),
-                    apply_link: job.apply_link,
-
-                    job_salary_estimate: job.job_salary_estimate,
-
-                    date_created_label: null,
-                    job_title: job.job_title,
-                    job_overview: job.job_overview,
-
-                    industries: job.job_sectors && job.job_sectors.length ?
-                        job.job_sectors.split(join_character).map((job_sector) => {
-                            return {
-                                industry_id: job_sector,
-                                id: job_sector,
-                                label: job_sector,
-                                name: job_sector,
-                            }
-                        })
-                        : [],
-
-                    job_types:  [{
-                        job_type_id: job.job_type,
-                        id: job.job_type,
-                        label: job.job_type,
-                        name: job.job_type,
-                    }],
-
-                    qualifications: [
-                        {
-                            qualification_id: Math.round(Math.random()*100000),
-                            name: job.job_qualifications
-                        }
-                    ],
-
-                    responsibilities: [
-                        {
-                            responsibility_id: Math.round(Math.random()*100000),
-                            name: job.job_responsibilities
-                        }
-                    ],
-
-                    degree_requirements: job.job_degree_requirements && job.job_degree_requirements.length ? job.job_degree_requirements.split(join_character).map((requirement) => {
-                        return {
-                            degree_requirement_id: requirement,
-                            id: requirement,
-                            name: requirement,
-                            label: requirement,
-                        }
-                    }) : [],
-                    company_id: job.company_id,
-                    // companies: [
-                    //     fields['Company'] && fields['Company'].length ? EMPLOYERS_MAP[fields['Company'][0]] : {}
-                    // ],
-                    affinities: job.diverse_candidates ? [{
-                        affinity_id: "Diverse Candidates",
-                        id: "Diverse Candidates",
-                        label: "Diverse Candidates",
-                        name: "Diverse Candidates",
-                    }]: [],
-
-
-                    job_html: job.job_html,
-                    job_board_category: job.job_board_category,
-                    job_seniority: job.job_seniority,
-
-
-                    locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
-                            return {
-                                location_id: location,
-                                id: location,
-                                city: location,
-                                state: location,
-                                label: location
-                            }
-                        })
-                        : [{
-                            location_id: "remote",
-                            id: "remote",
-                            city: "Remote",
-                            state: "Remote",
-                            label: "Remote"
-                        }]
-                }
-
-            });
-
-            // console.log(jobs)
             resolve(jobs);
         })
     })
-
 }
 
 function test_endpoints() {
@@ -519,6 +910,9 @@ function load_job_counts() {
         is_user_submitted: false,
         job_source: "glassdoor"
     }).then((jobs) => {
+
+        ALL_JOBS = jobs;
+
         console.log("jobs, lenths", jobs.length);
         jobs.forEach((job) => {
             JOB_COUNTS[job.company_id] = JOB_COUNTS[job.company_id] || 0;
