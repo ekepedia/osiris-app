@@ -47,6 +47,7 @@ const UserPreferencesSchema = require("./user_preferences/schema/user_preference
 const CompaniesSchema = require("./companies/schema/companies.schema");
 const CompanyDemographicsSchema = require("./company_demographics/schema/company_demographics.schema");
 const JobsSchema = require("./jobs/schema/jobs.schema");
+const JobsBufferSchema = require("./jobs/schema/jobs_buffer.schema");
 const SavedJobsSchema = require("./saved_jobs/schema/saved_jobs.schema");
 const SavedJobNotesSchema = require("./saved_jobs_notes/schema/saved_job_notes.schema");
 const SavedJobRemindersSchema = require("./saved_jobs_reminders/schema/saved_jobs_reminders.schema");
@@ -102,6 +103,7 @@ function init_schema() {
     CompaniesSchema(knex);
     CompanyDemographicsSchema(knex);
     JobsSchema(knex);
+    JobsBufferSchema(knex);
     SavedJobsSchema(knex);
     SavedJobNotesSchema(knex);
     SavedJobRemindersSchema(knex);

@@ -2,7 +2,7 @@ const winston = require("winston");
 const { JOBS_TABLE } = require("../JobService");
 
 module.exports = function (connection) {
-    connection.schema.alterTable(JOBS_TABLE, function (table) {
+    connection.schema.createTable(JOBS_TABLE, function (table) {
         table.increments('job_id').primary();
         table.string('airtable_job_id').unique();
 
