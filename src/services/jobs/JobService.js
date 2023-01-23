@@ -73,9 +73,9 @@ module.exports.init = function (connection) {
     // import_webscraper_jobs();
     load_job_counts();
     get_jobs_for_job_board({}).then(() => {});
-    port_buffer_to_jobs().then(() => {
-
-    });
+    // port_buffer_to_jobs().then(() => {
+    //
+    // });
 
     // get_buffer_for_lambda().then((rows) => {
     //     console.log(rows);
