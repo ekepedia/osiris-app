@@ -80,6 +80,14 @@ app.get("/api/jobs", function (req, res) {
 });
 
 
+app.get("/api/jobs-buffer", function (req, res) {
+    JobService.get_buffer_for_lambda().then((jobs) => {
+        res.json( _.shuffle(jobs) );
+    }).catch((err) => {
+        res.json({ jobs: [] });
+    });
+});
+
 app.post("/api/jobs-buffer", function (req, res) {
     let data = req.body.rows
     let { batch_id, job_source } = req.body;
@@ -106,7 +114,24 @@ app.post("/api/jobs-buffer", function (req, res) {
     res.json({
         success: true
     });
-})
+});
+
+app.post("/api/jobs-buffer/:job_buffer_id", function (req, res) {
+    let data = req.body.rows
+    let { job_buffer_id, job_html, job_direct_link } = req.body;
+
+    console.log("/api/jobs-buffer", {job_buffer_id,job_direct_link });
+
+    JobService.edit_job_buffer(req.body).then(() => {
+        console.log("Updated:", job_buffer_id)
+    }).catch((e) =>{
+        console.log(e)
+    })
+
+    res.json({
+        success: true
+    });
+});
 
 app.post("/api/jobs/v2", function (req, res) {
     console.log("/api/jobs/v2", "payload:", req.body);
