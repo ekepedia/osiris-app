@@ -20,6 +20,8 @@ const OSIRIS_DATA_BASE = "appMzGF6dxRHZfubu";
 
 let PRELOADED_DATA = [];
 
+let COMPANY_MAP = {};
+
 let INDUSTRY_MAPPING = [{"company_industry":"Health Care Services & Hospitals","count":772,"new_industry":"Healthcare","":""},{"company_industry":"Information Technology Support Services","count":421,"new_industry":"Engineering","":""},{"company_industry":"Enterprise Software & Network Solutions","count":380,"new_industry":"Engineering","":""},{"company_industry":"Colleges & Universities","count":329,"new_industry":"Education","":""},{"company_industry":"Computer Hardware Development","count":315,"new_industry":"Engineering","":""},{"company_industry":"Advertising & Public Relations","count":285,"new_industry":"Marketing","":""},{"company_industry":"Banking & Lending","count":269,"new_industry":"Financial Services","":""},{"company_industry":"Restaurants & Cafes","count":236,"new_industry":"","":""},{"company_industry":"Business Consulting","count":230,"new_industry":"Consulting","":""},{"company_industry":"HR Consulting","count":220,"new_industry":"Consulting","":""},{"company_industry":"Consumer Product Manufacturing","count":190,"new_industry":"Consumer Products","":""},{"company_industry":"Department, Clothing & Shoe Stores","count":187,"new_industry":"Consumer Products","":""},{"company_industry":"Insurance Carriers","count":183,"new_industry":"Financial Services","":""},{"company_industry":"Energy & Utilities","count":182,"new_industry":"Life Sciences","":""},{"company_industry":"Biotech & Pharmaceuticals","count":180,"new_industry":"Life Sciences","":""},{"company_industry":"Internet & Web Services","count":173,"new_industry":"Tech","":""},{"company_industry":"Machinery Manufacturing","count":171,"new_industry":"Engineering","":""},{"company_industry":"Investment & Asset Management","count":165,"new_industry":"Financial Services","":""},{"company_industry":"Real Estate","count":149,"new_industry":"Real Estate","":""},{"company_industry":"Electronics Manufacturing","count":125,"new_industry":"Engineering","":""},{"company_industry":"Primary & Secondary Schools","count":121,"new_industry":"Education","":""},{"company_industry":"Food & Beverage Manufacturing","count":117,"new_industry":"Consumer Products","":""},{"company_industry":"Civic & Social Services","count":112,"new_industry":"","":""},{"company_industry":"Transportation Equipment Manufacturing","count":100,"new_industry":"Engineering","":""},{"company_industry":"Shipping & Trucking","count":95,"new_industry":"","":""},{"company_industry":"Hotels & Resorts","count":94,"new_industry":"","":""},{"company_industry":"Aerospace & Defense","count":92,"new_industry":"Engineering","":""},{"company_industry":"Construction","count":90,"new_industry":"","":""},{"company_industry":"National Agencies","count":82,"new_industry":"","":""},{"company_industry":"Software Development","count":82,"new_industry":"Engineering","":""},{"company_industry":"Legal","count":79,"new_industry":"Legal","":""},{"company_industry":"Research & Development","count":74,"new_industry":"","":""},{"company_industry":"Architectural & Engineering Services","count":73,"new_industry":"Engineering","":""},{"company_industry":"Other Retail Stores","count":73,"new_industry":"Consumer Products","":""},{"company_industry":"Health Care Products Manufacturing","count":69,"new_industry":"Healthcare","":""},{"company_industry":"Education & Training Services","count":66,"new_industry":"Education","":""},{"company_industry":"Wholesale","count":64,"new_industry":"","":""},{"company_industry":"Publishing","count":62,"new_industry":"","":""},{"company_industry":"Telecommunications Services","count":62,"new_industry":"","":""},{"company_industry":"Chemical Manufacturing","count":61,"new_industry":"Life Sciences","":""},{"company_industry":"State & Regional Agencies","count":60,"new_industry":"","":""},{"company_industry":"Financial Transaction Processing","count":59,"new_industry":"Financial Services","":""},{"company_industry":"Grocery Stores","count":58,"new_industry":"","":""},{"company_industry":"Municipal Agencies","count":58,"new_industry":"","":""},{"company_industry":"Beauty & Wellness","count":57,"new_industry":"Beauty","":""},{"company_industry":"Home Furniture & Housewares Stores","count":57,"new_industry":"","":""},{"company_industry":"Accounting & Tax","count":53,"new_industry":"Financial Services","":""},{"company_industry":"Insurance Agencies & Brokerages","count":53,"new_industry":"","":""},{"company_industry":"Taxi & Car Services","count":53,"new_industry":"","":""},{"company_industry":"Broadcast Media","count":48,"new_industry":"Media","":""},{"company_industry":"Preschools & Child Care Services","count":41,"new_industry":"","":""},{"company_industry":"Culture & Entertainment","count":40,"new_industry":"Entertainment","":""},{"company_industry":"Sports & Recreation","count":38,"new_industry":"","":""},{"company_industry":"Food & Beverage Stores","count":37,"new_industry":"","":""},{"company_industry":"Vehicle Dealers","count":37,"new_industry":"","":""},{"company_industry":"Airlines, Airports & Air Transportation","count":36,"new_industry":"Engineering","":""},{"company_industry":"Staffing & Subcontracting","count":36,"new_industry":"","":""},{"company_industry":"Building & Personnel Services","count":32,"new_industry":"","":""},{"company_industry":"Cable, Internet & Telephone Providers","count":29,"new_industry":"","":""},{"company_industry":"Financial Services","count":29,"new_industry":"Financial Services","":""},{"company_industry":"Grantmaking & Charitable Foundations","count":29,"new_industry":"","":""},{"company_industry":"Metal & Mineral Manufacturing","count":29,"new_industry":"","":""},{"company_industry":"Travel Agencies","count":28,"new_industry":"","":""},{"company_industry":"Sporting Goods Stores","count":26,"new_industry":"","":""},{"company_industry":"Beauty & Personal Accessories Stores","count":25,"new_industry":"Beauty","":""},{"company_industry":"Security & Protective","count":25,"new_industry":"","":""},{"company_industry":"Catering & Food Service Contractors","count":24,"new_industry":"","":""},{"company_industry":"Film Production","count":24,"new_industry":"","":""},{"company_industry":"Membership Organizations","count":23,"new_industry":"","":""},{"company_industry":"Consumer Electronics & Appliances Stores","count":22,"new_industry":"Engineering","":""},{"company_industry":"Video Game Publishing","count":21,"new_industry":"","":""},{"company_industry":"IT Services and IT Consulting","count":19,"new_industry":"","":""},{"company_industry":"General Merchandise & Superstores","count":18,"new_industry":"","":""},{"company_industry":"Technology, Information and Internet","count":17,"new_industry":"","":""},{"company_industry":"Automotive Parts & Accessories Stores","count":15,"new_industry":"","":""},{"company_industry":"Gambling","count":14,"new_industry":"","":""},{"company_industry":"Convenience Stores","count":13,"new_industry":"Consumer Products","":""},{"company_industry":"Pet & Pet Supplies Stores","count":13,"new_industry":"","":""},{"company_industry":"Gift, Novelty & Souvenir Stores","count":12,"new_industry":"","":""},{"company_industry":"Rail Transportation","count":12,"new_industry":"","":""},{"company_industry":"Consumer Product Rental","count":11,"new_industry":"","":""},{"company_industry":"Drug & Health Stores","count":11,"new_industry":"","":""},{"company_industry":"Mining & Metals","count":11,"new_industry":"","":""},{"company_industry":"General Repair & Maintenance","count":10,"new_industry":"","":""},{"company_industry":"Office Supply & Copy Stores","count":10,"new_industry":"","":""},{"company_industry":"Crop Production","count":9,"new_industry":"Life Sciences","":""},{"company_industry":"Manufacturing","count":9,"new_industry":"Engineering","":""},{"company_industry":"Commercial Equipment Services","count":8,"new_industry":"","":""},{"company_industry":"Hospitals & Health Clinics","count":8,"new_industry":"","":""},{"company_industry":"Media & Entertainment Stores","count":8,"new_industry":"","":""},{"company_industry":"Vehicle Repair & Maintenance","count":8,"new_industry":"","":""},{"company_industry":"Wood & Paper Manufacturing","count":8,"new_industry":"","":""},{"company_industry":"Business Consulting and Services","count":7,"new_industry":"Consulting","":""},{"company_industry":"Hospitals and Health Care","count":7,"new_industry":"","":""},{"company_industry":"Oil and Gas","count":7,"new_industry":"","":""},{"company_industry":"Retail","count":7,"new_industry":"","":""},{"company_industry":"Stock Exchanges","count":7,"new_industry":"","":""},{"company_industry":"Higher Education","count":6,"new_industry":"","":""},{"company_industry":"Industrial Machinery Manufacturing","count":6,"new_industry":"","":""},{"company_industry":"Photography","count":6,"new_industry":"","":""},{"company_industry":"Religious Institutions","count":6,"new_industry":"","":""},{"company_industry":"Car & Truck Rental","count":5,"new_industry":"","":""},{"company_industry":"Farm Support","count":5,"new_industry":"","":""},{"company_industry":"Insurance","count":5,"new_industry":"","":""},{"company_industry":"Motor Vehicle Manufacturing","count":5,"new_industry":"","":""},{"company_industry":"Pet Care & Veterinary","count":5,"new_industry":"","":""},{"company_industry":"Pharmaceutical Manufacturing","count":5,"new_industry":"","":""},{"company_industry":"Toy & Hobby Stores","count":5,"new_industry":"","":""},{"company_industry":"Utilities","count":5,"new_industry":"","":""},{"company_industry":"Auctions & Galleries","count":4,"new_industry":"","":""},{"company_industry":"Commercial Printing","count":4,"new_industry":"","":""},{"company_industry":"Food and Beverage Services","count":4,"new_industry":"","":""},{"company_industry":"Law Firms","count":4,"new_industry":"Legal","":""},{"company_industry":"Telecommunications","count":4,"new_industry":"","":""},{"company_industry":"Wellness and Fitness Services","count":4,"new_industry":"","":""},{"company_industry":"Banking","count":3,"new_industry":"Financial Services","":""},{"company_industry":"Biotechnology Research","count":3,"new_industry":"Life Sciences","":""},{"company_industry":"Forestry, Logging & Timber Operations","count":3,"new_industry":"","":""},{"company_industry":"Marine Transportation","count":3,"new_industry":"","":""},{"company_industry":"Semiconductor Manufacturing","count":3,"new_industry":"","":""},{"company_industry":"Advertising Services","count":2,"new_industry":"Marketing","":""},{"company_industry":"Audiovisual","count":2,"new_industry":"","":""},{"company_industry":"Aviation and Aerospace Component Manufacturing","count":2,"new_industry":"Engineering","":""},{"company_industry":"Civil Engineering","count":2,"new_industry":"","":""},{"company_industry":"Computers and Electronics Manufacturing","count":2,"new_industry":"","":""},{"company_industry":"Consumer Services","count":2,"new_industry":"Consumer Products","":""},{"company_industry":"Debt Relief","count":2,"new_industry":"","":""},{"company_industry":"Defense and Space Manufacturing","count":2,"new_industry":"Engineering","":""},{"company_industry":"Design Services","count":2,"new_industry":"","":""},{"company_industry":"Environmental Services","count":2,"new_industry":"","":""},{"company_industry":"Human Resources Services","count":2,"new_industry":"","":""},{"company_industry":"Property Management","count":2,"new_industry":"","":""},{"company_industry":"Wholesale Building Materials","count":2,"new_industry":"","":""},{"company_industry":"Accounting","count":1,"new_industry":"Financial Services","":""},{"company_industry":"Airlines and Aviation","count":1,"new_industry":"Engineering","":""},{"company_industry":"Animal Production","count":1,"new_industry":"Life Sciences","":""},{"company_industry":"Appliances, Electrical, and Electronics Manufacturing","count":1,"new_industry":"Engineering","":""},{"company_industry":"Biotechnology","count":1,"new_industry":"Life Sciences","":""},{"company_industry":"Broadcast Media Production and Distribution","count":1,"new_industry":"Media","":""},{"company_industry":"Computer and Network Security","count":1,"new_industry":"","":""},{"company_industry":"Computer Hardware Manufacturing","count":1,"new_industry":"Engineering","":""},{"company_industry":"Data Security Software Products","count":1,"new_industry":"","":""},{"company_industry":"Dental Clinics","count":1,"new_industry":"","":""},{"company_industry":"Entertainment Providers","count":1,"new_industry":"","":""},{"company_industry":"Event Services","count":1,"new_industry":"","":""},{"company_industry":"Freight and Package Transportation","count":1,"new_industry":"","":""},{"company_industry":"Government Administration","count":1,"new_industry":"","":""},{"company_industry":"Investment Banking","count":1,"new_industry":"Financial Services","":""},{"company_industry":"Investment Management","count":1,"new_industry":"Financial Services","":""},{"company_industry":"Legal Services","count":1,"new_industry":"Legal","":""},{"company_industry":"Medical Equipment Manufacturing","count":1,"new_industry":"","":""},{"company_industry":"Medical Testing & Clinical Laboratories","count":1,"new_industry":"","":""},{"company_industry":"Musicians","count":1,"new_industry":"","":""},{"company_industry":"Non-profit Organizations","count":1,"new_industry":"","":""},{"company_industry":"Packaging and Containers Manufacturing","count":1,"new_industry":"","":""},{"company_industry":"Parking & Valet","count":1,"new_industry":"","":""},{"company_industry":"Pharmaceutical","count":1,"new_industry":"","":""},{"company_industry":"Philanthropic Fundraising Services","count":1,"new_industry":"","":""},{"company_industry":"Professional Services","count":1,"new_industry":"","":""},{"company_industry":"Real Estate Agencies","count":1,"new_industry":"Real Estate","":""},{"company_industry":"Research Services","count":1,"new_industry":"","":""},{"company_industry":"Residential Building Construction","count":1,"new_industry":"","":""},{"company_industry":"Retail Office Equipment","count":1,"new_industry":"","":""},{"company_industry":"Spectator Sports","count":1,"new_industry":"","":""},{"company_industry":"Translation & Linguistic Services","count":1,"new_industry":"","":""},{"company_industry":"Travel Arrangements","count":1,"new_industry":"","":""},{"company_industry":"Truck Transportation","count":1,"new_industry":"","":""},{"company_industry":"Venture Capital and Private Equity Principals","count":1,"new_industry":"","":""},{"company_industry":"Waste Management","count":1,"new_industry":"","":""}];
 let INDUSTRY_MAPPING_MAP = {};
 INDUSTRY_MAPPING.forEach((m) => {
@@ -27,7 +29,13 @@ INDUSTRY_MAPPING.forEach((m) => {
 });
 
 module.exports.COMPANY_TABLE = COMPANY_TABLE;
+module.exports.COMPANY_MAP = COMPANY_MAP;
+module.exports.PRELOADED_DATA = PRELOADED_DATA;
+module.exports.COMPANIES = PRELOADED_DATA;
 
+module.exports.get_all_companies = () => {
+    return PRELOADED_DATA;
+};
 module.exports.init = function (connection) {
 
     init = true;
@@ -46,6 +54,7 @@ module.exports.init = function (connection) {
     // import_data();
     // import_demo_data();
     //
+
     // setTimeout(() => {
     //     preload_and_prejoin_companies();
     // }, 1000);
@@ -53,6 +62,9 @@ module.exports.init = function (connection) {
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
         console.log("SET PRELOADED DATA:", companies.length);
+        companies.forEach((company) => {
+            COMPANY_MAP[company.company_id] = company;
+        })
 
         // companies.forEach((company) => {
         //     let new_industry = (INDUSTRY_MAPPING_MAP[company.company_industry] || company.glassdoor_industry);
@@ -394,7 +406,8 @@ function preload_and_prejoin_companies() {
     let company_lowercase_name_map = {};
     let companies = [];
     let company_demographics = [];
-    let company_ids_with_company_demographics = [];
+    let jobs_buffer = [];
+    let missing_companies = {};
 
     async.parallel([(cb) => {
         CompanyDemographicService.get_company_demographics({}).then((in_company_demographics) => {
@@ -403,7 +416,6 @@ function preload_and_prejoin_companies() {
                 company_demographics = company_demographic;
                 company_demographics_map[company_demographic.company_id] = company_demographics_map[company_demographic.company_id] || [];
                 company_demographics_map[company_demographic.company_id].push(company_demographic);
-                company_ids_with_company_demographics.push(company_demographic.company_id);
             });
             cb(null);
         })
@@ -412,26 +424,22 @@ function preload_and_prejoin_companies() {
             companies = in_companies;
             cb();
         })
+    },(cb) => {
+        JobService.port_buffer_to_jobs().then((j) => {
+            jobs_buffer = j;
+            cb();
+        });
     },], (err) => {
-        // let list = [];
         companies.forEach((company) => {
-            // console.log(company.company_id)
             company_map[company.company_id] = company;
             company_name_map[company.company_name] = company;
             company_lowercase_name_map[(company.company_name || "").toLowerCase()] = company;
-            // list.push({
-            //     company_name: company.company_name,
-            //     company_id: company.company_id,
-            //     company_size: company.company_size,
-            //     years: company_demographics_map[company.company_id + ""] ? company_demographics_map[company.company_id +""].length : 0
-            // });
         });
-        // const fs = require('fs');
-        // fs.writeFile('./helloworld.txt', JSON.stringify(list), function (err) {
-        //     if (err) return console.log(err);
-        //     console.log('Hello World > helloworld.txt');
-        // });
 
+
+
+
+        // console.log(jobs_buffer)
         // const filename = "jobs_desc_working_doc_1050.csv";
         // const filename = "jobs_desc_working_doc_2476.csv";
         const filename = "jobs_desc_working_doc_1275.csv";
@@ -440,118 +448,90 @@ function preload_and_prejoin_companies() {
         let found = 0;
         let missing = 0;
         let web_jobs = [];
-        fs.createReadStream(__dirname + `/../../../data/${filename}`)
-            .pipe(csv())
-            .on('data', (job) => {
-                i++
 
-                if (job.job_company === "Boston Consulting Group") {
-                    job.job_company = "Boston Consulting Group (BCG)"
-                }
+        jobs_buffer.forEach( (job) => {
+            i++
 
-                if (job.job_company === "JPMorgan Chase Bank, N.A.") {
-                    job.job_company = "JPMorgan Chase & Co."
-                }
+            if (job.job_company === "Boston Consulting Group") {
+                job.job_company = "Boston Consulting Group (BCG)"
+            }
 
-                const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
-                let company_id = null;
-                if (job_company) {
-                    found++;
-                    company_id = job_company.company_id
-                } else {
-                    console.log(job.job_company)
-                }
+            if (job.job_company === "JPMorgan Chase Bank, N.A.") {
+                job.job_company = "JPMorgan Chase & Co."
+            }
 
+            if (job.job_company === "CLEAR - Corporate") {
+                job.job_company = "CLEAR"
+            }
 
-                let job_city = "";
-                let job_state = "";
-                if (job.job_location && job.job_location.indexOf(", ") !== -1) {
-                    let parts = job.job_location.split(", ");
-                    job_city = parts[0];
-                    job_state = parts[1];
-                } else {
+            if (job.job_company === "TIDAL") {
+                job.job_company = "BLOCK"
+            }
 
-                }
+            const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
+            let company_id = null;
 
-                const job_location = [{
-                    location_id: job.job_location,
-                    id: job.job_location,
-                    city: job_city,
-                    state: job_state,
-                    label: job.job_location,
-                }];
-
-                if (job.job_html) {
-                    job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
-                } else {
-                    missing++
-                }
-
-                console.log(found, missing, i)
-
-                if (job.job_board_category === "Consulting")
-                    job.job_board_category = "Consultant"
-
-                let job_for_board = {
-                    job_id: i + 9800000,
-                    date_created: new Date().getTime(),
-                    apply_link: job.job_link,
-                    locations: job_location,
-                    job_salary_estimate: job.job_salary,
-                    date_created_label: null,
-                    job_title: job.job_title,
-                    job_overview: "",
-                    industries: [{
-                        industry_id: job.job_board_category,
-                        id: job.job_board_category,
-                        label:job.job_board_category,
-                        name: job.job_board_category,
-                    }],
-                    job_types: [{
-                        job_type_id: "Full-Time",
-                        id: "Full-Time",
-                        label: "Full-Time",
-                        name: "Full-Time",
-                    }],
-                    qualifications: [],
-                    responsibilities: [],
-                    degree_requirements: [],
-                    company_id,
-                    batch_id: filename,
-                    companies: [{
-                        company_name: job.job_company,
-                        company_website: job.job_company,
-                        company_logo_url: job.job_logo_url,
-                        company_industry: null
-                    }],
-                    affinities: [],
-
-                    job_html: job.job_html,
-                    job_board_category: job.job_board_category,
-                    job_seniority: job.job_board_level,
-                };
+            if (job_company) {
+                found++;
+                company_id = job_company.company_id
+            } else {
+                // console.log(job.job_company)
+                missing_companies[job.job_company] = missing_companies[job.job_company] || 0;
+                missing_companies[job.job_company]++;
+            }
 
 
-                // if (company_id && job.job_html) {
-                //     web_jobs.push(job_for_board);
-                //     let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", filename, "glassdoor");
-                //     // delete db_job["job_html"]
-                //     // console.log(db_job)
-                //     JobService.create_job(db_job).then((job_id) =>{
-                //         console.log("created job:", job_id);
-                //     }).catch((e) => {
-                //         console.log("error creating job:", e);
-                //     });
-                //
-                // }
+            let job_city = "";
+            let job_state = "";
+            if (job.job_location && job.job_location.indexOf(", ") !== -1) {
+                let parts = job.job_location.split(", ");
+                job_city = parts[0];
+                job_state = parts[1];
+            } else {
 
+            }
 
+            const job_location = [{
+                location_id: job.job_location,
+                id: job.job_location,
+                city: job_city,
+                state: job_state,
+                label: job.job_location,
+            }];
 
-            })
-            .on('end', () => {
-                // console.log('CSV file successfully processed');
-                JobService.set_webscraped_jobs(web_jobs);
-            });
+            if (job.job_html) {
+                job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
+            } else {
+                missing++
+            }
+
+            if (job.job_board_category === "Consulting")
+                job.job_board_category = "Consultant"
+
+            if (company_id && job.job_html) {
+                let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", job.batch_id, job.job_source);
+                // delete db_job["job_html"]
+                // console.log(db_job)
+                JobService.create_job(db_job).then((job_id) =>{
+                    console.log("created job:", job_id);
+                }).catch((e) => {
+                    console.log("error creating job:", e);
+                });
+
+            }
+        });
+
+        let compss = Object.keys(missing_companies);
+
+        compss = compss.sort((a, b) => {
+            return missing_companies[a] - missing_companies[b]
+        });
+
+        console.log(found, missing, i)
+        console.log("Missing companies:", compss.length)
+        compss.forEach((c) => {
+            // console.log(c, missing_companies[c])
+        })
     })
 
 }
@@ -563,10 +543,11 @@ function format_webscraped_job_for_db(job, company_id, job_type, batch_id, job_s
     let db_job = {
         company_id: company_id,
         user_id: null,
-        apply_link: job.job_link,
+        apply_link: job.job_direct_link || job.job_link,
         job_salary_estimate: job.job_salary && job.job_salary.length ? job.job_salary : null,
         company_name: job.job_company,
         job_title: job.job_title,
+        airtable_job_id: job.job_buffer_id,
         job_overview: null,
         job_qualifications: null,
         job_responsibilities: null,

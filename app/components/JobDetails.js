@@ -35,6 +35,7 @@ import StandardButton from "./StandardButton";
 import CoverImageHolder from "./CoverImageHolder";
 import {mc} from "../common/helpers";
 import SavedJobService from "../services/SavedJobService";
+import TrackingService from "../services/TrackingService";
 
 const Styles = {
     container: {
@@ -227,7 +228,13 @@ class JobDetails extends React.Component {
                             <StandardButton label={""} icon={`${is_saved_job ? "fa-solid" : "fa-regular"} fa-bookmark`} secondary={!is_saved_job} onClick={() => {this.updateSavedJob()}}/>
                         </div>
                         <div style={{display: "inline-block"}}>
-                            <StandardButton label={"Apply Now"} secondary={true} onClick={() => {onApply()}}/>
+                            <StandardButton label={"Apply Now"} secondary={true} onClick={() => {
+
+                                TrackingService.trackClick({page: "job-board", sub_page: "job-details-apply-now", value: job.job_id, custom: `${company.company_name} --- ${job.job_title}`});
+
+
+                                onApply()
+                            }}/>
                         </div>
                     </div>
                 </div>
