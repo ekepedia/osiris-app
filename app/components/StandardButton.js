@@ -75,11 +75,11 @@ class StandardButton extends React.Component {
     }
 
     render() {
-        let { classes, label, secondary, onClick, fullWidth, icon, iconStyle } = this.props;
+        let { classes, disabled, label, secondary, onClick, fullWidth, icon, iconStyle } = this.props;
 
         return (<div className={classes.container}>
 
-            <button style={{width: fullWidth ? "100%" : null}} className={secondary ? mc(classes.secondaryButton) : classes.buttonStyle} onClick={() => {
+            <button disabled={disabled} style={{width: fullWidth ? "100%" : null, transition: "all 0.5s", opacity: disabled ? 0.5 : null}} className={secondary ? mc(classes.secondaryButton) : classes.buttonStyle} onClick={() => {
                 onClick ? onClick() : null;
             }}>{label}{icon && <span style={{marginLeft: label && label.length ? "8px" : "0px"}}><i style={iconStyle} className={mc(icon,classes.defaultIcon)}/></span>}</button>
         </div>)

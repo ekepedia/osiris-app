@@ -15,7 +15,7 @@ function trackEvent ({type, page, sub_page, action, value, user_id, custom}) {
             axios.post("/api/tracking/v1", {
                 "user_id": in_user_id || user_id,
                 "type": type,
-                "custom_1": "mvp-beta-v2",
+                "custom_1": "mvp-beta-v3",
                 "custom_2": page,
                 "custom_3": sub_page,
                 "custom_4": action,

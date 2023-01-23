@@ -54,6 +54,7 @@ module.exports.init = function (connection) {
     // import_data();
     // import_demo_data();
     //
+
     // setTimeout(() => {
     //     preload_and_prejoin_companies();
     // }, 1000);
@@ -405,7 +406,8 @@ function preload_and_prejoin_companies() {
     let company_lowercase_name_map = {};
     let companies = [];
     let company_demographics = [];
-    let company_ids_with_company_demographics = [];
+    let jobs_buffer = [];
+    let missing_companies = {};
 
     async.parallel([(cb) => {
         CompanyDemographicService.get_company_demographics({}).then((in_company_demographics) => {
@@ -414,7 +416,6 @@ function preload_and_prejoin_companies() {
                 company_demographics = company_demographic;
                 company_demographics_map[company_demographic.company_id] = company_demographics_map[company_demographic.company_id] || [];
                 company_demographics_map[company_demographic.company_id].push(company_demographic);
-                company_ids_with_company_demographics.push(company_demographic.company_id);
             });
             cb(null);
         })
@@ -423,26 +424,22 @@ function preload_and_prejoin_companies() {
             companies = in_companies;
             cb();
         })
+    },(cb) => {
+        JobService.port_buffer_to_jobs().then((j) => {
+            jobs_buffer = j;
+            cb();
+        });
     },], (err) => {
-        // let list = [];
         companies.forEach((company) => {
-            // console.log(company.company_id)
             company_map[company.company_id] = company;
             company_name_map[company.company_name] = company;
             company_lowercase_name_map[(company.company_name || "").toLowerCase()] = company;
-            // list.push({
-            //     company_name: company.company_name,
-            //     company_id: company.company_id,
-            //     company_size: company.company_size,
-            //     years: company_demographics_map[company.company_id + ""] ? company_demographics_map[company.company_id +""].length : 0
-            // });
         });
-        // const fs = require('fs');
-        // fs.writeFile('./helloworld.txt', JSON.stringify(list), function (err) {
-        //     if (err) return console.log(err);
-        //     console.log('Hello World > helloworld.txt');
-        // });
 
+
+
+
+        // console.log(jobs_buffer)
         // const filename = "jobs_desc_working_doc_1050.csv";
         // const filename = "jobs_desc_working_doc_2476.csv";
         const filename = "jobs_desc_working_doc_1275.csv";
@@ -451,118 +448,90 @@ function preload_and_prejoin_companies() {
         let found = 0;
         let missing = 0;
         let web_jobs = [];
-        fs.createReadStream(__dirname + `/../../../data/${filename}`)
-            .pipe(csv())
-            .on('data', (job) => {
-                i++
 
-                if (job.job_company === "Boston Consulting Group") {
-                    job.job_company = "Boston Consulting Group (BCG)"
-                }
+        jobs_buffer.forEach( (job) => {
+            i++
 
-                if (job.job_company === "JPMorgan Chase Bank, N.A.") {
-                    job.job_company = "JPMorgan Chase & Co."
-                }
+            if (job.job_company === "Boston Consulting Group") {
+                job.job_company = "Boston Consulting Group (BCG)"
+            }
 
-                const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
-                let company_id = null;
-                if (job_company) {
-                    found++;
-                    company_id = job_company.company_id
-                } else {
-                    console.log(job.job_company)
-                }
+            if (job.job_company === "JPMorgan Chase Bank, N.A.") {
+                job.job_company = "JPMorgan Chase & Co."
+            }
 
+            if (job.job_company === "CLEAR - Corporate") {
+                job.job_company = "CLEAR"
+            }
 
-                let job_city = "";
-                let job_state = "";
-                if (job.job_location && job.job_location.indexOf(", ") !== -1) {
-                    let parts = job.job_location.split(", ");
-                    job_city = parts[0];
-                    job_state = parts[1];
-                } else {
+            if (job.job_company === "TIDAL") {
+                job.job_company = "BLOCK"
+            }
 
-                }
+            const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
+            let company_id = null;
 
-                const job_location = [{
-                    location_id: job.job_location,
-                    id: job.job_location,
-                    city: job_city,
-                    state: job_state,
-                    label: job.job_location,
-                }];
-
-                if (job.job_html) {
-                    job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
-                } else {
-                    missing++
-                }
-
-                console.log(found, missing, i)
-
-                if (job.job_board_category === "Consulting")
-                    job.job_board_category = "Consultant"
-
-                let job_for_board = {
-                    job_id: i + 9800000,
-                    date_created: new Date().getTime(),
-                    apply_link: job.job_link,
-                    locations: job_location,
-                    job_salary_estimate: job.job_salary,
-                    date_created_label: null,
-                    job_title: job.job_title,
-                    job_overview: "",
-                    industries: [{
-                        industry_id: job.job_board_category,
-                        id: job.job_board_category,
-                        label:job.job_board_category,
-                        name: job.job_board_category,
-                    }],
-                    job_types: [{
-                        job_type_id: "Full-Time",
-                        id: "Full-Time",
-                        label: "Full-Time",
-                        name: "Full-Time",
-                    }],
-                    qualifications: [],
-                    responsibilities: [],
-                    degree_requirements: [],
-                    company_id,
-                    batch_id: filename,
-                    companies: [{
-                        company_name: job.job_company,
-                        company_website: job.job_company,
-                        company_logo_url: job.job_logo_url,
-                        company_industry: null
-                    }],
-                    affinities: [],
-
-                    job_html: job.job_html,
-                    job_board_category: job.job_board_category,
-                    job_seniority: job.job_board_level,
-                };
+            if (job_company) {
+                found++;
+                company_id = job_company.company_id
+            } else {
+                // console.log(job.job_company)
+                missing_companies[job.job_company] = missing_companies[job.job_company] || 0;
+                missing_companies[job.job_company]++;
+            }
 
 
-                // if (company_id && job.job_html) {
-                //     web_jobs.push(job_for_board);
-                //     let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", filename, "glassdoor");
-                //     // delete db_job["job_html"]
-                //     // console.log(db_job)
-                //     JobService.create_job(db_job).then((job_id) =>{
-                //         console.log("created job:", job_id);
-                //     }).catch((e) => {
-                //         console.log("error creating job:", e);
-                //     });
-                //
-                // }
+            let job_city = "";
+            let job_state = "";
+            if (job.job_location && job.job_location.indexOf(", ") !== -1) {
+                let parts = job.job_location.split(", ");
+                job_city = parts[0];
+                job_state = parts[1];
+            } else {
 
+            }
 
+            const job_location = [{
+                location_id: job.job_location,
+                id: job.job_location,
+                city: job_city,
+                state: job_state,
+                label: job.job_location,
+            }];
 
-            })
-            .on('end', () => {
-                // console.log('CSV file successfully processed');
-                JobService.set_webscraped_jobs(web_jobs);
-            });
+            if (job.job_html) {
+                job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
+            } else {
+                missing++
+            }
+
+            if (job.job_board_category === "Consulting")
+                job.job_board_category = "Consultant"
+
+            if (company_id && job.job_html) {
+                let db_job = format_webscraped_job_for_db(job, company_id, "Full-Time", job.batch_id, job.job_source);
+                // delete db_job["job_html"]
+                // console.log(db_job)
+                JobService.create_job(db_job).then((job_id) =>{
+                    console.log("created job:", job_id);
+                }).catch((e) => {
+                    console.log("error creating job:", e);
+                });
+
+            }
+        });
+
+        let compss = Object.keys(missing_companies);
+
+        compss = compss.sort((a, b) => {
+            return missing_companies[a] - missing_companies[b]
+        });
+
+        console.log(found, missing, i)
+        console.log("Missing companies:", compss.length)
+        compss.forEach((c) => {
+            // console.log(c, missing_companies[c])
+        })
     })
 
 }
@@ -574,10 +543,11 @@ function format_webscraped_job_for_db(job, company_id, job_type, batch_id, job_s
     let db_job = {
         company_id: company_id,
         user_id: null,
-        apply_link: job.job_link,
+        apply_link: job.job_direct_link || job.job_link,
         job_salary_estimate: job.job_salary && job.job_salary.length ? job.job_salary : null,
         company_name: job.job_company,
         job_title: job.job_title,
+        airtable_job_id: job.job_buffer_id,
         job_overview: null,
         job_qualifications: null,
         job_responsibilities: null,
