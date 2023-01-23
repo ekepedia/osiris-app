@@ -110,7 +110,7 @@ function get_buffer_for_lambda() {
                 return row;
             });
 
-            console.log(batch_ids)
+            // console.log(batch_ids)
 
             return resolve(_.without(rows, null));
         }).catch((err) => {
