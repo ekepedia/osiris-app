@@ -136,7 +136,7 @@ app.post("/api/jobs-buffer/:job_buffer_id", function (req, res) {
 app.post("/api/jobs/v2", function (req, res) {
     console.log("/api/jobs/v2", "payload:", req.body);
     JobService.get_jobs_for_job_board(req.body).then((jobs) => {
-        res.json({ jobs: _.shuffle(jobs) });
+        res.json({ jobs: jobs });
     }).catch((err) => {
         res.json({ jobs: [] });
     });

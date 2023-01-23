@@ -19,6 +19,7 @@ import {STYLE_MODAL_CONTENT, STYLE_MODAL_OVERLAY, MODAL_TIMING, STYLE_BUTTON_SUB
 import COMMON from "../common";
 import StandardButton from "./StandardButton";
 import StandardInput from "./StandardInput";
+import TrackingService from "../services/TrackingService";
 
 const Styles = {
     container: {
@@ -80,7 +81,7 @@ class JobAlertSignUp extends React.Component {
         </div>)
     }
 
-    renderFooter() {
+    renderFooter(industry) {
         const { page } = this.state || {};
         const { onSubmit, onClose, label, job } = this.props || {};
 
@@ -101,10 +102,14 @@ class JobAlertSignUp extends React.Component {
                 </div>
             </div>
             <div style={{display: "inline-block", }}>
-                <StandardButton fullWidth={false} label={company && company.length ? `Continue to ${company}` : "Continue to Jobs"} onClick={() => {
+                <StandardButton disabled={!this.state.email || !this.state.email.length} fullWidth={false} label={company && company.length ? `Continue to ${company}` : "Continue to Jobs"} onClick={() => {
                     if (onClose) onClose();
 
                     if (job) window.open(job.apply_link, "_blank");
+
+                    if (this.state.email) {
+                        TrackingService.trackSubmit({page: "job-alert-sign-up", sub_page: industry, value: this.state.email, custom: company});
+                    }
                 }}/>
             </div>
         </div>)
@@ -161,14 +166,14 @@ class JobAlertSignUp extends React.Component {
                                         Timing is everything! Sign up for {industry} job alerts to give yourself the best chance of getting accepted
                                     </div>
                                     <div>
-                                        <StandardInput placeholder={"Email Address"}/>
+                                        <StandardInput value={this.state.email} update={(v) => (this.setState({email: v}))} placeholder={"Email Address"}/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div style={{flex: "0 0 32px"}}>
                             <div>
-                                {this.renderFooter()}
+                                {this.renderFooter(industry)}
                             </div>
                         </div>
                     </div>

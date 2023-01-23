@@ -29,6 +29,7 @@ import SavedJobService from "../../services/SavedJobService";
 import AuthService from "../../services/AuthService";
 import axios from "axios";
 import UserPreferenceService from "../../services/UserPreferenceService";
+import TrackingService from "../../services/TrackingService";
 
 const Styles = {
     container: {
@@ -352,17 +353,25 @@ class Jobs extends React.Component {
             glassdoor_compensation,
             MAX_RESULTS
         } = this.state;
+
+
+        let params = (new URL(document.location)).searchParams;
+        let job_id = params.get("j");
+
+        let job_ids = job_id ? [job_id] : [];
+
         DataService.getJobs({
             companies: selectedCompanies,
             locations: selectedLocations,
             industries: selectedCompanyIndustries,
             job_titles: selectedIndustries,
             seniorities: selectedSeniorities,
+            job_ids: job_ids,
             glassdoor_overall,
             glassdoor_culture,
             glassdoor_work_life,
             glassdoor_compensation,
-            max: 100//MAX_RESULTS
+            max: 200//MAX_RESULTS
         }).then(({jobs}) => {
             this.processJobs({jobs});
         })
@@ -439,6 +448,8 @@ class Jobs extends React.Component {
         this.setState({[field]: selected, MAX_RESULTS: 10});
         this.resetScrollPosition();
 
+        TrackingService.trackClick({page: "job-board", sub_page: "job-filter", custom: field, value: id});
+
         setTimeout(() => {
             this.reloadJobs();
         }, 100);
@@ -495,6 +506,7 @@ class Jobs extends React.Component {
     }
 
     openJobAssistant() {
+        TrackingService.trackClick({page: "job-board", sub_page: "job-assistant",});
         this.setState({showJobAssistant: true})
     }
 
@@ -503,12 +515,15 @@ class Jobs extends React.Component {
     }
 
     submitJobAssistant() {
+        TrackingService.trackSubmit({page: "job-board", sub_page: "job-assistant",});
         this.closeJobAssistant();
         this.openJobAlerts();
     }
 
     setSelectedJob(job_id) {
         let job = this.getJob(job_id);
+
+        TrackingService.trackClick({page: "job-board", sub_page: "job-card", value: job_id});
 
         this.setState({
             selectedJobId: job_id,
