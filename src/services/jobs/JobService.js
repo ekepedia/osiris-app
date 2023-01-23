@@ -75,6 +75,9 @@ module.exports.init = function (connection) {
     get_jobs_for_job_board({}).then(() => {});
 
 
+    // get_buffer_for_lambda().then((rows) => {
+    //     console.log(rows);
+    // })
     // populate_job_board_links();
     // call_lambda({
     //     job_board_link:"https://www.glassdoor.com/Job/new-york-financial-analyst-jobs-SRCH_IL.0,8_IC1132348_KO9,26.htm",
@@ -83,6 +86,38 @@ module.exports.init = function (connection) {
     //     console.log(data);
     // })
 };
+
+module.exports.get_buffer_for_lambda = get_buffer_for_lambda;
+
+function get_buffer_for_lambda() {
+    let knexQuery = knex(JOBS_BUFFER_TABLE).whereNull("job_html");
+
+    return new Promise((resolve, reject) => {
+        knexQuery.then((rows) => {
+
+            let batch_ids = {};
+
+            rows = rows.map((row) => {
+                batch_ids[row.batch_id] = batch_ids[row.batch_id] || 0;
+                batch_ids[row.batch_id]++;
+
+                // if (row.job_board_level.indexOf("Internship") === -1 && row.job_board_level.indexOf("Entry") === -1)
+                //     return null;
+
+                // if (row.job_board_link.indexOf("companyId") === -1)
+                //     return null;
+
+                return row;
+            });
+
+            // console.log(batch_ids)
+
+            return resolve(_.without(rows, null));
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
 
 function populate_job_board_links() {
     let links = require("../../../data/data-board-links.json");
@@ -411,6 +446,71 @@ function create_job_buffer({
             const job_buffer_id = rows[0];
 
             return resolve(job_buffer_id);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
+module.exports.edit_job_buffer = edit_job_buffer;
+
+function edit_job_buffer({
+                               job_buffer_id,
+                               buffer_unique_code,
+                               batch_id,
+                               company_id,
+                               job_board_link,
+                               job_board_city,
+                               job_board_state,
+                               job_board_location,
+                               job_board_category,
+                               job_board_level,
+                               job_title,
+                               job_company,
+                               job_location,
+                               job_salary,
+                               job_link,
+                               job_direct_link,
+                               job_logo_url,
+                               job_html,
+                               apply_link,
+                               job_overview,
+                               job_qualifications,
+                               job_responsibilities,
+                               job_source,
+                           }) {
+    return new Promise((resolve, reject) => {
+        if (!job_buffer_id)
+            return reject(new Error("Missing job_buffer_id"));
+
+        const query = DatabaseService.generate_query({
+            buffer_unique_code,
+            batch_id,
+            company_id,
+            job_board_link,
+            job_board_city,
+            job_board_state,
+            job_board_location,
+            job_board_category,
+            job_board_level,
+            job_title,
+            job_company,
+            job_location,
+            job_salary,
+            job_link,
+            job_direct_link,
+            job_logo_url,
+            job_html,
+            apply_link,
+            job_overview,
+            job_qualifications,
+            job_responsibilities,
+            job_source,
+        });
+
+
+        knex(JOBS_BUFFER_TABLE).where({job_buffer_id}).update(query).then(() =>{
+            return resolve();
         }).catch((err) => {
             return reject(err);
         });
