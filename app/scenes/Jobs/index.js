@@ -497,7 +497,7 @@ class Jobs extends React.Component {
         this.setState({showJobAlerts: false})
     }
 
-    openApplyModal() {f
+    openApplyModal() {
         this.setState({showApplyNow: true})
     }
 
