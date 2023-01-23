@@ -75,9 +75,9 @@ module.exports.init = function (connection) {
     get_jobs_for_job_board({}).then(() => {});
 
 
-    get_buffer_for_lambda().then((rows) => {
-        console.log(rows);
-    })
+    // get_buffer_for_lambda().then((rows) => {
+    //     console.log(rows);
+    // })
     // populate_job_board_links();
     // call_lambda({
     //     job_board_link:"https://www.glassdoor.com/Job/new-york-financial-analyst-jobs-SRCH_IL.0,8_IC1132348_KO9,26.htm",
