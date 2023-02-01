@@ -101,11 +101,14 @@ function port_buffer_to_jobs() {
         knexQuery.then((rows) => {
 
             rows = rows.map((row) => {
-                if (JOB_TITLES.indexOf(row.job_board_category) === -1)
-                    return null;
+                // if (JOB_TITLES.indexOf(row.job_board_category) === -1)
+                //     return null;
 
                 if (row.batch_id.indexOf("single") === -1)
                     return null;
+
+                // if (row.job_buffer_id !== 8781)
+                //        return null;
 
                 return row;
             });

@@ -120,6 +120,10 @@ app.post("/api/jobs-buffer/:job_buffer_id", function (req, res) {
     let data = req.body.rows
     let { job_buffer_id, job_html, job_direct_link } = req.body;
 
+    if (job_html){
+        console.log("job_html.length", job_html.length)
+    }
+
     console.log("/api/jobs-buffer", {job_buffer_id,job_direct_link });
 
     JobService.edit_job_buffer(req.body).then(() => {
@@ -135,6 +139,7 @@ app.post("/api/jobs-buffer/:job_buffer_id", function (req, res) {
 
 app.post("/api/jobs/v2", function (req, res) {
     console.log("/api/jobs/v2", "payload:", req.body);
+
     JobService.get_jobs_for_job_board(req.body).then((jobs) => {
         res.json({ jobs: jobs });
     }).catch((err) => {

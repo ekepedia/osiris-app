@@ -468,13 +468,25 @@ function preload_and_prejoin_companies() {
                 job.job_company = "BLOCK"
             }
 
+            if (job.job_company === "Snapchat") {
+                job.job_company = "Snap"
+            }
+
+            if (job.job_company === "VICE MEDIA GROUP") {
+                job.job_company = "Vice Media"
+            }
+
             const job_company = company_lowercase_name_map[(job.job_company || "").toLowerCase()];
             let company_id = null;
 
+            // console.log("job.job_company", job.job_company, company_lowercase_name_map[(job.job_company || "").toLowerCase()])
+
             if (job_company) {
+                // console.log("FOUNDD!!")
                 found++;
                 company_id = job_company.company_id
             } else {
+                // console.log("NOOTTTT FOUNDD!!")
                 // console.log(job.job_company)
                 missing_companies[job.job_company] = missing_companies[job.job_company] || 0;
                 missing_companies[job.job_company]++;
@@ -499,6 +511,9 @@ function preload_and_prejoin_companies() {
                 label: job.job_location,
             }];
 
+            console.log(company_id && job.job_html ? "TRE" : "FALSE", job.job_company)
+
+            // TODO: FIX
             if (job.job_html) {
                 job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
             } else {
@@ -515,9 +530,12 @@ function preload_and_prejoin_companies() {
                 JobService.create_job(db_job).then((job_id) =>{
                     console.log("created job:", job_id);
                 }).catch((e) => {
-                    console.log("error creating job:", e);
+                    // console.log("error creating job:", e);
+                    console.log("job already existed");
                 });
 
+            } else {
+                // console.log(job)
             }
         });
 
@@ -530,7 +548,7 @@ function preload_and_prejoin_companies() {
         console.log(found, missing, i)
         console.log("Missing companies:", compss.length)
         compss.forEach((c) => {
-            // console.log(c, missing_companies[c])
+            console.log(c, missing_companies[c])
         })
     })
 

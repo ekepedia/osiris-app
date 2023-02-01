@@ -13,6 +13,7 @@ import DataService from '../../services/DataService';
 
 import { COLOR_WHITE } from "../../common/colors";
 import { FONT_BODY_BOLD } from "../../common/fonts";
+import { mc } from "../../common/helpers";
 import COMMON from "../../common/index";
 
 import NavBar from "../../components/NavBar"
@@ -609,7 +610,7 @@ class Jobs extends React.Component {
                             <div style={{flex: 1,  height: "100%",}}>
                                 <div style={{ height: "100%",}}>
                                     <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
-                                        <div  id={"mobile-cards-container"} className={classes.cardContainer}>
+                                        <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.showOnMobile)}>
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
@@ -628,8 +629,51 @@ class Jobs extends React.Component {
                                                 selectedDegreeRequirements={this.state.selectedDegreeRequirements}
                                                 setSelectedJob={this.setSelectedJob.bind(this)}
                                                 saved_jobs_ids={saved_jobs_ids}
+                                                mobile={true}
+                                                resetScrollPosition={this.resetScrollPosition.bind(this)}
+                                                resetMax={() => (this.setState({MAX_RESULTS: 10}))}
+
+                                                job={this.state.selectedJob}
+                                                saved_jobs={saved_jobs}
                                                 MAX_RESULTS={MAX_RESULTS}
+                                                user={user}
+                                                onApply={this.openApplyModal.bind(this)}
                                                 handleScroll={this.handleScroll.bind(this)}
+                                                forceCompany={this.forceCompany.bind(this)}
+                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
+                                            />
+                                        </div>
+                                        <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
+                                            <JobCards
+                                                jobs={this.jobs}
+                                                loading={loading}
+                                                glassdoor_overall={this.state.glassdoor_overall}
+                                                glassdoor_compensation={this.state.glassdoor_compensation}
+                                                glassdoor_culture={this.state.glassdoor_culture}
+                                                glassdoor_work_life={this.state.glassdoor_work_life}
+                                                selectedJobId={this.state.selectedJobId}
+                                                selectedLocations={this.state.selectedLocations}
+                                                selectedCompanies={this.state.selectedCompanies}
+                                                selectedIndustries={this.state.selectedIndustries}
+                                                selectedCompanyIndustries={this.state.selectedCompanyIndustries}
+                                                selectedAffinities={this.state.selectedAffinities}
+                                                selectedSeniorities={this.state.selectedSeniorities}
+                                                selectedRoles={this.state.selectedRoles}
+                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                setSelectedJob={this.setSelectedJob.bind(this)}
+                                                saved_jobs_ids={saved_jobs_ids}
+                                                mobile={false}
+                                                resetScrollPosition={this.resetScrollPosition.bind(this)}
+                                                resetMax={() => (this.setState({MAX_RESULTS: 10}))}
+
+                                                job={this.state.selectedJob}
+                                                saved_jobs={saved_jobs}
+                                                MAX_RESULTS={MAX_RESULTS}
+                                                user={user}
+                                                onApply={this.openApplyModal.bind(this)}
+                                                handleScroll={this.handleScroll.bind(this)}
+                                                forceCompany={this.forceCompany.bind(this)}
+                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
                                             />
                                         </div>
                                         <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>

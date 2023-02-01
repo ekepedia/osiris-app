@@ -18,6 +18,7 @@ import COMMON from "../common/index";
 import JobCard from "./JobCard";
 import LoadingJobCard from "./LoadingJobCard";
 import InfiniteScroll from "react-infinite-scroll-component";
+import JobDetails from "./JobDetails";
 
 const Styles = {
     container: {
@@ -25,6 +26,8 @@ const Styles = {
         marginBottom: "200px",
         '@media (max-width: 768px)': {
             padding: "0",
+            marginBottom: "20px",
+
         },
     },
     cardPadding: {
@@ -38,7 +41,14 @@ class JobCards extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        let params = (new URL(document.location)).searchParams;
+        let job_id = params.get("j");
+
+        console.log("job_id", job_id, !!job_id)
+
+        this.state = {
+            showMobileJob: !!job_id
+        };
     }
 
     componentDidMount() {
@@ -297,7 +307,7 @@ class JobCards extends React.Component {
     }
 
     render() {
-        let { classes, client, match: { params }, jobs, selectedJobId, setSelectedJob, handleScroll, mobile, loading, MAX_RESULTS} = this.props;
+        let { classes, client, match: { params }, resetMax, resetScrollPosition, updateSavedJobIds, forceCompany, onApply, user, saved_jobs, saved_jobs_ids, job, jobs, selectedJobId, setSelectedJob, handleScroll, mobile, loading, MAX_RESULTS} = this.props;
 
         console.time("done filtering");
         let { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
@@ -310,10 +320,30 @@ class JobCards extends React.Component {
 
         return (<div className={classes.container}>
 
-            <div style={{...FONT_TITLE_3_BOLD, marginBottom: mobile ? null : "20px"}}>{usingFilters ? "Filtered": "All"} Jobs</div>
-            <div className={classes.showOnMobile} style={{...COMMON.FONTS.P200, marginBottom: "20px", fontSize: "13px"}}>We are actively developing the mobile version of the job board and can't wait to share it with you once it's complete!</div>
+            <div style={{...FONT_TITLE_3_BOLD, marginBottom: "20px", display: mobile && this.state.showMobileJob ? "none" : null}}>{usingFilters ? "Filtered": "All"} Jobs</div>
+            <div onClick={() => {
+                this.setState({showMobileJob: !this.state.showMobileJob});
+                resetScrollPosition ? resetScrollPosition() : null;
+                resetMax ? resetMax() : null;
+            }} className={classes.showOnMobile} style={{...COMMON.FONTS.P200, display: this.state.showMobileJob ? null : "none", marginBottom: "20px", fontSize: "13px"}}>
+                <i className="fa-solid fa-arrow-left-long"/> View all Jobs
+            </div>
 
-            <InfiniteScroll
+            <div style={{display: this.state.showMobileJob ? null : "none"}} className={classes.showOnMobile}>
+                <JobDetails
+                    job={job}
+                    saved_jobs_ids={saved_jobs_ids}
+                    saved_jobs={saved_jobs}
+                    user={user}
+                    onApply={onApply}
+
+                    forceCompany={forceCompany}
+                    updateSavedJobIds={updateSavedJobIds}
+                />
+            </div>
+
+            {!mobile || !this.state.showMobileJob ? <InfiniteScroll
+                style={{display: mobile && this.state.showMobileJob ? "none" : null}}
                 dataLength={MAX_RESULTS}
                 next={() => {
                     console.log("loading more!", MAX_RESULTS);
@@ -335,8 +365,13 @@ class JobCards extends React.Component {
                     </div>);
                 }) : <div>
                     {filteredJobs.map((job) => {
-                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                            <JobCard job={job} selectedJobId={selectedJobId}/>
+                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => {
+                            setSelectedJob(job.job_id);
+                            this.setState({showMobileJob: true});
+                            resetScrollPosition ? resetScrollPosition() : null;
+                            resetMax ? resetMax() : null;
+                        }}>
+                            <JobCard mobile={mobile} job={job} selectedJobId={selectedJobId}/>
                         </div>);
                     })}
 
@@ -355,12 +390,20 @@ class JobCards extends React.Component {
                     {(usingFilters && unFilteredJobs && unFilteredJobs.length >= 1) ? <div style={{...FONT_TITLE_3_BOLD, margin: "20px 0"}}>Additional Opportunities</div> : null}
 
                     {unFilteredJobs.map((job) => {
-                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => (setSelectedJob(job.job_id))}>
-                            <JobCard job={job} selectedJobId={selectedJobId}/>
+                        return (<div className={classes.cardPadding} key={job.job_id} onClick={() => {
+                            setSelectedJob(job.job_id);
+                            this.setState({showMobileJob: true});
+                            resetScrollPosition ? resetScrollPosition() : null;
+                            resetMax ? resetMax() : null;
+
+                        }}>
+                            <JobCard mobile={mobile} job={job} selectedJobId={selectedJobId}/>
                         </div>);
                     })}
                 </div>}
-            </InfiniteScroll>
+            </InfiniteScroll> : null}
+
+
 
 
 
