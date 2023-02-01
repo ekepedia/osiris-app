@@ -530,7 +530,8 @@ function preload_and_prejoin_companies() {
                 JobService.create_job(db_job).then((job_id) =>{
                     console.log("created job:", job_id);
                 }).catch((e) => {
-                    console.log("error creating job:", e);
+                    // console.log("error creating job:", e);
+                    console.log("job already existed");
                 });
 
             } else {

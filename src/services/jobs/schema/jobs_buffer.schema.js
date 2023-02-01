@@ -24,7 +24,7 @@ module.exports = function (connection) {
         table.string('job_link', 2000);
         table.string('job_direct_link', 2000);
         table.string('job_logo_url', 2000);
-        table.string('job_html', 10000);
+        table.string('job_html', 20000);
 
         table.string('apply_link', 2000);
 
