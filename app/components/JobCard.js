@@ -56,7 +56,7 @@ class JobCard extends React.Component {
     }
 
     render() {
-        let { classes, job, selectedJobId, client, match: { params } } = this.props;
+        let { classes, job, selectedJobId, mobile, client, match: { params } } = this.props;
 
         job = job || {};
 
@@ -83,8 +83,8 @@ class JobCard extends React.Component {
             }
         }
 
-        return (<div className={classes.container} style={{background: selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
-            <div style={{padding: "15px", border: `1px solid ${selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "4px", overflow: "hidden"}}>
+        return (<div className={classes.container} style={{background: !mobile && selectedJobId === job.job_id ? COMMON.COLORS.N50 : null}}>
+            <div style={{padding: "15px", border: `1px solid ${!mobile && selectedJobId === job.job_id ? COMMON.COLORS.B400 : COMMON.COLORS.N300}`, borderRadius: "4px", overflow: "hidden"}}>
                 <div style={{display: "flex", marginBottom: "7px"}}>
 
                     <div style={{flex: "0 0 38px", marginRight: "8px", height: "38px"}}>

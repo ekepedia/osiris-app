@@ -29,7 +29,7 @@ module.exports = function (connection) {
         table.string('job_responsibilities', 5000);
 
 
-        table.string('job_html', 10000);
+        table.string('job_html', 20000);
         table.string('job_seniority');
         table.string('job_board_category');
         table.string('job_source');
