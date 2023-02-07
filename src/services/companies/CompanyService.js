@@ -57,7 +57,7 @@ module.exports.init = function (connection) {
 
     // setTimeout(() => {
     //     preload_and_prejoin_companies();
-    // }, 1000);
+    // }, 1001);
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
@@ -468,6 +468,14 @@ function preload_and_prejoin_companies() {
                 job.job_company = "BLOCK"
             }
 
+            if (job.job_company === "Macquarie Group Limited") {
+                job.job_company = "Macquarie Group"
+            }
+
+            if (job.job_company === "PUBLIC POLICY INSTITUTE OF CALIFORNIA") {
+                job.job_company = "PPIC"
+            }
+
             if (job.job_company === "Snapchat") {
                 job.job_company = "Snap"
             }
@@ -514,11 +522,13 @@ function preload_and_prejoin_companies() {
             console.log(company_id && job.job_html ? "TRE" : "FALSE", job.job_company)
 
             // TODO: FIX
-            if (job.job_html) {
-                job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
-            } else {
-                missing++
-            }
+            // if (job.job_html) {
+            //     job.job_html = job.job_html.replace(/<div.*Show more.*<\/div>/, "");
+            // } else {
+            //     missing++
+            // }
+
+            // console.log(job.job_html)
 
             if (job.job_board_category === "Consulting")
                 job.job_board_category = "Consultant"
