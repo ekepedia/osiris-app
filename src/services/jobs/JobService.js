@@ -107,6 +107,9 @@ function port_buffer_to_jobs() {
                 if (row.batch_id.indexOf("single") === -1)
                     return null;
 
+                // if (row.job_company.indexOf("Patreon") === -1)
+                //     return null;
+
                 // if (row.job_buffer_id !== 8781)
                 //        return null;
 
@@ -660,6 +663,16 @@ function reformat_job_for_job_board(job) {
     if (!job)
         return job;
 
+    let years_of_experience = null;
+
+    if (job.job_html) {
+        const regexp = /(\d+.{0,30}experience)/g;
+        const matches = (regexp).exec(job.job_html);
+        if (matches && matches.length) {
+            years_of_experience = matches[1];
+        }
+    }
+
     return {
 
         job_id: job.job_id,
@@ -724,6 +737,7 @@ function reformat_job_for_job_board(job) {
         job_html: job.job_html,
         job_board_category: job.job_board_category,
         job_seniority: job.job_seniority,
+        years_of_experience,
 
         locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
                 return {
