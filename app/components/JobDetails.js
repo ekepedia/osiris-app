@@ -246,6 +246,7 @@ class JobDetails extends React.Component {
                         })}
                         <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
                         {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
+                        {job.years_of_experience ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.years_of_experience}/> : null }
                         {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} style={{background: COMMON.COLORS.B200, marginBottom: "5px", color: COMMON.COLORS.B500}} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
                         {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, marginBottom: "5px", color: COMMON.COLORS.G600}}/> : null}
                         {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, marginBottom: "5px", color: COMMON.COLORS.V600}}/> : null}
