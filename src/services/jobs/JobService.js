@@ -664,13 +664,46 @@ function reformat_job_for_job_board(job) {
         return job;
 
     let years_of_experience = null;
+    let job_salary_min = null;
+    let job_salary_max = null;
+    let years_of_experience_min = null;
+    let years_of_experience_max = null;
 
     if (job.job_html) {
         const regexp = /(\d+.{0,30}experience)/g;
         const matches = (regexp).exec(job.job_html);
-        if (matches && matches.length) {
+        if (matches && matches.length && matches[1] && matches[1].indexOf("year") !== -1) {
             years_of_experience = matches[1];
+
+            if (years_of_experience && years_of_experience.length) {
+                let yoe = (years_of_experience || "").replace(/,/g,"");
+                yoe = (yoe || "").replace(/\+/g,"");
+                yoe = (yoe || "").replace(/-/g," ");
+                yoe = yoe.split(" ");
+                yoe = _.filter(yoe, (s) => {
+                    return (s && (parseFloat(s) && parseFloat(s) > 0 || s === "0"))
+                });
+                yoe = yoe.map((s) => parseFloat(s));
+                years_of_experience_min = _.min(yoe);
+                years_of_experience_max = _.max(yoe);
+                // console.log("yoe", yoe, years_of_experience, years_of_experience_min, years_of_experience_max);
+            }
         }
+    }
+
+    if (job.job_salary_estimate && job.job_salary_estimate.length && job.job_salary_estimate.indexOf("Per Hour") === -1) {
+        let salary = (job.job_salary_estimate || "").replace(/K/g,",000");
+        salary = (salary || "").replace(/,/g,"");
+        salary = (salary || "").replace(/\$/g,"");
+        salary = (salary || "").replace(/-/g," ");
+        salary = salary.split(" ");
+        salary = _.filter(salary, (s) => {
+            return (s && (parseFloat(s) && parseFloat(s) > 0 || s === "0"))
+        });
+        salary = salary.map((s) => parseFloat(s));
+        job_salary_min = _.min(salary);
+        job_salary_max = _.max(salary);
+        // console.log("salary", salary, _.max(salary))
     }
 
     return {
@@ -679,6 +712,8 @@ function reformat_job_for_job_board(job) {
         date_created: new Date().getTime(),
         apply_link: job.apply_link,
 
+        job_salary_min,
+        job_salary_max,
         job_salary_estimate: job.job_salary_estimate,
 
         date_created_label: null,
@@ -738,6 +773,8 @@ function reformat_job_for_job_board(job) {
         job_board_category: job.job_board_category,
         job_seniority: job.job_seniority,
         years_of_experience,
+        years_of_experience_min,
+        years_of_experience_max,
 
         locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
                 return {
@@ -787,9 +824,17 @@ function get_jobs_for_job_board({
     glassdoor_culture,
     glassdoor_work_life,
     glassdoor_compensation,
+    job_salary_min,
+    job_salary_max,
+    years_of_experience_min,
+    years_of_experience_max,
                                 }) {
     return new Promise((resolve, reject) => {
         console.time("total job processing time:");
+        if (parseFloat(job_salary_min) === 2000000)
+            job_salary_min = 200000
+        if (parseFloat(years_of_experience_min) === 100)
+            years_of_experience_min = 10
         load_all_jobs().then((jobs) => {
             let all_jobs = [];
             let forced_jobs = [];
@@ -828,6 +873,14 @@ function get_jobs_for_job_board({
                 let glassdoor_culture_found = glassdoor_culture && glassdoor_culture > 0 ? company.glassdoor_culture >= glassdoor_culture : true;
                 let glassdoor_work_life_found = glassdoor_work_life && glassdoor_work_life > 0 ? company.glassdoor_work_life >= glassdoor_work_life : true;
                 let glassdoor_compensation_found = glassdoor_compensation && glassdoor_compensation > 0 ? company.glassdoor_compensation >= glassdoor_compensation : true;
+
+                let job_salary_min_found = job_salary_min && job_salary_min > 0 ? job.job_salary_min !== null && job.job_salary_min >= job_salary_min : true;
+                let job_salary_max_found = job_salary_max && job_salary_max > 0 ? job.job_salary_max !== null && job.job_salary_max <= job_salary_max : true;
+
+                let years_of_experience_min_found = years_of_experience_min && years_of_experience_min > 0 ? job.years_of_experience_min !== null && job.years_of_experience_min >= years_of_experience_min : true;
+                let years_of_experience_max_found = years_of_experience_max && years_of_experience_max > 0 ? job.years_of_experience_max !== null && job.years_of_experience_max <= years_of_experience_max : true;
+
+                // console.log( years_of_experience_min, years_of_experience_min && years_of_experience_min > 0, years_of_experience_max && years_of_experience_max > 0, years_of_experience_min_found, job.years_of_experience)
 
                 if (job.industries) {
                     job.industries.forEach((job_title) => {
@@ -880,6 +933,10 @@ function get_jobs_for_job_board({
                     glassdoor_overall_found &&
                     glassdoor_culture_found &&
                     glassdoor_work_life_found &&
+                    job_salary_min_found &&
+                    job_salary_max_found &&
+                    years_of_experience_min_found &&
+                    years_of_experience_max_found &&
                     glassdoor_compensation_found
                 ) {
                     return job
@@ -896,6 +953,10 @@ function get_jobs_for_job_board({
                         glassdoor_overall_found ||
                         glassdoor_culture_found ||
                         glassdoor_work_life_found ||
+                        job_salary_min_found ||
+                        job_salary_max_found ||
+                        years_of_experience_min_found ||
+                        years_of_experience_max_found ||
                         glassdoor_compensation_found
                     ) {
                         semi_filtered_jobs.push(job);

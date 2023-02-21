@@ -208,7 +208,11 @@ class Jobs extends React.Component {
             selectedJobId: this.jobs[0].job_id,
             selectedJob: this.jobs[0],
             loading: true,
-            MAX_RESULTS: 10
+            MAX_RESULTS: 10,
+            job_salary_min: 15000,
+            job_salary_max: 2000000,
+            years_of_experience_min: 0,
+            years_of_experience_max: 100,
         };
     }
 
@@ -352,6 +356,10 @@ class Jobs extends React.Component {
             glassdoor_culture,
             glassdoor_work_life,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
             MAX_RESULTS
         } = this.state;
 
@@ -372,6 +380,10 @@ class Jobs extends React.Component {
             glassdoor_culture,
             glassdoor_work_life,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
             max: 200//MAX_RESULTS
         }).then(({jobs}) => {
             this.processJobs({jobs});
@@ -614,6 +626,10 @@ class Jobs extends React.Component {
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
+                                                job_salary_min={this.state.job_salary_min}
+                                                job_salary_max={this.state.job_salary_max}
+                                                years_of_experience_min={this.state.years_of_experience_min}
+                                                years_of_experience_max={this.state.years_of_experience_max}
                                                 glassdoor_overall={this.state.glassdoor_overall}
                                                 glassdoor_compensation={this.state.glassdoor_compensation}
                                                 glassdoor_culture={this.state.glassdoor_culture}
@@ -643,10 +659,14 @@ class Jobs extends React.Component {
                                                 updateSavedJobIds={this.updateSavedJobIds.bind(this)}
                                             />
                                         </div>
-                                        <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
+                                        <div id={"mobile-cards-container-2"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
                                             <JobCards
                                                 jobs={this.jobs}
                                                 loading={loading}
+                                                job_salary_min={this.state.job_salary_min}
+                                                job_salary_max={this.state.job_salary_max}
+                                                years_of_experience_min={this.state.years_of_experience_min}
+                                                years_of_experience_max={this.state.years_of_experience_max}
                                                 glassdoor_overall={this.state.glassdoor_overall}
                                                 glassdoor_compensation={this.state.glassdoor_compensation}
                                                 glassdoor_culture={this.state.glassdoor_culture}
