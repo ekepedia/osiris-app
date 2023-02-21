@@ -69,6 +69,10 @@ class JobCards extends React.Component {
             glassdoor_work_life,
             glassdoor_culture,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
         } = this.props;
 
         let filteredJobs = [];
@@ -295,7 +299,7 @@ class JobCards extends React.Component {
         return {
             filteredJobs: filteredJobs,
             unFilteredJobs: unFilteredJobs,
-            usingFilters: (glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
+            usingFilters: (job_salary_min || job_salary_max || years_of_experience_min || years_of_experience_max || glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
                 (selectedCompanyIndustries && selectedCompanyIndustries.length) ||
@@ -315,7 +319,7 @@ class JobCards extends React.Component {
 
         filteredJobs = filteredJobs.slice(0, MAX_RESULTS);
         unFilteredJobs = unFilteredJobs.slice(0, MAX_RESULTS);
-        // console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
+        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters, MAX_RESULTS);
 
 
         return (<div className={classes.container}>
@@ -351,7 +355,7 @@ class JobCards extends React.Component {
                 }}
                 hasMore={true}
                 scrollThreshold={"100px"}
-                scrollableTarget="mobile-cards-container"
+                scrollableTarget={mobile ? "mobile-cards-container" : "mobile-cards-container-2"}
                 loader={<div className="loader" key={0}></div>}
                 endMessage={
                     <div style={{ textAlign: 'center' }}>

@@ -729,6 +729,10 @@ function getJobs ({
     glassdoor_culture,
     glassdoor_work_life,
     glassdoor_compensation,
+    job_salary_min,
+    job_salary_max,
+    years_of_experience_min,
+    years_of_experience_max,
 }) {
     return new Promise((resolve, reject) => {
         axios.post("/api/jobs/v2", {
@@ -743,6 +747,10 @@ function getJobs ({
             glassdoor_culture,
             glassdoor_work_life,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
         }).then((res) => {
             console.log(res.data)
             return resolve(res.data);

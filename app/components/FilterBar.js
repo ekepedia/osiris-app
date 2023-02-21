@@ -19,6 +19,7 @@ import FilterDropdown from "./FilterDropdown";
 import StandardButton from "./StandardButton";
 import RatingsDropdown from "./RatingsDropdown";
 import {str} from "../common/helpers";
+import MinMaxDropdown from "./MinMaxDropdown";
 
 const NAV_HEIGHT = 65;
 
@@ -276,6 +277,18 @@ class FilterBar extends React.Component {
                 <div style={{flex: 1}}>
                     <div className={classes.filterContainer}>
                         <FilterDropdown
+                            label="Role"
+                            placeholder="Select Role"
+                            options={this.roles}
+                            selectedOptions={state["selectedRoles"]}
+                            onAdd={(id) => (addToField("selectedRoles", id))}
+                            onRemove={(id) => (removeFromField("selectedRoles", id))}
+                            onClear={() => (clearField("selectedRoles"))}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <FilterDropdown
                             label="Job Title"
                             placeholder="Select Job Title"
                             options={this.job_titles}
@@ -294,6 +307,59 @@ class FilterBar extends React.Component {
                             onAdd={(id) => (addToField("selectedCompanyIndustries", id))}
                             onRemove={(id) => (removeFromField("selectedCompanyIndustries", id))}
                             onClear={() => (clearField("selectedCompanyIndustries"))}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <MinMaxDropdown
+                            label="Salary"
+                            selectedOptions={[]}
+                            min_value={state["job_salary_min"]}
+                            max_value={state["job_salary_max"]}
+                            min_value_label={"job_salary_min"}
+                            max_value_label={"job_salary_max"}
+                            options={[
+                                {label: "15K", value: 15000},
+                                {label: "30K", value: 30000},
+                                {label: "45K", value: 45000},
+                                {label: "60K", value: 60000},
+                                {label: "75K", value: 75000},
+                                {label: "90K", value: 90000},
+                                {label: "105K", value: 105000},
+                                {label: "120k", value: 120000},
+                                {label: "135K", value: 135000},
+                                {label: "150K", value: 150000},
+                                {label: "165K", value: 165000},
+                                {label: "180K", value: 180000},
+                                {label: "195K", value: 195000},
+                                {label: "200K+", value: 2000000},
+                            ]}
+                            update={update}
+                            disableSearch={true}
+                        />
+                    </div>
+                    <div className={classes.filterContainer}>
+                        <MinMaxDropdown
+                            label="Years of Experience"
+                            selectedOptions={[]}
+                            min_value={state["years_of_experience_min"]}
+                            max_value={state["years_of_experience_max"]}
+                            min_value_label={"years_of_experience_min"}
+                            max_value_label={"years_of_experience_max"}
+                            options={[
+                                {label: "0", value: 0},
+                                {label: "1", value: 1},
+                                {label: "2", value: 2},
+                                {label: "3", value: 3},
+                                {label: "4", value: 4},
+                                {label: "5", value: 5},
+                                {label: "6", value: 6},
+                                {label: "7", value: 7},
+                                {label: "8", value: 8},
+                                {label: "9", value: 9},
+                                {label: "10+", value: 100},
+                            ]}
+                            update={update}
+                            disableSearch={true}
                         />
                     </div>
                     <div className={classes.filterContainer}>
@@ -340,18 +406,6 @@ class FilterBar extends React.Component {
                             onAdd={(id) => (addToField("selectedCompanies", id))}
                             onRemove={(id) => (removeFromField("selectedCompanies", id))}
                             onClear={() => (clearField("selectedCompanies"))}
-                        />
-                    </div>
-                    <div className={classes.filterContainer}>
-                        <FilterDropdown
-                            label="Role"
-                            placeholder="Select Role"
-                            options={this.roles}
-                            selectedOptions={state["selectedRoles"]}
-                            onAdd={(id) => (addToField("selectedRoles", id))}
-                            onRemove={(id) => (removeFromField("selectedRoles", id))}
-                            onClear={() => (clearField("selectedRoles"))}
-                            disableSearch={true}
                         />
                     </div>
                     <div className={classes.filterContainer}>
