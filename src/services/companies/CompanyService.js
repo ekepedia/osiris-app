@@ -54,7 +54,7 @@ module.exports.init = function (connection) {
     // import_data();
     // import_demo_data();
     //
-
+    //
     // setTimeout(() => {
     //     preload_and_prejoin_companies();
     // }, 1001);
@@ -466,6 +466,10 @@ function preload_and_prejoin_companies() {
 
             if (job.job_company === "TIDAL") {
                 job.job_company = "BLOCK"
+            }
+
+            if (job.job_company === "Scaleapi") {
+                job.job_company = "Scale AI"
             }
 
             if (job.job_company === "Macquarie Group Limited") {

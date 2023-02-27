@@ -869,16 +869,18 @@ function get_jobs_for_job_board({
                 let location_found = valid_single_field(locations, job.locations, true);
                 let seniority_found = valid_single_field(seniorities, job.job_seniority);
 
+                seniorities = seniorities || [];
+
                 let glassdoor_overall_found = glassdoor_overall && glassdoor_overall > 0 ? company.glassdoor_overall >= glassdoor_overall : true;
                 let glassdoor_culture_found = glassdoor_culture && glassdoor_culture > 0 ? company.glassdoor_culture >= glassdoor_culture : true;
                 let glassdoor_work_life_found = glassdoor_work_life && glassdoor_work_life > 0 ? company.glassdoor_work_life >= glassdoor_work_life : true;
                 let glassdoor_compensation_found = glassdoor_compensation && glassdoor_compensation > 0 ? company.glassdoor_compensation >= glassdoor_compensation : true;
 
-                let job_salary_min_found = job_salary_min && job_salary_min > 0 ? job.job_salary_min !== null && job.job_salary_min >= job_salary_min : true;
-                let job_salary_max_found = job_salary_max && job_salary_max > 0 ? job.job_salary_max !== null && job.job_salary_max <= job_salary_max : true;
+                let job_salary_min_found = seniorities.indexOf("Internship") === -1 && job_salary_min && job_salary_min > 0 ? job.job_salary_min !== null && job.job_salary_min >= job_salary_min : true;
+                let job_salary_max_found = seniorities.indexOf("Internship") === -1 && job_salary_max && job_salary_max > 0 ? job.job_salary_max !== null && job.job_salary_max <= job_salary_max : true;
 
-                let years_of_experience_min_found = years_of_experience_min && years_of_experience_min > 0 ? job.years_of_experience_min !== null && job.years_of_experience_min >= years_of_experience_min : true;
-                let years_of_experience_max_found = years_of_experience_max && years_of_experience_max > 0 ? job.years_of_experience_max !== null && job.years_of_experience_max <= years_of_experience_max : true;
+                let years_of_experience_min_found = seniorities.indexOf("Internship") === -1 && years_of_experience_min && years_of_experience_min > 0 ? job.years_of_experience_min !== null && job.years_of_experience_min >= years_of_experience_min : true;
+                let years_of_experience_max_found = seniorities.indexOf("Internship") === -1 && years_of_experience_max && years_of_experience_max > 0 ? job.years_of_experience_max !== null && job.years_of_experience_max <= years_of_experience_max : true;
 
                 // console.log( years_of_experience_min, years_of_experience_min && years_of_experience_min > 0, years_of_experience_max && years_of_experience_max > 0, years_of_experience_min_found, job.years_of_experience)
 
