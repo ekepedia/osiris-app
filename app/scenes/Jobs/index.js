@@ -209,10 +209,10 @@ class Jobs extends React.Component {
             selectedJob: this.jobs[0],
             loading: true,
             MAX_RESULTS: 10,
-            job_salary_min: 15000,
-            job_salary_max: 2000000,
-            years_of_experience_min: 0,
-            years_of_experience_max: 100,
+            // job_salary_min: 15000,
+            // job_salary_max: 2000000,
+            // years_of_experience_min: 0,
+            // years_of_experience_max: 100,
         };
     }
 
