@@ -1,7 +1,7 @@
 {
   "name": "osiris",
   "version": "1.0.0",
-  "description": "Web app for OSIRIS",
+  "description": "Web app for Pearl",
   "main": "app.js",
   "engines": {
     "node": "10.15.0"

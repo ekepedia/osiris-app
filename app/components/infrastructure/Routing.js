@@ -6,6 +6,7 @@ import Home from "../../scenes/Home/index";
 import UserPortfolio from "../../scenes/UserPortfolio/index";
 import PublicPortfolio from "../../scenes/PublicPortfolio/index";
 import Login from "../../scenes/Login/index";
+import ChatDemo from "../../scenes/ChatDemo/index";
 import ClaimPortfolio from "../../scenes/ClaimPortfolio/index";
 import CompanyIndex from "../../scenes/CompanyIndex/index";
 import CompanyPage from "../../scenes/CompanyPage/index";
@@ -31,8 +32,10 @@ class Routing extends React.Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <Route exact path='/login' component={Login}/>
+                    <Route exact path='/gpt-chat-demo' component={ChatDemo}/>
                     <Route exact path='/forgot-password' component={ForgotPassword}/>
                     <Route exact path='/osiris-onboarding' component={SignUp}/>
+                    <Route exact path='/pearl-onboarding' component={SignUp}/>
                     <Route exact path='/onboard' component={Onboarding}/>
                     <Route exact path='/reset-password/:reset_password_code' component={ResetPassword}/>
                     <Route exact path='/jobs' component={Jobs}/>

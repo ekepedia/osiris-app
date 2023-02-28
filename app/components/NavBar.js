@@ -126,7 +126,7 @@ class NavBar extends React.Component {
                     <Link to={user && user.user_id ? "/companies" : "/"} style={{color: COMMON.COLORS.N900}} onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "logo"});
                     }}>
-                        <img src={"/img/osiris-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
+                        <img src={"/img/pearl-logo.png"} style={{height: "29px", marginTop: "9.5px"}}/>
                     </Link>
                 </div>
                 <div style={{flex: 1, textAlign: "right",}}>

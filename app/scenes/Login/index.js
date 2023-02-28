@@ -156,7 +156,7 @@ class Login extends React.Component {
                                             <div className={mc(classes.buttonContainer)}>
                                                 <StandardButton label={"Sign in"} fullWidth={true} onClick={() => (this.login())}/>
                                             </div>
-                                            <div style={{...COMMON.FONTS.P100, textAlign: "center", marginTop: "10px", color: COMMON.COLORS.N700}}>Don't have an account? <Link to={"/osiris-onboarding"}><span>Sign up for free</span></Link></div>
+                                            <div style={{...COMMON.FONTS.P100, textAlign: "center", marginTop: "10px", color: COMMON.COLORS.N700}}>Don't have an account? <Link to={"/pearl-onboarding"}><span>Sign up for free</span></Link></div>
 
                                         </div>
                                     </div>
