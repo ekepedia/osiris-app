@@ -910,8 +910,6 @@ function get_jobs_for_job_board({
                     };
                 }
 
-
-
                 let forced_id = false
 
                 if (job_ids && job_ids.length) {
