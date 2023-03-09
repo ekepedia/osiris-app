@@ -79,6 +79,13 @@ app.get("/api/jobs", function (req, res) {
     });
 });
 
+app.get("/api/job-descriptions", function (req, res) {
+    JobService.get_job_descriptions().then(({JOB_SKILLS, JOB_DESCRIPTIONS}) => {
+        res.json({ SKILLS:JOB_SKILLS, JOB_DESCRIPTIONS });
+    })
+})
+
+
 
 app.get("/api/jobs-buffer", function (req, res) {
     JobService.get_buffer_for_lambda().then((jobs) => {
@@ -87,6 +94,33 @@ app.get("/api/jobs-buffer", function (req, res) {
         res.json({ jobs: [] });
     });
 });
+
+
+
+app.post("/api/summarize-job", function (req, res) {
+    let { job_html } = req.body;
+
+    console.log("/api/summarize-job", new Date(), job_html);
+
+    let prompt = `Summarize this job description:\n\n${job_html}`;
+
+    JobService.get_text_completion({prompt}).then((response) => {
+        console.log("GTP", response);
+
+        if (response && response.choices && response.choices.length) {
+            res.json({
+                success: true,
+                response: response.choices[0].text
+            });
+        } else {
+            res.json({
+                success: false
+            });
+        }
+    })
+
+});
+
 
 app.post("/api/jobs-buffer", function (req, res) {
     let data = req.body.rows

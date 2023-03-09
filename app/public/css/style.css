@@ -8,6 +8,9 @@ a {
     color: #3366FF;
 }
 
+.gpt-skill-bubble {
+    display: inline-block;
+}
 /*input {*/
 /*    appearance: none !important;*/
 /*    -moz-appearance: none !important;*/

@@ -36,6 +36,8 @@ import CoverImageHolder from "./CoverImageHolder";
 import {mc} from "../common/helpers";
 import SavedJobService from "../services/SavedJobService";
 import TrackingService from "../services/TrackingService";
+import axios from "axios";
+import FadeIn from "react-fade-in";
 
 const Styles = {
     container: {
@@ -94,18 +96,67 @@ const Styles = {
 
 const SECTION_BUFFER = "32px";
 
+let JOB_DESCRIPTIONS = {};
+
 class JobDetails extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-
+            enable_gpt: true,
+            loading_gpt: false,
+            gpt_response: ""
         };
+
+        this.last_sent = new Date().getTime() - 5000;
     }
 
     componentDidMount() {
+        this.loadGPTResponse();
+        this.loadSkills();
+    }
 
+    loadSkills() {
+        axios.get("/api/job-descriptions").then((response) => {
+            console.log("response.data", response.data);
+            JOB_DESCRIPTIONS = response.data.JOB_DESCRIPTIONS;
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let { job } = this.props;
+
+        if (!job)
+            return;
+
+        if (job.job_id !== (prevProps.job || {}).job_id) {
+            console.log("WE GOT A NEW JOB!!!");
+            this.loadGPTResponse();
+        }
+    }
+
+    loadGPTResponse() {
+        let {  job } = this.props;
+
+        if (!job || !job.job_html || !this.state.enable_gpt)
+            return;
+
+        if ((new Date().getTime() - this.last_sent) < 500)
+            return console.warn("Skipping dupe requests");
+
+        this.last_sent = new Date().getTime();
+
+        this.setState({loading_gpt: true});
+
+        axios.post("/api/summarize-job", {job_html: job.job_html}).then((response) => {
+            console.log("response GPT", response.data);
+            this.setState({
+                loading_gpt: false,
+                gpt_response: (response.data || {}).response
+            });
+
+        })
     }
 
     updateSavedJob() {
@@ -151,13 +202,15 @@ class JobDetails extends React.Component {
         console.log("saved_jobs_ids", saved_jobs_ids, job)
         job = job || {};
 
+
         let company = job.companies && job.companies.length ? job.companies[0] : {};
         let job_type = job.job_types && job.job_types.length ? job.job_types[0] : {};
         let qualification = job.qualifications && job.qualifications.length ? job.qualifications[0] : {};
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
+        let industry = job.industries && job.industries.length ? job.industries[0].name : "";
 
-
+        let skills = (JOB_DESCRIPTIONS[industry] || {}).skills || [];
 
         if (qualification && qualification.name) {
             try {
@@ -269,6 +322,46 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
+                {true ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
+                    <div>
+                        <div style={{...COMMON.FONTS.H400, borderRadius: "6px", width: "fit-content", marginBottom: "10px", padding: "2px 6px", background: COMMON.COLORS.N900, fontWeight: 600, fontSize: "12px", color: COMMON.COLORS.N0}}><i className="fa-solid fa-circle"></i> Pearl Job Assistant</div>
+                        {this.state.loading_gpt ?
+                            <div><i className="fa-solid fa-spinner fa-spin"></i> Summarizing Job Description</div>
+                            :
+                            <div>
+                                <div>
+                                    {this.state.gpt_response}
+                                </div>
+                                <div>
+                                    <br/>
+                                    <div>{industry} Recommended Skills <i>(click to view courses)</i></div>
+                                    <div>
+                                        <FadeIn childClassName={"gpt-skill-bubble"}>
+                                            {skills.map((skill) => {
+                                                return (<div onClick={() => {
+                                                    //console.log("todo")
+                                                    window.open(`https://www.skillshare.com/en/search?query=${skill}`, "_blank");
+                                                }} style={{
+                                                    display: "inline-block",
+                                                    borderRadius: "45px",
+                                                    padding: "8px 10px",
+                                                    border: `1px solid ${COMMON.COLORS.N700}`,
+                                                    ...COMMON.FONTS.H300,
+                                                    lineHeight: "initial",
+                                                    marginRight: "5px",
+                                                    marginTop: "5px",
+                                                    cursor: "pointer",
+                                                    textTransform: "capitalize",
+                                                    color: COMMON.COLORS.N700,
+                                                    background: COMMON.COLORS.N0
+                                                }}>{skill}</div>)
+                                            })}
+                                        </FadeIn>
+                                    </div>
+                                </div>
+                            </div>}
+                    </div>
+                </div>: null}
                 {job.job_html ? <div style={{marginBottom: company.company_about ? SECTION_BUFFER : null}}>
                     <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
                 </div> : <div>

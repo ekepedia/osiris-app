@@ -221,9 +221,14 @@ class Jobs extends React.Component {
             let params = (new URL(document.location)).searchParams;
             let company_id = params.get("c");
             let job_id = params.get("j");
+            let job_title = params.get("t");
 
             if (company_id) {
-                this.addToField("selectedCompanies", company_id)
+                this.addToField("selectedCompanies", company_id);
+            }
+
+            if (job_title) {
+                this.addToField("selectedIndustries", job_title);
             }
 
             if (!company_id && !job_id) {
@@ -303,6 +308,7 @@ class Jobs extends React.Component {
             let params = (new URL(document.location)).searchParams;
             let job_id = params.get("j");
             let company_id = params.get("c");
+            let job_title = params.get("t");
 
             if (job_id) {
                 jobs.forEach((job) => {

@@ -1137,6 +1137,29 @@ function import_airtable_jobs() {
     });
 }
 
+module.exports.get_text_completion = get_text_completion;
+
+async function get_text_completion({prompt}) {
+    const { Configuration, OpenAIApi } = require("openai");
+    const configuration = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
+    return new Promise(async (resolve) => {
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: prompt || "Say this is a test",
+            max_tokens: 256,
+            temperature: 0.7,
+        });
+
+        resolve(response.data)
+    })
+
+
+}
+
 function load_job_counts() {
     get_jobs({
         is_user_submitted: false,
@@ -1151,6 +1174,66 @@ function load_job_counts() {
             JOB_COUNTS[job.company_id]++
         })
     })
+}
+import_jobs_and_skills();
+
+let JOB_SKILLS = {};
+let JOB_DESCRIPTIONS = {};
+
+module.exports.get_job_descriptions = get_job_descriptions;
+
+function get_job_descriptions () {
+    return new Promise((resolve) => {
+        resolve({
+            JOB_SKILLS,
+            JOB_DESCRIPTIONS
+        });
+    })
+}
+
+function import_jobs_and_skills() {
+    fs.createReadStream(__dirname + `/../../../data/skills.csv`)
+        .pipe(csv())
+        .on('data', (skill) => {
+            JOB_SKILLS[skill.skill_title] = {
+                ...skill,
+                youtube_link: `https://www.youtube.com/results?search_query=${skill.skill_title}`,
+                skillshare_link: `https://www.skillshare.com/en/search?query=${skill.skill_title}`,
+            };
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+    fs.createReadStream(__dirname + `/../../../data/job-titles.csv`)
+        .pipe(csv())
+        .on('data', (job) => {
+            JOB_DESCRIPTIONS[job.job_title] = {...job, skills: _.without([
+                job.skill_1 || null,
+                job.skill_2 || null,
+                job.skill_3 || null,
+                job.skill_4 || null,
+                job.skill_5 || null,
+                job.skill_6 || null,
+                job.skill_7 || null,
+                job.skill_8 || null,
+                job.skill_9 || null,
+                job.skill_10 || null,
+                job.skill_11 || null,
+                job.skill_12 || null,
+                job.skill_13 || null,
+                job.skill_14 || null,
+                job.skill_15 || null,
+                job.skill_16 || null,
+                job.skill_17 || null,
+                job.skill_18 || null,
+                job.skill_19 || null,
+                job.skill_20 || null,
+                ], null)};
+            // console.log(JOB_DESCRIPTIONS);
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
 }
 
 function import_webscraper_jobs() {
