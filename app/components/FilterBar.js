@@ -275,7 +275,7 @@ class FilterBar extends React.Component {
         return (<div className={classes.container} id="jobs-filter-bar">
             <div style={{display: "flex"}}>
                 <div style={{flex: 1}}>
-                    <div className={classes.filterContainer}>
+                    <div className={classes.filterContainer} style={{display: "none"}}>
                         <FilterDropdown
                             label="Role"
                             placeholder="Select Role"

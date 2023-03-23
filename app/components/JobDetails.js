@@ -104,7 +104,7 @@ class JobDetails extends React.Component {
         super(props);
 
         this.state = {
-            enable_gpt: true,
+            enable_gpt: false,
             loading_gpt: false,
             gpt_response: ""
         };
@@ -322,7 +322,7 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                {true ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
+                {false ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
                     <div>
                         <div style={{...COMMON.FONTS.H400, borderRadius: "6px", width: "fit-content", marginBottom: "10px", padding: "2px 6px", background: COMMON.COLORS.N900, fontWeight: 600, fontSize: "12px", color: COMMON.COLORS.N0}}><i className="fa-solid fa-circle"></i> Pearl Job Assistant</div>
                         {this.state.loading_gpt ?

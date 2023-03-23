@@ -31,6 +31,9 @@ import AuthService from "../../services/AuthService";
 import axios from "axios";
 import UserPreferenceService from "../../services/UserPreferenceService";
 import TrackingService from "../../services/TrackingService";
+import StandardBadge from "../../components/StandardBadge";
+import StandardButton from "../../components/StandardButton";
+import MobileSelectArea from "../../components/MobileSelectArea";
 
 const Styles = {
     container: {
@@ -42,7 +45,15 @@ const Styles = {
     mainContainer: {
         padding: "20px 50px",
         '@media (max-width: 768px)': {
-            padding: "20px",
+            padding: "0px",
+            paddingBottom: "0px"
+        },
+    },
+    subContainer: {
+        display: "flex",
+        height: "100%",
+        '@media (max-width: 768px)': {
+            flexDirection: "column"
         },
     },
     cardContainer: {
@@ -53,7 +64,26 @@ const Styles = {
         '@media (max-width: 768px)': {
             flex: 1,
             marginRight: "0",
+            padding: "20px"
         },
+    },
+    mobileFilterBar: {
+        flex: "0 0 40px",
+        padding: "0 20px",
+        lineHeight: "40px",
+        background: COMMON.COLORS.B400,
+        whiteSpace: "nowrap",
+        color: COMMON.COLORS.N0,
+        overflow: "scroll",
+        textTransform: "uppercase"
+    },
+    mobileFilterBarOption: {
+        display: "inline-block",
+        marginRight: "12px",
+        ...COMMON.FONTS.H200,
+        lineHeight: "40px",
+        cursor: "pointer",
+        opacity: 0.5
     },
     hideOnMobile: {
         '@media (max-width: 768px)': {
@@ -68,6 +98,15 @@ const Styles = {
     },
     ...COMMON.STYLES.GENERAL.NavigationStyles
 };
+
+const PAYLOADS = [
+    {label: "Job Title", options: "job_titles", selectedOptions: "selectedIndustries"},
+    // {label: "Industry", options: "company_industries", selectedOptions: "selectedCompanyIndustries"},
+    // {label: "Role", options: "roles", selectedOptions: "selectedRoles"},
+    {label: "Seniority", options: "seniorities", selectedOptions: "selectedSeniorities"},
+    // {label: "Location", options: "locations", selectedOptions: "selectedLocations"},
+    // {label: "Company", options: "companies", selectedOptions: "selectedCompanies"},
+]
 
 class Jobs extends React.Component {
 
@@ -209,6 +248,7 @@ class Jobs extends React.Component {
             selectedJob: this.jobs[0],
             loading: true,
             MAX_RESULTS: 10,
+            payload: PAYLOADS[0],
             // job_salary_min: 15000,
             // job_salary_max: 2000000,
             // years_of_experience_min: 0,
@@ -627,96 +667,148 @@ class Jobs extends React.Component {
 
                             <div style={{flex: 1,  height: "100%",}}>
                                 <div style={{ height: "100%",}}>
-                                    <div className={classes.mainContainer} style={{display: "flex", height: "100%",}}>
-                                        <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.showOnMobile)}>
-                                            <JobCards
-                                                jobs={this.jobs}
-                                                loading={loading}
-                                                job_salary_min={this.state.job_salary_min}
-                                                job_salary_max={this.state.job_salary_max}
-                                                years_of_experience_min={this.state.years_of_experience_min}
-                                                years_of_experience_max={this.state.years_of_experience_max}
-                                                glassdoor_overall={this.state.glassdoor_overall}
-                                                glassdoor_compensation={this.state.glassdoor_compensation}
-                                                glassdoor_culture={this.state.glassdoor_culture}
-                                                glassdoor_work_life={this.state.glassdoor_work_life}
-                                                selectedJobId={this.state.selectedJobId}
-                                                selectedLocations={this.state.selectedLocations}
-                                                selectedCompanies={this.state.selectedCompanies}
-                                                selectedIndustries={this.state.selectedIndustries}
-                                                selectedCompanyIndustries={this.state.selectedCompanyIndustries}
-                                                selectedAffinities={this.state.selectedAffinities}
-                                                selectedSeniorities={this.state.selectedSeniorities}
-                                                selectedRoles={this.state.selectedRoles}
-                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                                setSelectedJob={this.setSelectedJob.bind(this)}
-                                                saved_jobs_ids={saved_jobs_ids}
-                                                mobile={true}
-                                                resetScrollPosition={this.resetScrollPosition.bind(this)}
-                                                resetMax={() => (this.setState({MAX_RESULTS: 10}))}
+                                    <div className={classes.mainContainer} style={{height: "100%",}}>
 
-                                                job={this.state.selectedJob}
-                                                saved_jobs={saved_jobs}
-                                                MAX_RESULTS={MAX_RESULTS}
-                                                user={user}
-                                                onApply={this.openApplyModal.bind(this)}
-                                                handleScroll={this.handleScroll.bind(this)}
-                                                forceCompany={this.forceCompany.bind(this)}
-                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
-                                            />
-                                        </div>
-                                        <div id={"mobile-cards-container-2"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
-                                            <JobCards
-                                                jobs={this.jobs}
-                                                loading={loading}
-                                                job_salary_min={this.state.job_salary_min}
-                                                job_salary_max={this.state.job_salary_max}
-                                                years_of_experience_min={this.state.years_of_experience_min}
-                                                years_of_experience_max={this.state.years_of_experience_max}
-                                                glassdoor_overall={this.state.glassdoor_overall}
-                                                glassdoor_compensation={this.state.glassdoor_compensation}
-                                                glassdoor_culture={this.state.glassdoor_culture}
-                                                glassdoor_work_life={this.state.glassdoor_work_life}
-                                                selectedJobId={this.state.selectedJobId}
-                                                selectedLocations={this.state.selectedLocations}
-                                                selectedCompanies={this.state.selectedCompanies}
-                                                selectedIndustries={this.state.selectedIndustries}
-                                                selectedCompanyIndustries={this.state.selectedCompanyIndustries}
-                                                selectedAffinities={this.state.selectedAffinities}
-                                                selectedSeniorities={this.state.selectedSeniorities}
-                                                selectedRoles={this.state.selectedRoles}
-                                                selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                                setSelectedJob={this.setSelectedJob.bind(this)}
-                                                saved_jobs_ids={saved_jobs_ids}
-                                                mobile={false}
-                                                resetScrollPosition={this.resetScrollPosition.bind(this)}
-                                                resetMax={() => (this.setState({MAX_RESULTS: 10}))}
+                                        <div className={classes.subContainer}>
+                                            <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.showOnMobile)}>
+                                                <JobCards
+                                                    jobs={this.jobs}
+                                                    loading={loading}
+                                                    job_salary_min={this.state.job_salary_min}
+                                                    job_salary_max={this.state.job_salary_max}
+                                                    years_of_experience_min={this.state.years_of_experience_min}
+                                                    years_of_experience_max={this.state.years_of_experience_max}
+                                                    glassdoor_overall={this.state.glassdoor_overall}
+                                                    glassdoor_compensation={this.state.glassdoor_compensation}
+                                                    glassdoor_culture={this.state.glassdoor_culture}
+                                                    glassdoor_work_life={this.state.glassdoor_work_life}
+                                                    selectedJobId={this.state.selectedJobId}
+                                                    selectedLocations={this.state.selectedLocations}
+                                                    selectedCompanies={this.state.selectedCompanies}
+                                                    selectedIndustries={this.state.selectedIndustries}
+                                                    selectedCompanyIndustries={this.state.selectedCompanyIndustries}
+                                                    selectedAffinities={this.state.selectedAffinities}
+                                                    selectedSeniorities={this.state.selectedSeniorities}
+                                                    selectedRoles={this.state.selectedRoles}
+                                                    selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                    setSelectedJob={this.setSelectedJob.bind(this)}
+                                                    saved_jobs_ids={saved_jobs_ids}
+                                                    mobile={true}
+                                                    resetScrollPosition={this.resetScrollPosition.bind(this)}
+                                                    resetMax={() => (this.setState({MAX_RESULTS: 10}))}
 
-                                                job={this.state.selectedJob}
-                                                saved_jobs={saved_jobs}
-                                                MAX_RESULTS={MAX_RESULTS}
-                                                user={user}
-                                                onApply={this.openApplyModal.bind(this)}
-                                                handleScroll={this.handleScroll.bind(this)}
-                                                forceCompany={this.forceCompany.bind(this)}
-                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
-                                            />
-                                        </div>
-                                        <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>
-                                            <JobDetails
-                                                job={this.state.selectedJob}
-                                                saved_jobs_ids={saved_jobs_ids}
-                                                saved_jobs={saved_jobs}
-                                                user={user}
-                                                onApply={this.openApplyModal.bind(this)}
+                                                    job={this.state.selectedJob}
+                                                    saved_jobs={saved_jobs}
+                                                    MAX_RESULTS={MAX_RESULTS}
+                                                    user={user}
+                                                    onApply={this.openApplyModal.bind(this)}
+                                                    handleScroll={this.handleScroll.bind(this)}
+                                                    forceCompany={this.forceCompany.bind(this)}
+                                                    updateSavedJobIds={this.updateSavedJobIds.bind(this)}
+                                                />
+                                            </div>
+                                            <div id={"mobile-cards-container-2"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
+                                                <JobCards
+                                                    jobs={this.jobs}
+                                                    loading={loading}
+                                                    job_salary_min={this.state.job_salary_min}
+                                                    job_salary_max={this.state.job_salary_max}
+                                                    years_of_experience_min={this.state.years_of_experience_min}
+                                                    years_of_experience_max={this.state.years_of_experience_max}
+                                                    glassdoor_overall={this.state.glassdoor_overall}
+                                                    glassdoor_compensation={this.state.glassdoor_compensation}
+                                                    glassdoor_culture={this.state.glassdoor_culture}
+                                                    glassdoor_work_life={this.state.glassdoor_work_life}
+                                                    selectedJobId={this.state.selectedJobId}
+                                                    selectedLocations={this.state.selectedLocations}
+                                                    selectedCompanies={this.state.selectedCompanies}
+                                                    selectedIndustries={this.state.selectedIndustries}
+                                                    selectedCompanyIndustries={this.state.selectedCompanyIndustries}
+                                                    selectedAffinities={this.state.selectedAffinities}
+                                                    selectedSeniorities={this.state.selectedSeniorities}
+                                                    selectedRoles={this.state.selectedRoles}
+                                                    selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                    setSelectedJob={this.setSelectedJob.bind(this)}
+                                                    saved_jobs_ids={saved_jobs_ids}
+                                                    mobile={false}
+                                                    resetScrollPosition={this.resetScrollPosition.bind(this)}
+                                                    resetMax={() => (this.setState({MAX_RESULTS: 10}))}
 
-                                                forceCompany={this.forceCompany.bind(this)}
-                                                updateSavedJobIds={this.updateSavedJobIds.bind(this)}
-                                            />
+                                                    job={this.state.selectedJob}
+                                                    saved_jobs={saved_jobs}
+                                                    MAX_RESULTS={MAX_RESULTS}
+                                                    user={user}
+                                                    onApply={this.openApplyModal.bind(this)}
+                                                    handleScroll={this.handleScroll.bind(this)}
+                                                    forceCompany={this.forceCompany.bind(this)}
+                                                    updateSavedJobIds={this.updateSavedJobIds.bind(this)}
+                                                />
+                                            </div>
+                                            <div className={classes.hideOnMobile} style={{flex: 1, height: "calc(100% - 64px)", paddingTop: "47px", overflowY: "hidden", display: loading ? "none" : null}}>
+                                                <JobDetails
+                                                    job={this.state.selectedJob}
+                                                    saved_jobs_ids={saved_jobs_ids}
+                                                    saved_jobs={saved_jobs}
+                                                    user={user}
+                                                    onApply={this.openApplyModal.bind(this)}
+
+                                                    forceCompany={this.forceCompany.bind(this)}
+                                                    updateSavedJobIds={this.updateSavedJobIds.bind(this)}
+                                                />
+                                            </div>
+
+                                            <div style={{flex: "0 0 133px", background: COMMON.COLORS.N0, overflow: "hidden"}} className={classes.showOnMobile}>
+
+
+                                                <div style={{display: "flex", height: "100%", overflow: "hidden", flexDirection: "column"}}>
+                                                    <div className={classes.mobileFilterBar}>
+                                                        {PAYLOADS.map((payload) => {
+                                                            return (
+                                                                <div style={{opacity: (payload.options === (this.state.payload || {}).options) ? 1 : null}}
+                                                                     className={classes.mobileFilterBarOption}>
+                                                                    <div onClick={() => {this.setState({payload})}}>
+                                                                        {payload.label}
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                    <div style={{flex: 1, padding: "0 20px", paddingTop: "0px", overflow: "scroll"}}>
+
+
+
+                                                        <MobileSelectArea
+                                                            payload={this.state.payload}
+                                                            addToField={this.addToField.bind(this)}
+                                                            disableSearch={true}
+                                                            removeFromField={this.removeFromField.bind(this)}
+                                                            clearField={this.clearField.bind(this)}
+                                                            update={(name, value) => {
+                                                                this.setState({
+                                                                    [name]: value
+                                                                });
+                                                                setTimeout(() => {
+                                                                    this.reloadJobs();
+                                                                }, 100)
+                                                            }}
+                                                            state={this.state}
+                                                            jobs={this.state.jobs}
+                                                            onAssistant={this.openJobAssistant.bind(this)}
+                                                        />
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
                                         </div>
+
+
+
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <JobAlertSignUp

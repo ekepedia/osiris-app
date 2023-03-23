@@ -350,6 +350,7 @@ class ChatDemo extends React.Component {
     loadJobs({job_title}) {
         DataService.getJobs({
             job_titles: [job_title || "Software Engineer"],
+            seniorities: ["Entry Level", "Mid Senior Level", "Internship"],
             max: 10
         }).then(({jobs}) => {
             console.log("LOADED JOBS:", jobs);
