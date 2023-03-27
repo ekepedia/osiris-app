@@ -86,6 +86,11 @@ class GenderPieChart extends React.Component {
         company_demographics = company_demographics || {};
         const spacing = 0.75;
 
+        const roundValue = (value) => {
+            if (!value || !parseFloat(value)) return value;
+            return Math.round(parseFloat(value)*10)/10
+        }
+
         return (<div className={classes.container}>
             <div className={mc(classes.pieChartHolder)}>
                 <div style={{height: "140px", width: "140px"}}>
@@ -105,14 +110,14 @@ class GenderPieChart extends React.Component {
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_YELLOW}}/>
                     <div className={mc(classes.pieChartLabelName)}>Male</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_male}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_male)}%</div>
                 </div>
             </div>
             <div className={mc(classes.pieChartLabelContainer)}>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_VIOLET}}/>
                     <div className={mc(classes.pieChartLabelName)}>Female</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_female}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_female)}%</div>
                 </div>
             </div>
 
