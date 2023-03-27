@@ -94,6 +94,12 @@ class RacePieChart extends React.Component {
             if (!value) return value;
             return value < 1 ? 1 : value;
         }
+
+        const roundValue = (value) => {
+            if (!value || !parseFloat(value)) return value;
+            return Math.round(parseFloat(value)*10)/10
+        }
+
         return (<div className={classes.container}>
             <div className={mc(classes.pieChartHolder)}>
                 <div style={{height: "140px", width: "140px"}}>
@@ -123,19 +129,19 @@ class RacePieChart extends React.Component {
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_YELLOW}}/>
                     <div className={mc(classes.pieChartLabelName)}>Asian</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_asian}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_asian)}%</div>
                 </div>
 
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_VIOLET}}/>
                     <div className={mc(classes.pieChartLabelName)}>Black</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_black}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_black)}%</div>
                 </div>
 
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_TEAL}}/>
                     <div className={mc(classes.pieChartLabelName)}>Hispanic/Latinx</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_latinx}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_latinx)}%</div>
                 </div>
 
             </div>
@@ -143,22 +149,22 @@ class RacePieChart extends React.Component {
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_PINK}}/>
                     <div className={mc(classes.pieChartLabelName)}>Indigenous</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_indigenous || "—"}{company_demographics.employees_indigenous ? "%" : ""}</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_indigenous) || "—"}{company_demographics.employees_indigenous ? "%" : ""}</div>
                 </div>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.B400}}/>
                     <div className={mc(classes.pieChartLabelName)}>Native Hawaiian</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_hawaiian || "—"}{company_demographics.employees_hawaiian ? "%" : ""}</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_hawaiian) || "—"}{company_demographics.employees_hawaiian ? "%" : ""}</div>
                 </div>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.CHART_ORANGE}}/>
                     <div className={mc(classes.pieChartLabelName)}>Multiracial</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_multi || "—"}{company_demographics.employees_multi ? "%" : ""}</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_multi) || "—"}{company_demographics.employees_multi ? "%" : ""}</div>
                 </div>
                 <div className={mc(classes.pieChartLabelHolder)}>
                     <div className={mc(classes.pieChartLabelColor)} style={{background: COMMON.COLORS.N400}}/>
                     <div className={mc(classes.pieChartLabelName)}>White</div>
-                    <div className={mc(classes.pieChartLabelPercentage)}>{company_demographics.employees_white}%</div>
+                    <div className={mc(classes.pieChartLabelPercentage)}>{roundValue(company_demographics.employees_white)}%</div>
                 </div>
             </div>
 
