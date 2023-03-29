@@ -42,6 +42,8 @@ const Styles = {
         padding: "0",
         '@media (max-width: 768px)': {
             padding: "0",
+            overflow: "hidden",
+            height: "calc(100% - 48px)"
         },
     },
     mainContainer: {
@@ -648,7 +650,7 @@ class Jobs extends React.Component {
                 <div className={classes.masterNavContainer} style={{borderBottom: "none"}}>
                     <NavBar />
                 </div>
-                <div className={classes.masterBodyContainer}>
+                <div className={classes.masterBodyContainer} style={{overflow: "hidden"}}>
                     <div className={classes.container}>
 
                         <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden"}}>
@@ -768,7 +770,7 @@ class Jobs extends React.Component {
                                                 />
                                             </div>
 
-                                            <div style={{flex: mobile_expanded ? 1 : "0 0 60px", background: COMMON.COLORS.N0, overflow: "hidden"}} className={classes.showOnMobile}>
+                                            <div style={{flex: mobile_expanded ? 1 : "0 0 70px", background: COMMON.COLORS.N0, overflow: "hidden"}} className={classes.showOnMobile}>
 
                                                 <MobileFilters
                                                     PAYLOADS={PAYLOADS}

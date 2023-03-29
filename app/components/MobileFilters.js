@@ -22,6 +22,8 @@ const Styles = {
         padding: "0",
         '@media (max-width: 768px)': {
             padding: "0",
+            height: "100%",
+            overflow: "hidden"
         },
     },
 };
@@ -54,11 +56,11 @@ class MobileFilters extends React.Component {
         return (<div className={classes.container}>
             <div style={{display: "flex", height: "100%", overflow: "hidden", flexDirection: "column"}}>
                 <div style={{
-                    flex: "0 0 20px",
+                    flex: "0 0 30px",
                     background: "black",
                     textAlign: "center",
                     color: "white",
-                    lineHeight: "20px",
+                    lineHeight: "30px",
                     fontSize: "10px",
                     textTransform: "uppercase",
                     letterSpacing: "0.25px",

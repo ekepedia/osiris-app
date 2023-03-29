@@ -262,7 +262,7 @@ class JobDetails extends React.Component {
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div onClick={() => {
                             window.open(`/companies/${company.company_id}`);
-                        }} style={{borderRadius: "4px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
+                        }} style={{borderRadius: "4px", height: "45px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
                             <CoverImageHolder url={company.company_logo_url}/>
                         </div>
                     </div>
