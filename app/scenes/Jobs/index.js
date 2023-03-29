@@ -34,6 +34,8 @@ import TrackingService from "../../services/TrackingService";
 import StandardBadge from "../../components/StandardBadge";
 import StandardButton from "../../components/StandardButton";
 import MobileSelectArea from "../../components/MobileSelectArea";
+import MobileFilterBar from "../../components/MobileFilterBar";
+import MobileFilters from "../../components/MobileFilters";
 
 const Styles = {
     container: {
@@ -68,9 +70,9 @@ const Styles = {
         },
     },
     mobileFilterBar: {
-        flex: "0 0 40px",
+
         padding: "0 20px",
-        lineHeight: "40px",
+
         background: COMMON.COLORS.B400,
         whiteSpace: "nowrap",
         color: COMMON.COLORS.N0,
@@ -100,12 +102,13 @@ const Styles = {
 };
 
 const PAYLOADS = [
-    {label: "Job Title", options: "job_titles", selectedOptions: "selectedIndustries"},
-    // {label: "Industry", options: "company_industries", selectedOptions: "selectedCompanyIndustries"},
-    // {label: "Role", options: "roles", selectedOptions: "selectedRoles"},
     {label: "Seniority", options: "seniorities", selectedOptions: "selectedSeniorities"},
-    // {label: "Location", options: "locations", selectedOptions: "selectedLocations"},
-    // {label: "Company", options: "companies", selectedOptions: "selectedCompanies"},
+
+    {label: "Job Title", options: "job_titles", selectedOptions: "selectedIndustries"},
+    {label: "Industry", options: "company_industries", selectedOptions: "selectedCompanyIndustries"},
+    // {label: "Role", options: "roles", selectedOptions: "selectedRoles"},
+    {label: "Location", options: "locations", selectedOptions: "selectedLocations"},
+    {label: "Company", options: "companies", selectedOptions: "selectedCompanies"},
 ]
 
 class Jobs extends React.Component {
@@ -291,7 +294,6 @@ class Jobs extends React.Component {
                     client,
                     user_id: user.user_id
                 }).then((saved_jobs) => {
-                    console.log("LOADED SAVED", saved_jobs);
 
                     saved_jobs = saved_jobs || [];
                     let saved_jobs_ids = [];
@@ -433,10 +435,14 @@ class Jobs extends React.Component {
             max: 200//MAX_RESULTS
         }).then(({jobs}) => {
             this.processJobs({jobs});
-        })
+        }).catch((e) => {
+            console.error(e);
+            this.setState({loading: false});
+        });
     }
 
     reloadJobs() {
+        this.setState({loading: true});
         this.loadJobs();
     }
 
@@ -455,8 +461,6 @@ class Jobs extends React.Component {
                         });
 
                         UserPreferenceService.getUserPreference({client, user_id}).then((user_preferences) => {
-                            console.log("user_preferences", user_preferences);
-
                             let selectedIndustries = [];
                             let selectedLocations = [];
                             user_preferences = user_preferences || [];
@@ -464,7 +468,6 @@ class Jobs extends React.Component {
                             user_preferences.forEach((user_preference) => {
                                 if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.INDUSTRIES) {
                                     let industry = COMMON.CONSTS.INDUSTRIES_MAP[user_preference.preference_id];
-                                    console.log("user_preference industry", industry );
 
                                     if (industry && industry.label) {
                                         selectedIndustries.push(industry.label);
@@ -474,7 +477,6 @@ class Jobs extends React.Component {
 
                                 if (user_preference.type_id === COMMON.CONSTS.PREFERENCE_TYPES.LOCATIONS) {
                                     let location = CITIES_MAP[user_preference.preference_id];
-                                    console.log("user_preference location", location );
 
                                     if (location && location.label) {
                                         selectedLocations.push(location.label)
@@ -488,7 +490,6 @@ class Jobs extends React.Component {
                                 selectedCompanyIndustries: selectedIndustries, selectedLocations
                             })
 
-                            console.log({selectedIndustries, selectedLocations})
                             resolve();
                         });
                     }
@@ -508,6 +509,7 @@ class Jobs extends React.Component {
         this.resetScrollPosition();
 
         TrackingService.trackClick({page: "job-board", sub_page: "job-filter", custom: field, value: id});
+        TrackingService.trackClick({page: "job-board", sub_page: "job-filter-add", custom: field, value: id});
 
         setTimeout(() => {
             this.reloadJobs();
@@ -537,13 +539,17 @@ class Jobs extends React.Component {
         this.setState({[field]: selected, MAX_RESULTS: 10})
         this.resetScrollPosition();
 
+        TrackingService.trackClick({page: "job-board", sub_page: "job-filter-remove", custom: field, value: id});
+
+
         setTimeout(() => {
             this.reloadJobs();
         }, 100);
     }
 
     resetScrollPosition() {
-        document.querySelector("#mobile-cards-container").scrollTop = 0;
+        if (document.querySelector("#mobile-cards-container"))
+            document.querySelector("#mobile-cards-container").scrollTop = 0;
     }
 
     clearField(field) {this.setState({[field]: []})}
@@ -635,7 +641,7 @@ class Jobs extends React.Component {
 
         const SCROLL_PAD = "100px";
 
-        let { loading, saved_jobs_ids, saved_jobs, user, MAX_RESULTS } = this.state;
+        let { loading, saved_jobs_ids, saved_jobs, user, mobile_expanded, MAX_RESULTS } = this.state;
 
         return (
             <div className={classes.masterContainer}>
@@ -652,6 +658,9 @@ class Jobs extends React.Component {
                                     removeFromField={this.removeFromField.bind(this)}
                                     clearField={this.clearField.bind(this)}
                                     update={(name, value) => {
+                                        console.log("updating state:", name, value);
+                                        TrackingService.trackClick({page: "job-board", sub_page: "job-filter", custom: name, value});
+
                                         this.setState({
                                             [name]: value
                                         });
@@ -670,43 +679,45 @@ class Jobs extends React.Component {
                                     <div className={classes.mainContainer} style={{height: "100%",}}>
 
                                         <div className={classes.subContainer}>
-                                            <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.showOnMobile)}>
-                                                <JobCards
-                                                    jobs={this.jobs}
-                                                    loading={loading}
-                                                    job_salary_min={this.state.job_salary_min}
-                                                    job_salary_max={this.state.job_salary_max}
-                                                    years_of_experience_min={this.state.years_of_experience_min}
-                                                    years_of_experience_max={this.state.years_of_experience_max}
-                                                    glassdoor_overall={this.state.glassdoor_overall}
-                                                    glassdoor_compensation={this.state.glassdoor_compensation}
-                                                    glassdoor_culture={this.state.glassdoor_culture}
-                                                    glassdoor_work_life={this.state.glassdoor_work_life}
-                                                    selectedJobId={this.state.selectedJobId}
-                                                    selectedLocations={this.state.selectedLocations}
-                                                    selectedCompanies={this.state.selectedCompanies}
-                                                    selectedIndustries={this.state.selectedIndustries}
-                                                    selectedCompanyIndustries={this.state.selectedCompanyIndustries}
-                                                    selectedAffinities={this.state.selectedAffinities}
-                                                    selectedSeniorities={this.state.selectedSeniorities}
-                                                    selectedRoles={this.state.selectedRoles}
-                                                    selectedDegreeRequirements={this.state.selectedDegreeRequirements}
-                                                    setSelectedJob={this.setSelectedJob.bind(this)}
-                                                    saved_jobs_ids={saved_jobs_ids}
-                                                    mobile={true}
-                                                    resetScrollPosition={this.resetScrollPosition.bind(this)}
-                                                    resetMax={() => (this.setState({MAX_RESULTS: 10}))}
 
-                                                    job={this.state.selectedJob}
-                                                    saved_jobs={saved_jobs}
-                                                    MAX_RESULTS={MAX_RESULTS}
-                                                    user={user}
-                                                    onApply={this.openApplyModal.bind(this)}
-                                                    handleScroll={this.handleScroll.bind(this)}
-                                                    forceCompany={this.forceCompany.bind(this)}
-                                                    updateSavedJobIds={this.updateSavedJobIds.bind(this)}
-                                                />
-                                            </div>
+                                            {!mobile_expanded ?
+                                                <div id={"mobile-cards-container"} className={mc(classes.cardContainer, classes.showOnMobile)}>
+                                                    <JobCards
+                                                        jobs={this.jobs}
+                                                        loading={loading}
+                                                        job_salary_min={this.state.job_salary_min}
+                                                        job_salary_max={this.state.job_salary_max}
+                                                        years_of_experience_min={this.state.years_of_experience_min}
+                                                        years_of_experience_max={this.state.years_of_experience_max}
+                                                        glassdoor_overall={this.state.glassdoor_overall}
+                                                        glassdoor_compensation={this.state.glassdoor_compensation}
+                                                        glassdoor_culture={this.state.glassdoor_culture}
+                                                        glassdoor_work_life={this.state.glassdoor_work_life}
+                                                        selectedJobId={this.state.selectedJobId}
+                                                        selectedLocations={this.state.selectedLocations}
+                                                        selectedCompanies={this.state.selectedCompanies}
+                                                        selectedIndustries={this.state.selectedIndustries}
+                                                        selectedCompanyIndustries={this.state.selectedCompanyIndustries}
+                                                        selectedAffinities={this.state.selectedAffinities}
+                                                        selectedSeniorities={this.state.selectedSeniorities}
+                                                        selectedRoles={this.state.selectedRoles}
+                                                        selectedDegreeRequirements={this.state.selectedDegreeRequirements}
+                                                        setSelectedJob={this.setSelectedJob.bind(this)}
+                                                        saved_jobs_ids={saved_jobs_ids}
+                                                        mobile={true}
+                                                        resetScrollPosition={this.resetScrollPosition.bind(this)}
+                                                        resetMax={() => (this.setState({MAX_RESULTS: 10}))}
+
+                                                        job={this.state.selectedJob}
+                                                        saved_jobs={saved_jobs}
+                                                        MAX_RESULTS={MAX_RESULTS}
+                                                        user={user}
+                                                        onApply={this.openApplyModal.bind(this)}
+                                                        handleScroll={this.handleScroll.bind(this)}
+                                                        forceCompany={this.forceCompany.bind(this)}
+                                                        updateSavedJobIds={this.updateSavedJobIds.bind(this)}
+                                                    />
+                                                </div> : null}
                                             <div id={"mobile-cards-container-2"} className={mc(classes.cardContainer, classes.hideOnMobile)}>
                                                 <JobCards
                                                     jobs={this.jobs}
@@ -757,48 +768,28 @@ class Jobs extends React.Component {
                                                 />
                                             </div>
 
-                                            <div style={{flex: "0 0 133px", background: COMMON.COLORS.N0, overflow: "hidden"}} className={classes.showOnMobile}>
+                                            <div style={{flex: mobile_expanded ? 1 : "0 0 60px", background: COMMON.COLORS.N0, overflow: "hidden"}} className={classes.showOnMobile}>
 
+                                                <MobileFilters
+                                                    PAYLOADS={PAYLOADS}
+                                                    state={this.state}
+                                                    addToField={this.addToField.bind(this)}
+                                                    removeFromField={this.removeFromField.bind(this)}
 
-                                                <div style={{display: "flex", height: "100%", overflow: "hidden", flexDirection: "column"}}>
-                                                    <div className={classes.mobileFilterBar}>
-                                                        {PAYLOADS.map((payload) => {
-                                                            return (
-                                                                <div style={{opacity: (payload.options === (this.state.payload || {}).options) ? 1 : null}}
-                                                                     className={classes.mobileFilterBarOption}>
-                                                                    <div onClick={() => {this.setState({payload})}}>
-                                                                        {payload.label}
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                    <div style={{flex: 1, padding: "0 20px", paddingTop: "0px", overflow: "scroll"}}>
+                                                    mobile_expanded={this.state.mobile_expanded}
 
+                                                    update={(name, value) => {
+                                                        console.log("updating state:", name, value);
+                                                        TrackingService.trackClick({page: "job-board", sub_page: "job-filter", custom: name, value});
 
-
-                                                        <MobileSelectArea
-                                                            payload={this.state.payload}
-                                                            addToField={this.addToField.bind(this)}
-                                                            disableSearch={true}
-                                                            removeFromField={this.removeFromField.bind(this)}
-                                                            clearField={this.clearField.bind(this)}
-                                                            update={(name, value) => {
-                                                                this.setState({
-                                                                    [name]: value
-                                                                });
-                                                                setTimeout(() => {
-                                                                    this.reloadJobs();
-                                                                }, 100)
-                                                            }}
-                                                            state={this.state}
-                                                            jobs={this.state.jobs}
-                                                            onAssistant={this.openJobAssistant.bind(this)}
-                                                        />
-                                                    </div>
-                                                </div>
-
-
+                                                        this.setState({
+                                                            [name]: value
+                                                        });
+                                                        setTimeout(() => {
+                                                            this.reloadJobs();
+                                                        }, 100)
+                                                    }}
+                                                />
 
                                             </div>
                                         </div>

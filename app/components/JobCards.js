@@ -44,8 +44,6 @@ class JobCards extends React.Component {
         let params = (new URL(document.location)).searchParams;
         let job_id = params.get("j");
 
-        console.log("job_id", job_id, !!job_id)
-
         this.state = {
             showMobileJob: !!job_id
         };
@@ -313,13 +311,10 @@ class JobCards extends React.Component {
     render() {
         let { classes, client, match: { params }, resetMax, resetScrollPosition, updateSavedJobIds, forceCompany, onApply, user, saved_jobs, saved_jobs_ids, job, jobs, selectedJobId, setSelectedJob, handleScroll, mobile, loading, MAX_RESULTS} = this.props;
 
-        console.time("done filtering");
         let { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
-        console.timeEnd("done filtering");
 
         filteredJobs = filteredJobs.slice(0, MAX_RESULTS);
         unFilteredJobs = unFilteredJobs.slice(0, MAX_RESULTS);
-        console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters, MAX_RESULTS);
 
 
         return (<div className={classes.container}>

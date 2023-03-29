@@ -9,13 +9,13 @@ let TrackingService = {};
 
 TrackingService.trackEvent = trackEvent;
 function trackEvent ({type, page, sub_page, action, value, user_id, custom}) {
-    // console.log("tracking event", page, sub_page, action, value);
+    console.log("tracking event", page, sub_page, action, custom, value,);
     try {
         AuthService.getCurrentUserId().then((in_user_id) => {
             axios.post("/api/tracking/v1", {
                 "user_id": in_user_id || user_id,
                 "type": type,
-                "custom_1": "mvp-beta-v3",
+                "custom_1": "mvp-beta-v4",
                 "custom_2": page,
                 "custom_3": sub_page,
                 "custom_4": action,

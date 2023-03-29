@@ -132,7 +132,7 @@ class JobDetails extends React.Component {
             return;
 
         if (job.job_id !== (prevProps.job || {}).job_id) {
-            console.log("WE GOT A NEW JOB!!!");
+            // console.log("WE GOT A NEW JOB!!!");
             this.loadGPTResponse();
         }
     }
@@ -200,7 +200,6 @@ class JobDetails extends React.Component {
     render() {
         let { classes, onApply, job, forceCompany, saved_jobs_ids, user } = this.props;
 
-        console.log("saved_jobs_ids", saved_jobs_ids, job)
         job = job || {};
 
 
@@ -325,7 +324,7 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                {false ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
+                {this.state.enable_gpt ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
                     <div>
                         <div style={{...COMMON.FONTS.H400, borderRadius: "6px", width: "fit-content", marginBottom: "10px", padding: "2px 6px", background: COMMON.COLORS.N900, fontWeight: 600, fontSize: "12px", color: COMMON.COLORS.N0}}><i className="fa-solid fa-circle"></i> Pearl Job Assistant</div>
                         {this.state.loading_gpt ?

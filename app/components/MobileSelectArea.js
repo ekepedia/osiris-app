@@ -21,6 +21,8 @@ import {
 
 import COMMON from "../common/index";
 import {mc, str} from "../common/helpers";
+import StandardInput from "./StandardInput";
+import TrackingService from "../services/TrackingService";
 
 const Styles = {
     container: {
@@ -81,7 +83,6 @@ class MobileSelectArea extends React.Component {
             filter: "",
         }
 
-
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
 
@@ -97,7 +98,6 @@ class MobileSelectArea extends React.Component {
 
         this.companies = [];
         DataService.getCompanies().then((companies) => {
-            console.log("companies", companies)
             this.companies = companies;
             this.setState({ companies });
         })
@@ -128,7 +128,6 @@ class MobileSelectArea extends React.Component {
 
         this.roles = [];
         DataService.getRoles().then(({roles}) => {
-            console.log("this.roles", roles);
             this.roles = roles;
             this.setState({ roles});
         })
@@ -306,19 +305,55 @@ class MobileSelectArea extends React.Component {
         return this.companies
     }
 
+    filterOptions(options) {
+
+        if (!options || !options.length) return options;
+
+        let set = options.map((option, i) => {
+            if (!option) return ;
+
+            const { filter } = this.state;
+
+            let label = (option.label || "").toLowerCase();
+
+            if (filter && filter.length) {
+                if (label.indexOf(filter.toLowerCase()) === -1) {
+                    return null;
+                }
+            }
+
+            if (!label || !label.length)
+                return null;
+
+            return option;
+
+        })
+
+        return _.without(set, null);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let { payload } = this.props;
+
+        if (!payload)
+            return;
+
+        if (payload.options !== (prevProps.payload || {}).options) {
+            console.log("WE GOT A NEW PAYLOAD!!!");
+            this.setState({filter: ""})
+        }
+    }
+
     render() {
         let { classes, label, placeholder, onClear, disableSearch,
 
             payload,
             addToField,
             removeFromField,
-            clearField,
             update,
 
             state,
-            jobs,
 
-            onAssistant
         } = this.props;
 
         selectedOptions = selectedOptions || [];
@@ -331,9 +366,17 @@ class MobileSelectArea extends React.Component {
         this.company_industries = this.constructCompanyIndustryOptions();
         this.seniorities = this.constructSeniorityOptions();
 
-         payload = payload || {};
+        payload = payload || {};
 
         let options = this[payload.options] || [];
+
+        options = this.filterOptions(options);
+        let original_length = options.length;
+        options = options.slice(0, 75);
+        let new_length = options.length;
+
+        let diff = original_length - new_length;
+
         let selectedOptions = state[payload.selectedOptions];
 
         let onAdd = (id) => (addToField(payload.selectedOptions, id));
@@ -347,16 +390,18 @@ class MobileSelectArea extends React.Component {
 
             <div>
                 <div style={{display: "flex", height: "100%", flexDirection: "column"}}>
-                    <div style={{flex: "0 0 32px", padding: "0", position: "relative", display: disableSearch ? "none" : null}}>
+                    <div style={{flex: "0 0 48px", padding: "8px 0", position: "relative", display: disableSearch ? "none" : null}}>
+                        <StandardInput placeholder={"Filter Options"} value={this.state.filter} update={(v) => {
+                            this.setState({filter: v});
+                            console.log("update filter", v, payload.options);
+                            TrackingService.trackSubmit({page: "job-board", sub_page: "job-filter-search", custom: payload.options, value: v});
+                            TrackingService.trackSubmit({page: "job-board", sub_page: "job-filter-mobile-search", custom: payload.options, value: v});
 
-                        <div style={{position: "absolute", left: 12, top: 10}}>
-                            <i className="fa-solid fa-magnifying-glass" style={{fontSize: "12px", color: COMMON.COLORS.N600}}/>
-                        </div>
-
-                        <input className={classes.input} placeholder={placeholder} value={this.state.filter} onChange={(e) => (this.setState({filter: e.target.value}))}/>
+                        }}/>
                     </div>
 
-                    <div style={{flex: 1, padding: "0", paddingTop: "12px", overflowY: "scroll",}}>
+                    <div style={{flex: 1, padding: "0", paddingTop: disableSearch ? "12px" : "0px", overflowY: "scroll",}}>
+
 
                         {options.map((option, i) => {
 
@@ -377,7 +422,10 @@ class MobileSelectArea extends React.Component {
                                 return null;
 
                             return (
-                                <div key={option.id} className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, border: selected ? `1px solid ${COMMON.COLORS.B400}`: null}} onClick={() => {selected ? onRemove(option.id) : onAdd(option.id)}}>
+                                <div key={option.id} className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, border: selected ? `1px solid ${COMMON.COLORS.B400}`: null}} onClick={() => {
+                                    selected ? onRemove(option.id) : onAdd(option.id);
+                                    this.setState({filter: ""});
+                                }}>
                                     <div style={{display: "flex"}}>
                                         <div style={{flex: 1}}>{option.label}</div>
                                         <div style={{flex: "0 0 10px", paddingLeft: "10px", display: selected ? null : "none"}}><i style={{cursor: "pointer",  fontSize: "13.5px", lineHeight: "16px"}} className="fa-solid fa-xmark"/></div>
@@ -386,6 +434,10 @@ class MobileSelectArea extends React.Component {
                             );
 
                         })}
+
+                        {diff && diff > 0 ? <div style={{margin: "20px 0", textAlign: "center"}}>
+                            {diff} Additional Options Available to Filter On
+                        </div>: null}
                     </div>
                 </div>
             </div>
