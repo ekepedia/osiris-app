@@ -105,14 +105,14 @@ module.exports.init = function (connection) {
     // })
 
     //jobs
-    // get_jobs_by_ids({jobs_ids: ["27133", "29295", "29320", "29386", "29278"]}).then((jobs) => {
+    // get_jobs_by_ids({jobs_ids: ["30539", "30532", "30528", "30512", "30505"]}).then((jobs) => {
     //     // console.log("jobs", jobs);
     //
     //     if (jobs && jobs.length) {
     //         jobs.forEach((job) => {
     //
     //             let { job_id, job_title, company_name} = job;
-    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
+    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}&t=Software%20Engineer`;
     //             let html = generate_html({job_title, company_name, apply_link});
     //             console.log("\n\n", html, "\n\n",);
     //
