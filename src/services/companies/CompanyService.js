@@ -56,9 +56,9 @@ module.exports.init = function (connection) {
     //
 
     //
-    setTimeout(() => {
-        preload_and_prejoin_companies();
-    }, 1001);
+    // setTimeout(() => {
+    //     preload_and_prejoin_companies();
+    // }, 1001);
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
