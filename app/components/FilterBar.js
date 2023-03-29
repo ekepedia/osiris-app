@@ -60,7 +60,6 @@ class FilterBar extends React.Component {
 
         this.companies = [];
         DataService.getCompanies().then((companies) => {
-            console.log("companies", companies)
             this.companies = companies;
             this.setState({ companies });
         })
@@ -91,7 +90,6 @@ class FilterBar extends React.Component {
 
         this.roles = [];
         DataService.getRoles().then(({roles}) => {
-            console.log("this.roles", roles);
             this.roles = roles;
             this.setState({ roles});
         })
@@ -274,7 +272,7 @@ class FilterBar extends React.Component {
 
         return (<div className={classes.container} id="jobs-filter-bar">
             <div style={{display: "flex"}}>
-                <div style={{flex: 1}}>
+                <div style={{flex: 1, whiteSpace: "nowrap", overflow: "scroll"}}>
                     <div className={classes.filterContainer} style={{display: "none"}}>
                         <FilterDropdown
                             label="Role"
