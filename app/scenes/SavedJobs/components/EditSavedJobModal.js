@@ -220,19 +220,19 @@ class EditSavedJobModal extends React.Component {
                                 paddingLeft: "35px",
                                 borderBottom: `1px solid ${COMMON.COLORS.N400}`
                             }}>
-                                <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
+                                <div className={mc(classes.companyMenuContainer)} style={{color: selectedState === 1 ? COMMON.COLORS.B400 : null}} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
                                     Info
                                     {selectedState === 1 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>
-                                <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
+                                <div className={mc(classes.companyMenuContainer)} style={{color: selectedState === 2 ? COMMON.COLORS.B400 : null}} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
                                     Company
                                     {selectedState === 2 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>
-                                <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
+                                <div className={mc(classes.companyMenuContainer)} style={{color: selectedState === 3 ? COMMON.COLORS.B400 : null}} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
                                     Reminders
                                     {selectedState === 3 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>
-                                <div className={mc(classes.companyMenuContainer)} onClick={() => {setSelectedState ? setSelectedState(4) : null}}>
+                                <div className={mc(classes.companyMenuContainer)} style={{color: selectedState === 4 ? COMMON.COLORS.B400 : null}} onClick={() => {setSelectedState ? setSelectedState(4) : null}}>
                                     Notes
                                     {selectedState === 4 ? <div className={classes.companyMenuSelectBar}/> : null}
                                 </div>

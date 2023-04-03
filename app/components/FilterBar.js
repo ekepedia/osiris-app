@@ -272,7 +272,7 @@ class FilterBar extends React.Component {
 
         return (<div className={classes.container} id="jobs-filter-bar">
             <div style={{display: "flex"}}>
-                <div style={{flex: 1, whiteSpace: "nowrap", overflow: "scroll"}}>
+                <div style={{flex: 1, whiteSpace: "nowrap"}}>
                     <div className={classes.filterContainer} style={{display: "none"}}>
                         <FilterDropdown
                             label="Role"
@@ -434,7 +434,7 @@ class FilterBar extends React.Component {
                         />
                     </div>
                 </div>
-                <div style={{flex: "0 0 100px", textAlign: "right"}}>
+                <div style={{display: "none", flex: "0", textAlign: "right"}}>
                     <StandardButton secondary={true} onClick={onAssistant} label={"Job Assistant"}/>
                 </div>
             </div>
