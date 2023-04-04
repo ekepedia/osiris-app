@@ -64,6 +64,7 @@ class MobileFilters extends React.Component {
                     fontSize: "10px",
                     textTransform: "uppercase",
                     letterSpacing: "0.25px",
+                    cursor: "pointer",
                     fontWeight: 600
                 }} onClick={() => {
                     update("mobile_expanded", !mobile_expanded);
@@ -85,14 +86,7 @@ class MobileFilters extends React.Component {
                         removeFromField={removeFromField}
                         mobile_expanded={mobile_expanded}
 
-                        update={(name, value) => {
-                            this.setState({
-                                [name]: value
-                            });
-                            setTimeout(() => {
-                                this.reloadJobs();
-                            }, 100)
-                        }}
+                        update={update}
 
                         state={state}
                         disableSearch={false}

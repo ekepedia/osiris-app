@@ -23,6 +23,7 @@ import COMMON from "../common/index";
 import {mc, str} from "../common/helpers";
 import StandardInput from "./StandardInput";
 import TrackingService from "../services/TrackingService";
+import StandardSelect from "./StandardSelect";
 
 const Styles = {
     container: {
@@ -370,6 +371,15 @@ class MobileSelectArea extends React.Component {
 
         let options = this[payload.options] || [];
 
+        let min_value_label = payload.min_value_label;
+        let max_value_label = payload.max_value_label;
+        let minMax = payload.minMax;
+        let min_options = payload.min_options;
+        let max_options = payload.max_options;
+
+        let min_value = state[min_value_label]
+        let max_value = state[max_value_label]
+
         options = this.filterOptions(options);
         let original_length = options.length;
         options = options.slice(0, 75);
@@ -390,7 +400,7 @@ class MobileSelectArea extends React.Component {
 
             <div>
                 <div style={{display: "flex", height: "100%", flexDirection: "column"}}>
-                    <div style={{flex: "0 0 48px", padding: "8px 0", position: "relative", display: disableSearch ? "none" : null}}>
+                    <div style={{flex: "0 0 48px", padding: "8px 0", position: "relative", display: minMax || disableSearch ? "none" : null}}>
                         <StandardInput placeholder={"Filter Options"} value={this.state.filter} update={(v) => {
                             this.setState({filter: v});
                             console.log("update filter", v, payload.options);
@@ -400,45 +410,59 @@ class MobileSelectArea extends React.Component {
                         }}/>
                     </div>
 
-                    <div style={{flex: 1, padding: "0", paddingTop: disableSearch ? "12px" : "0px", overflowY: "scroll",}}>
+                    {minMax ?
+                        <div style={{flex: 1, padding: "8px 0px", overflowY: "scroll"}}>
+                            <div className={classes.ratingsContainer}>
+                                <div className={classes.ratingsLabel}>Min</div>
+                                <StandardSelect value={min_value} options={min_options} update={(val) => update(min_value_label, val)} />
+                                <div style={{height: "8px", width: "100%"}}/>
+                                <div className={classes.ratingsLabel}>Max</div>
+                                <StandardSelect value={max_value} options={max_options} update={(val) => update(max_value_label, val)} />
+                            </div>
+                        </div>
+                        : <div style={{flex: 1, padding: "0", paddingTop: disableSearch ? "12px" : "0px", overflowY: "scroll",}}>
 
 
-                        {options.map((option, i) => {
+                            {options.map((option, i) => {
 
-                            option = option || {};
-                            const { filter } = this.state;
+                                option = option || {};
+                                const { filter } = this.state;
 
-                            const selected = selectedOptions && selectedOptions.indexOf(option.id) !== -1;
+                                const selected = selectedOptions && selectedOptions.indexOf(option.id) !== -1;
 
-                            let label = (option.label || "").toLowerCase();
+                                let label = (option.label || "").toLowerCase();
 
-                            if (filter && filter.length) {
-                                if (label.indexOf(filter.toLowerCase()) === -1) {
-                                    return null;
+                                if (filter && filter.length) {
+                                    if (label.indexOf(filter.toLowerCase()) === -1) {
+                                        return null;
+                                    }
                                 }
-                            }
 
-                            if (!label || !label.length)
-                                return null;
+                                if (!label || !label.length)
+                                    return null;
 
-                            return (
-                                <div key={option.id} className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, border: selected ? `1px solid ${COMMON.COLORS.B400}`: null}} onClick={() => {
-                                    selected ? onRemove(option.id) : onAdd(option.id);
-                                    this.setState({filter: ""});
-                                }}>
-                                    <div style={{display: "flex"}}>
-                                        <div style={{flex: 1}}>{option.label}</div>
-                                        <div style={{flex: "0 0 10px", paddingLeft: "10px", display: selected ? null : "none"}}><i style={{cursor: "pointer",  fontSize: "13.5px", lineHeight: "16px"}} className="fa-solid fa-xmark"/></div>
+                                return (
+                                    <div key={option.id} className={mc(classes.selectOption)} style={{color: selected ? COMMON.COLORS.B400 : null, background: selected ? COMMON.COLORS.B100 : null, border: selected ? `1px solid ${COMMON.COLORS.B400}`: null}} onClick={() => {
+                                        selected ? onRemove(option.id) : onAdd(option.id);
+                                        this.setState({filter: ""});
+                                    }}>
+                                        <div style={{display: "flex"}}>
+                                            <div style={{flex: 1}}>{option.label}</div>
+                                            <div style={{flex: "0 0 10px", paddingLeft: "10px", display: selected ? null : "none"}}><i style={{cursor: "pointer",  fontSize: "13.5px", lineHeight: "16px"}} className="fa-solid fa-xmark"/></div>
+                                        </div>
                                     </div>
-                                </div>
-                            );
+                                );
 
-                        })}
+                            })}
 
-                        {diff && diff > 0 ? <div style={{margin: "20px 0", textAlign: "center"}}>
-                            {diff} Additional Options Available to Filter On
-                        </div>: null}
-                    </div>
+                            {diff && diff > 0 ? <div style={{margin: "20px 0", textAlign: "center"}}>
+                                {diff} Additional Options Available to Filter On
+                            </div>: null}
+                        </div>
+                    }
+
+
+
                 </div>
             </div>
         </div>)
