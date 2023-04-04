@@ -105,25 +105,25 @@ module.exports.init = function (connection) {
     // })
 
     //jobs
-    get_jobs_by_ids({jobs_ids: ["32940","32928", "32899", "32788", "32501", "32917"]}).then((jobs) => {
-        // console.log("jobs", jobs);
-
-        return
-        if (jobs && jobs.length) {
-            console.log("\n\n");
-            jobs.forEach((job) => {
-
-                let { job_id, job_title, company_name} = job;
-                // let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
-                let apply_link = `https://www.pearl.works/jobs?j=${job_id}&t=Product%20Manager`;
-                let html = generate_html({job_title, company_name, apply_link});
-                console.log(html);
-
-            })
-            console.log("\n\n");
-
-        }
-    })
+    // get_jobs_by_ids({jobs_ids: ["32940","32928", "32899", "32788", "32501", "32917"]}).then((jobs) => {
+    //     // console.log("jobs", jobs);
+    //
+    //     return
+    //     if (jobs && jobs.length) {
+    //         console.log("\n\n");
+    //         jobs.forEach((job) => {
+    //
+    //             let { job_id, job_title, company_name} = job;
+    //             // let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
+    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}&t=Product%20Manager`;
+    //             let html = generate_html({job_title, company_name, apply_link});
+    //             console.log(html);
+    //
+    //         })
+    //         console.log("\n\n");
+    //
+    //     }
+    // })
 };
 
 let TITTLES = [{"job_category":"Account Manager"},{"job_category":"Aerospace Engineer"},{"job_category":"Biology Research Assistant"},{"job_category":"Business Analyst"},{"job_category":"Chemistry Research Assistant"},{"job_category":"Associate Consultant"},{"job_category":"Customer Success Manager"},{"job_category":"Data Science Analyst"},{"job_category":"Assistant Electrical Engineer"},{"job_category":"Financial Analyst"},{"job_category":"Junior Graphic Designer"},{"job_category":"Machine Learning Engineer"},{"job_category":"Marketing Coordinator"},{"job_category":"Mechanical Engineer"},{"job_category":"Paralegal"},{"job_category":"Associate Product Manager"},{"job_category":"Recruiter"},{"job_category":"Product Strategy"},{"job_category":"Associate Software Engineer"},{"job_category":"Life Sciences Analyst"},{"job_category":"Research Analyst"},{"job_category":"Social Media Coordinator"},{"job_category":"Research Associate"},{"job_category":"Sales and Trading Markets Analyst"},{"job_category":"Sales Strategy & Operations"},{"job_category":"Systems Engineer"},{"job_category":"Product Sales"},{"job_category":"Chief of Staff"},{"job_category":"Digital Marketing Project Manager"},{"job_category":"Digital Strategy Manager"},{"job_category":"Management Consultant"},{"job_category":"Media Planner"},{"job_category":"Private Equity Analyst"},{"job_category":"Private Equity Associate"},{"job_category":"Product Manager"},{"job_category":"Product Owner"},{"job_category":"Program Manager"},{"job_category":"Project Coordinator"},{"job_category":"Project Finance Analyst"},{"job_category":"Software Engineer"},{"job_category":"Software Engineer Associate"},{"job_category":"Staff Software Engineer"},{"job_category":"Strategist"},{"job_category":"Supply Chain Planner"},{"job_category":"Acquisitions Analyst"},{"job_category":"Advisory Associate"},{"job_category":"Audit Associate"},{"job_category":"Backend Engineer"},{"job_category":"Business Technology Analyst"},{"job_category":"Clean Energy Strategic Analyst"},{"job_category":"Community Operations Manager & Designer"},{"job_category":"Consultant"},{"job_category":"Data Scientist"},{"job_category":"Enterprise Account Executive"},{"job_category":"Equities Analyst"},{"job_category":"Health Management Consultant"},{"job_category":"Junior Full Stack Developer"},{"job_category":"Life Sciences Associate"},{"job_category":"Account Executive"},{"job_category":"Advisory Senior Associate"},{"job_category":"Aeronautical Engineer Associate"},{"job_category":"Associate Product Designer"},{"job_category":"Business & Integration Architecture Analyst"},{"job_category":"Business Development Associate"},{"job_category":"Cloud Native Engineer"},{"job_category":"Commercial Real Estate Analyst"},{"job_category":"Communications Designer"},{"job_category":"Corporate Strategy"},{"job_category":"Data Strategist"},{"job_category":"Digital Customer Solutions Manager"},{"job_category":"Digital Experience Specialist"},{"job_category":"Institutional Equity Sales Analyst"},{"job_category":"Manager of Entertainment and Influencer"},{"job_category":"Mechanical Design Engineer"},{"job_category":"Media Manager"},{"job_category":"Product Manager II"},{"job_category":"Program Analyst"},{"job_category":"Program Specialist"},{"job_category":"Quantitative Trader"},{"job_category":"Real Estate Analyst"},{"job_category":"Real Estate Syndicated Finance Analyst"},{"job_category":"Senior Associate Software Engineer"},{"job_category":"Senior Consultant"},{"job_category":"Senior Data Analyst"},{"job_category":"Senior Manager"},{"job_category":"Senior Product Manager"},{"job_category":"Software Development Engineer"},{"job_category":"Space Vehicle Systems Engineer"},{"job_category":"Sustainability Fellow"},{"job_category":"Training and Content Coordinator"},{"job_category":"Trust Solutions Assurance Associate"},{"job_category":"Value Chain Finance Analyst"},{"job_category":"Wealth Management Analyst"}];
