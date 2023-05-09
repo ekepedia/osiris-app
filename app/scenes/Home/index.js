@@ -366,7 +366,7 @@ class Home extends React.Component {
                                             <div>
                                                 <div className={mc(classes.marginLeftDefault, classes.landingHeroText)}>
                                                     <div className={mc(classes.landingHeroTitle)}>The professional network built for the multi-hyphenate generation</div>
-                                                    <div className={mc(classes.landingHeroBody)}>OSIRIS is redefining what a social and career network can and should be by redefining the professional for today’s generation</div>
+                                                    <div className={mc(classes.landingHeroBody)}>Pearl is redefining what a social and career network can and should be by redefining the professional for today’s generation</div>
                                                     <div style={{marginTop: "25px"}}>
                                                         <div style={{...COMMON.STYLES.STYLE_BUTTON_HEADLINE, background: COMMON.COLORS.OSIRIS_GREEN}} onClick={() => (this.setOnBoardingModal(true))}>Claim your portfolio</div>
                                                     </div>
@@ -411,7 +411,7 @@ class Home extends React.Component {
                                             <div>
                                                 <div className={mc(classes.marginLeftDefault, classes.landingHeroText)}>
                                                     <div className={mc(classes.landingHeroTitle)}>Finding your dream job doesn’t have to suck</div>
-                                                    <div className={mc(classes.landingHeroBody)}>OSIRIS provides you with the community, tools, and data to make better career decisions</div>
+                                                    <div className={mc(classes.landingHeroBody)}>Pearl provides you with the community, tools, and data to make better career decisions</div>
                                                     <div style={{marginTop: "25px"}}>
                                                         <StandardButton label={"Request Invite"} fullWidth={false} onClick={() => {
                                                             window.open("https://osiris-works.typeform.com/sign-up", "_blank");
@@ -429,7 +429,7 @@ class Home extends React.Component {
                                         <div>
                                             <div className={mc(classes.sectionSubTitle)}>COMMUNITY - coming soon</div>
                                             <div className={mc(classes.sectionTitle)}>Join an inclusive community</div>
-                                            <div className={mc(classes.sectionBody)}>OSIRIS connects you with your peers, companies, and mentors across industries</div>
+                                            <div className={mc(classes.sectionBody)}>Pearl connects you with your peers, companies, and mentors across industries</div>
                                         </div>
                                     </div>
                                 </div>
@@ -517,7 +517,7 @@ class Home extends React.Component {
                                                     <div className={mc(classes.sectionWidthWide)}>
                                                         <div className={mc(classes.sectionSubTitle)}>Jobs</div>
                                                         <div className={mc(classes.sectionTitle)}>Stop guessing. Understand the job before you apply</div>
-                                                        <div className={mc(classes.sectionBody)}>OSIRIS helps you find exciting job opportunities, from fast-growing early-stage startups to nonprofits to the major corporations you know and love</div>
+                                                        <div className={mc(classes.sectionBody)}>Pearl helps you find exciting job opportunities, from fast-growing early-stage startups to nonprofits to the major corporations you know and love</div>
                                                         <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
                                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                                 <div className={mc(classes.sectionPoint)}>
@@ -588,7 +588,7 @@ class Home extends React.Component {
                                                     <div className={mc(classes.sectionWidthWide, classes.peerSupportSection)}>
                                                         <div className={mc(classes.sectionSubTitle)}>Companies</div>
                                                         <div className={mc(classes.sectionTitle)}>Don’t settle. Find a company that reflects you and your values</div>
-                                                        <div className={mc(classes.sectionBody)}>Osiris provides the tools and information you need to ensure that you join a company that embodies what you care about most</div>
+                                                        <div className={mc(classes.sectionBody)}>Pearl provides the tools and information you need to ensure that you join a company that embodies what you care about most</div>
                                                         <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
                                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                                 <div className={mc(classes.sectionPoint)}>
@@ -641,9 +641,9 @@ class Home extends React.Component {
                                             <div className={mc(classes.userProfileSection)}>
                                                 <div className={mc(classes.marginLeftDefault, classes.sectionWidthWide,)}>
                                                     <div>
-                                                        <div className={mc(classes.sectionSubTitle)}>OSIRIS profile</div>
+                                                        <div className={mc(classes.sectionSubTitle)}>Pearp profile</div>
                                                         <div className={mc(classes.sectionTitle)}>A professional profile that actually represents you and your work</div>
-                                                        <div className={mc(classes.sectionBody)}>Showcase your work on your OSIRIS profile. As you build your profile it will be easier to find peers and jobs</div>
+                                                        <div className={mc(classes.sectionBody)}>Showcase your work on your Pearl profile. As you build your profile it will be easier to find peers and jobs</div>
                                                         <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
                                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                                 <div className={mc(classes.sectionPoint)}>
@@ -719,7 +719,7 @@ class Home extends React.Component {
                                                     <div>
                                                         <div className={mc(classes.sectionSubTitle)}>JOB SEARCH TRACKER</div>
                                                         <div className={mc(classes.sectionTitle)}>No more spreadsheets. Organize your search to find your dream job</div>
-                                                        <div className={mc(classes.sectionBody)}>OSIRIS helps you organize your job search. We keep track of the details that matter most to you so that you don’t have to rely on messy spreadsheets</div>
+                                                        <div className={mc(classes.sectionBody)}>Pearl helps you organize your job search. We keep track of the details that matter most to you so that you don’t have to rely on messy spreadsheets</div>
                                                         <div className={mc(classes.hideOnMobile, classes.sectionPointContainer)}>
                                                             <div style={{flex: 1, paddingRight: "25px"}}>
                                                                 <div className={mc(classes.sectionPoint)}>
@@ -770,7 +770,7 @@ class Home extends React.Component {
                                 <div className={mc(classes.applySectionContainer)}>
                                     <div style={{textAlign: "center"}}>
                                         <div style={{maxWidth: "301px", margin: "auto"}}>
-                                            <div className={mc(classes.sectionTitle)}>Join the OSIRIS community today</div>
+                                            <div className={mc(classes.sectionTitle)}>Join the Pearl community today</div>
                                         </div>
                                         <div style={{marginTop: "50px",}}>
                                             <div className={classes.footerProfileContainer}>
@@ -889,7 +889,7 @@ class Home extends React.Component {
                                             OSIRIS
                                         </div>
                                         <div style={{flex: 1}}>
-                                            <div className={mc(classes.footerBold)}>Browse OSIRIS</div>
+                                            <div className={mc(classes.footerBold)}>Browse Pearl</div>
                                             <div className={mc(classes.footerDefault)}>Jobs</div>
                                             <div className={mc(classes.footerDefault)}>Employers</div>
                                             <div className={mc(classes.footerDefault)}>Universities</div>

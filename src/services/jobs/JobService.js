@@ -87,10 +87,72 @@ module.exports.init = function (connection) {
     // }).then((data) => {
     //     console.log(data);
     // })
+
+    // internships
+    // get_jobs_by_ids({jobs_ids: ["30555", "30550", "30535", "30548", "30524"]}).then((jobs) => {
+    //     // console.log("jobs", jobs);
+    //
+    //     if (jobs && jobs.length) {
+    //         jobs.forEach((job) => {
+    //
+    //             let { job_id, job_title, company_name} = job;
+    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
+    //             let html = generate_html({job_title, company_name, apply_link});
+    //             console.log("\n\n", html, "\n\n",);
+    //
+    //         })
+    //     }
+    // })
+
+    //jobs
+    // get_jobs_by_ids({jobs_ids: ["32940","32928", "32899", "32788", "32501", "32917"]}).then((jobs) => {
+    //     // console.log("jobs", jobs);
+    //
+    //     return
+    //     if (jobs && jobs.length) {
+    //         console.log("\n\n");
+    //         jobs.forEach((job) => {
+    //
+    //             let { job_id, job_title, company_name} = job;
+    //             // let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
+    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}&t=Product%20Manager`;
+    //             let html = generate_html({job_title, company_name, apply_link});
+    //             console.log(html);
+    //
+    //         })
+    //         console.log("\n\n");
+    //
+    //     }
+    // })
 };
 
 let TITTLES = [{"job_category":"Account Manager"},{"job_category":"Aerospace Engineer"},{"job_category":"Biology Research Assistant"},{"job_category":"Business Analyst"},{"job_category":"Chemistry Research Assistant"},{"job_category":"Associate Consultant"},{"job_category":"Customer Success Manager"},{"job_category":"Data Science Analyst"},{"job_category":"Assistant Electrical Engineer"},{"job_category":"Financial Analyst"},{"job_category":"Junior Graphic Designer"},{"job_category":"Machine Learning Engineer"},{"job_category":"Marketing Coordinator"},{"job_category":"Mechanical Engineer"},{"job_category":"Paralegal"},{"job_category":"Associate Product Manager"},{"job_category":"Recruiter"},{"job_category":"Product Strategy"},{"job_category":"Associate Software Engineer"},{"job_category":"Life Sciences Analyst"},{"job_category":"Research Analyst"},{"job_category":"Social Media Coordinator"},{"job_category":"Research Associate"},{"job_category":"Sales and Trading Markets Analyst"},{"job_category":"Sales Strategy & Operations"},{"job_category":"Systems Engineer"},{"job_category":"Product Sales"},{"job_category":"Chief of Staff"},{"job_category":"Digital Marketing Project Manager"},{"job_category":"Digital Strategy Manager"},{"job_category":"Management Consultant"},{"job_category":"Media Planner"},{"job_category":"Private Equity Analyst"},{"job_category":"Private Equity Associate"},{"job_category":"Product Manager"},{"job_category":"Product Owner"},{"job_category":"Program Manager"},{"job_category":"Project Coordinator"},{"job_category":"Project Finance Analyst"},{"job_category":"Software Engineer"},{"job_category":"Software Engineer Associate"},{"job_category":"Staff Software Engineer"},{"job_category":"Strategist"},{"job_category":"Supply Chain Planner"},{"job_category":"Acquisitions Analyst"},{"job_category":"Advisory Associate"},{"job_category":"Audit Associate"},{"job_category":"Backend Engineer"},{"job_category":"Business Technology Analyst"},{"job_category":"Clean Energy Strategic Analyst"},{"job_category":"Community Operations Manager & Designer"},{"job_category":"Consultant"},{"job_category":"Data Scientist"},{"job_category":"Enterprise Account Executive"},{"job_category":"Equities Analyst"},{"job_category":"Health Management Consultant"},{"job_category":"Junior Full Stack Developer"},{"job_category":"Life Sciences Associate"},{"job_category":"Account Executive"},{"job_category":"Advisory Senior Associate"},{"job_category":"Aeronautical Engineer Associate"},{"job_category":"Associate Product Designer"},{"job_category":"Business & Integration Architecture Analyst"},{"job_category":"Business Development Associate"},{"job_category":"Cloud Native Engineer"},{"job_category":"Commercial Real Estate Analyst"},{"job_category":"Communications Designer"},{"job_category":"Corporate Strategy"},{"job_category":"Data Strategist"},{"job_category":"Digital Customer Solutions Manager"},{"job_category":"Digital Experience Specialist"},{"job_category":"Institutional Equity Sales Analyst"},{"job_category":"Manager of Entertainment and Influencer"},{"job_category":"Mechanical Design Engineer"},{"job_category":"Media Manager"},{"job_category":"Product Manager II"},{"job_category":"Program Analyst"},{"job_category":"Program Specialist"},{"job_category":"Quantitative Trader"},{"job_category":"Real Estate Analyst"},{"job_category":"Real Estate Syndicated Finance Analyst"},{"job_category":"Senior Associate Software Engineer"},{"job_category":"Senior Consultant"},{"job_category":"Senior Data Analyst"},{"job_category":"Senior Manager"},{"job_category":"Senior Product Manager"},{"job_category":"Software Development Engineer"},{"job_category":"Space Vehicle Systems Engineer"},{"job_category":"Sustainability Fellow"},{"job_category":"Training and Content Coordinator"},{"job_category":"Trust Solutions Assurance Associate"},{"job_category":"Value Chain Finance Analyst"},{"job_category":"Wealth Management Analyst"}];
 let JOB_TITLES = TITTLES.map((a) => (a.job_category));
+
+
+// function generate_html({apply_link, company_name, job_title}) {
+//     let html =
+// `<tr><td align="left" class="v  s-8 m" style="font-size:0;padding-bottom:18px;word-break:break-word;"><div class="il">
+// <!--[if mso | IE]>
+// <table role="none" border="0" cellpadding="0" cellspacing="0" align="left"><tr><td style="padding:0;padding-top:0;padding-left:0;padding-right:0;padding-bottom:0;" class="l-outlook -outlook -outlook">
+// <![endif]--> <a class="l  " href="${apply_link}" target="_blank" style="display:inline-block;color:#000000;font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:0;text-decoration:none;text-transform:none;padding:0;padding-top:0;padding-left:0;padding-right:0;padding-bottom:0;"><ul class="glist" style="font-size:14px;color:#101840;padding:0;font-weight:700;Margin:0 0 0 14px;list-style-position:inside;"><li style="Margin:0;"><span style="font-size:14px;font-family:Inter,Arial,sans-serif;font-weight:700;color:#101840;line-height:121%;text-decoration:underline;"><span style="font-size:14px;font-family:Inter,Arial,sans-serif;font-weight:700;color:#101840;line-height:121%;text-decoration:underline;">${company_name}</span><span style="font-size:14px;font-family:Inter,Arial,sans-serif;font-weight:400;color:#101840;line-height:121%;text-decoration:underline;"> | ${job_title}
+// </span></span></li></ul></a>
+// <!--[if mso | IE]>
+// </td></tr></table>
+// <![endif]--></div>
+// </td></tr>`
+//     return html
+// }
+
+function generate_html({apply_link, company_name, job_title}) {
+    let html = `
+<li style="text-decoration:underline; padding: 8px 0">
+    <a style="color: #23496d;" href="${apply_link}">
+        <span style="font-weight:700">${company_name}</span> | <span>${job_title}</span>
+    </a>
+</li>`;
+    return html
+}
 
 module.exports.port_buffer_to_jobs = port_buffer_to_jobs;
 
@@ -104,8 +166,8 @@ function port_buffer_to_jobs() {
                 // if (JOB_TITLES.indexOf(row.job_board_category) === -1)
                 //     return null;
 
-                if (row.batch_id.indexOf("single") === -1)
-                    return null;
+                // if (row.batch_id.indexOf("single") === -1)
+                //     return null;
 
                 // if (row.job_company.indexOf("Patreon") === -1)
                 //     return null;
@@ -147,8 +209,8 @@ function get_buffer_for_lambda() {
                 // if (row.job_board_link.indexOf("companyId") === -1)
                 //     return null;
 
-                if (row.batch_id.indexOf("single-") === -1)
-                    return null;
+                // if (row.batch_id.indexOf("single-") === -1)
+                //     return null;
 
                 return row;
             });
@@ -664,13 +726,46 @@ function reformat_job_for_job_board(job) {
         return job;
 
     let years_of_experience = null;
+    let job_salary_min = null;
+    let job_salary_max = null;
+    let years_of_experience_min = null;
+    let years_of_experience_max = null;
 
     if (job.job_html) {
         const regexp = /(\d+.{0,30}experience)/g;
         const matches = (regexp).exec(job.job_html);
-        if (matches && matches.length) {
+        if (matches && matches.length && matches[1] && matches[1].indexOf("year") !== -1) {
             years_of_experience = matches[1];
+
+            if (years_of_experience && years_of_experience.length) {
+                let yoe = (years_of_experience || "").replace(/,/g,"");
+                yoe = (yoe || "").replace(/\+/g,"");
+                yoe = (yoe || "").replace(/-/g," ");
+                yoe = yoe.split(" ");
+                yoe = _.filter(yoe, (s) => {
+                    return (s && (parseFloat(s) && parseFloat(s) > 0 || s === "0"))
+                });
+                yoe = yoe.map((s) => parseFloat(s));
+                years_of_experience_min = _.min(yoe);
+                years_of_experience_max = _.max(yoe);
+                // console.log("yoe", yoe, years_of_experience, years_of_experience_min, years_of_experience_max);
+            }
         }
+    }
+
+    if (job.job_salary_estimate && job.job_salary_estimate.length && job.job_salary_estimate.indexOf("Per Hour") === -1) {
+        let salary = (job.job_salary_estimate || "").replace(/K/g,",000");
+        salary = (salary || "").replace(/,/g,"");
+        salary = (salary || "").replace(/\$/g,"");
+        salary = (salary || "").replace(/-/g," ");
+        salary = salary.split(" ");
+        salary = _.filter(salary, (s) => {
+            return (s && (parseFloat(s) && parseFloat(s) > 0 || s === "0"))
+        });
+        salary = salary.map((s) => parseFloat(s));
+        job_salary_min = _.min(salary);
+        job_salary_max = _.max(salary);
+        // console.log("salary", salary, _.max(salary))
     }
 
     return {
@@ -679,6 +774,8 @@ function reformat_job_for_job_board(job) {
         date_created: new Date().getTime(),
         apply_link: job.apply_link,
 
+        job_salary_min,
+        job_salary_max,
         job_salary_estimate: job.job_salary_estimate,
 
         date_created_label: null,
@@ -738,6 +835,8 @@ function reformat_job_for_job_board(job) {
         job_board_category: job.job_board_category,
         job_seniority: job.job_seniority,
         years_of_experience,
+        years_of_experience_min,
+        years_of_experience_max,
 
         locations: job.job_locations && job.job_locations.length ? job.job_locations.split(join_character).map((location) => {
                 return {
@@ -787,9 +886,17 @@ function get_jobs_for_job_board({
     glassdoor_culture,
     glassdoor_work_life,
     glassdoor_compensation,
+    job_salary_min,
+    job_salary_max,
+    years_of_experience_min,
+    years_of_experience_max,
                                 }) {
     return new Promise((resolve, reject) => {
         console.time("total job processing time:");
+        if (parseFloat(job_salary_min) === 2000000)
+            job_salary_min = 200000
+        if (parseFloat(years_of_experience_min) === 100)
+            years_of_experience_min = 10
         load_all_jobs().then((jobs) => {
             let all_jobs = [];
             let forced_jobs = [];
@@ -824,10 +931,20 @@ function get_jobs_for_job_board({
                 let location_found = valid_single_field(locations, job.locations, true);
                 let seniority_found = valid_single_field(seniorities, job.job_seniority);
 
+                seniorities = seniorities || [];
+
                 let glassdoor_overall_found = glassdoor_overall && glassdoor_overall > 0 ? company.glassdoor_overall >= glassdoor_overall : true;
                 let glassdoor_culture_found = glassdoor_culture && glassdoor_culture > 0 ? company.glassdoor_culture >= glassdoor_culture : true;
                 let glassdoor_work_life_found = glassdoor_work_life && glassdoor_work_life > 0 ? company.glassdoor_work_life >= glassdoor_work_life : true;
                 let glassdoor_compensation_found = glassdoor_compensation && glassdoor_compensation > 0 ? company.glassdoor_compensation >= glassdoor_compensation : true;
+
+                let job_salary_min_found = seniorities.indexOf("Internship") === -1 && job_salary_min && job_salary_min > 0 ? job.job_salary_min !== null && job.job_salary_min >= job_salary_min : true;
+                let job_salary_max_found = seniorities.indexOf("Internship") === -1 && job_salary_max && job_salary_max > 0 ? job.job_salary_max !== null && job.job_salary_max <= job_salary_max : true;
+
+                let years_of_experience_min_found = seniorities.indexOf("Internship") === -1 && years_of_experience_min && years_of_experience_min > 0 ? job.years_of_experience_min !== null && job.years_of_experience_min >= years_of_experience_min : true;
+                let years_of_experience_max_found = seniorities.indexOf("Internship") === -1 && years_of_experience_max && years_of_experience_max > 0 ? job.years_of_experience_max !== null && job.years_of_experience_max <= years_of_experience_max : true;
+
+                // console.log( years_of_experience_min, years_of_experience_min && years_of_experience_min > 0, years_of_experience_max && years_of_experience_max > 0, years_of_experience_min_found, job.years_of_experience)
 
                 if (job.industries) {
                     job.industries.forEach((job_title) => {
@@ -855,8 +972,6 @@ function get_jobs_for_job_board({
                     };
                 }
 
-
-
                 let forced_id = false
 
                 if (job_ids && job_ids.length) {
@@ -880,6 +995,10 @@ function get_jobs_for_job_board({
                     glassdoor_overall_found &&
                     glassdoor_culture_found &&
                     glassdoor_work_life_found &&
+                    job_salary_min_found &&
+                    job_salary_max_found &&
+                    years_of_experience_min_found &&
+                    years_of_experience_max_found &&
                     glassdoor_compensation_found
                 ) {
                     return job
@@ -896,6 +1015,10 @@ function get_jobs_for_job_board({
                         glassdoor_overall_found ||
                         glassdoor_culture_found ||
                         glassdoor_work_life_found ||
+                        job_salary_min_found ||
+                        job_salary_max_found ||
+                        years_of_experience_min_found ||
+                        years_of_experience_max_found ||
                         glassdoor_compensation_found
                     ) {
                         semi_filtered_jobs.push(job);
@@ -1076,6 +1199,29 @@ function import_airtable_jobs() {
     });
 }
 
+module.exports.get_text_completion = get_text_completion;
+
+async function get_text_completion({prompt}) {
+    const { Configuration, OpenAIApi } = require("openai");
+    const configuration = new Configuration({
+        apiKey: process.env.OPENAI_API_KEY,
+    });
+    const openai = new OpenAIApi(configuration);
+
+    return new Promise(async (resolve) => {
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: prompt || "Say this is a test",
+            max_tokens: 256,
+            temperature: 0.7,
+        });
+
+        resolve(response.data)
+    })
+
+
+}
+
 function load_job_counts() {
     get_jobs({
         is_user_submitted: false,
@@ -1090,6 +1236,66 @@ function load_job_counts() {
             JOB_COUNTS[job.company_id]++
         })
     })
+}
+import_jobs_and_skills();
+
+let JOB_SKILLS = {};
+let JOB_DESCRIPTIONS = {};
+
+module.exports.get_job_descriptions = get_job_descriptions;
+
+function get_job_descriptions () {
+    return new Promise((resolve) => {
+        resolve({
+            JOB_SKILLS,
+            JOB_DESCRIPTIONS
+        });
+    })
+}
+
+function import_jobs_and_skills() {
+    fs.createReadStream(__dirname + `/../../../data/skills.csv`)
+        .pipe(csv())
+        .on('data', (skill) => {
+            JOB_SKILLS[skill.skill_title] = {
+                ...skill,
+                youtube_link: `https://www.youtube.com/results?search_query=${skill.skill_title}`,
+                skillshare_link: `https://www.skillshare.com/en/search?query=${skill.skill_title}`,
+            };
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
+    fs.createReadStream(__dirname + `/../../../data/job-titles.csv`)
+        .pipe(csv())
+        .on('data', (job) => {
+            JOB_DESCRIPTIONS[job.job_title] = {...job, skills: _.without([
+                job.skill_1 || null,
+                job.skill_2 || null,
+                job.skill_3 || null,
+                job.skill_4 || null,
+                job.skill_5 || null,
+                job.skill_6 || null,
+                job.skill_7 || null,
+                job.skill_8 || null,
+                job.skill_9 || null,
+                job.skill_10 || null,
+                job.skill_11 || null,
+                job.skill_12 || null,
+                job.skill_13 || null,
+                job.skill_14 || null,
+                job.skill_15 || null,
+                job.skill_16 || null,
+                job.skill_17 || null,
+                job.skill_18 || null,
+                job.skill_19 || null,
+                job.skill_20 || null,
+                ], null)};
+            // console.log(JOB_DESCRIPTIONS);
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        });
 }
 
 function import_webscraper_jobs() {

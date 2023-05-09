@@ -44,8 +44,6 @@ class JobCards extends React.Component {
         let params = (new URL(document.location)).searchParams;
         let job_id = params.get("j");
 
-        console.log("job_id", job_id, !!job_id)
-
         this.state = {
             showMobileJob: !!job_id
         };
@@ -69,6 +67,10 @@ class JobCards extends React.Component {
             glassdoor_work_life,
             glassdoor_culture,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
         } = this.props;
 
         let filteredJobs = [];
@@ -295,7 +297,7 @@ class JobCards extends React.Component {
         return {
             filteredJobs: filteredJobs,
             unFilteredJobs: unFilteredJobs,
-            usingFilters: (glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
+            usingFilters: (job_salary_min || job_salary_max || years_of_experience_min || years_of_experience_max || glassdoor_overall || glassdoor_culture || glassdoor_work_life || glassdoor_compensation) || (selectedLocations && selectedLocations.length) ||
                 (selectedCompanies && selectedCompanies.length) ||
                 (selectedIndustries && selectedIndustries.length) ||
                 (selectedCompanyIndustries && selectedCompanyIndustries.length) ||
@@ -309,13 +311,10 @@ class JobCards extends React.Component {
     render() {
         let { classes, client, match: { params }, resetMax, resetScrollPosition, updateSavedJobIds, forceCompany, onApply, user, saved_jobs, saved_jobs_ids, job, jobs, selectedJobId, setSelectedJob, handleScroll, mobile, loading, MAX_RESULTS} = this.props;
 
-        console.time("done filtering");
         let { filteredJobs, unFilteredJobs, usingFilters } = this.filterJobs(jobs);
-        console.timeEnd("done filtering");
 
         filteredJobs = filteredJobs.slice(0, MAX_RESULTS);
         unFilteredJobs = unFilteredJobs.slice(0, MAX_RESULTS);
-        // console.log("lengths:", filteredJobs.length, unFilteredJobs.length, usingFilters);
 
 
         return (<div className={classes.container}>
@@ -351,7 +350,7 @@ class JobCards extends React.Component {
                 }}
                 hasMore={true}
                 scrollThreshold={"100px"}
-                scrollableTarget="mobile-cards-container"
+                scrollableTarget={mobile ? "mobile-cards-container" : "mobile-cards-container-2"}
                 loader={<div className="loader" key={0}></div>}
                 endMessage={
                     <div style={{ textAlign: 'center' }}>

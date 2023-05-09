@@ -159,7 +159,7 @@ class ResetPassword extends React.Component {
                                                     <StandardButton label={"Send reset link"} fullWidth={true} onClick={() => (this.forgot())}/>
                                                 </div>
 
-                                                <div style={{...COMMON.FONTS.P100, textAlign: "center", marginTop: "10px", color: COMMON.COLORS.N700}}>Don't have an account? <Link to={"/osiris-onboarding"}><span>Sign up for free</span></Link></div>
+                                                <div style={{...COMMON.FONTS.P100, textAlign: "center", marginTop: "10px", color: COMMON.COLORS.N700}}>Don't have an account? <Link to={"/pearl-onboarding"}><span>Sign up for free</span></Link></div>
 
 
                                             </div>}

@@ -18,6 +18,7 @@ import {STYLE_BUTTON_FOOTNOTE, STYLE_BUTTON_FOOTNOTE_OUTLINE} from "../common/st
 import COMMON from "../common/index";
 import CoverImageHolder from "./CoverImageHolder";
 import StandardBadge from "./StandardBadge";
+import GlassdoorBadge from "./GlassdoorBadge";
 
 const Styles = {
     container: {
@@ -119,10 +120,12 @@ class JobCard extends React.Component {
                             {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
 
                             {/*<StandardBadge label={job_type.name} iconLeft={true} icon={"fa-sharp fa-solid fa-briefcase"}/>*/}
-                            {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall}`} icon={"fa-solid fa-star"} iconLeft={false} iconStyle={{color: COMMON.COLORS.Y400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
-                            {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture}`} icon={"fa-sharp fa-solid fa-basketball"} iconLeft={false} iconStyle={{color: COMMON.COLORS.P400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
-                            {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work-life balance`} label={`${company.glassdoor_work_life}`} icon={"fa-solid fa-scale-balanced"} iconLeft={false} iconStyle={{color: COMMON.COLORS.R400}} style={{background: COMMON.COLORS.N100, color: COMMON.COLORS.N900}}/> : null}
-                            {/*{company.glassdoor_culture ? <StandardBadge label={`${company.glassdoor_culture} CULTURE`} tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, color: COMMON.COLORS.B500}}/> : null}*/}
+
+                            {company.glassdoor_overall ? <GlassdoorBadge type={"overall"} value={company.glassdoor_overall} company_name={company.company_name} small={true}/> : null}
+                            {company.glassdoor_work_life ? <GlassdoorBadge type={"work_life"} value={company.glassdoor_work_life} company_name={company.company_name} small={true}/> : null}
+                            {company.glassdoor_culture ? <GlassdoorBadge type={"culture"} value={company.glassdoor_culture} company_name={company.company_name} small={true}/> : null}
+
+
 
                         </div>
 

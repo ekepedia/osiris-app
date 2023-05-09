@@ -118,13 +118,8 @@ function init () {
         current_user_id = JSON.parse(current_user_id_string)
     }
 
-    console.log("INIT Auth Service:", current_user_id, current_user);
+    // console.log("INIT Auth Service:", current_user_id, current_user);
     reloadCurrentUser().then();
-
-    console.log("abote to meit!");
-
-    console.log(window);
-
     updateIntercomObject();
 }
 

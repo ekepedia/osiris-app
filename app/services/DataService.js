@@ -729,6 +729,10 @@ function getJobs ({
     glassdoor_culture,
     glassdoor_work_life,
     glassdoor_compensation,
+    job_salary_min,
+    job_salary_max,
+    years_of_experience_min,
+    years_of_experience_max,
 }) {
     return new Promise((resolve, reject) => {
         axios.post("/api/jobs/v2", {
@@ -743,8 +747,11 @@ function getJobs ({
             glassdoor_culture,
             glassdoor_work_life,
             glassdoor_compensation,
+            job_salary_min,
+            job_salary_max,
+            years_of_experience_min,
+            years_of_experience_max,
         }).then((res) => {
-            console.log(res.data)
             return resolve(res.data);
         })
     });
@@ -756,7 +763,6 @@ DataService.getLocations = getLocations;
 function getLocations () {
     return new Promise((resolve, reject) => {
         axios.get("/api/locations/v2").then((res) => {
-            console.log("locations", res.data)
             return resolve(res.data && res.data.locations ? res.data.locations : null);
         })
 
@@ -768,7 +774,6 @@ DataService.getCompanies = getCompanies;
 function getCompanies () {
     return new Promise((resolve, reject) => {
         axios.get("/api/companies/v2").then((res) => {
-            console.log(res.data)
             return resolve(res.data && res.data.companies ? res.data.companies : null);
         })
     });
@@ -779,7 +784,6 @@ DataService.getJobTitles = getJobTitles;
 function getJobTitles() {
     return new Promise((resolve, reject) => {
         axios.get("/api/job-titles/v2").then((res) => {
-            console.log("job titles", res.data)
             return resolve(res.data && res.data.job_titles ? res.data.job_titles : null);
         })
 
@@ -791,7 +795,6 @@ DataService.getIndustries = getIndustries;
 function getIndustries() {
     return new Promise((resolve, reject) => {
         axios.get("/api/industries/v2").then((res) => {
-            console.log("industries", res.data)
             return resolve(res.data && res.data.industries ? res.data.industries : null);
         })
 
@@ -803,7 +806,6 @@ DataService.getSeniorities = getSeniorities;
 function getSeniorities() {
     return new Promise((resolve, reject) => {
         axios.get("/api/senorities/v2").then((res) => {
-            console.log("senorities", res.data)
             return resolve(res.data && res.data.senorities ? res.data.senorities : null);
         })
 
@@ -815,7 +817,6 @@ DataService.getDegreeRequirements = getDegreeRequirements;
 function getDegreeRequirements () {
     return new Promise((resolve, reject) => {
         axios.get("/api/degree-requirements").then((res) => {
-            console.log(res.data)
             return resolve(res.data);
         })
 
@@ -827,7 +828,6 @@ DataService.getRoles = getRoles;
 function getRoles() {
     return new Promise((resolve, reject) => {
         axios.get("/api/roles").then((res) => {
-            console.log(res.data)
             return resolve(res.data);
         })
 
@@ -839,7 +839,6 @@ DataService.getAffinities = getAffinities;
 function getAffinities() {
     return new Promise((resolve, reject) => {
         axios.get("/api/affinities").then((res) => {
-            console.log(res.data)
             return resolve(res.data);
         })
 

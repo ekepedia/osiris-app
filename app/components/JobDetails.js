@@ -36,6 +36,9 @@ import CoverImageHolder from "./CoverImageHolder";
 import {mc} from "../common/helpers";
 import SavedJobService from "../services/SavedJobService";
 import TrackingService from "../services/TrackingService";
+import axios from "axios";
+import FadeIn from "react-fade-in";
+import GlassdoorBadge from "./GlassdoorBadge";
 
 const Styles = {
     container: {
@@ -94,18 +97,67 @@ const Styles = {
 
 const SECTION_BUFFER = "32px";
 
+let JOB_DESCRIPTIONS = {};
+
 class JobDetails extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-
+            enable_gpt: false,
+            loading_gpt: false,
+            gpt_response: ""
         };
+
+        this.last_sent = new Date().getTime() - 5000;
     }
 
     componentDidMount() {
+        this.loadGPTResponse();
+        this.loadSkills();
+    }
 
+    loadSkills() {
+        axios.get("/api/job-descriptions").then((response) => {
+            console.log("response.data", response.data);
+            JOB_DESCRIPTIONS = response.data.JOB_DESCRIPTIONS;
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        let { job } = this.props;
+
+        if (!job)
+            return;
+
+        if (job.job_id !== (prevProps.job || {}).job_id) {
+            // console.log("WE GOT A NEW JOB!!!");
+            this.loadGPTResponse();
+        }
+    }
+
+    loadGPTResponse() {
+        let {  job } = this.props;
+
+        if (!job || !job.job_html || !this.state.enable_gpt)
+            return;
+
+        if ((new Date().getTime() - this.last_sent) < 500)
+            return console.warn("Skipping dupe requests");
+
+        this.last_sent = new Date().getTime();
+
+        this.setState({loading_gpt: true});
+
+        axios.post("/api/summarize-job", {job_html: job.job_html}).then((response) => {
+            console.log("response GPT", response.data);
+            this.setState({
+                loading_gpt: false,
+                gpt_response: (response.data || {}).response
+            });
+
+        })
     }
 
     updateSavedJob() {
@@ -148,16 +200,17 @@ class JobDetails extends React.Component {
     render() {
         let { classes, onApply, job, forceCompany, saved_jobs_ids, user } = this.props;
 
-        console.log("saved_jobs_ids", saved_jobs_ids, job)
         job = job || {};
+
 
         let company = job.companies && job.companies.length ? job.companies[0] : {};
         let job_type = job.job_types && job.job_types.length ? job.job_types[0] : {};
         let qualification = job.qualifications && job.qualifications.length ? job.qualifications[0] : {};
         let responsibility = job.responsibilities && job.responsibilities.length ? job.responsibilities[0] : {};
         let degree_requirement = job.degree_requirements && job.degree_requirements.length ? job.degree_requirements[0] : {};
+        let industry = job.industries && job.industries.length ? job.industries[0].name : "";
 
-
+        let skills = (JOB_DESCRIPTIONS[industry] || {}).skills || [];
 
         if (qualification && qualification.name) {
             try {
@@ -209,7 +262,7 @@ class JobDetails extends React.Component {
                     <div style={{flex: "0 0 45px", marginRight: "10px"}}>
                         <div onClick={() => {
                             window.open(`/companies/${company.company_id}`);
-                        }} style={{borderRadius: "4px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
+                        }} style={{borderRadius: "4px", height: "45px", cursor: "pointer", border: `1px solid ${COMMON.COLORS.N300}`, overflow: "hidden", width: "100%"}}>
                             <CoverImageHolder url={company.company_logo_url}/>
                         </div>
                     </div>
@@ -244,14 +297,16 @@ class JobDetails extends React.Component {
                         {(job.locations && job.locations.length) && (job.locations).map((location) =>{
                             return (<StandardBadge iconLeft={true} icon={"fa-solid fa-location-dot"} style={{background: COMMON.COLORS.Y100, color: COMMON.COLORS.Y600, marginBottom: "5px"}} key={location.location_id} label={location.label}/>)
                         })}
-                        <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>
-                        {job.job_seniority ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
+                        {/*<StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job_type.name}/>*/}
+                        {job.job_seniority ? <StandardBadge iconLeft={true} style={{background: COMMON.COLORS.G200,color: COMMON.COLORS.G600}} icon={"fa-solid fa-briefcase"} label={job.job_seniority}/> : null }
                         {job.years_of_experience ? <StandardBadge iconLeft={true} icon={"fa-solid fa-briefcase"} label={job.years_of_experience}/> : null }
                         {(salary && salary.length) ? <StandardBadge tooltip={salary_tooltip} label={`${salary}`} style={{background: COMMON.COLORS.B200, marginBottom: "5px", color: COMMON.COLORS.B500}} icon={"fa-solid fa-money-bill"} iconLeft={true}/> : null}
-                        {company.glassdoor_overall ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_overall}/5 on<br/>Glassdoor overall`} label={`${company.glassdoor_overall} OVERALL`} icon={"fa-solid fa-star"} iconLeft={true} style={{background: COMMON.COLORS.G200, marginBottom: "5px", color: COMMON.COLORS.G600}}/> : null}
-                        {company.glassdoor_work_life ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_work_life}/5 on<br/>Glassdoor for work/life`} label={`${company.glassdoor_work_life} WORK-LIFE`} icon={"fa-solid fa-bed"} iconLeft={true} style={{background: COMMON.COLORS.V100, marginBottom: "5px", color: COMMON.COLORS.V600}}/> : null}
-                        {company.glassdoor_culture ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_culture}/5 on<br/>Glassdoor for culture`} label={`${company.glassdoor_culture} CULTURE`} icon={"fa-solid fa-gavel"} iconLeft={true} style={{background: COMMON.COLORS.B200, marginBottom: "5px", color: COMMON.COLORS.B500}}/> : null}
-                        {company.glassdoor_compensation ? <StandardBadge tooltip={`Employees rate ${company.company_name} ${company.glassdoor_compensation}/5 on<br/>Glassdoor for compensation`} label={`${company.glassdoor_compensation} COMPENSATION`} icon={"fa-solid fa-dollar-sign"} iconLeft={true} style={{background: COMMON.COLORS.O100, marginBottom: "5px", color: COMMON.COLORS.O600}}/> : null}
+
+                        {company.glassdoor_overall ? <GlassdoorBadge type={"overall"} value={company.glassdoor_overall} company_name={company.company_name} small={false}/> : null}
+                        {company.glassdoor_work_life ? <GlassdoorBadge type={"work_life"} value={company.glassdoor_work_life} company_name={company.company_name} small={false}/> : null}
+                        {company.glassdoor_culture ? <GlassdoorBadge type={"culture"} value={company.glassdoor_culture} company_name={company.company_name} small={false}/> : null}
+                        {company.glassdoor_compensation ? <GlassdoorBadge type={"compensation"} value={company.glassdoor_compensation} company_name={company.company_name} small={false}/> : null}
+
                     </div>
 
                     <div style={{display: "none"}}>
@@ -269,6 +324,46 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
+                {this.state.enable_gpt ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
+                    <div>
+                        <div style={{...COMMON.FONTS.H400, borderRadius: "6px", width: "fit-content", marginBottom: "10px", padding: "2px 6px", background: COMMON.COLORS.N900, fontWeight: 600, fontSize: "12px", color: COMMON.COLORS.N0}}><i className="fa-solid fa-circle"></i> Pearl Job Assistant</div>
+                        {this.state.loading_gpt ?
+                            <div><i className="fa-solid fa-spinner fa-spin"></i> Summarizing Job Description</div>
+                            :
+                            <div>
+                                <div>
+                                    {this.state.gpt_response}
+                                </div>
+                                <div>
+                                    <br/>
+                                    <div>{industry} Recommended Skills <i>(click to view courses)</i></div>
+                                    <div>
+                                        <FadeIn childClassName={"gpt-skill-bubble"}>
+                                            {skills.map((skill) => {
+                                                return (<div onClick={() => {
+                                                    //console.log("todo")
+                                                    window.open(`https://www.skillshare.com/en/search?query=${skill}`, "_blank");
+                                                }} style={{
+                                                    display: "inline-block",
+                                                    borderRadius: "45px",
+                                                    padding: "8px 10px",
+                                                    border: `1px solid ${COMMON.COLORS.N700}`,
+                                                    ...COMMON.FONTS.H300,
+                                                    lineHeight: "initial",
+                                                    marginRight: "5px",
+                                                    marginTop: "5px",
+                                                    cursor: "pointer",
+                                                    textTransform: "capitalize",
+                                                    color: COMMON.COLORS.N700,
+                                                    background: COMMON.COLORS.N0
+                                                }}>{skill}</div>)
+                                            })}
+                                        </FadeIn>
+                                    </div>
+                                </div>
+                            </div>}
+                    </div>
+                </div>: null}
                 {job.job_html ? <div style={{marginBottom: company.company_about ? SECTION_BUFFER : null}}>
                     <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
                 </div> : <div>
