@@ -55,16 +55,47 @@ module.exports.init = function (connection) {
     // import_demo_data();
     //
 
-
+    //
     // setTimeout(() => {
     //     preload_and_prejoin_companies();
     // }, 1001);
+
+    
+
+
+    // let company_glassdoor = require("../../../data/company_glassdoor.json");
+
+    // let company_map = {};
+    // company_glassdoor.forEach((company) => {
+    //     let company_name = (company.Company || "").toLowerCase().trim();
+    //     company_map[company_name] = company;
+    // })
 
     get_companies({is_clearbit_import: false}).then((companies) => {
         PRELOADED_DATA = companies;
         console.log("SET PRELOADED DATA:", companies.length);
         companies.forEach((company) => {
             COMPANY_MAP[company.company_id] = company;
+
+
+            // if (company.company_logo_url.indexOf("airtable")!== -1) {
+            //     // console.log(company)
+            //     let company_name = (company.company_name || "").toLowerCase().trim();
+            //     console.log(company_name, company_map[company_name]);
+
+
+            //     if (company_map[company_name]) {
+            //         console.log("submit edit")
+            //         edit_company({
+            //             company_id: company.company_id,
+            //             company_logo_url: company_map[company_name].Logo
+            //         }).then(() => {});
+            //     }
+                
+            // }
+
+
+
         })
 
         // companies.forEach((company) => {
