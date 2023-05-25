@@ -45,7 +45,8 @@ class EditSavedJobModalHeader extends React.PureComponent {
                 <div style={{flex: 1}}>
                     <div style={{display: "flex"}}>
                         <div style={{flex: "0 0 40px", marginRight: "15px", height: "40px", border: `1px solid ${COMMON.COLORS.LIGHT_GREY}`, borderRadius: "6px", overflow: "hidden"}}>
-                            <CoverImageHolder url={(company_map[job.company_id] || {}).company_logo_url}/>
+                            
+                        <Link to={`/companies/${(company_map[job.company_id] || {}).company_id}`}><CoverImageHolder url={(company_map[job.company_id] || {}).company_logo_url}/></Link>
                         </div>
                         <div style={{flex: 1}}>
                             <div style={{...COMMON.FONTS.FONT_HEADLINE_BOLD, lineHeight: "21px"}}>{job.job_title}</div>

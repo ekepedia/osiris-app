@@ -291,7 +291,7 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                <div style={{marginBottom: SECTION_BUFFER}}>
+                <div style={{marginBottom: SECTION_BUFFER, display: "none"}}>
 
                     <div style={{marginBottom: "0"}}>
                         {(job.locations && job.locations.length) && (job.locations).map((location) =>{
@@ -324,7 +324,109 @@ class JobDetails extends React.Component {
                     </div>
                 </div>
 
-                {this.state.enable_gpt ? <div style={{borderRadius: "4px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
+                <div>
+                    <div style={{border: `1px solid ${COMMON.COLORS.N400}`, borderRadius: "4px", marginBottom: "25px", padding: "15px 20px"}}>
+                        <div style={{...COMMON.FONTS.H500, marginBottom: "10px"}}>Highlights</div>
+                        <div style={{display:"flex"}}>
+                            <div style={{...COMMON.FONTS.H400,flex: "0 0 145px", paddingRight: "25px", marginBottom: "10px"}}>
+
+                                <div style={{display: "flex"}}>
+                                    <div style={{flex: "0 0 25px", paddingTop: "5px"}}>
+                                        <i class="fa-regular fa-building"/>
+                                    </div>
+                                    <div style={{flex: 1}}>
+                                        Location
+                                    </div>
+                                </div>
+
+                                
+                                
+
+                            </div>
+                            <div style={{flex: 1}}>
+                                {(job.locations && job.locations.length) && (job.locations).map((location) =>{
+                                    return (<span style={{...COMMON.FONTS.P200}}>{location.label} </span>)
+                                })}
+                            </div>
+                        </div>
+                        <div style={{display:"flex"}}>
+                            <div style={{...COMMON.FONTS.H400,flex: "0 0 145px", paddingRight: "25px", marginBottom: "10px"}}>
+
+                                <div style={{display: "flex"}}>
+                                    <div style={{flex: "0 0 25px", paddingTop: "5px"}}>
+                                        <i class="fa-solid fa-graduation-cap"/>
+                                    </div>
+                                    <div style={{flex: 1}}>
+                                        Seniority
+                                    </div>
+                                </div>
+
+                                
+                                
+
+                            </div>
+                            <div style={{flex: 1}}>
+                                {job.job_seniority}
+                            </div>
+                        </div>
+                        <div style={{display: job.years_of_experience ? "flex" : "none"}}>
+                            <div style={{...COMMON.FONTS.H400,flex: "0 0 145px", paddingRight: "25px", marginBottom: "10px"}}>
+
+
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: "0 0 25px", paddingTop: "5px"}}>
+                                    <i class="fa-solid fa-graduation-cap"/>
+                                </div>
+                                <div style={{flex: 1}}>
+                                Experience
+                                </div>
+                            </div>
+
+                            </div>
+                            <div style={{flex: 1}}>
+                            {job.years_of_experience}
+                            </div>
+                        </div>
+                        <div style={{display: salary ? "flex" : "none"}}>
+                            <div style={{...COMMON.FONTS.H400,flex: "0 0 145px", paddingRight: "25px", marginBottom: "10px"}}>
+
+
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: "0 0 25px", paddingTop: "5px"}}>
+                                    <i class="fa-solid fa-dollar-sign"/>
+                                </div>
+                                <div style={{flex: 1}}>
+                                Compensation
+                                </div>
+                            </div>
+
+                            </div>
+                            <div style={{flex: 1}}>
+                            {salary}
+                            </div>
+                        </div>
+                        
+                        <div style={{display:"flex"}}>
+                            <div style={{...COMMON.FONTS.H400,flex: "0 0 145px", paddingRight: "25px", marginBottom: "10px"}}>
+
+                            <div style={{display: "flex"}}>
+                                <div style={{flex: "0 0 25px", paddingTop: "5px"}}>
+                                    <i class="fa-solid fa-star"/>
+                                </div>
+                                <div style={{flex: 1}}>
+                                Ratings
+                                </div>
+                            </div>
+
+                            </div>
+                            <div style={{flex: 1}}>
+                            {company.glassdoor_overall ? <GlassdoorBadge type={"overall"} value={company.glassdoor_overall} company_name={company.company_name} small={false}/> : null}
+                        {company.glassdoor_work_life ? <GlassdoorBadge type={"work_life"} value={company.glassdoor_work_life} company_name={company.company_name} small={false}/> : null}
+                        {company.glassdoor_culture ? <GlassdoorBadge type={"culture"} value={company.glassdoor_culture} company_name={company.company_name} small={false}/> : null}
+                        
+                            </div>
+                        </div>
+                        {this.state.enable_gpt ? <div style={{borderRadius: "4px", marginTop: "10px", background: "rgb(244, 246, 250)", padding: "8px", marginBottom: "12px", border: `1px solid ${COMMON.COLORS.N400}`}}>
                     <div>
                         <div style={{...COMMON.FONTS.H400, borderRadius: "6px", width: "fit-content", marginBottom: "10px", padding: "2px 6px", background: COMMON.COLORS.N900, fontWeight: 600, fontSize: "12px", color: COMMON.COLORS.N0}}><i className="fa-solid fa-circle"></i> Pearl Job Assistant</div>
                         {this.state.loading_gpt ?
@@ -364,6 +466,10 @@ class JobDetails extends React.Component {
                             </div>}
                     </div>
                 </div>: null}
+                    </div>
+                </div>
+
+                
                 {job.job_html ? <div style={{marginBottom: company.company_about ? SECTION_BUFFER : null}}>
                     <div dangerouslySetInnerHTML={(() => ({__html: job.job_html}))()}/>
                 </div> : <div>

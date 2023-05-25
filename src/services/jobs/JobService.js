@@ -74,7 +74,7 @@ module.exports.init = function (connection) {
     load_job_counts();
     get_jobs_for_job_board({}).then(() => {});
     // port_buffer_to_jobs().then(() => {
-    //
+    
     // });
 
     // get_buffer_for_lambda().then((rows) => {
@@ -89,40 +89,41 @@ module.exports.init = function (connection) {
     // })
 
     // internships
-    // get_jobs_by_ids({jobs_ids: ["30555", "30550", "30535", "30548", "30524"]}).then((jobs) => {
-    //     // console.log("jobs", jobs);
-    //
-    //     if (jobs && jobs.length) {
-    //         jobs.forEach((job) => {
-    //
-    //             let { job_id, job_title, company_name} = job;
-    //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
-    //             let html = generate_html({job_title, company_name, apply_link});
-    //             console.log("\n\n", html, "\n\n",);
-    //
-    //         })
-    //     }
-    // })
+    get_jobs_by_ids({jobs_ids: ["40881", "40875", "40879", "40883", "39714", "39716"]}).then((jobs) => {
+        // console.log("jobs", jobs);
+
+        console.log("<ul>");
+        if (jobs && jobs.length) {
+            jobs.forEach((job) => {
+                let { job_id, job_title, company_name} = job;
+                let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
+                let html = generate_html({job_title, company_name, apply_link});
+                console.log(html);
+            })
+        }
+        console.log("</ul>");
+
+    })
 
     //jobs
-    // get_jobs_by_ids({jobs_ids: ["32940","32928", "32899", "32788", "32501", "32917"]}).then((jobs) => {
+    // get_jobs_by_ids({jobs_ids: ["42009", "42059", "42064", "42032", "42018", "42007", "42015"]}).then((jobs) => {
     //     // console.log("jobs", jobs);
-    //
-    //     return
+    
+    //     // return
+    //     console.log("<ul>");
     //     if (jobs && jobs.length) {
-    //         console.log("\n\n");
+
     //         jobs.forEach((job) => {
-    //
+    
     //             let { job_id, job_title, company_name} = job;
     //             // let apply_link = `https://www.pearl.works/jobs?j=${job_id}`;
     //             let apply_link = `https://www.pearl.works/jobs?j=${job_id}&t=Product%20Manager`;
     //             let html = generate_html({job_title, company_name, apply_link});
     //             console.log(html);
-    //
+    
     //         })
-    //         console.log("\n\n");
-    //
     //     }
+    //     console.log("</ul>");
     // })
 };
 
