@@ -37,11 +37,11 @@ module.exports.get_all_companies = () => {
     return PRELOADED_DATA;
 };
 module.exports.init = function (connection) {
-
+    console.log("company begins");
     init = true;
     knex = connection;
 
-    console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
+    console.log(`SQL: ${SERVICE_NAME} company Successfully Initialized`);
 
     // knex(COMPANY_TABLE).where({batch_id: "glassdoor_s_0_n_11000"}).del().then(() => {
     // }).catch((err) => {

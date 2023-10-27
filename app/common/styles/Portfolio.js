@@ -152,6 +152,15 @@ const PortfolioHeaderStyles = {
         display: "inline-block",
         marginLeft: "5px"
     },
+    groupHeaderButtonContainer: {
+        position: "absolute",
+        top: "19px",
+        right: "112px",
+        '@media (max-width: 768px)': {
+            top: "19px",
+            right: "15px",
+        },
+    },
     profileHeaderName:{
         ...H600,
         '@media (max-width: 768px)': {

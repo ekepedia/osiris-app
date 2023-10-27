@@ -176,6 +176,7 @@ import { PORTFOLIO } from "./styles/Portfolio";
 import { GENERAL } from "./styles/General";
 import { COMPANY } from "./styles/Company";
 import { SAVED_JOBS } from "./styles/SavedJobs";
+import { GROUP } from "./styles/Group";
 
 export const STYLES = {
     STYLE_INPUT,
@@ -199,6 +200,7 @@ export const STYLES = {
     PORTFOLIO,
     GENERAL,
     COMPANY,
+    GROUP,
     SAVED_JOBS
 }
 

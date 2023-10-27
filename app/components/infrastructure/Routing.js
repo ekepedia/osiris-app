@@ -16,8 +16,10 @@ import Settings from "../../scenes/Settings/index";
 import ResetPassword from "../../scenes/ResetPassword/index";
 import ForgotPassword from "../../scenes/ForgotPassword/index";
 import Onboarding from "../../scenes/Onboarding/index";
+import GroupPage from "../../scenes/GroupPage/index";
 
 import {withApollo} from "react-apollo";
+import groupPage from "../../scenes/GroupPage/index";
 
 class Routing extends React.Component {
 
@@ -44,10 +46,10 @@ class Routing extends React.Component {
                     <Route exact path='/settings/:user_id' component={Settings}/>
                     <Route exact path='/u/:username' component={PublicPortfolio}/>
                     <Route exact path='/ue/:username' component={PublicPortfolio}/>
-
                     <Route exact path='/saved-jobs/:user_id' component={SavedJobs}/>
                     <Route exact path='/companies' component={CompanyIndex}/>
                     <Route exact path='/companies/:company_id' component={CompanyPage}/>
+                    <Route exact path='/groups' component={GroupPage}/>
                 </Switch>
             </main>
         );

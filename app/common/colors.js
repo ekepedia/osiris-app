@@ -29,6 +29,8 @@ export const N_700 = "#696F8C";
 export const N_800 = "#474D66";
 export const N_900 = "#101840";
 
+export const G_900 = "#181C2C";
+
 export const COLORS = {
     COLOR_WHITE,
     COLOR_BLACK,
@@ -53,7 +55,8 @@ export const COLORS = {
     N_600,
     N_700,
     N_800,
-    N_900
+    N_900,
+    G_900
 }
 
 

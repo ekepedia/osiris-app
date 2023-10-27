@@ -3,6 +3,7 @@ const { COMPANY_TABLE } = require("../CompanyService");
 
 module.exports = function (connection) {
     connection.schema.createTable(COMPANY_TABLE, function (table) {
+        console.log("creating table for compaknees");
         table.increments('company_id').primary();
         table.string('airtable_company_id').unique();
         table.string('glassdoor_company_id').unique();

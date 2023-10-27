@@ -60,6 +60,8 @@ const DemoUserService = require("./src/services/demo_users/DemoUserService");
 const UserLoginService = require("./src/services/user_logins/UserLoginService");
 const JobService = require("./src/services/jobs/JobService");
 const CompanyService = require("./src/services/companies/CompanyService");
+const GroupService = require("./src/services/groups/GroupService");
+
 
 UserLoginService.set_routes(app);
 

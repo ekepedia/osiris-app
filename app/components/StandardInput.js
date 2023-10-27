@@ -20,6 +20,7 @@ const Styles = {
         '@media (max-width: 768px)': {
             padding: "0",
         },
+        width:"100%"
     },
     inputStyle: {
         height: "32px",
