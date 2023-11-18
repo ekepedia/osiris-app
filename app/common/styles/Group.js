@@ -27,14 +27,16 @@ const GroupPageStyles = {
         marginBottom: "15px",
         ...FONT_TITLE_3_BOLD
     },
-    mainContainer: {
+    mainGroupContainer: {
         display: "flex",
         paddingTop: "35px",
+        paddingLeft:"50px",
+        paddingRight:"50px",
         '@media (max-width: 1000px)': {
             paddingTop: "10px",
         },
     },
-    LHSContainer: {
+    LHSGroupContainer: {
         flex: "0 0 315px",
         marginRight: "50px",
         height: "fit-content",
@@ -46,7 +48,7 @@ const GroupPageStyles = {
             display: "none"
         },
     },
-    RHSContainer: {
+    RHSGroupContainer: {
         flex: 1,
         maxHeight: "calc(100vh - 120px)",
         height: "fit-content",

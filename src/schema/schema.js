@@ -7,6 +7,10 @@ const Users = require("./users");
 const FeedbackUsers = require("./feedback_users");
 const DemoTrackings = require("./demo_tracking");
 const DemoSohoApplications = require("./demo_soho_application");
+const Groups = require("./groups");
+const GroupPosts = require("./group_posts");
+const GroupPostResponses = require("./group_post_responses")
+const GroupMembers = require("./group_members");
 const UserEducations = require("./user_educations");
 const UserExperiences = require("./user_experiences");
 const UserRaces = require("./user_races");
@@ -58,6 +62,10 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.typeDef,
         DemoTrackings.typeDef,
         DemoSohoApplications.typeDef,
+        Groups.typeDef,
+        GroupPosts.typeDef,
+        GroupPostResponses.typeDef,
+        GroupMembers.typeDef,
         UserEducations.typeDef,
         UserExperiences.typeDef,
         UserRaces.typeDef,
@@ -79,6 +87,10 @@ const jsSchema = makeExecutableSchema({
         FeedbackUsers.resolver,
         DemoTrackings.resolver,
         DemoSohoApplications.resolver,
+        Groups.resolver,
+        GroupPosts.resolver,
+        GroupPostResponses.resolver,
+        GroupMembers.resolver,
         UserEducations.resolver,
         UserExperiences.resolver,
         UserRaces.resolver,

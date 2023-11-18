@@ -12,6 +12,12 @@ const DemoSohoApplicationService = require("./demo_soho_application/DemoSohoAppl
 const UserService = require("./users/UserService");
 const EmailService = require("./emails/EmailService");
 
+const GroupService = require("./groups/GroupService");
+const GroupPostService = require("./group_posts/GroupPostService");
+const GroupPostResponseService = require("./group_post_responses/GroupPostResponseService");
+const GroupMemberService = require("./group_members/GroupMemberService");
+
+
 const UserLoginService = require("./user_logins/UserLoginService");
 const UserEducationService = require("./user_educations/UserEducationService");
 const UserExperienceService = require("./user_experiences/UserExperienceService");
@@ -34,6 +40,12 @@ const DemoTrackingSchema = require("./demo_tracking/schema/demo_tracking.schema"
 const DemoSohoApplicationSchema = require("./demo_soho_application/schema/demo_soho_application.schema");
 const UserSchema = require("./users/schema/users.schema");
 const EmailSchema = require("./emails/schema/emails.schema");
+
+const GroupsSchema = require("./groups/schema/groups.schema");
+const GroupPostsSchema = require("./group_posts/schema/group_posts.schema");
+const GroupPostResponsesSchema = require("./group_post_responses/schema/group_post_responses.schema");
+const GroupMembersSchema = require("./group_members/schema/group_members.schema");
+
 
 const UserLoginsSchema = require("./user_logins/schema/user_logins.schema");
 const UserEducationSchema = require("./user_educations/schema/user_educations.schema");
@@ -73,6 +85,11 @@ module.exports.init = function (connection) {
     UserUniversityService.init(connection);
     UserPreferenceService.init(connection);
 
+    GroupService.init(connection);
+    GroupPostService.init(connection);
+    GroupPostResponseService.init(connection);
+    GroupMemberService.init(connection);
+
     CompanyDemographicService.init(connection);
     CompanyService.init(connection);
     JobService.init(connection);
@@ -90,6 +107,11 @@ function init_schema() {
     FeedbackUserSchema(knex);
     UserSchema(knex);
     EmailSchema(knex);
+
+    GroupsSchema(knex);
+    GroupPostsSchema(knex);
+    GroupPostResponsesSchema(knex);
+    GroupMembersSchema(knex);
 
     UserLoginsSchema(knex);
     UserEducationSchema(knex);

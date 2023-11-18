@@ -5,8 +5,6 @@ const moment = require("moment");
 
 
 const DatabaseService = require("../DatabaseService");
-const CompanyService = require("../companies/CompanyService")
-const JobService = require("../jobs/JobService")
 
 let init = false;
 let knex = null;
@@ -40,7 +38,7 @@ module.exports.init = function (connection) {
     init = true;
     knex = connection;
 
-    console.log(`SQL: ${SERVICE_NAME} Groups Successfully Initialized`);
+    console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
     // knex(COMPANY_TABLE).where({batch_id: "glassdoor_s_0_n_11000"}).del().then(() => {
     // }).catch((err) => {

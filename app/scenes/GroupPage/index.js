@@ -8,7 +8,7 @@ import { withRouter, Link, useHistory} from 'react-router-dom';
 import injectSheet from 'react-jss';
 
 import DataService from '../../services/DataService';
-import {COLOR_WHITE, PIE_CHART_WHITE} from "../../common/colors";
+import {COLOR_WHITE, N400, PIE_CHART_WHITE} from "../../common/colors";
 import COMMON from "../../common";
 import { PieChart } from 'react-minimal-pie-chart';
 import CompanyDemographicService from "../../services/CompanyDemographicService";
@@ -23,6 +23,12 @@ import CoverImageHolder from "../../components/CoverImageHolder";
 import GroupService from "../../services/GroupService";
 import GroupSearchBar from "./components/GroupSearchBar";
 import CompanyHeader from "../CompanyPage/components/CompanyHeader";
+import PostJobModal from "./components/modals/PostJobModal";
+import TrackingService from "../../services/TrackingService";
+import EventService from "../../services/EventService";
+import AuthService from "../../services/AuthService";
+import UserService from '../../services/UserService';
+import {FONT_HEADLINE_BOLD, H600} from "../../common/fonts";
 
 const Styles = {
     container: {
@@ -42,6 +48,28 @@ const Styles = {
         overflow: "hidden",
         whiteSpace: "nowrap",
     },
+    profileBarContainer : {
+        flex: "0 0 320px",
+        marginRight: "50px",
+        width: "320px",
+        height: "fit-content",
+        maxHeight: "calc(100vh - 147px)",
+        overflow: "scroll",
+        borderRadius: "4px",
+        border: `1px solid ${N400}`,
+        '@media (max-width: 1000px)': {
+            display: "none"
+        },
+    },
+    groupProfileContainer: {
+        marginRight: "15px",
+        height: "30px",
+        width: "30px",
+        borderRadius: "100%",
+        border: `2px solid ${COMMON.COLORS.N900}`,
+        overflow: "hidden",
+        cursor: "pointer",
+    },
     jobCardCompany: {
         ...COMMON.FONTS.P100,
         color: COMMON.COLORS.N700,
@@ -50,8 +78,22 @@ const Styles = {
     ...COMMON.STYLES.GENERAL.NavigationStyles,
     ...COMMON.STYLES.GROUP.GroupPageStyles,
     ...COMMON.STYLES.GROUP.GroupProfilePageStyles,
+    ...COMMON.STYLES.PORTFOLIO.PortfolioHeaderStyles,
     racePieChartHolder: {
         marginTop: "20px"
+    },
+    profileNameText: {
+        color: COMMON.COLORS.G_900,
+        textAlign: "center",
+
+        //Text sm/Semibold
+        fontFamily:"Inter",
+        lineHeight: "20px",
+        fontSize: "14px",
+        fontStyle: "normal",
+        fontWeight: "600",
+
+
     }
 };
 
@@ -60,24 +102,55 @@ class GroupPage extends React.Component {
 
 
     constructor(props) {
-        console.log("4");
         super(props);
-        console.log("5");
+        let user = {};
+        let userstring = localStorage.user;
+
+        if (userstring && userstring !== "undefined") {
+            user = JSON.parse(userstring)
+        }
         this.state = {
             selectedState: 1,
+            user:null,
+            first_name: "",
+            last_name: "",
+            bio: "",
+            profile_photo_url: "",
+            cover_photo_url: "",
+            username: ""
         };
     }
 
     componentDidMount() {
-        console.log("1");
         this.loadGroups();
-        console.log("2");
+        this.loadUser();
         this.loadGroupJobs();
-        console.log("3");
+        EventService.on(EventService.events.UPDATE_USER, () => {
+            this.loadUser();
+        })
+    }
+
+    loadUser() {
+        let { client, match: { params } } = this.props;
+
+        const user_id = AuthService.getCurrentUserIdSync();
+        UserService.getUser({client, user_id}).then((user) => {
+            console.log("loaded user,", user);
+            user = user || {};
+            this.setState({
+                user,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                bio: user.bio,
+                username: user.username,
+                profile_photo_url: user.profile_photo_url,
+                cover_photo_url: user.cover_photo_url,
+
+            })
+        })
     }
 
     loadGroups() {
-        console.log("6");
         let { client, match: { params } } = this.props;
 
         GroupService.getGroups({
@@ -118,7 +191,7 @@ class GroupPage extends React.Component {
         console.log("7");
         let { classes, client, match: { params }, history } = this.props;
 
-        let { group, selectedState, groups } = this.state;
+        let { group, user, selectedState, groups } = this.state;
 
         group = group || {};
 
@@ -127,6 +200,7 @@ class GroupPage extends React.Component {
             group_id
         } = group;
 
+        user = user || {};
 
         return (
 
@@ -135,10 +209,34 @@ class GroupPage extends React.Component {
                     <NavBar />
                 </div>
                 <div className={classes.masterBodyContainer}>
-                    <div className={classes.container}>
-
-                        <div className={classes.mainContainer}>
-
+                    <div className={classes.mainGroupContainer} style={{display:"flex", flexGrow:"100"}}>
+                        <div className={classes.LHSGroupContainer}>
+                            <div className={classes.groupFilterContainer}>
+                                <div style={{
+                                    ...COMMON.FONTS.H600,
+                                    color: COMMON.COLORS.N900,
+                                    paddingBottom: "10px",
+                                    marginBottom: "20px",
+                                    borderBottom: `1px solid ${COMMON.COLORS.N400}`
+                                }}>
+                                    <div style={{ flex: user && user.user_id ? "0 0 30px" : 0}} align={"center"}>
+                                        {user && user.user_id ? <Link to={"/profile"} onClick={() => {
+                                            TrackingService.trackClick({page: "navbar", value: "profile"});
+                                        }}>
+                                            <div title="Profile" id="profile-link" className={classes.groupProfileContainer}>
+                                                <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
+                                                    <CoverImageHolder url={user.profile_photo_url || "/img/generic-user.jpeg"}/>
+                                                </div>
+                                            </div>
+                                            <div className={classes.profileNameText}>
+                                                {this.state.first_name} {this.state.last_name}
+                                            </div>
+                                        </Link> : null}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={classes.RHSGroupContainer}>
                             <div className={mc(classes.headerContainer)}>
                                 <GroupHeader {...{group, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
@@ -148,8 +246,6 @@ class GroupPage extends React.Component {
                             <div style={{display: selectedState === 1 ? null : "none"}} className={mc(classes.sectionContainer)}>
                                 <GroupSearchBar style={{width: "100%"}}/>
                             </div>
-
-
                             <div  style={{display: selectedState === 2 ? null : "none"}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Overview</div>
                                 <div className={mc(classes.sectionSubHeader)}>Identified by OSIRIS from {group.group_name}</div>

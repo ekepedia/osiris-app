@@ -111,7 +111,7 @@ const typeDef = gql`
 const resolver = {
     Query: {
         groups: (_, { input }) => new Promise((res, rej) => {
-            GroupsService.get_groups(input).then((groups) => {
+            GroupService.get_groups(input).then((groups) => {
                 return res(groups);
             });
         }),

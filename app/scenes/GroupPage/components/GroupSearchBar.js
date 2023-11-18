@@ -14,7 +14,10 @@ import TrackingService from "../../../services/TrackingService";
 import CoverImageHolder from "../../../components/CoverImageHolder";
 import {mc} from "../../../common/helpers";
 import StandardInput from "../../../components/StandardInput";
-
+import PostJobModal from "./modals/PostJobModal";
+import JobsService from "../../../services/JobsService";
+import SavedJobService from "../../../services/SavedJobService";
+import CompanyService from "../../../services/CompanyService";
 
 const Styles = {
     groupSearchBarContainer: {
@@ -29,14 +32,15 @@ const Styles = {
         width: "100%",
         marginBottom: "20px"
     },
-    groupProfileContainer: {
+    groupLHSProfileContainer: {
         marginRight: "15px",
         height: "30px",
         width: "30px",
         borderRadius: "100%",
         border: `2px solid ${COMMON.COLORS.N900}`,
         overflow: "hidden",
-        cursor: "pointer"
+        cursor: "pointer",
+        alignItems: "center"
     },
     groupPostOptions: {
         height:"100%",
@@ -61,12 +65,14 @@ class GroupSearchBar extends React.Component {
         this.state = {
             selected: true,
             newPostInSearchBar:null,
-            user
+            user,
+            openPostJobModal: false,
         };
     }
 
     componentDidMount() {
         this.loadUser();
+        this.loadCompanies(true);
         EventService.on(EventService.events.UPDATE_USER, () => {
             this.loadUser();
         })
@@ -82,10 +88,60 @@ class GroupSearchBar extends React.Component {
         })
     }
 
+    loadCompanies(first) {
+        let { client } = this.props;
+
+        if (first) {
+            this.setState({loading_companies: true});
+        }
+
+        CompanyService.getCompanies({client}).then((companies) => {
+            console.log("LOADED COMPANIES");
+
+            companies = companies.sort((a, b) => {
+
+                let nameA = a.company_name || "";
+                let nameB = b.company_name || "";
+
+                return nameA.localeCompare(nameB);
+            });
+
+            let options = [];
+            let company_map = {};
+            let option_map = {};
+
+            companies.forEach((company) => {
+                options.push({
+                    value: company.company_id,
+                    company: company,
+                    label: (<div><img src={company.company_logo_url} style={{
+                        height: "20px",
+                        width: "20px",
+                        borderRadius: "4px",
+                        marginRight: "5px",
+                        border: `1px solid ${COMMON.COLORS.N300}`
+                    }}/><span style={{...COMMON.FONTS.P100}}>{company.company_name}</span></div>)
+                });
+                company_map[company.company_id] = company;
+            });
+
+            options.forEach((option) => {
+                option_map[option.value] = option
+            })
+
+            this.setState({
+                companies,
+                options,
+                company_map,
+                option_map,
+                loading_companies: false
+            })
+        })
+    }
 
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { user } = this.state;
+        let { user, openPostJobModal, companies, options, company_map, option_map} = this.state;
 
         const {
             newPostInSearchBar,
@@ -99,8 +155,8 @@ class GroupSearchBar extends React.Component {
                         {user && user.user_id ? <Link to={"/profile"} onClick={() => {
                             TrackingService.trackClick({page: "navbar", value: "profile"});
                         }}>
-                            <div title="Profile" id="profile-link" className={classes.groupProfileContainer}>
-                                <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden"}}>
+                            <div title="Profile" id="profile-link" className={classes.groupLHSProfileContainer}>
+                                <div style={{border: `1px solid ${COMMON.COLORS.N0}`, borderRadius: "100%", height: "100%", width: "100%", overflow: "hidden", alignItems: "center"}}>
                                     <CoverImageHolder url={user.profile_photo_url || "/img/generic-user.jpeg"}/>
                                 </div>
                             </div>
@@ -114,7 +170,7 @@ class GroupSearchBar extends React.Component {
                     }}/>
                 </div>
                 <div className={classes.postOptions} style={{display:"flex", height: "20px", width: "100%"}}>
-                    <div className={classes.groupPostOptions} onClick={() => {setSelectedState ? setSelectedState(1) : null}}>
+                    <div className={classes.groupPostOptions} onClick={() => (this.setState({openPostJobModal: true}))}>
                         <i className="fa-regular fa-pen-to-square" style={{marginRight: "5px"}}/>Post a Job
                     </div>
                     <div className={classes.groupPostOptions} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
@@ -124,6 +180,37 @@ class GroupSearchBar extends React.Component {
                         <i className="fa-light fa-microphone" style={{marginRight: "5px"}}/>Create Event
                     </div>
                 </div>
+            <PostJobModal open={openPostJobModal} options={options} onSubmit={({job_title, apply_link, status_id, company_id,}) => {
+                console.log("SUBMIT", job_title, apply_link, status_id, company_id);
+
+                JobsService.addJob({
+                    client,
+                    job_title,
+                    apply_link,
+                    company_id,
+                    user_id: params.user_id,
+                    submitted_by_id: params.user_id,
+                    date_created: new Date().getTime() + "",
+                    is_user_submitted: true,
+                    is_public: false
+                }).then((job_id) => {
+                    console.log("CREATE NEW JOB:", job_id);
+                    console.log("params", params)
+                    console.log("params.user)id", params.user_id)
+
+                    // this.loadJobs();
+                    console.log("USER ID:", params.user_id);
+                    SavedJobService.addSavedJob({client,
+                        job_id,
+                        user_id: params.user_id,
+                        status_id: status_id + ""
+                    }).then((saved_job_id) => {
+                        console.log("CREATED NEW SAVED JOB:", saved_job_id);
+                    })
+                })
+
+
+            }} onClose={() => (this.setState({openPostJobModal: false}))}/>
         </div>)
     }
 
