@@ -158,6 +158,7 @@ function post_to_slack(message) {
 
     return console.warn("slack disabled");
 
+    //slack currently disabled above
     const url = "https://hooks.slack.com/services/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";
 
     axios.post(url, {"text": message}).then((res) => {

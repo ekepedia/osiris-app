@@ -88,14 +88,14 @@ const resolver = {
                 return rej(err);
             });
         }),
-        edit_group: (_, {input}) => new Promise((res, rej) => {
+        edit_post: (_, {input}) => new Promise((res, rej) => {
             GroupPostService.edit_group_post(input).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);
             })
         }),
-        remove_group: (_, {group_id}) => new Promise((res, rej) => {
+        remove_post: (_, {group_id}) => new Promise((res, rej) => {
             GroupPostService.remove_group_post({group_id}).then( () => {
                 return res(true);
             }).catch(() => {

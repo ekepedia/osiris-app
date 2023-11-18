@@ -113,14 +113,14 @@ const resolver = {
                 return rej(err);
             });
         }),
-        edit_user_preference: (_, {input}) => new Promise((res, rej) => {
+        edit_group_member: (_, {input}) => new Promise((res, rej) => {
             GroupMemberService.edit_group_member(input).then( () => {
                 return res(true);
             }).catch(() => {
                 return res(false);
             })
         }),
-        remove_user_preference: (_, {group_member_id}) => new Promise((res, rej) => {
+        remove_group_member: (_, {group_member_id}) => new Promise((res, rej) => {
             GroupMemberService.remove_group_member({group_member_id}).then( () => {
                 return res(true);
             }).catch(() => {

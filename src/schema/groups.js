@@ -29,7 +29,10 @@ const typeDef = gql`
         group_company_affiliation: String,
         group_role_affiliation: String,
         group_school_affiliation: String,
+        
+        privacy_setting: String,
 
+        is_active: Boolean,
         is_hidden: Boolean,
         is_verified: Boolean,
         is_clearbit_import: Boolean,
@@ -53,6 +56,9 @@ const typeDef = gql`
         group_role_affiliation: String
         group_school_affiliation: String
 
+        privacy_setting: String,
+
+        is_active: Boolean,
         is_hidden: Boolean
         is_verified: Boolean
         is_clearbit_import: Boolean
@@ -76,6 +82,9 @@ const typeDef = gql`
         group_role_affiliation: String
         group_school_affiliation: String
 
+        privacy_setting: String,
+
+        is_active: Boolean,
         is_hidden: Boolean
         is_verified: Boolean
         is_clearbit_import: Boolean
@@ -98,7 +107,10 @@ const typeDef = gql`
         group_company_affiliation: String
         group_role_affiliation: String
         group_school_affiliation: String
+        
+        privacy_setting: String,
 
+        is_active: Boolean,
         is_hidden: Boolean
         is_verified: Boolean
         is_clearbit_import: Boolean

@@ -179,6 +179,9 @@ function get_groups({
                             group_role_affiliation,
                             group_school_affiliation,
 
+                            privacy_setting,
+
+                            is_active,
                             is_hidden,
                             is_verified,
                             is_clearbit_import,
@@ -201,6 +204,9 @@ function get_groups({
         group_role_affiliation,
         group_school_affiliation,
 
+        privacy_setting,
+
+        is_active,
         is_hidden,
         is_verified,
         is_clearbit_import,
@@ -241,6 +247,9 @@ function create_group({
                           group_role_affiliation,
                           group_school_affiliation,
 
+                          privacy_setting,
+
+                          is_active,
                           is_hidden,
                           is_verified,
                           is_clearbit_import,
@@ -267,6 +276,9 @@ function create_group({
             group_role_affiliation,
             group_school_affiliation,
 
+            privacy_setting,
+
+            is_active,
             is_hidden,
             is_verified,
             is_clearbit_import,
@@ -301,6 +313,9 @@ function edit_group({
                         group_role_affiliation,
                         group_school_affiliation,
 
+                        privacy_setting,
+
+                        is_active,
                         is_hidden,
                         is_verified,
                         is_clearbit_import,
@@ -326,6 +341,9 @@ function edit_group({
             group_role_affiliation,
             group_school_affiliation,
 
+            privacy_setting,
+
+            is_active,
             is_hidden,
             is_verified,
             is_clearbit_import,
