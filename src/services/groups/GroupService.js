@@ -229,6 +229,23 @@ function get_groups({
     });
 }
 
+module.exports.get_groups_by_ids = get_groups_by_ids;
+
+function get_groups_by_ids({groups_ids}) {
+    return new Promise((resolve, reject) => {
+        if (!groups_ids && !groups_ids)
+            return reject(new Error("Missing groups_ids"));
+
+        let knexQuery = knex(SERVICE_DEFAULT_TABLE).whereIn("group_id", groups_ids);
+
+        knexQuery.then((rows) => {
+            return resolve(rows);
+        }).catch((err) => {
+            return reject(err);
+        });
+    });
+}
+
 module.exports.create_group = create_group;
 
 function create_group({

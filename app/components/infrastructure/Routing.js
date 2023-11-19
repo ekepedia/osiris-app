@@ -17,6 +17,7 @@ import ResetPassword from "../../scenes/ResetPassword/index";
 import ForgotPassword from "../../scenes/ForgotPassword/index";
 import Onboarding from "../../scenes/Onboarding/index";
 import GroupPage from "../../scenes/GroupPage/index";
+import GroupsHomePage from "../../scenes/GroupsHomePage/index";
 
 import {withApollo} from "react-apollo";
 import groupPage from "../../scenes/GroupPage/index";
@@ -50,6 +51,7 @@ class Routing extends React.Component {
                     <Route exact path='/companies' component={CompanyIndex}/>
                     <Route exact path='/companies/:company_id' component={CompanyPage}/>
                     <Route exact path='/groups' component={GroupPage}/>
+                    <Route exact path='/groups-home-page' component={GroupsHomePage}/>
                 </Switch>
             </main>
         );

@@ -5,6 +5,7 @@ import { gql } from 'apollo-boost';
 import axios from "axios";
 import UserEducationService from "./UserEducationService";
 import GroupMemberService from "./GroupMemberService";
+import JobsService from "./JobsService";
 
 let GroupService = {};
 
@@ -138,6 +139,58 @@ GroupService.getGroups = ({
         client.query({query: GroupsQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
             if (response && response.data && response.data.groups && response.data.groups.length) {
                 resolve(response.data.groups)
+            } else {
+                resolve(null)
+            }
+        }).catch((err) => {
+            resolve();
+        })
+    });
+}
+
+JobsService.getGroupsByIds = ({
+                                client,
+                                group_ids,
+                            }) => {
+    return new Promise((resolve, reject) => {
+        const GroupsQuery = gql`
+            query GroupsQuery(
+                $group_ids: [String],
+            ){
+                groups_by_ids(input: $group_ids) {
+                    group_id,
+                    group_name,
+                    group_logo_url,
+                    cover_photo_url,
+
+                    group_size,
+                    group_about,
+                    group_website,
+                    group_founded_year,
+
+                    group_industry_affiliation,
+                    group_company_affiliation,
+                    group_role_affiliation,
+                    group_school_affiliation,
+
+                    privacy_setting,
+
+                    is_active,
+                    is_hidden,
+                    is_verified,
+                    is_clearbit_import,
+                    batch_id,
+                }
+            }
+        `;
+
+        const variables = {
+            group_ids,
+        };
+
+        client.query({query: GroupsQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
+            if (response && response.data && response.data.groups_by_ids && response.data.groups_by_ids.length) {
+                resolve(response.data.groups_by_ids)
             } else {
                 resolve(null)
             }

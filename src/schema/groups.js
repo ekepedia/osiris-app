@@ -1,11 +1,13 @@
 const { gql } = require('apollo-server-express');
 
 const GroupService = require("../services/groups/GroupService");
+const JobService = require("../services/jobs/JobService");
 
 // Construct a schema, using GraphQL schema language
 const typeDef = gql`
     extend type Query {
         groups(input: QueryGroup): [Group]
+        groups_by_ids(input: [String]) : [Group]
     }
 
     extend type Mutation {
@@ -124,6 +126,11 @@ const resolver = {
     Query: {
         groups: (_, { input }) => new Promise((res, rej) => {
             GroupService.get_groups(input).then((groups) => {
+                return res(groups);
+            });
+        }),
+        groups_by_ids: (_, { input }) => new Promise((res, rej) => {
+            GroupService.get_jobs_by_ids({groups_ids: input}).then((groups) => {
                 return res(groups);
             });
         }),
