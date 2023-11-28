@@ -153,12 +153,12 @@ class NavBar extends React.Component {
                             {path.indexOf("/companies") !== -1 && <div className={classes.selectedLink}/>}
                         </div>
                     </Link> : null}
-                    {user && user.user_id ? <Link to={"/groups-home-page"} onClick={() => {
+                    {user && user.user_id ? <Link to={"/groups-home-page/" + user.user_id } onClick={() => {
                         TrackingService.trackClick({page: "navbar", value: "groups-home-page"});
                     }}>
                         <div title="View Groups" id="groups-home-page-link" className={classes.linkStyle} style={{color: path === "/groups-home-page" ? COMMON.COLORS.B400 : null}}>
                             Groups
-                            {path === "/groups-home-page" && <div className={classes.selectedLink}/>}
+                            {path === "/groups-home-page" + user.user_id && <div className={classes.selectedLink}/>}
                         </div>
                     </Link> : null}
                     {user && user.user_id ? <Link onClick={() => {

@@ -51,7 +51,7 @@ class Routing extends React.Component {
                     <Route exact path='/companies' component={CompanyIndex}/>
                     <Route exact path='/companies/:company_id' component={CompanyPage}/>
                     <Route exact path='/groups' component={GroupPage}/>
-                    <Route exact path='/groups-home-page' component={GroupsHomePage}/>
+                    <Route exact path='/groups-home-page/:user_id' component={GroupsHomePage}/>
                 </Switch>
             </main>
         );

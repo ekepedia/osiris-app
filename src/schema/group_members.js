@@ -107,9 +107,11 @@ const resolver = {
     },
     Mutation: {
         add_group_member: (_, {input}) => new Promise((res, rej) => {
+            console.log("did get here group member", input);
             GroupMemberService.add_group_member(input).then( (group_member_id) => {
                 return res(group_member_id)
             }).catch((err) => {
+                console.log("errrrrorr in group members", err)
                 return rej(err);
             });
         }),

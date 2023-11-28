@@ -66,14 +66,15 @@ class GroupsHomePage extends React.Component {
             openCreateNewGroupModal: false,
             openFindGroupsModal: false,
             openGroupActionsModal: false,
+            loadedGroups: false,
             selectedGroup: null,
         };
     }
 
     componentDidMount() {
-        this.loadGroups(true);
         this.loadUsersGroups(true);
         this.loadCompanies(true);
+        //this.loadGroups(true);
     }
 
     loadCompanies(first) {
@@ -154,48 +155,30 @@ class GroupsHomePage extends React.Component {
                 this.loadGroups(true, group_ids);
             }
 
+            console.log("state pre 2", this.state);
+
             this.setState({
                 users_groups,
-                loading_users_groups: false
+                loading_users_groups: false,
+                loadedGroups: true,
+                loading_groups: false
             })
+            console.log("state pre 3", this.state);
         })
     }
 
     loadGroups(first, group_ids) {
         let { client, match: {params} } = this.props;
         console.log("params in loadUsersGroups 123", params);
+        console.log("group ids in loadUsersGroups 123", group_ids);
         if(first){
             this.setState({loading_groups: true});
         }
 
         if (group_ids) {
+            console.log("entered this 123", group_ids);
             GroupService.getGroupsByIds({client, group_ids}).then((groups) => {
                 console.log("LOADED GROUPS", groups);
-
-                groups = groups || [];
-                let groups_map = {};
-
-                groups.forEach((job) => {
-                    groups_map[group.group_id] = group;
-                })
-
-                groups = groups.sort((a, b) => {
-
-                    let nameA = a.group_name || "";
-                    let nameB = b.group_name || "";
-
-                    return nameA.localeCompare(nameB);
-                });
-
-                this.setState({
-                    groups,
-                    groups_map,
-                    loading_jobs: false
-                })
-            })
-        } else {
-            GroupService.getGroups({client}).then((groups) => {
-                // console.log("LOADED GROUPS", groups);
 
                 groups = groups || [];
                 let groups_map = {};
@@ -212,11 +195,47 @@ class GroupsHomePage extends React.Component {
                     return nameA.localeCompare(nameB);
                 });
 
+                console.log("state post load 2", this.state);
+
+
                 this.setState({
                     groups,
                     groups_map,
                     loading_groups: false
                 })
+                console.log("state post load", this.state);
+            })
+        } else {
+            console.log("entered this 1234", params.user_id);
+            //Loads groups that are open to all members (privacy setting is a 3)
+            GroupService.getGroups({client, privacy_setting: "3" }).then((groups) => {
+                console.log("LOADED GROUPS", groups);
+                groups = groups || [];
+                let groups_map = {};
+                console.log("entered this 12345", groups);
+
+                groups.forEach((group) => {
+                    groups_map[group.group_id] = group;
+                })
+                console.log("entered this 123456", groups);
+
+                groups = groups.sort((a, b) => {
+                    let nameA = a.group_name || "";
+                    let nameB = b.group_name || "";
+
+                    return nameA.localeCompare(nameB);
+                });
+
+                console.log("state post load 25", this.state);
+
+
+                this.setState({
+                    groups,
+                    groups_map,
+                    loading_groups: false
+                })
+                console.log("state post load 26", this.state);
+
             })
         }
 
@@ -226,7 +245,6 @@ class GroupsHomePage extends React.Component {
         let { classes, client, match: { params } } = this.props;
         let { users_groups, groups_map, openCreateNewGroupModal, options, openFindGroupsModal, openGroupActionsModal, selectedGroup } = this.state;
         console.log("yes", this.state);
-        console.log("render state 123", params);
 
         return (
             <div className={classes.masterContainer}>
@@ -254,10 +272,11 @@ class GroupsHomePage extends React.Component {
                             {users_groups.map((user_group) => {
                                 console.log("USER GROUP GROUP", user_group)
                                 let group = groups_map ? ((groups_map[user_group.group_id] || {})) : {};
-                                let group_name = group.group_id && group_map ? (group_map[group.group_id] || {}).group_name : group.group_name
+                                //let group_name = group.group_id && groups_map ? (groups_map[group.group_id] || {}).group_name : group.group_name
 
                                 if (!groups_map)
                                     return;
+                                console.log("USER GROUP GROUP 12345", user_group)
                                 return (<div className={mc(classes.savedJobRow)} key={user_group.group_id}>
                                     <div className={mc(classes.jobTitle)}
                                          style={{flex: 1}}
@@ -294,23 +313,23 @@ class GroupsHomePage extends React.Component {
                     </div>
                     <CreateNewGroupModal open={openCreateNewGroupModal} options={options} onSubmit={({group_name, group_company_affiliation, group_about}) => {
                         console.log("CREATING NEW GROUP", group_name, group_company_affiliation, group_about);
-                        console.log("users", params);
 
                         GroupService.addGroup({
                             client,
                             group_name,
                             group_company_affiliation,
                             group_about,
-                            group_creator_user_id: params.group_creator_user_id,
-                            group_owner_user_id: params.group_creator_user_id,
+                            group_creator_user_id: params.user_id,
+                            group_owner_user_id: params.user_id,
                             date_created: new Date().getTime() + "",
                         }).then((group_id)=>{
                             console.log("group id", group_id);
-                            console.log("user", params.group_creator_user_id);
+                            console.log("user", params.user_id);
                             GroupMemberService.addGroupMember({
                                 client,
                                 user_id: params.user_id,
                                 group_id,
+                                type_id: "1",
                                 role_in_group_id: "1",
                                 role_in_group_name: "Creator",
                                 join_date: new Date().getTime() + "",

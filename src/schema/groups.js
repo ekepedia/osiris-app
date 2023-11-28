@@ -153,6 +153,7 @@ const resolver = {
             });
         }),
         groups_by_ids: (_, { input }) => new Promise((res, rej) => {
+            console.log("did get here groups by ids", input);
             GroupService.get_groups_by_ids({groups_ids: input}).then((groups) => {
                 return res(groups);
             });

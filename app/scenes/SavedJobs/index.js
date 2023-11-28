@@ -269,6 +269,7 @@ class SavedJobs extends React.Component {
                 // console.log("LOADED JOBS", jobs);
 
                 jobs = jobs || [];
+                console.log("entered this 12345", jobs);
                 let jobs_map = {};
 
                 jobs.forEach((job) => {
@@ -336,7 +337,6 @@ class SavedJobs extends React.Component {
         let { saved_jobs, jobs_map, saved_job_notes, options, option_map, company_map, openAddSavedJobModal, openEditSavedJobModal, selectedSavedJob, selectedJob, company_demographics_map, selectedcompany_demographics} = this.state;
 
         console.log("render state xyq", this.state);
-        console.log("render state 123", params);
         return (
             <div className={classes.masterContainer}>
                 <div className={classes.masterNavContainer}>
@@ -462,7 +462,6 @@ class SavedJobs extends React.Component {
                         <EditSavedJobModal refetch={() => {this.loadSavedJobs();}} onSubmit={() => {this.submitEditSavedJob(); this.submitEditJob();}} company_map={company_map}  company_demographics={selectedcompany_demographics} option_map={option_map} jobs_map={jobs_map} options={options} job={selectedJob} saved_job={selectedSavedJob} updateField={this.updateSelectedSavedJob} updateJobField={this.updateSelectedJob} open={openEditSavedJobModal} onClose={() => (this.setState({openEditSavedJobModal: false}))}/>
                         <AddSavedJobModal open={openAddSavedJobModal} options={options} onSubmit={({job_title, apply_link, status_id, company_id,}) => {
                             console.log("SUBMIT ", job_title, apply_link, status_id, company_id);
-                            console.log("params", params);
                             JobsService.addJob({
                                 client,
                                 job_title,
@@ -475,11 +474,7 @@ class SavedJobs extends React.Component {
                                 is_public: false
                             }).then((job_id) => {
                                 console.log("CREATE NEW JOB:", job_id);
-                                console.log("params", params)
-                                console.log("params.user)id", params.user_id)
-
                                 // this.loadJobs();
-                                console.log("USER ID:", params.user_id);
                                 SavedJobService.addSavedJob({client,
                                     job_id,
                                     user_id: params.user_id,

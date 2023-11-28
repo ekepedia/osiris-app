@@ -97,13 +97,10 @@ module.exports.init = function (connection) {
     SavedJobNoteService.init(connection);
     SavedJobReminderService.init(connection);
 
-    console.log("testing right here 1", knex.schema);
-
     init_schema();
 };
 
 function init_schema() {
-    console.log("testing right here 2", knex.schema);
 
     DemoUserSchema(knex);
     DemoTrackingSchema(knex);
