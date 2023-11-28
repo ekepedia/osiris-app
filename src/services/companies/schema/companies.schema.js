@@ -51,6 +51,7 @@ module.exports = function (connection) {
         table.string('airtable_batch_id');
 
         table.timestamps(true, true);
+        console.log("table for companies", table);
     }).then(function () {
         winston.info(`Created ${COMPANY_TABLE} table`);
     }).catch(function () {

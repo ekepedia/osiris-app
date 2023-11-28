@@ -94,6 +94,7 @@ const resolver = {
     Mutation: {
         add_saved_job: (_, {input}) => new Promise((res, rej) => {
             SavedJobService.create_saved_job(input).then( (job_id) => {
+                console.log("did get here jobs", input);
                 return res(job_id)
             }).catch((err) => {
                 return rej(err);

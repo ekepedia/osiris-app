@@ -2,6 +2,13 @@ import {G200, G600, N100, N600, N700, O100, O600, R100, R600, Y100, Y600} from "
 import { UNIVERSITIES } from "./data/universities"
 export const NAV_HEIGHT = 48;
 
+const ROLE_IN_GROUPS = [
+    {value: 1, label: "Creator"},
+    {value: 2, label: "Admin"},
+    {value: 3, label: "User"},
+    {value: 4, label: "Alumni"}
+]
+
 const MONTHS = [
     {value: 1, label: "Jan"},
     {value: 2, label: "Feb"},

@@ -21,6 +21,10 @@ const typeDef = gql`
         group_name: String,
         group_logo_url: String,
         cover_photo_url: String,
+
+        group_creator_user_id: String,
+        group_owner_user_id: String,
+        date_created: String,
         
         group_size: String,
         group_about: String,
@@ -31,6 +35,8 @@ const typeDef = gql`
         group_company_affiliation: String,
         group_role_affiliation: String,
         group_school_affiliation: String,
+
+        target_member_starting_year: String,
         
         privacy_setting: String,
 
@@ -43,10 +49,13 @@ const typeDef = gql`
     }
 
     input CreateGroupInput {
-        group_id: String,
         group_name: String,
         group_logo_url: String,
         cover_photo_url: String,
+
+        group_creator_user_id: String,
+        group_owner_user_id: String,
+        date_created: String,
 
         group_size: String,
         group_about: String
@@ -58,6 +67,8 @@ const typeDef = gql`
         group_role_affiliation: String
         group_school_affiliation: String
 
+        target_member_starting_year: String
+        
         privacy_setting: String,
 
         is_active: Boolean,
@@ -74,6 +85,10 @@ const typeDef = gql`
         group_logo_url: String,
         cover_photo_url: String,
 
+        group_creator_user_id: String,
+        group_owner_user_id: String,
+        date_created: String,
+
         group_size: String,
         group_about: String
         group_website: String
@@ -83,6 +98,8 @@ const typeDef = gql`
         group_company_affiliation: String
         group_role_affiliation: String
         group_school_affiliation: String
+
+        target_member_starting_year: String
 
         privacy_setting: String,
 
@@ -100,6 +117,10 @@ const typeDef = gql`
         group_logo_url: String,
         cover_photo_url: String,
 
+        group_creator_user_id: String,
+        group_owner_user_id: String,
+        date_created: String,
+
         group_size: String,
         group_about: String
         group_website: String
@@ -109,7 +130,9 @@ const typeDef = gql`
         group_company_affiliation: String
         group_role_affiliation: String
         group_school_affiliation: String
-        
+
+        target_member_starting_year: String
+
         privacy_setting: String,
 
         is_active: Boolean,
@@ -125,21 +148,24 @@ const typeDef = gql`
 const resolver = {
     Query: {
         groups: (_, { input }) => new Promise((res, rej) => {
-            GroupService.get_groups(input).then((groups) => {
-                return res(groups);
+            GroupService.get_groups(input).then((group_id) => {
+                return res(group_id);
             });
         }),
         groups_by_ids: (_, { input }) => new Promise((res, rej) => {
-            GroupService.get_jobs_by_ids({groups_ids: input}).then((groups) => {
+            GroupService.get_groups_by_ids({groups_ids: input}).then((groups) => {
                 return res(groups);
             });
         }),
     },
     Mutation: {
         add_group: (_, {input}) => new Promise((res, rej) => {
+            console.log("did get here", input);
             GroupService.create_group(input).then( (group_id) => {
+                console.log("TESTXYZ group src schema", group_id)
                 return res(group_id)
             }).catch((err) => {
+                console.log("errrrrorr", err)
                 return rej(err);
             });
         }),

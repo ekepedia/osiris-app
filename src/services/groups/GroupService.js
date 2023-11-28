@@ -37,125 +37,20 @@ module.exports.init = function (connection) {
     console.log("begin");
     init = true;
     knex = connection;
+    console.log("groups backend xyz", knex);
 
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
-    // knex(COMPANY_TABLE).where({batch_id: "glassdoor_s_0_n_11000"}).del().then(() => {
-    // }).catch((err) => {
-    // });
-
-    // import_glassdoor_companies();
-    // test_endpoints();
-    // mass_delete();
-    // construct_questions();
-    // import_data();
-    // import_demo_data();
-    //
-
-    //
-    // setTimeout(() => {
-    //     preload_and_prejoin_companies();
-    // }, 1001);
-
-
-
-
-    // let company_glassdoor = require("../../../data/company_glassdoor.json");
-
-    // let company_map = {};
-    // company_glassdoor.forEach((company) => {
-    //     let company_name = (company.Company || "").toLowerCase().trim();
-    //     company_map[company_name] = company;
-    // })
-
-    get_groups({is_clearbit_import: false}).then((groups) => {
-        console.log(" Groups DATA:", groups.length);
-        PRELOADED_DATA = groups;
-        console.log("SET PRELOADED Groups DATA:", groups.length);
-        groups.forEach((group) => {
-            GROUP_MAP[group.group_id] = group;
-
-
-            // if (company.company_logo_url.indexOf("airtable")!== -1) {
-            //     // console.log(company)
-            //     let company_name = (company.company_name || "").toLowerCase().trim();
-            //     console.log(company_name, company_map[company_name]);
-
-
-            //     if (company_map[company_name]) {
-            //         console.log("submit edit")
-            //         edit_company({
-            //             company_id: company.company_id,
-            //             company_logo_url: company_map[company_name].Logo
-            //         }).then(() => {});
-            //     }
-
-            // }
-
-
-
-        })
-
-        // companies.forEach((company) => {
-        //     let new_industry = (INDUSTRY_MAPPING_MAP[company.company_industry] || company.glassdoor_industry);
-        //
-        //     if (new_industry && new_industry.length) {
-        //         console.log(company.company_id, company.company_industry, new_industry);
-        //
-        //     }
-        //     edit_company({
-        //         company_id: company.company_id,
-        //         company_industry: new_industry
-        //     }).then((d) => {
-        //         console.log(d);
-        //     })
-        // })
-    })
-
-    let in_locations = [{
-        location_id: "remote",
-        id: "remote",
-        city: "Remote",
-        state: "Remote",
-        label: "Remote"
-    }];
-    let in_location_map = {
-        "remote": {
-            location_id: "remote",
-            id: "remote",
-            city: "Remote",
-            state: "Remote",
-            label: "Remote"
-        }
-    };
-
-    // load_locations({locations: in_locations, location_map: in_location_map}).then(({locations, location_map}) => {
-       // load_industries({}).then(({industries, industry_map}) => {
-         //   load_dei({}).then(({dei_data, dei_data_map}) => {
-
-                // dei_data.forEach((dei) => {
-                //
-                //     get_companies({
-                //         airtable_company_id: dei.airtable_company_id
-                //     }).then((companies) =>{
-                //         if (companies && companies.length) {
-                //             const {company_id} = companies[0];
-                //             const CompanyDemographicService = require("../company_demographics/CompanyDemographicService")
-                //
-                //             CompanyDemographicService.create_company_demographic(
-                //                 {...dei, company_id}
-                //             ).then((d) => {
-                //                 console.log(d)
-                //             })
-                //         }
-                //     })
-                //
-                // })
-                // import_airtable_companies({location_map, industry_map, dei_data_map});
-          //  });
-        // });
-    // });
-
+    //get_groups({is_clearbit_import: false}).then((groups) => {
+    //    console.log(" Groups DATA:", groups.length);
+    //    PRELOADED_DATA = groups;
+    //    console.log("SET PRELOADED Groups DATA:", groups.length);
+    //    if(groups && groups.length) {groups.forEach((group) => {
+    //        GROUP_MAP[group.group_id] = group;
+    //    })}
+    //    console.log(" ET PRELOADED Groups DATA", groups.length);
+    //})
+    console.log(" T PRELOADED Groups DATA");
     return new Promise((resolve) => {
         resolve();
     });
@@ -169,6 +64,10 @@ function get_groups({
                             group_logo_url,
                             cover_photo_url,
 
+                            group_creator_user_id,
+                            group_owner_user_id,
+                            date_created,
+
                             group_size,
                             group_about,
                             group_website,
@@ -178,6 +77,9 @@ function get_groups({
                             group_company_affiliation,
                             group_role_affiliation,
                             group_school_affiliation,
+
+                            //Year that group members started at the industry or company that they are affiliated with
+                            target_member_starting_year,
 
                             privacy_setting,
 
@@ -194,6 +96,10 @@ function get_groups({
         group_logo_url,
         cover_photo_url,
 
+        group_creator_user_id,
+        group_owner_user_id,
+        date_created,
+
         group_size,
         group_about,
         group_website,
@@ -203,6 +109,8 @@ function get_groups({
         group_company_affiliation,
         group_role_affiliation,
         group_school_affiliation,
+
+        target_member_starting_year,
 
         privacy_setting,
 
@@ -249,10 +157,14 @@ function get_groups_by_ids({groups_ids}) {
 module.exports.create_group = create_group;
 
 function create_group({
-                          group_id,
+                          //group_id,
                           group_name,
                           group_logo_url,
                           cover_photo_url,
+
+                          group_creator_user_id,
+                          group_owner_user_id,
+                          date_created,
 
                           group_size,
                           group_about,
@@ -263,6 +175,8 @@ function create_group({
                           group_company_affiliation,
                           group_role_affiliation,
                           group_school_affiliation,
+
+                          target_member_starting_year,
 
                           privacy_setting,
 
@@ -276,12 +190,15 @@ function create_group({
     return new Promise((resolve, reject) => {
         if (!group_name)
             return reject(new Error("Missing group_name"));
-
         const query = DatabaseService.generate_query({
-            group_id,
+            //group_id,
             group_name,
             group_logo_url,
             cover_photo_url,
+
+            group_creator_user_id,
+            group_owner_user_id,
+            date_created,
 
             group_size,
             group_about,
@@ -293,6 +210,8 @@ function create_group({
             group_role_affiliation,
             group_school_affiliation,
 
+            target_member_starting_year,
+
             privacy_setting,
 
             is_active,
@@ -301,12 +220,13 @@ function create_group({
             is_clearbit_import,
             batch_id,
         });
-
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("group_id").then((rows) => {
+            console.log("rowsssss", rows)
             const group_id = rows[0];
-
+            console.log("group.id", group_id)
             return resolve(group_id);
         }).catch((err) => {
+            console.log("errorrrrrrr", err)
             return reject(err);
         });
     });
@@ -320,6 +240,10 @@ function edit_group({
                         group_logo_url,
                         cover_photo_url,
 
+                        group_creator_user_id,
+                        group_owner_user_id,
+                        date_created,
+
                         group_size,
                         group_about,
                         group_website,
@@ -329,6 +253,8 @@ function edit_group({
                         group_company_affiliation,
                         group_role_affiliation,
                         group_school_affiliation,
+
+                        target_member_starting_year,
 
                         privacy_setting,
 
@@ -348,6 +274,10 @@ function edit_group({
             group_logo_url,
             cover_photo_url,
 
+            group_creator_user_id,
+            group_owner_user_id,
+            date_created,
+
             group_size,
             group_about,
             group_website,
@@ -357,6 +287,8 @@ function edit_group({
             group_company_affiliation,
             group_role_affiliation,
             group_school_affiliation,
+
+            target_member_starting_year,
 
             privacy_setting,
 

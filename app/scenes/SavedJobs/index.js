@@ -54,6 +54,7 @@ class SavedJobs extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("props in saved jobs", props);
 
         this.state = {
             options: [
@@ -156,6 +157,7 @@ class SavedJobs extends React.Component {
 
     loadSavedJobs(first) {
         let { client, match: { params } } = this.props;
+        console.log("params in loadSavedJobs 123", params);
 
         if (first) {
             this.setState({loading_saved_jobs: true});
@@ -333,7 +335,8 @@ class SavedJobs extends React.Component {
         let { classes, client, match: { params } } = this.props;
         let { saved_jobs, jobs_map, saved_job_notes, options, option_map, company_map, openAddSavedJobModal, openEditSavedJobModal, selectedSavedJob, selectedJob, company_demographics_map, selectedcompany_demographics} = this.state;
 
-        console.log(this.state);
+        console.log("render state xyq", this.state);
+        console.log("render state 123", params);
         return (
             <div className={classes.masterContainer}>
                 <div className={classes.masterNavContainer}>
@@ -458,8 +461,8 @@ class SavedJobs extends React.Component {
 
                         <EditSavedJobModal refetch={() => {this.loadSavedJobs();}} onSubmit={() => {this.submitEditSavedJob(); this.submitEditJob();}} company_map={company_map}  company_demographics={selectedcompany_demographics} option_map={option_map} jobs_map={jobs_map} options={options} job={selectedJob} saved_job={selectedSavedJob} updateField={this.updateSelectedSavedJob} updateJobField={this.updateSelectedJob} open={openEditSavedJobModal} onClose={() => (this.setState({openEditSavedJobModal: false}))}/>
                         <AddSavedJobModal open={openAddSavedJobModal} options={options} onSubmit={({job_title, apply_link, status_id, company_id,}) => {
-                            console.log("SUBMIT", job_title, apply_link, status_id, company_id);
-
+                            console.log("SUBMIT ", job_title, apply_link, status_id, company_id);
+                            console.log("params", params);
                             JobsService.addJob({
                                 client,
                                 job_title,
@@ -486,8 +489,6 @@ class SavedJobs extends React.Component {
                                     this.loadSavedJobs();
                                 })
                             })
-
-
                         }} onClose={() => (this.setState({openAddSavedJobModal: false}))}/>
                     </div>
                 </div>

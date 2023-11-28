@@ -1,15 +1,18 @@
 const winston = require("winston");
 const { GROUP_TABLE } = require("../GroupService");
+const {Table} = require("@mui/material");
 
 module.exports = function (connection) {
     connection.schema.createTable(GROUP_TABLE, function (table) {
-        console.log("table for groups");
         table.increments('group_id').primary();
-        table.string('clearbit_group_id').unique();
 
         table.string('group_name');
         table.string('group_logo_url', 2000);
-        table.string('group_photo_url', 2000);
+        table.string('cover_photo_url', 2000);
+
+        table.string('group_creator_user_id');
+        table.string('group_owner_user_id');
+        table.string('date_created');
 
         table.string('group_size');
         table.string('group_about', 5000);
@@ -20,6 +23,9 @@ module.exports = function (connection) {
         table.string('group_company_affiliation');
         table.string('group_role_affiliation');
         table.string('group_school_affiliation');
+
+        //Year that group members started at the industry or company that they are affiliated with
+        table.string('target_member_starting_year');
 
         //Determines who can view the group
         // 1 means only members can see content but everyone can view group and request to post

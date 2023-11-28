@@ -81,6 +81,8 @@ class CreateNewGroupModal extends React.Component {
             privacy_setting,
         } = this.state;
 
+        console.log(this.props);
+
 
         return (<div className={classes.container}>
             <Modal

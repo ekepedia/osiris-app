@@ -17,7 +17,7 @@ module.exports.SAVED_JOBS_TABLE = SAVED_JOBS_TABLE;
 module.exports.init = function (connection) {
     init = true;
     knex = connection;
-
+    console.log("saved job backend xyz", knex);
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
     // test_endpoints();
@@ -82,7 +82,6 @@ function create_saved_job({
     return new Promise((resolve, reject) => {
         if (!job_id || !user_id)
             return reject(new Error("Missing job_id || user_id"));
-
         const query = DatabaseService.generate_query({
             job_id,
             user_id,
@@ -98,6 +97,7 @@ function create_saved_job({
 
         knex(SERVICE_DEFAULT_TABLE).insert(query).returning("saved_job_id").then((rows) => {
             const saved_job_id = rows[0];
+
 
             return resolve(saved_job_id);
         }).catch((err) => {

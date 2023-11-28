@@ -88,6 +88,7 @@ SavedJobService.addSavedJob = ({client, job_id, user_id, status_id, status, job_
         };
 
         client.mutate({mutation: AddSavedJobMutation, variables}).then((response) => {
+            //should this be add_user_link or add_group THISISANOPENQ
             resolve(response.data.add_user_link)
         }).catch((err) => {
             resolve();
