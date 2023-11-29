@@ -21,6 +21,8 @@ import {COLORS} from "../../common/colors"
 import Lottie from "react-lottie";
 import loadingCircles from "../../common/lottie/loading-circles";
 import CreateNewGroupModal from "./components/CreateNewGroupModal";
+import CoverImageHolder from "../../components/CoverImageHolder";
+
 
 const Styles = {
     container: {
@@ -37,7 +39,24 @@ const Styles = {
         height:"70px",
         alignItems: "center",
         alignSelf: "stretch",
-        background: COLOR_WHITE
+        background: COLOR_WHITE,
+        borderBottom: `1px solid ${COLORS.N400}`
+},
+    groupRowContainer: {background: COLOR_WHITE, marginTop: "15px", width: "100%", alignSelf: "stretch", alignItems: "flex-start", display: "flex", height: "auto", cursor: "pointer", borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N400}`, padding: "15px", flex: 1, overflow: "hidden"},
+    groupRowImgContainer: {
+        flex: "0 0 38px", overflow: "hidden", height: "38px", marginRight: "8px", borderRadius: "4px", border: `1px solid ${COMMON.COLORS.N400}`
+    },
+    groupRowTitle: {
+        ...COMMON.FONTS.H400,
+        color: COMMON.COLORS.N900,
+        textOverflow: "ellipsis",
+        overflow: "hidden",
+        whiteSpace: "nowrap",
+    },
+    groupRowMembers: {
+        ...COMMON.FONTS.P100,
+        color: COMMON.COLORS.N700,
+        marginTop: "-2px"
     },
     ...COMMON.STYLES.GENERAL.NavigationStyles,
 };
@@ -131,7 +150,6 @@ class GroupsHomePage extends React.Component {
     //Identify groups that user is a member of using GroupMemberService to return a list of group IDs
     loadUsersGroups(first){
         let { client, match: {params} } = this.props;
-        console.log("params in loadUsersGroups 123", params);
         if (first) {
             this.setState({loading_users_groups: true});
         }
@@ -243,7 +261,7 @@ class GroupsHomePage extends React.Component {
 
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { users_groups, groups_map, openCreateNewGroupModal, options, openFindGroupsModal, openGroupActionsModal, selectedGroup } = this.state;
+        let { users_groups, groups, groups_map, openCreateNewGroupModal, options, openFindGroupsModal, openGroupActionsModal, selectedGroup } = this.state;
         console.log("yes", this.state);
 
         return (
@@ -268,16 +286,29 @@ class GroupsHomePage extends React.Component {
                         </div>
                     </div>
                     <div className={mc(classes.mainContainer)}>
-                        <div>{users_groups && users_groups.length && !this.state.loading_groups && !this.state.loading_saved_jobs && !this.state.loading_users_groups ? <div>
-                            {users_groups.map((user_group) => {
+                        <div>{users_groups && users_groups.length && groups && groups.length && !this.state.loading_groups && !this.state.loading_saved_jobs && !this.state.loading_users_groups ? <div>
+                            {groups.map((user_group) => {
                                 console.log("USER GROUP GROUP", user_group)
-                                let group = groups_map ? ((groups_map[user_group.group_id] || {})) : {};
+                                let group = groups_map ? ((groups_map[groups.group_id] || {})) : {};
                                 //let group_name = group.group_id && groups_map ? (groups_map[group.group_id] || {}).group_name : group.group_name
 
                                 if (!groups_map)
                                     return;
-                                console.log("USER GROUP GROUP 12345", user_group)
-                                return (<div className={mc(classes.savedJobRow)} key={user_group.group_id}>
+                                return (<div className={classes.groupRowContainer}
+                                             key={user_group.group_id}
+                                             onClick={() => {this.setState({selectedGroup: user_group});}}
+                                >
+                                    <div className={classes.groupRowImgContainer}>
+                                        <CoverImageHolder url={(user_group.group_logo_url || "https://i.imgur.com/tM97NWQ.png")}/>
+                                    </div>
+                                    <div style={{flex: 1, overflow: "hidden"}}>
+                                        <div className={classes.groupRowTitle}>
+                                            Group Name: {user_group.group_name}
+                                        </div>
+                                        <div className={classes.groupRowMembers}>
+                                            Group size: {user_group.group_size}
+                                        </div>
+                                    </div>
                                     <div className={mc(classes.jobTitle)}
                                          style={{flex: 1}}
                                          onClick={() => {
