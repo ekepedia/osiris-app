@@ -29,6 +29,11 @@ import EventService from "../../services/EventService";
 import AuthService from "../../services/AuthService";
 import UserService from '../../services/UserService';
 import {FONT_HEADLINE_BOLD, H600} from "../../common/fonts";
+import GroupMemberService from "../../services/GroupMemberService";
+import GroupPostService from "../../services/GroupPostService";
+import Lottie from "react-lottie";
+import StandardButton from "../../components/StandardButton";
+import loadingCircles from "../../common/lottie/loading-circles";
 
 const Styles = {
     container: {
@@ -79,6 +84,7 @@ const Styles = {
     ...COMMON.STYLES.GROUP.GroupPageStyles,
     ...COMMON.STYLES.GROUP.GroupProfilePageStyles,
     ...COMMON.STYLES.PORTFOLIO.PortfolioHeaderStyles,
+    ...COMMON.STYLES.GROUP.GroupRowStyles,
     racePieChartHolder: {
         marginTop: "20px"
     },
@@ -92,11 +98,32 @@ const Styles = {
         fontSize: "14px",
         fontStyle: "normal",
         fontWeight: "600",
+    },
+    postContainer: {
+        background: COLOR_WHITE,
+        marginTop: "15px",
+        width: "100%",
+        alignSelf: "stretch",
+        alignItems: "flex-start",
+        display: "flex",
+        height: "auto",
+        cursor: "pointer",
+        borderRadius: "4px",
+        border: `1px solid ${COMMON.COLORS.N400}`,
+        padding: "15px",
+        flex: 1,
+        overflow: "hidden"},
 
-
-    }
 };
 
+const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingCircles,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 class GroupPage extends React.Component {
 
@@ -110,28 +137,35 @@ class GroupPage extends React.Component {
             user = JSON.parse(userstring)
         }
         this.state = {
+            loaded_group: false,
+            loaded_group_member: false,
             selectedState: 1,
-            user:null,
+            user,
             first_name: "",
             last_name: "",
             bio: "",
             profile_photo_url: "",
             cover_photo_url: "",
-            username: ""
+            username: "",
+            openShareNewJobModal: false
         };
     }
 
     componentDidMount() {
-        this.loadGroups();
-        this.loadUser();
-        this.loadGroupJobs();
+        this.loadUser(true);
+        this.loadGroup();
+        this.loadPosts(true);
+        //this.loadGroupJobs();
         EventService.on(EventService.events.UPDATE_USER, () => {
             this.loadUser();
         })
     }
 
-    loadUser() {
-        let { client, match: { params } } = this.props;
+    loadUser(first) {
+        let { client, match: { params }, user} = this.props;
+        if(first){
+            this.setState({loading_user: true});
+        }
 
         const user_id = AuthService.getCurrentUserIdSync();
         UserService.getUser({client, user_id}).then((user) => {
@@ -145,53 +179,90 @@ class GroupPage extends React.Component {
                 username: user.username,
                 profile_photo_url: user.profile_photo_url,
                 cover_photo_url: user.cover_photo_url,
-
+                loading_user: false
             })
         })
     }
 
-    loadGroups() {
-        let { client, match: { params } } = this.props;
-
-        GroupService.getGroups({
+    loadPosts(first) {
+        let {client, match: {params}} = this.props;
+        if (first){
+            this.setState({
+                loading_posts: true
+            })
+        }
+        GroupPostService.getGroupPosts({
             client,
             group_id: params.group_id
-        }).then((groups) => {
-            console.log("LOADED GROUP", groups);
+        }).then((posts) => {
+            console.log("LOADED POSTS", posts);
+            posts = posts || [];
+            let posts_map = {};
+            console.log("entered this 12345", posts);
 
-            let group = null;
+            posts.forEach((post) => {
+                posts_map[post.post_id] = post;
+            })
+            console.log("entered this 123456", posts);
 
-            if (groups && groups.length) {
-                group = groups[0]
-            }
+            posts = posts.sort((a, b) => {
+                let nameA = a.post_date || "";
+                let nameB = b.post_date || "";
 
+                return nameA.localeCompare(nameB);
+            });
             this.setState({
-                group
+                posts,
+                posts_map,
+                loading_posts: false
             })
         })
     }
 
-    loadGroupJobs() {
-        let { client, match: { params } } = this.props;
-
-        GroupService.getGroups({
-            client,
-            group_id: params.group_id,
-            is_user_submitted: false
-        }).then((groups) => {
-            console.log("LOADED GROUPS", groups);
-
+    loadGroup(first) {
+        let { client, match: { params }} = this.props;
+        if(first){
+            this.setState({loading_group: true});
+        }
+        const user_id = AuthService.getCurrentUserIdSync();
+        GroupService.getGroupsByIds({client, group_ids: params.group_id}).then((group) => {
+            console.log("LOADED GROUP", group);
             this.setState({
-                groups: groups || []
+                group,
+                loaded_group: true,
+                loading_group: false
+            })
+        })
+
+        GroupMemberService.getGroupMembers({client, user_id, group_id: params.group_id}).then((group_member) =>{
+            console.log("LOADED GROUP MEMBER", group_member);
+            this.setState({
+                group_member,
+                loaded_group_member: true
             })
         })
     }
+
+    //loadGroupJobs() {
+    //    let { client, match: { params } } = this.props;
+
+    //    GroupService.getGroups({
+    //        client,
+    //        group_id: params.group_id,
+    //        is_user_submitted: false
+    //    }).then((groups) => {
+    //        console.log("LOADED GROUPS", groups);
+    //        this.setState({
+    //            groups: groups || []
+    //        })
+    //    })
+    //}
 
     render() {
         console.log("7");
         let { classes, client, match: { params }, history } = this.props;
 
-        let { group, user, selectedState, groups } = this.state;
+        let { group, group_member, user, selectedState, groups, posts, posts_map } = this.state;
 
         group = group || {};
 
@@ -238,13 +309,60 @@ class GroupPage extends React.Component {
                         </div>
                         <div className={classes.RHSGroupContainer}>
                             <div className={mc(classes.headerContainer)}>
-                                <GroupHeader {...{group, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
+                                <GroupHeader {...{group, group_member: this.state.group_member, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
                                 }}/>
                             </div>
 
-                            <div style={{display: selectedState === 1 ? null : "none"}} className={mc(classes.sectionContainer)}>
-                                <GroupSearchBar style={{width: "100%"}}/>
+                            <div style={{display: selectedState === 1 ? null : "none"}}>
+                                <div className={mc(classes.groupSearchBarContainer)}>
+                                    <GroupSearchBar style={{width: "100%"}}/>
+                                </div>
+                                <div className={mc(classes.groupPostContainer)}>{posts && posts.length && !this.state.loading_user && !this.state.loading_group && !this.state.loading_posts ? <div>
+                                    {posts.map((post) => {
+                                        console.log("GROUP POST POST", post)
+                                        let primary_post = posts_map ? ((posts_map[posts.post_id] || {})) : {};
+                                        //let group_name = group.group_id && groups_map ? (groups_map[group.group_id] || {}).group_name : group.group_name
+                                        //add in company affiliation to posts
+                                        if (!posts_map)
+                                            return;
+                                        return (<div className={classes.postContainer}
+                                                     key={post.post_id}
+                                                     onClick={() => {this.setState({selectedPost: post});}}
+                                        >
+
+                                            <div className={classes.groupRowImgContainer}>
+                                                <CoverImageHolder url={("https://i.imgur.com/tM97NWQ.png")}/>
+                                            </div>
+                                            <div style={{flex: 1, overflow: "hidden"}}>
+                                                <div className={classes.groupRowTitle} >
+                                                    Post Group Name: {post.poster_id}
+                                                </div>
+                                            </div>
+                                        </div>)
+                                    })}
+                                </div> : (this.state.loading_user || this.state.loading_group || this.state.loading_posts) ? <div>
+                                    <div style={{padding: "20px", textAlign: "center"}}>
+                                        <div style={{textAlign: "center"}}>
+                                            <Lottie options={defaultOptions}
+                                                    height={96}
+                                                    width={96}/>
+                                        </div>
+                                        <div>Loading Posts</div>
+                                        <div>One Moment Please</div>
+                                    </div>
+                                </div> : <div>
+                                    <div style={{padding: "20px", textAlign: "center"}}>
+                                        <div style={{fontSize: "14px"}}>This group does not have any posts! Click below to create a new post</div>
+                                        <div style={{marginTop: "20px"}}>
+                                            <StandardButton label={"Share Job"} onClick={() => (
+
+                                                this.setState({openShareNewJobModal: true}))
+                                            }/>
+                                        </div>
+                                    </div>
+                                </div>
+                                } </div>
                             </div>
                             <div  style={{display: selectedState === 2 ? null : "none"}} className={mc(classes.sectionContainer)}>
                                 <div className={mc(classes.sectionMainTitle)}>Overview</div>

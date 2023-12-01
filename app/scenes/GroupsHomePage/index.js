@@ -153,7 +153,6 @@ class GroupsHomePage extends React.Component {
         if (first) {
             this.setState({loading_users_groups: true});
         }
-
         GroupMemberService.getGroupMembers({
             client,
             user_id: params.user_id
@@ -183,6 +182,34 @@ class GroupsHomePage extends React.Component {
             })
             console.log("state pre 3", this.state);
         })
+    }
+
+    //Counts the number of active members of a group
+    //type_id retrieves the target user type (e.g., alumni, active, admin)
+    //Need to fix
+    countGroupMembers(group_id, type_id) {
+        console.log("got herz", group_id);
+        let {client, memberCount} = this.props;
+        if(group_id && type_id){
+            console.log("got here");
+            this.setState({counting_group_members: true});
+            GroupMemberService.getGroupMembers({client, group_id, type_id}).then((members) =>{
+                memberCount=members.length;
+            })
+            this.setState({counting_group_members: false});
+            return memberCount
+        } else {
+            console.log("got here 2", group_id);
+            this.setState({counting_group_members: true});
+            console.log("got here 23");
+            GroupMemberService.getGroupMembers({client, group_id}).then((members) =>{
+                console.log("zyx,", members);
+                memberCount=members.length;
+            })
+            console.log("got here 234");
+            this.setState({counting_group_members: false});
+            return memberCount
+        }
     }
 
     loadGroups(first, group_ids) {
@@ -269,7 +296,7 @@ class GroupsHomePage extends React.Component {
                 <div className={classes.masterNavContainer}>
                     <NavBar/>
                 </div>
-                <div className={classes.masterBodyContainer} style={{width: "100%", paddingLeft: "50px", paddingRight: "50px",  paddingTop: "50px"}}>
+                <div className={classes.masterBodyContainer} style={{width: "100%", paddingLeft: "50px", paddingRight: "50px",  paddingTop: "50px", overflow: "scroll"}}>
                     <div className={classes.groupBarContainerHeader}>
                         <div style={{display: "flex", width: "100%", alignItems: "center", paddingTop: "0px" }} >
                             <div className={mc(classes.rowContainerHeader)} style={{flex: 1, fontSize: "16px", color: COLORS.G_900}}>
@@ -289,6 +316,7 @@ class GroupsHomePage extends React.Component {
                         <div>{users_groups && users_groups.length && groups && groups.length && !this.state.loading_groups && !this.state.loading_saved_jobs && !this.state.loading_users_groups ? <div>
                             {groups.map((user_group) => {
                                 console.log("USER GROUP GROUP", user_group)
+                                //change to user_group
                                 let group = groups_map ? ((groups_map[groups.group_id] || {})) : {};
                                 //let group_name = group.group_id && groups_map ? (groups_map[group.group_id] || {}).group_name : group.group_name
 
@@ -298,24 +326,19 @@ class GroupsHomePage extends React.Component {
                                              key={user_group.group_id}
                                              onClick={() => {this.setState({selectedGroup: user_group});}}
                                 >
+
                                     <div className={classes.groupRowImgContainer}>
                                         <CoverImageHolder url={(user_group.group_logo_url || "https://i.imgur.com/tM97NWQ.png")}/>
                                     </div>
                                     <div style={{flex: 1, overflow: "hidden"}}>
-                                        <div className={classes.groupRowTitle}>
+                                        <div className={classes.groupRowTitle} onClick={() => {
+                                            window.open(`/groups/${user_group.group_id}`);
+                                        }}>
                                             Group Name: {user_group.group_name}
                                         </div>
                                         <div className={classes.groupRowMembers}>
-                                            Group size: {user_group.group_size}
+                                            Group size: {user_group.group_size || 1}
                                         </div>
-                                    </div>
-                                    <div className={mc(classes.jobTitle)}
-                                         style={{flex: 1}}
-                                         onClick={() => {
-                                             this.setState({selectedGroup: user_group});
-                                         }}
-                                    >
-                                        {(groups_map[user_group.group_id] || {}).group_name}
                                     </div>
                                 </div>)
                             })}
@@ -350,6 +373,7 @@ class GroupsHomePage extends React.Component {
                             group_name,
                             group_company_affiliation,
                             group_about,
+                            group_size: 1,
                             group_creator_user_id: params.user_id,
                             group_owner_user_id: params.user_id,
                             date_created: new Date().getTime() + "",

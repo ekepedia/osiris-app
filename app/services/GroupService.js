@@ -247,7 +247,7 @@ GroupService.addGroup = ({
                                          group_owner_user_id,
                                          date_created,
 
-                                         //group_size,
+                                         group_size,
                                          group_about,
                                          //group_website,
                                          //group_founded_year,
@@ -278,6 +278,7 @@ GroupService.addGroup = ({
                 $group_owner_user_id: String,
                 $date_created: String,
                 
+                $group_size: String,
                 $group_about: String,
     
                 $group_company_affiliation: String,
@@ -291,6 +292,7 @@ GroupService.addGroup = ({
                     group_owner_user_id: $group_owner_user_id,
                     date_created: $date_created,
 
+                    group_size: $group_size,
                     group_about: $group_about,
                     
                     group_company_affiliation: $group_company_affiliation,
@@ -306,7 +308,7 @@ GroupService.addGroup = ({
             group_creator_user_id,
             group_owner_user_id,
             date_created,
-            //group_size,
+            group_size,
             group_about,
             //group_website,
             //group_founded_year,

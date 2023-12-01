@@ -52,7 +52,7 @@ const GroupPageStyles = {
         flex: 1,
         maxHeight: "calc(100vh - 120px)",
         height: "fit-content",
-        overflow: "hidden",
+        overflow: "scroll",
     },
     RHSScrollContainer: {
         maxHeight: "calc(100vh - 177px)",
@@ -98,7 +98,7 @@ const GroupProfilePageStyles = {
     headerContainer: {
         // marginBottom: "20px"
     },
-    sectionContainer: {
+    groupSearchBarContainer: {
         padding: "25px 35px",
         background: COLOR_WHITE,
         borderRadius: "6px",
@@ -223,6 +223,14 @@ const GroupRowStyles = {
         border: `1px solid ${N300}`,
         borderRadius: "6px",
         overflow: "hidden"
+    },
+    groupPostContainer: {
+        padding: "25px 35px",
+        background: COLOR_WHITE,
+        borderRadius: "6px",
+        border: `1px solid ${LIGHT_GREY}`,
+        color: OSIRIS_BLACK,
+        marginTop: "15px"
     },
     groupNameContainer: {
         flex: 2,

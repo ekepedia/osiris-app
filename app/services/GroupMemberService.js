@@ -204,7 +204,7 @@ GroupMemberService.getGroupMembers = ({
             is_verified,
             is_hidden,
         };
-
+        console.log("this is where we look ", GroupMemberQuery);
         client.query({query: GroupMemberQuery, variables, fetchPolicy: "no-cache"}).then((response) => {
             if (response && response.data && response.data.group_members && response.data.group_members.length) {
                 resolve(response.data.group_members);
@@ -212,6 +212,7 @@ GroupMemberService.getGroupMembers = ({
                 resolve(null);
             }
         }).catch((err) => {
+            console.log("error in front end service", err);
             resolve();
         })
     });

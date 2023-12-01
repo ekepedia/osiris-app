@@ -47,7 +47,8 @@ class PortfolioHeader extends React.Component {
         super(props);
 
         this.state = {
-
+            userIsAdminOrCreator: false,
+            loadedGroupMember: false
         };
 
         this.portfolioLinkRef = React.createRef();
@@ -64,6 +65,10 @@ class PortfolioHeader extends React.Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.setHeightRatio.bind(this));
+    }
+
+    testAdminPrivileges(){
+
     }
 
     setHeightRatio() {
@@ -100,15 +105,62 @@ class PortfolioHeader extends React.Component {
     }
 
     render() {
-        let { classes, group, selectedState, setSelectedState, has_demographics, has_jobs} = this.props;
+        let { classes, group, group_member, selectedState, setSelectedState, has_demographics, has_jobs} = this.props;
 
+        //Fix - not working
+        let {userIsAdminOrCreators} = this.state;
+        console.log("groupie", this.props.group_member);
+        if(this.props.group_member !== undefined) {
+            if (group_member[0].type_id === "1" || group_member[0].type_id === "2"){
+                userIsAdminOrCreators = true
+            }
+        }
+        console.log("testing", userIsAdminOrCreators);
+        //if(group_member !== undefined && !this.loadedGroupMember) {
+          //  console.log("reached", group_member[0]);
+            //if (group_member[0].type_id === "1" || group_member[0].type_id === "2") {
+              //  console.log("reached 2", group_member);
+
+                //if(!this.loadedGroupMember){
+                  //  this.setState({
+                    //    userIsAdminOrCreator: true,
+                      //  loadedGroupMember: true
+                    //})
+           // }
+        //}
         group = group || {};
+
+        console.log("creator", this.state);
+
+        let {
+            cover_photo_url,
+            group_name,
+            group_logo_url,
+            group_website
+        } = group;
+        console.log("groupHEader", selectedState, group_member);
+
+        let center_align = "calc( 50% - 12.5px)";
+        let center_style_cover = {top: cover_photo_url ? 20: center_align, right: cover_photo_url ? 20: center_align, border: cover_photo_url ? null: "none"};
+
+        //<div className={classes.cameraIconContainer} style={{...center_style_cover}} onClick={() => {this.uploadCoverPhoto()}}>
+        //    <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
+        //    <input type={"file"} style={{display: "none"}} ref={this.profileCoverUpload} onChange={(e) => {
+        //        uploadCoverPhoto ? uploadCoverPhoto(e) : null
+        //    }}/>
+        //</div>
 
         return (<div className={classes.container}>
             <div className={classes.superContainer}>
                 <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
+                    {userIsAdminOrCreators ? <div>
+                            <CoverImageHolder url={group.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
+                            <div className={classes.cameraIconContainer} style={{...center_style_cover}}>
+                                <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
+                            </div>
+                        </div> :
                     <CoverImageHolder url={group.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
-                </div>
+                            }</div>
                 <div className={classes.profileHeaderContainer} style={{paddingBottom: 0}}>
                     <div className={classes.profileImageContainer}>
                         <div className={classes.profileImage} style={{overflow: "hidden"}}>

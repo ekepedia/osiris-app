@@ -99,6 +99,7 @@ const typeDef = gql`
 const resolver = {
     Query: {
         group_members: (_, { input }) => new Promise((res, rej) => {
+            console.log("did get here group member", input);
             GroupMemberService.get_group_members(input).then((group_members) => {
                 console.log("RE", group_members)
                 return res(group_members);
