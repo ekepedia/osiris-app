@@ -89,7 +89,7 @@ class PostQuestionModal extends React.Component {
                 <div style={{height: "100%", overflow: "hidden"}}>
                     <div style={{display: "flex", flexDirection: "column", height: "100%", overflow: "hidden", maxHeight: COMMON.STYLES.EDIT_PORTFOLIO_MODAL.DEFAULT_MODAL_MAX_HEIGHT,}}>
                         <div style={{flex: "0 0 51px", padding: "15px 25px", borderBottom: `1px solid ${COMMON.COLORS.COLOR_BORDER_GREY}`}}>
-                            <EditPortfolioModalHeader title={"Post new job xyz"} onClose={onClose} />
+                            <EditPortfolioModalHeader title={"Post new job abc"} onClose={onClose} />
                         </div>
 
                         <div style={{flex: 1, padding: "20px 25px", overflow: "scroll"}}>

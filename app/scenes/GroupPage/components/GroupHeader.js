@@ -52,6 +52,8 @@ class PortfolioHeader extends React.Component {
         };
 
         this.portfolioLinkRef = React.createRef();
+        this.groupProfileUpload = React.createRef();
+        this.groupCoverUpload = React.createRef();
     }
 
     componentDidMount() {
@@ -104,8 +106,22 @@ class PortfolioHeader extends React.Component {
         });
     }
 
+    uploadGroupCoverPhoto() {
+        if (!this.groupCoverUpload || !this.groupCoverUpload.current)
+            return;
+
+        this.groupCoverUpload.current.click();
+    }
+
+    uploadGroupProfilePhoto() {
+        if (!this.groupProfileUpload || !this.groupProfileUpload.current)
+            return;
+
+        this.groupProfileUpload.current.click();
+    }
+
     render() {
-        let { classes, group, group_member, selectedState, setSelectedState, has_demographics, has_jobs} = this.props;
+        let { uploadGroupCoverPhoto, uploadGroupProfilePhoto, classes, group, group_member, selectedState, setSelectedState, has_demographics, has_jobs} = this.props;
 
         //Fix - not working
         let {userIsAdminOrCreators} = this.state;
@@ -138,10 +154,11 @@ class PortfolioHeader extends React.Component {
             group_logo_url,
             group_website
         } = group;
-        console.log("groupHEader", selectedState, group_member);
+        console.log("groupHEader", selectedState, group_member, group[0]);
 
         let center_align = "calc( 50% - 12.5px)";
         let center_style_cover = {top: cover_photo_url ? 20: center_align, right: cover_photo_url ? 20: center_align, border: cover_photo_url ? null: "none"};
+        let center_style_logo = {top: group_logo_url ? null : center_align, right: group_logo_url ? null : center_align, border: group_logo_url ? null: "none"};
 
         //<div className={classes.cameraIconContainer} style={{...center_style_cover}} onClick={() => {this.uploadCoverPhoto()}}>
         //    <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
@@ -153,19 +170,35 @@ class PortfolioHeader extends React.Component {
         return (<div className={classes.container}>
             <div className={classes.superContainer}>
                 <div className={classes.profileCover} ref={this.portfolioLinkRef} style={{height: this.state.currentHeight ? this.state.currentHeight : null}}>
-                    {userIsAdminOrCreators ? <div>
-                            <CoverImageHolder url={group.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
-                            <div className={classes.cameraIconContainer} style={{...center_style_cover}}>
+                    {userIsAdminOrCreators && group[0] ? <div>
+                            <CoverImageHolder url={group[0].cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
+                            <div className={classes.cameraIconContainer} style={{...center_style_cover}} onClick={() => {this.uploadGroupCoverPhoto()}}>
                                 <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
+                                <input type={"file"} style={{display: "none"}} ref={this.groupCoverUpload} onChange={(e) => {
+                                    uploadGroupCoverPhoto ? uploadGroupCoverPhoto(e) : null
+                                }}/>
                             </div>
+                        </div> : (group[0]) ? <div>
+                            <CoverImageHolder url={group[0].cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
                         </div> :
-                    <CoverImageHolder url={group.cover_photo_url || "https://i.imgur.com/tM97NWQ.png"}/>
+                    <CoverImageHolder url={"https://i.imgur.com/tM97NWQ.png"}/>
                             }</div>
                 <div className={classes.profileHeaderContainer} style={{paddingBottom: 0}}>
                     <div className={classes.profileImageContainer}>
                         <div className={classes.profileImage} style={{overflow: "hidden"}}>
-                            <CoverImageHolder url={group.group_logo_url}/>
-                        </div>
+                            {userIsAdminOrCreators && group[0] ? <div>
+                                <CoverImageHolder url={group[0].group_logo_url || "https://t4.ftcdn.net/jpg/02/01/10/87/360_F_201108775_UMAoFXBAsSKNcr53Ip5CTSy52Ajuk1E4.jpg"}/>
+                                <div style={{...center_style_logo}} className={classes.cameraIconContainer} onClick={() => {this.uploadGroupProfilePhoto()}} >
+                                    <i className={mc("fa-solid fa-camera", classes.cameraIcon)}/>
+                                    <input type={"file"} style={{display: "none"}} ref={this.groupProfileUpload} onChange={(e) => {
+                                        uploadGroupProfilePhoto ? uploadGroupProfilePhoto(e) : null
+                                    }}/>
+                                </div>
+                            </div> : (group[0]) ? <div>
+                                    <CoverImageHolder url={group[0].group_logo_url || "https://t4.ftcdn.net/jpg/02/01/10/87/360_F_201108775_UMAoFXBAsSKNcr53Ip5CTSy52Ajuk1E4.jpg"}/>
+                            </div> :
+                                <CoverImageHolder url={"https://t4.ftcdn.net/jpg/02/01/10/87/360_F_201108775_UMAoFXBAsSKNcr53Ip5CTSy52Ajuk1E4.jpg"}/>
+                            }</div>
                     </div>
                     <div className={classes.editHeaderButtonContainer}>
                         <div className={classes.editHeaderButton}>

@@ -7,8 +7,8 @@ module.exports = function (connection) {
         table.increments('group_id').primary();
 
         table.string('group_name');
-        table.string('group_logo_url', 2000);
-        table.string('cover_photo_url', 2000);
+        table.string('group_logo_url');
+        table.string('cover_photo_url');
 
         table.string('group_creator_user_id');
         table.string('group_owner_user_id');

@@ -37,8 +37,6 @@ module.exports.init = function (connection) {
     console.log("begin");
     init = true;
     knex = connection;
-    console.log("groups backend xyz", knex);
-
     console.log(`SQL: ${SERVICE_NAME} Successfully Initialized`);
 
     //get_groups({is_clearbit_import: false}).then((groups) => {
@@ -265,9 +263,10 @@ function edit_group({
                         batch_id,
                       }) {
     return new Promise((resolve, reject) => {
+        console.log("did arrive here yebo !");
         if (!group_id)
             return reject(new Error("Missing group_id"));
-
+        console.log("did get past !");
         const query = {
             group_id,
             group_name,
@@ -302,6 +301,7 @@ function edit_group({
         knex(SERVICE_DEFAULT_TABLE).where({group_id}).update(query).then(() =>{
             return resolve();
         }).catch((err) => {
+            console.log(" got to group service backend", err);
             return reject(err);
         });
     });

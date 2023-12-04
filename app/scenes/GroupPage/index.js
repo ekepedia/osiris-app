@@ -34,6 +34,8 @@ import GroupPostService from "../../services/GroupPostService";
 import Lottie from "react-lottie";
 import StandardButton from "../../components/StandardButton";
 import loadingCircles from "../../common/lottie/loading-circles";
+import axios from "axios";
+import groupService from "../../services/GroupService";
 
 const Styles = {
     container: {
@@ -219,6 +221,63 @@ class GroupPage extends React.Component {
         })
     }
 
+    fileUploaded(e, cover) {
+        console.log("Files", e.target.files);
+        if (e.target.files && e.target.files[0]) {
+
+            const file = e.target.files[0];
+            const formData = new FormData();
+
+            formData.append('img', file);
+
+            axios.post("/api/upload-user-img", formData).then((data) => {
+                if (data && data.data && data.data.url) {
+                    const { url } = data.data;
+                    if (cover) {
+                        this.submitGroupCoverPhoto(url);
+                    } else {
+                        this.submitGroupProfilePhoto(url);
+                    }
+                }
+            })
+        }
+    }
+
+    submitGroupCoverPhoto(url) {
+        let { client } = this.props;
+
+        const group = this.state.group[0] || {};
+        const group_id = group.group_id;
+        const cover_photo_url = url;
+        console.log("coverPhotoUrl", cover_photo_url);
+
+        console.log("cover group id", group_id);
+
+        console.log("ewithin submiut 1", group);
+
+        GroupService.editGroup({client, group_id, cover_photo_url}).then((success) => {
+            console.log("successfully uploaded group cover photo", success);
+            this.loadGroup();
+        })
+    }
+
+    submitGroupProfilePhoto(url) {
+
+        let { client } = this.props;
+
+        const group = this.state.group[0] || {};
+        const group_id = group.group_id;
+        const group_logo_url = url;
+
+        console.log("cover group id", group_id);
+        console.log("ewithin submiut 2", group);
+
+        GroupService.editGroup({client, group_id, group_logo_url}).then((success) => {
+            console.log("successfully uploaded group logo photo", success);
+            this.loadGroup();
+        })
+    }
+
     loadGroup(first) {
         let { client, match: { params }} = this.props;
         if(first){
@@ -259,7 +318,7 @@ class GroupPage extends React.Component {
     //}
 
     render() {
-        console.log("7");
+        console.log("GROUP", this.state);
         let { classes, client, match: { params }, history } = this.props;
 
         let { group, group_member, user, selectedState, groups, posts, posts_map } = this.state;
@@ -311,7 +370,10 @@ class GroupPage extends React.Component {
                             <div className={mc(classes.headerContainer)}>
                                 <GroupHeader {...{group, group_member: this.state.group_member, selectedState: this.state.selectedState}} setSelectedState={(selectedState) => {
                                     this.setState({selectedState})
-                                }}/>
+                                }}
+                                             uploadGroupCoverPhoto={(e) => (this.fileUploaded(e, true))}
+                                             uploadGroupProfilePhoto={(e) => (this.fileUploaded(e))}
+                                />
                             </div>
 
                             <div style={{display: selectedState === 1 ? null : "none"}}>

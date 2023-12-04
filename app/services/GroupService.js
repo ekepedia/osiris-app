@@ -463,6 +463,7 @@ GroupService.editGroup = ({
         client.mutate({mutation: EditGroupMutation, variables}).then((response) => {
             resolve(response.data.edit_group)
         }).catch((err) => {
+            console.log("this was the error", err);
             resolve();
         })
     })

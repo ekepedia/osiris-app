@@ -171,7 +171,9 @@ const resolver = {
             });
         }),
         edit_group: (_, {input}) => new Promise((res, rej) => {
+            console.log("did get here yebo 1", input);
             GroupService.edit_group(input).then( () => {
+                console.log("did get here yes", input);
                 return res(true);
             }).catch(() => {
                 return res(false);
