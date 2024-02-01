@@ -65,8 +65,12 @@ const SavedJobNotesSchema = require("./saved_jobs_notes/schema/saved_job_notes.s
 const SavedJobRemindersSchema = require("./saved_jobs_reminders/schema/saved_jobs_reminders.schema");
 
 module.exports.init = function (connection) {
+
     init = true;
+    console.log("got here to database service 1", connection);
     knex = connection;
+
+    console.log("got here to database service 2", connection);
 
     winston.info("Database Service Successfully Initialized");
 

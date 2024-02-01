@@ -418,7 +418,6 @@ class GroupPage extends React.Component {
                                         <div style={{fontSize: "14px"}}>This group does not have any posts! Click below to create a new post</div>
                                         <div style={{marginTop: "20px"}}>
                                             <StandardButton label={"Share Job"} onClick={() => (
-
                                                 this.setState({openShareNewJobModal: true}))
                                             }/>
                                         </div>

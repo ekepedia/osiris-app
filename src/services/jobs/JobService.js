@@ -1265,7 +1265,7 @@ function import_jobs_and_skills() {
             };
         })
         .on('end', () => {
-            console.log('CSV file successfully processed');
+            console.log('CSV file successfully processed - skills');
         });
     fs.createReadStream(__dirname + `/../../../data/job-titles.csv`)
         .pipe(csv())
@@ -1295,7 +1295,7 @@ function import_jobs_and_skills() {
             // console.log(JOB_DESCRIPTIONS);
         })
         .on('end', () => {
-            console.log('CSV file successfully processed');
+            console.log('CSV file successfully processed - titles');
         });
 }
 
@@ -1360,7 +1360,7 @@ function import_webscraper_jobs() {
             WEBSCRAPED_JOBS.push(job_for_board);
         })
         .on('end', () => {
-            console.log('CSV file successfully processed');
+            console.log('CSV file successfully processed - webscraped jobs');
         });
 }
 

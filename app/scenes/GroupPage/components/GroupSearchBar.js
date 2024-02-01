@@ -15,6 +15,7 @@ import CoverImageHolder from "../../../components/CoverImageHolder";
 import {mc} from "../../../common/helpers";
 import StandardInput from "../../../components/StandardInput";
 import PostJobModal from "./modals/PostJobModal";
+import PostQuestionModal from "./modals/PostQuestionModal";
 import JobsService from "../../../services/JobsService";
 import SavedJobService from "../../../services/SavedJobService";
 import CompanyService from "../../../services/CompanyService";
@@ -67,6 +68,7 @@ class GroupSearchBar extends React.Component {
             newPostInSearchBar:null,
             user,
             openPostJobModal: false,
+            openPostQuestionModal: false,
         };
     }
 
@@ -141,7 +143,7 @@ class GroupSearchBar extends React.Component {
 
     render() {
         let { classes, client, match: { params } } = this.props;
-        let { user, openPostJobModal, companies, options, company_map, option_map} = this.state;
+        let { user, openPostJobModal, openPostQuestionModal, companies, options, company_map, option_map} = this.state;
 
         const {
             newPostInSearchBar,
@@ -173,13 +175,44 @@ class GroupSearchBar extends React.Component {
                     <div className={classes.groupPostOptions} onClick={() => (this.setState({openPostJobModal: true}))}>
                         <i className="fa-regular fa-pen-to-square" style={{marginRight: "5px"}}/>Post a Job
                     </div>
-                    <div className={classes.groupPostOptions} onClick={() => {setSelectedState ? setSelectedState(2) : null}}>
+                    <div className={classes.groupPostOptions} onClick={() => (this.setState({openPostQuestionModal: true}))}>
                         <i className="fa-regular fa-pen-to-square" style={{marginRight: "5px"}}/>Ask a Question
                     </div>
                     <div className={classes.groupPostOptions} onClick={() => {setSelectedState ? setSelectedState(3) : null}}>
                         <i className="fa-light fa-microphone" style={{marginRight: "5px"}}/>Create Event
                     </div>
                 </div>
+            <PostQuestionModal open={openPostQuestionModal} options={options} onSubmit={({job_title, apply_link, status_id, company_id,}) => {
+                console.log("SUBMIT", job_title, apply_link, status_id, company_id);
+
+                JobsService.addJob({
+                    client,
+                    job_title,
+                    apply_link,
+                    company_id,
+                    user_id: params.user_id,
+                    submitted_by_id: params.user_id,
+                    date_created: new Date().getTime() + "",
+                    is_user_submitted: true,
+                    is_public: false
+                }).then((job_id) => {
+                    console.log("CREATE NEW JOB:", job_id);
+                    console.log("params", params)
+                    console.log("params.user)id", params.user_id)
+
+                    // this.loadJobs();
+                    console.log("USER ID:", params.user_id);
+                    SavedJobService.addSavedJob({client,
+                        job_id,
+                        user_id: params.user_id,
+                        status_id: status_id + ""
+                    }).then((saved_job_id) => {
+                        console.log("CREATED NEW SAVED JOB:", saved_job_id);
+                    })
+                })
+
+
+            }} onClose={() => (this.setState({openPostQuestionModal: false}))}/>
             <PostJobModal open={openPostJobModal} options={options} onSubmit={({job_title, apply_link, status_id, company_id,}) => {
                 console.log("SUBMIT", job_title, apply_link, status_id, company_id);
 

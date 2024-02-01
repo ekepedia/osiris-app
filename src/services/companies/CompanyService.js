@@ -1039,7 +1039,7 @@ function import_glassdoor_companies() {
 
         })
         .on('end', () => {
-            console.log('CSV file successfully processed');
+            console.log('CSV file successfully processed - glassdoor companies');
         });
 }
 

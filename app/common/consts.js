@@ -149,6 +149,23 @@ const PASSIONS = [
     {value: 1407, label: "Music"},
 ];
 
+const PRIVACY = [
+    {value: 1501, label: "Open"},
+    {value: 1502, label: "Private"},
+    {value: 1503, label: "Secret"},
+];
+
+const QUESTION_TOPICS = [
+    {value: 1601, label: "Company culture"},
+    {value: 1602, label: "Compensation & benefits"},
+    {value: 1603, label: "Performance reviews"},
+    {value: 1604, label: "Recruitment"},
+    {value: 1605, label: "Skill development"},
+    {value: 1606, label: "Social responsibility"},
+    {value: 1607, label: "Worklife balance"},
+    {value: 1608, label: "Other"},
+];
+
 let PASSIONS_MAP = {};
 PASSIONS.forEach((d) => {
     PASSIONS_MAP[d.value] = d;
@@ -175,6 +192,7 @@ export const CONSTS = {
     MONTHS,
     YEARS,
     GENDERS,
+    ROLE_IN_GROUPS,
     STATUSES,
     RACES,
     RACES_MAP,
@@ -188,5 +206,7 @@ export const CONSTS = {
     PASSIONS,
     PASSIONS_MAP,
     UNIVERSITIES: UNIVERSITIES_FORMATTED,
-    UNIVERSITIES_MAP
+    UNIVERSITIES_MAP,
+    PRIVACY,
+    QUESTION_TOPICS
 }
